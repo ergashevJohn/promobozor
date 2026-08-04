@@ -1,0 +1,246 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import GrouponCard from "./GrouponCard";
+import { Promocode } from "./types";
+
+// Mock dependencies
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+}));
+
+vi.mock("next/image", () => ({
+  default: ({
+    alt,
+    src,
+    className,
+    fill: _fill,
+    priority: _priority,
+    sizes: _sizes,
+    ...rest
+  }: any) => (
+    <span
+      data-testid="next-image"
+      data-src={src}
+      role="img"
+      aria-label={alt}
+      className={className}
+      {...rest}
+    />
+  ),
+}));
+
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href }: any) => <a href={href}>{children}</a>,
+}));
+
+vi.mock("sonner", () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
+// Mock Lucide icons
+vi.mock("lucide-react", () => ({
+  Check: ({ className }: any) => <span data-testid="icon-check" className={className} />,
+  Clock: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
+  Clock3: ({ className }: any) => <span data-testid="icon-clock-3" className={className} />,
+  Copy: ({ className }: any) => <span data-testid="icon-copy" className={className} />,
+  Eye: ({ className }: any) => <span data-testid="icon-eye" className={className} />,
+  Star: ({ className }: any) => <span data-testid="icon-star" className={className} />,
+  TicketPercent: ({ className }: any) => (
+    <span data-testid="icon-ticket-percent" className={className} />
+  ),
+  ThumbsDown: ({ className }: any) => <span data-testid="icon-thumbs-down" className={className} />,
+  ThumbsUp: ({ className }: any) => <span data-testid="icon-thumbs-up" className={className} />,
+}));
+
+// Mock API calls
+global.fetch = vi.fn();
+
+describe("GrouponCard", () => {
+  const mockPromocode: Promocode = {
+    id: "promo-1",
+    type: "code",
+    code: "TESTCODE",
+    discountType: "amount",
+    discountValue: 50000,
+    currency: "UZS",
+    isFeatured: false,
+    status: "active",
+    viewsCount: 10,
+    copyCount: 5,
+    likesCount: 2,
+    dislikesCount: 0,
+    expiresAt: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+    translations: [
+      {
+        language: "uz",
+        title: "Test Promo",
+        slug: "test-promo",
+        conditions: "Test conditions",
+      },
+    ],
+    store: {
+      id: "store-1",
+      translations: [{ language: "uz", name: "Test Store", slug: "test-store" }],
+      logoUrl: "/store-logo.png",
+    },
+    category: null,
+    brand: null,
+  };
+
+  const mockTranslations = {
+    featured: "Featured",
+    verified: "Verified",
+    fresh: "Fresh",
+    popular: "Popular",
+    endingSoon: "Ending Soon",
+    unlimited: "Unlimited",
+    unknownStore: "Unknown Store",
+    storeTitle: "Store",
+    promocodeTitle: "Promocode",
+    activateLink: "Activate the link",
+    details: "Details",
+    viewDetails: "View Details",
+    storeOffer: "Store offer",
+    brandOffer: "Brand offer",
+    directDeal: "Direct deal",
+    codeReady: "Code ready",
+    dealRoute: "Deal route",
+    promoCodeLabel: "Promo code",
+    copy: "Copy",
+    copied: "Copied",
+    getDeal: "Get Deal",
+    like: "Like",
+    dislike: "Dislike",
+    codeCopied: "Code copied!",
+    copyError: "Failed to copy",
+    expired: "Expired",
+    disabled: "Disabled",
+  };
+
+  it("renders correctly with basic info", () => {
+    render(<GrouponCard promocode={mockPromocode} translations={mockTranslations} />);
+
+    expect(screen.getByText("Test Store")).toBeInTheDocument();
+    expect(screen.getByText("Test Promo")).toBeInTheDocument();
+    expect(screen.getByText("50000 UZS")).toBeInTheDocument(); // Currency check
+    expect(screen.getByText("TESTCODE")).toBeInTheDocument();
+  });
+
+  it("renders with percent discount", () => {
+    const percentPromo = {
+      ...mockPromocode,
+      discountType: "percent" as const,
+      discountValue: 20,
+    };
+
+    render(<GrouponCard promocode={percentPromo} translations={mockTranslations} />);
+    expect(screen.getByText("20%")).toBeInTheDocument();
+  });
+
+  it("renders with different currency (USD)", () => {
+    const usdPromo = {
+      ...mockPromocode,
+      currency: "USD" as const,
+      discountValue: 10,
+    };
+
+    render(<GrouponCard promocode={usdPromo} translations={mockTranslations} />);
+    expect(screen.getByText("10 USD")).toBeInTheDocument();
+  });
+
+  it("shows freshness and popularity signals when thresholds match", () => {
+    const signaledPromo = {
+      ...mockPromocode,
+      startsAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      viewsCount: 250,
+      copyCount: 20,
+    };
+
+    render(<GrouponCard promocode={signaledPromo} translations={mockTranslations} />);
+
+    expect(screen.getByText("Fresh")).toBeInTheDocument();
+    expect(screen.getByText("Popular")).toBeInTheDocument();
+  });
+
+  it("shows promo link activation for link type", () => {
+    const linkPromo = {
+      ...mockPromocode,
+      type: "link" as const,
+      link: "https://example.com",
+    };
+
+    render(<GrouponCard promocode={linkPromo} translations={mockTranslations} />);
+
+    // Check for "Activate the link" text (translation value)
+    expect(screen.getByText("Activate the link")).toBeInTheDocument();
+  });
+
+  it("renders separate details CTA", () => {
+    render(<GrouponCard promocode={mockPromocode} translations={mockTranslations} />);
+
+    expect(screen.getByText("View Details")).toBeInTheDocument();
+  });
+
+  it("handles copy action", async () => {
+    const mockClipboard = {
+      writeText: vi.fn().mockResolvedValue(undefined),
+    };
+    Object.assign(navigator, { clipboard: mockClipboard });
+
+    render(<GrouponCard promocode={mockPromocode} translations={mockTranslations} />);
+
+    const copyButton = screen.getByLabelText("Copy"); // Based on aria-label with translation value
+    fireEvent.click(copyButton);
+
+    await waitFor(() => {
+      expect(mockClipboard.writeText).toHaveBeenCalledWith("TESTCODE");
+    });
+  });
+
+  it("renders expired status correctly", () => {
+    const expiredPromo = {
+      ...mockPromocode,
+      status: "expired" as const,
+      expiresAt: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    };
+
+    render(<GrouponCard promocode={expiredPromo} translations={mockTranslations} />);
+
+    // Should show "Expired" badge
+    expect(screen.getByText("Expired")).toBeInTheDocument();
+
+    // Link should NOT be present
+    const detailsLink = screen.queryByLabelText(/Details/);
+    expect(detailsLink).not.toBeInTheDocument();
+
+    // Inactive appearance should be applied (opacity and grayscale)
+    const cardContainer = screen.getByRole("article");
+    expect(cardContainer).toHaveClass("opacity-60");
+    expect(cardContainer).toHaveClass("grayscale");
+  });
+
+  it("renders disabled status correctly", () => {
+    const disabledPromo = {
+      ...mockPromocode,
+      status: "disabled" as const,
+    };
+
+    render(<GrouponCard promocode={disabledPromo} translations={mockTranslations} />);
+
+    // Should show "Disabled" badge
+    expect(screen.getByText("Disabled")).toBeInTheDocument();
+
+    // Link should NOT be present
+    const detailsLink = screen.queryByLabelText(/Details/);
+    expect(detailsLink).not.toBeInTheDocument();
+
+    // Inactive appearance should be applied
+    const cardContainer = screen.getByRole("article");
+    expect(cardContainer).toHaveClass("opacity-60");
+    expect(cardContainer).toHaveClass("grayscale");
+  });
+});

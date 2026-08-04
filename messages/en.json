@@ -1,0 +1,961 @@
+{
+  "common": {
+    "home": "Home",
+    "stores": "Stores",
+    "categories": "Categories",
+    "brands": "Brands",
+    "promocodes": "Promocodes",
+    "view": "View",
+    "viewAll": "View all",
+    "copy": "Copy",
+    "copied": "Copied",
+    "search": "Search",
+    "searchPlaceholder": "Search stores or promo codes",
+    "noResults": "No results found",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "tryAgain": "Try again",
+    "all": "All",
+    "featured": "Featured",
+    "verified": "Verified",
+    "expires": "Expires",
+    "views": "Views",
+    "copies": "Copies",
+    "likes": "Likes",
+    "dislikes": "Dislikes",
+    "clear": "Clear",
+    "loadMore": "Load More",
+    "offersFound": "offers found",
+    "offers": "offers",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "page": "Page",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "toggleTheme": "Toggle theme",
+    "skipToContent": "Skip to content",
+    "breadcrumb": "Breadcrumb",
+    "pagination": "Pagination",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "lastUpdated": "Last updated",
+    "firstPublished": "First published",
+    "readingTime": "min read",
+    "minutes": "minutes",
+    "author": "Author",
+    "experience": "experience",
+    "years": "years",
+    "expertise": "Expertise",
+    "currency": "UZS",
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDescription": "Sorry, the page you are looking for does not exist or has been removed.",
+    "goHome": "Go to Homepage",
+    "popularPages": "Popular Pages",
+    "orSearchPromocodes": "Or try searching for promocodes:",
+    "viewAllStores": "View all stores",
+    "viewCategories": "View categories",
+    "viewBrands": "View brands",
+    "contact": "Contact",
+    "altStoreLogo": "Store logo",
+    "altStoreLogoWithSlug": "Store logo - {slug} page",
+    "altBrandLogo": "Brand logo",
+    "altBrandLogoWithSlug": "Brand logo - {slug} page",
+    "altCategoryImage": "Category image",
+    "altCategoryImageWithSlug": "Category image - {slug} page"
+  },
+  "LocaleLayout": {
+    "title": "PromoBozor — Deals and promo code marketplace",
+    "description": "PromoBozor helps you find useful discounts, promo codes, and coupons in one place. Explore trusted offers for online stores and services and save more."
+  },
+  "header": {
+    "title": "PromoBozor",
+    "tagline": "Deals and promo code marketplace",
+    "menu": "Menu"
+  },
+  "footer": {
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "verification": "How We Verify Promocodes",
+    "allRights": "All rights reserved",
+    "description": "PromoBozor helps shoppers discover useful promo codes, coupons, and discounts for stores and services in one trusted place.",
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "socialMedia": "Social Media",
+    "followUs": "Follow Us on Social Media",
+    "socialDescription": "Follow us for new promocodes and discounts",
+    "newsletter": "Newsletter",
+    "newsletterPlaceholder": "Your email",
+    "subscribe": "Subscribe",
+    "copyright": "© 2026 PromoBozor. All rights reserved.",
+    "createdBy": "Created by"
+  },
+  "card": {
+    "featured": "Featured",
+    "verified": "Verified",
+    "fresh": "Fresh",
+    "popular": "Popular",
+    "exclusive": "Exclusive",
+    "details": "Offer details",
+    "viewDetails": "View Details",
+    "storeOffer": "Store offer",
+    "brandOffer": "Brand offer",
+    "directDeal": "Direct deal",
+    "codeReady": "Code ready",
+    "dealRoute": "Deal route",
+    "promoCodeLabel": "Promo code",
+    "copy": "Copy",
+    "copied": "Copied",
+    "getCode": "Get Code",
+    "getDeal": "View offer",
+    "activateLink": "Open the offer",
+    "unknownStore": "Unknown Store",
+    "unlimited": "Unlimited",
+    "off": "off",
+    "upTo": "up to",
+    "expiresIn": "Expires in",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "like": "Like",
+    "dislike": "Dislike",
+    "expired": "Expired",
+    "disabled": "Inactive"
+  },
+  "home": {
+    "title": "Find discounts and promo codes in one place",
+    "subtitle": "Find verified offers for online stores, services, and marketplaces, understand the terms quickly, and save more on every order.",
+    "description": "Find useful, curated, and trustworthy promo codes and discounts for online shopping with PromoBozor.",
+    "featuredPromocodes": "Featured promo codes and deals",
+    "featuredDescription": "Manually curated, fresh, and genuinely useful offers",
+    "allPromocodes": "All verified promocodes",
+    "allPromocodesDescription": "All active discounts and offers",
+    "popularStores": "Popular Stores",
+    "popularCategories": "Popular Categories",
+    "popularBrands": "Popular Brands",
+    "trustPills": ["Verified offers", "Updated daily", "Fast, simple search"],
+    "heroInsight": {
+      "label": "PromoBozor insight",
+      "title": "Useful offers across marketplaces, food delivery, banking, and services",
+      "tags": ["Promo", "Coupon", "Savings"]
+    },
+    "heroCards": {
+      "focus": {
+        "label": "Focus",
+        "title": "Reliable, easy-to-use promocodes"
+      },
+      "cta": {
+        "label": "Outcome",
+        "title": "Find faster, use with confidence"
+      }
+    },
+    "overhaul": {
+      "heroQuickLinks": [
+        { "label": "Latest deals", "href": "/en/promocodes" },
+        { "label": "Food delivery", "href": "/en/categories" },
+        { "label": "Top stores", "href": "/en/stores" },
+        { "label": "Trusted brands", "href": "/en/brands" }
+      ],
+      "featured": {
+        "eyebrow": "Best deals right now",
+        "description": "The strongest live savings opportunities, curated to help you decide faster."
+      },
+      "routes": {
+        "eyebrow": "Start with your intent",
+        "title": "Choose the fastest path to a useful offer",
+        "description": "Instead of scrolling through a generic coupon directory, jump straight into the route that matches what you want to save on right now.",
+        "cta": "Browse all offers",
+        "cardCta": "Open route",
+        "items": [
+          {
+            "kicker": "Fresh picks",
+            "title": "See the latest verified deals first",
+            "description": "Start with the offers that were checked recently and are most likely to be immediately useful.",
+            "href": "/en/promocodes"
+          },
+          {
+            "kicker": "Store finder",
+            "title": "Go straight to the store you already use",
+            "description": "Browse store-specific savings when you already know where you plan to order or shop.",
+            "href": "/en/stores"
+          },
+          {
+            "kicker": "Category map",
+            "title": "Explore delivery, banking, and marketplace savings",
+            "description": "Use categories to compare savings paths across food delivery, finance, services, and more.",
+            "href": "/en/categories"
+          },
+          {
+            "kicker": "Brand routes",
+            "title": "Discover curated offers around popular brands",
+            "description": "Jump into brand-focused pages when you're comparing similar offers across familiar names.",
+            "href": "/en/brands"
+          }
+        ]
+      },
+      "proof": {
+        "eyebrow": "Freshness and proof",
+        "title": "Savings are easier to trust when the context is clear",
+        "description": "PromoBozor should help users understand not only what the offer is, but why it feels safe to use right now.",
+        "items": [
+          {
+            "title": "Daily review cadence",
+            "description": "High-traffic offers are reviewed frequently so outdated promos do not stay visible for long."
+          },
+          {
+            "title": "Usable terms, not walls of text",
+            "description": "We highlight the conditions that matter most before you waste time trying a deal."
+          },
+          {
+            "title": "Verification before hype",
+            "description": "Useful and believable savings matter more than noisy catalog volume."
+          },
+          {
+            "title": "Cross-marketplace coverage",
+            "description": "Marketplace, banking, services, and delivery offers live in one savings workflow."
+          }
+        ]
+      },
+      "guide": {
+        "eyebrow": "Decision support",
+        "title": "Help users choose the right deal, not just copy the first code they see",
+        "description": "A stronger PromoBozor experience explains how to compare offers, what makes a deal worth trusting, and when to use a code versus a direct deal.",
+        "primaryCta": "See our verification process",
+        "secondaryCta": "Read common questions",
+        "items": [
+          {
+            "title": "Check freshness before checkout",
+            "description": "When an offer was checked recently, users have stronger confidence that it still applies."
+          },
+          {
+            "title": "Look at conditions before copying",
+            "description": "Minimum order amount, new-user limits, and payment constraints should be obvious early."
+          },
+          {
+            "title": "Use comparison paths, not random browsing",
+            "description": "Store, category, and brand routes should help users narrow faster instead of creating clutter."
+          }
+        ]
+      },
+      "browse": {
+        "stores": {
+          "eyebrow": "Store-first savings",
+          "description": "When you already know where you want to buy, jump into store-specific pages and reach the most active live offers faster.",
+          "featuredLabel": "Top route this week",
+          "featuredCta": "See store deals"
+        },
+        "categories": {
+          "eyebrow": "Shop by need",
+          "description": "Categories should guide users by intent, not just list taxonomy labels.",
+          "labels": ["Fast-moving", "High-use", "Daily savings", "Curated path"],
+          "cardDescriptions": [
+            "Useful when you want the strongest currently active offers in this area.",
+            "Great for comparing multiple saving options before choosing a store.",
+            "Best for habits like delivery, banking, or recurring online spending.",
+            "A cleaner path into high-intent offers without browsing random cards."
+          ],
+          "cardCta": "Explore category"
+        },
+        "brands": {
+          "eyebrow": "Curated brands",
+          "description": "Popular brands should feel like useful routes into savings, not just logo walls.",
+          "cardLabel": "Brand path"
+        }
+      }
+    },
+    "howItWorks": "How it works?",
+    "step1Title": "Find a promocode",
+    "step1Description": "Choose a promocode from the desired store or category",
+    "step2Title": "Copy the code",
+    "step2Description": "Copy the promocode with one click",
+    "step3Title": "Save money!",
+    "step3Description": "Enter the promocode when shopping and save money",
+    "stats": {
+      "stores": "Stores",
+      "categories": "Categories",
+      "promocodes": "Active Promocodes",
+      "users": "Users"
+    },
+    "seo": {
+      "intro": {
+        "title": "Best Promo Codes in Uzbekistan 2026",
+        "premiumDeals": "2026 Premium Deals",
+        "content": "PromoBozor brings promocodes and discounts for shoppers in Uzbekistan into a clean, trustworthy format. We review the source, expiry window, and usage terms so the most useful offers are easier to find and compare.",
+        "benefitsTitle": "Why Choose Us:",
+        "benefits": [
+          "Offers are manually reviewed and refreshed regularly",
+          "Usage conditions are explained clearly and briefly",
+          "Yandex, Uzum, Click, and other popular services in one place",
+          "Free for shoppers and no registration required"
+        ],
+        "experience": "Our goal is not to build a noisy coupon catalog, but to help shoppers quickly find offers that are actually worth using."
+      },
+      "howItWorks": {
+        "title": "How It Works?",
+        "steps": [
+          {
+            "title": "Find the store you need",
+            "description": "Choose from 50+ brands"
+          },
+          {
+            "title": "Copy the promo code",
+            "description": "Save the code with one click"
+          },
+          {
+            "title": "Apply on the store site",
+            "description": "Enter the code on the payment page"
+          },
+          {
+            "title": "Save!",
+            "description": "Get an automatic discount"
+          }
+        ],
+        "footer": "Each code has been checked and verified within the last 24 hours."
+      },
+      "categories": {
+        "title": "Popular Categories",
+        "items": [
+          {
+            "title": "Food Delivery",
+            "description": "Up to 40% discount on Yandex Eats, Bellissimo, and other services. New promotions and special offers every week."
+          },
+          {
+            "title": "E-commerce",
+            "description": "Exclusive codes for Uzum Market and Yandex Market. Best prices for electronics, fashion, and home goods."
+          },
+          {
+            "title": "Finance and Banking",
+            "description": "Cashback and bonus offers for TBC Bank, Uzum Bank, and other financial services."
+          }
+        ]
+      },
+      "results": {
+        "title": "Our Results",
+        "items": [
+          {
+            "label": "Active promo codes",
+            "value": "50+"
+          },
+          {
+            "label": "Partner brands",
+            "value": "20+"
+          },
+          {
+            "label": "Saved by our clients",
+            "value": "10M+"
+          },
+          {
+            "label": "Code success rate",
+            "value": "98.5%"
+          },
+          {
+            "label": "Monthly visits",
+            "value": "3,000+"
+          }
+        ]
+      },
+      "trust": {
+        "title": "Trust and Safety",
+        "content": "All promo codes are manually checked and verified. We only publish verified and actually working codes. If you find that a code doesn't work, let us know and we will update or remove it within 24 hours. Your savings are our top priority.",
+        "successRate": "98.5% Success Rate",
+        "verifiedDaily": "Verified Daily",
+        "monthlyUsers": "3,000+ Monthly Users"
+      }
+    },
+    "faq": {
+      "eyebrow": "Quick Answers",
+      "title": "Answers Shoppers Ask Before Using a Promocode",
+      "description": "This section quickly explains how PromoBozor works, how often deals are refreshed, and what to check before using a promocode.",
+      "seeAll": "Read all questions",
+      "verificationCta": "See how we verify promocodes",
+      "items": [
+        {
+          "question": "Which stores usually have the most active promocodes?",
+          "answer": "Yandex, Uzum, Click, Payme and other frequently updated partners usually have the largest number of active offers on PromoBozor."
+        },
+        {
+          "question": "How do I use a promocode from PromoBozor?",
+          "answer": "Open the offer, copy the code or activate the deal link, then paste the code during checkout on the store website or app."
+        },
+        {
+          "question": "Are promocodes on PromoBozor free?",
+          "answer": "Yes. Browsing, copying and using promocodes on PromoBozor is completely free for shoppers."
+        },
+        {
+          "question": "How often are deals updated?",
+          "answer": "Our team reviews offers every day, adds fresh submissions and removes expired or inactive deals as soon as they are confirmed."
+        },
+        {
+          "question": "What happens if a promocode stops working?",
+          "answer": "If a code no longer works, we recheck its conditions, expiration status and source page, then update or remove the listing."
+        },
+        {
+          "question": "How do you verify promocodes?",
+          "answer": "We review source pages, test code availability, check usage terms and monitor expiry dates before marking an offer as verified."
+        }
+      ]
+    }
+  },
+  "store": {
+    "title": "Store",
+    "h1Title": "{name} - Promocodes and Discounts",
+    "allStores": "All Stores - Promocodes and Discounts",
+    "allStoresDescription": "Compare verified promocodes, live discounts, and useful savings from popular stores in one place.",
+    "activeStores": "Active stores",
+    "promocodes": "Promocodes",
+    "activePromocodes": "Active promocodes",
+    "noPromocodes": "No active promocodes in this store yet",
+    "noPromocodesDescription": "There are no active offers for this store yet. Explore other stores or check back later.",
+    "noStoresFound": "No matching stores found",
+    "noStoresDescription": "There are no stores to show in this section yet. Please check back later.",
+    "searchHint": "Try another keyword or return to the list of popular stores",
+    "about": "About store",
+    "website": "Website",
+    "visitStore": "Visit Store",
+    "totalSaved": "Total Saved",
+    "popularPromocodes": "Popular Promocodes",
+    "findStore": "Search by store name",
+    "views": "Views",
+    "uses": "Uses",
+    "allPromocodes": "All Promocodes",
+    "featuredPromocodes": "Featured Promocodes",
+    "bestOffers": "Best Offers",
+    "checkBackLater": "Check back later",
+    "visitWebsite": "Visit Website",
+    "viewOffers": "View offers"
+  },
+  "category": {
+    "title": "Category",
+    "h1Title": "{name} - Promocodes and Discounts",
+    "allCategories": "All Categories - Promocodes and Coupons",
+    "allCategoriesDescription": "Explore verified promocodes, coupons, and discounts across shopping, food, travel, fintech, and other popular categories in Uzbekistan.",
+    "directoryKicker": "Savings by category",
+    "trustLabel": "Category overview",
+    "trustValue": "Active routes reviewed",
+    "trustDescription": "Browse categories with fresh offers, practical savings intent, and a faster path to relevant deals.",
+    "featuredLabel": "Popular route",
+    "featuredHint": "Start with the strongest categories for shopping, food delivery, fintech, and everyday services.",
+    "activeCategories": "Active categories",
+    "promocodes": "Promocodes",
+    "activePromocodes": "Active promocodes",
+    "noPromocodes": "No active promocodes in this category yet",
+    "noPromocodesDescription": "There are no active offers in this category yet. Explore other categories or check back later.",
+    "noCategoriesFound": "No matching categories found",
+    "noCategoriesDescription": "There are no categories to show in this section yet.",
+    "exploreCategory": "Explore Category",
+    "trending": "Trending Categories",
+    "views": "Views",
+    "uses": "Uses",
+    "allPromocodes": "All Promocodes",
+    "featuredPromocodes": "Featured Promocodes",
+    "bestOffers": "Best Offers",
+    "checkBackLater": "Check back later",
+    "viewOffers": "View offers",
+    "emptyCta": "Browse all offers"
+  },
+  "brand": {
+    "title": "Brand",
+    "h1Title": "{name} - Promocodes and Discounts",
+    "allBrands": "All Brands - Promocodes and Discounts",
+    "description": "Find verified coupons, bonus offers, and active discounts from popular brands with fresh updates for shoppers in Uzbekistan.",
+    "directoryKicker": "Curated brand offers",
+    "trustLabel": "Brand coverage",
+    "trustValue": "Verified brand savings",
+    "trustDescription": "Compare current offers from recognizable brands and move faster toward trusted savings paths.",
+    "featuredLabel": "Fresh brand",
+    "featuredHint": "Explore brands with visible discount activity, updated offers, and a clearer path to the best deal.",
+    "activeBrands": "Active brands",
+    "promocodes": "Promocodes",
+    "activePromocodes": "Active promocodes",
+    "noPromocodes": "No active promocodes for this brand yet",
+    "noPromocodesDescription": "There are no active offers for this brand yet. Explore other brands or check back later.",
+    "noBrandsFound": "No matching brands found",
+    "noBrandsDescription": "There are no brands to show in this section yet.",
+    "about": "About brand",
+    "officialWebsite": "Official Website",
+    "views": "Views",
+    "uses": "Uses",
+    "allPromocodes": "All Promocodes",
+    "featuredPromocodes": "Featured Promocodes",
+    "bestOffers": "Best Offers",
+    "checkBackLater": "Check back later",
+    "viewOffers": "View offers",
+    "emptyCta": "Explore active promocodes"
+  },
+  "promocode": {
+    "title": "Promocode Details",
+    "copyCode": "Get Code",
+    "copied": "Copied",
+    "codeCopied": "Code copied!",
+    "getCode": "Get Code",
+    "promoCode": "Promocode",
+    "promoLink": "Promo Link",
+    "showCode": "Show Code",
+    "useCode": "Use Code",
+    "activateLink": "Open Offer",
+    "activateLinkToGetDiscount": "Open the offer link to activate your discount",
+    "linkActivated": "Link activated!",
+    "redirecting": "Redirecting to store...",
+    "copyError": "Failed to copy",
+    "discount": "Discount",
+    "discountAmount": "Discount Amount",
+    "terms": "Terms & Conditions",
+    "termsConditions": "Terms of Use",
+    "termsAndConditions": "Terms & Conditions",
+    "description": "Description",
+    "details": "Details",
+    "howToUse": "How to Use",
+    "validUntil": "Valid Until",
+    "expiresOn": "Expires On",
+    "expiresSoon": "Expires Soon",
+    "expired": "Expired",
+    "active": "Active",
+    "exclusive": "Exclusive",
+    "verified": "Verified",
+    "related": "Related Offers",
+    "relatedOffers": "Related Offers",
+    "moreFrom": "More from",
+    "sharePromocode": "Share Promocode",
+    "reportIssue": "Report Issue",
+    "workingPromocode": "Does it work?",
+    "notWorking": "Not Working",
+    "isWorking": "Working",
+    "thanksForFeedback": "Thanks for feedback!",
+    "usedBy": "users used",
+    "successRate": "Success Rate",
+    "views": "Views",
+    "copies": "Copies",
+    "daysRemaining": "Days Remaining",
+    "expiryDate": "Expiry Date",
+    "share": "Share",
+    "amount": "Amount",
+    "percentage": "Percentage"
+  },
+  "filter": {
+    "filters": "Filters",
+    "store": "Store",
+    "category": "Category",
+    "brand": "Brand",
+    "sort": "Sort",
+    "sortBy": "Sort By",
+    "kicker": "Discovery controls",
+    "title": "Filter and sort offers faster",
+    "description": "Narrow by store, category, brand, and ranking logic before comparing cards.",
+    "activeFilters": "active filters",
+    "newest": "Newest First",
+    "popular": "Most Popular",
+    "ending": "Ending Soon",
+    "discount": "Best Discount",
+    "allStores": "All Stores",
+    "allCategories": "All Categories",
+    "allBrands": "All Brands",
+    "selectStore": "Select Store",
+    "selectCategory": "Select Category",
+    "selectBrand": "Select Brand",
+    "applyFilters": "Apply",
+    "clearFilters": "Clear",
+    "resetFilters": "Reset",
+    "showResults": "Show Results"
+  },
+  "search": {
+    "placeholder": "Search promocodes...",
+    "searching": "Searching...",
+    "noResults": "No results found",
+    "noResultsDescription": "No matching offers were found for this query. Try adjusting your keywords.",
+    "trySearching": "Try searching",
+    "popularSearches": "Popular Searches",
+    "recentSearches": "Recent Searches",
+    "clearHistory": "Clear History",
+    "searchResults": "Search Results",
+    "resultsFor": "results for"
+  },
+  "empty": {
+    "noPromocodes": "No promocodes found",
+    "noPromocodesDescription": "Try broader filters or explore other stores and categories.",
+    "noPromocodesHint": "You will usually get better results by clearing one filter, trying a broader store or category, or sorting by newest.",
+    "noStores": "No stores found",
+    "noStoresDescription": "No stores in this section yet. Please check back later.",
+    "noCategories": "No categories found",
+    "noCategoriesDescription": "No categories in this section yet. Please check back later.",
+    "noBrands": "No brands found",
+    "noBrandsDescription": "No brands in this section yet. Please check back later.",
+    "lowResultTitle": "Only a few offers match right now",
+    "lowResultDescription": "Try clearing one filter or switching the sort order to uncover more active savings routes.",
+    "resetFiltersCta": "Reset filters",
+    "noDescription": "No description available.",
+    "noData": "No data available",
+    "comeBackLater": "Come back later"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "welcome": "Welcome",
+    "statistics": "Statistics",
+    "manage": "Manage",
+    "add": "Add",
+    "addNew": "Add New",
+    "createNew": "Create New",
+    "total": "Total",
+    "active": "Active",
+    "inactive": "Inactive",
+    "draft": "Draft",
+    "published": "Published",
+    "actions": "Actions",
+    "name": "Name",
+    "slug": "Slug",
+    "image": "Image",
+    "icon": "Icon",
+    "description": "Description",
+    "metaTitle": "Meta Title",
+    "metaDescription": "Meta Description",
+    "status": "Status",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "confirmDelete": "Confirm deletion?",
+    "deleteWarning": "This action cannot be undone",
+    "successCreated": "Successfully created",
+    "successUpdated": "Successfully updated",
+    "successDeleted": "Successfully deleted",
+    "errorOccurred": "An error occurred",
+    "stores": "Stores",
+    "categories": "Categories",
+    "brands": "Brands",
+    "promocodes": "Promocodes",
+    "users": "Users",
+    "settings": "Settings",
+    "darkMode": "Dark Mode",
+    "language": "Language",
+    "profile": "Profile",
+    "role": "Role",
+    "telegram": {
+      "sendToTelegram": "Send to Telegram",
+      "sendNow": "Send Now",
+      "schedule": "Schedule",
+      "preview": "Preview",
+      "template": "Template",
+      "templates": {
+        "minimal": "Minimal",
+        "standard": "Standard",
+        "rich": "Rich"
+      },
+      "customMessage": "Custom message",
+      "customMessagePlaceholder": "Enter text...",
+      "scheduleFor": "When to send",
+      "history": "Send history",
+      "status": {
+        "pending": "Pending",
+        "scheduled": "Scheduled",
+        "sent": "Sent",
+        "failed": "Failed"
+      },
+      "broadcastCount": "Sent to users",
+      "viewOnChannel": "View on channel",
+      "templateInfo": {
+        "minimal": "Only title, discount and code",
+        "standard": "Title, store, description and code",
+        "rich": "All data, conditions and links"
+      },
+      "info": {
+        "channelLanguage": "Sent to channel in Uzbek",
+        "botLanguage": "Bot users receive in their language"
+      },
+      "success": "Promocode successfully sent!",
+      "sending": "Sending...",
+      "error": "Error sending"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidUrl": "Invalid URL address",
+    "minLength": "Minimum length is {min} characters",
+    "maxLength": "Maximum length is {max} characters",
+    "passwordMismatch": "Passwords do not match",
+    "invalidDate": "Invalid date",
+    "invalidNumber": "Invalid number",
+    "selectOption": "Select an option"
+  },
+  "meta": {
+    "defaultTitle": "PromoBozor — Deals and promo code marketplace",
+    "defaultDescription": "PromoBozor helps you find useful discounts, promo codes, and coupons in one place. Explore trusted offers for online stores and services and save more.",
+    "keywords": "promocode, discount, offers, coupons, uzbekistan, yandex, uzum"
+  },
+  "consent": {
+    "title": "Cookie and Data Usage",
+    "description": "We use cookies and similar technologies to improve your experience and analyze our site. By consenting, you allow us to process your personal data.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "settings": "Settings",
+    "save": "Save",
+    "cancel": "Cancel",
+    "necessary": "Necessary",
+    "analytics": "Analytics",
+    "marketing": "Marketing",
+    "necessaryDescription": "Necessary cookies for basic site functionality",
+    "analyticsDescription": "Cookies for site analysis and improvement",
+    "marketingDescription": "Cookies for personalized advertising",
+    "learnMore": "Learn More",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "faq": {
+    "title": "Promocode FAQ and Savings Questions",
+    "description": "Detailed answers about how promocodes work, how long they last, and how PromoBozor verifies savings for users in Uzbekistan.",
+    "questions": [
+      {
+        "question": "How do I use a promocode?",
+        "answer": "Using a promocode is simple and involves 3 easy steps. First, find the promocode you need on our site and click the 'Copy' button. The code will be automatically copied to your clipboard. Then, navigate to the store or service website — for example, Yandex Eats, Uzum, Click, or Payme. Once you've filled your shopping cart and proceed to checkout, you'll find a designated field labeled 'promocode', 'coupon', 'promo code', 'kupon', or 'code' on the payment page. Paste the code you copied from us into this field and click the 'Apply' button. If the code is valid and active, the discount will be automatically calculated and reflected in your total. Note: some stores may apply promocodes only to specific product categories or require a minimum purchase amount. You can find the terms and conditions for each promocode on our site. According to our verification, 98.5% of promocodes worked successfully in 2024."
+      },
+      {
+        "question": "How long are promocodes valid?",
+        "answer": "Each promocode has its own validity period determined by the store or service. The expiration date is clearly displayed on the promocode page. Some promocodes are valid indefinitely with no expiration date, but most are valid for 1-4 weeks, 1-3 months, or for limited-time special events. Once a promocode expires, it will no longer work and the discount will not be applied. That's why it's important to check the expiration date before using it. Our site clearly shows the expiration date for each promocode, and expired promocodes are automatically marked as 'expired'. Additionally, some stores may require using a promocode within a specific timeframe, such as within 24 hours of activation. In such cases, detailed information is provided in the promocode description."
+      },
+      {
+        "question": "Are promocodes free?",
+        "answer": "Yes, all promocodes are completely free. Using PromoBozor requires no payment whatsoever. Our mission is to find the best discounts for Uzbekistan users and compile them in one place. You don't pay anything to copy, use, or receive discounts from promocodes. We partner with stores and brands, but this comes at no additional cost to you. Unlike some sites, we don't require registration, collect personal information, or impose other conditions. We strive to make finding, accessing, and using promocodes as easy and convenient as possible. If you have questions, you can reach us via Telegram."
+      },
+      {
+        "question": "What should I do if a promocode doesn't work?",
+        "answer": "If a promocode doesn't work, first check its expiration date. Expired codes won't work. If the date hasn't passed, ensure you've entered the code correctly — some are case-sensitive. Also, read the promocode terms — there may be restrictions like minimum purchase amount, specific categories, or new customers only. If everything seems correct but the code still doesn't work, we recommend contacting the store's customer service. Also, please notify us — we'll verify and update or remove the promocode if needed. We rely on our users to help maintain promocode quality and resolve issues within 24 hours. You can reach us through our Telegram channel or the 'Report' button on the page."
+      },
+      {
+        "question": "How often are new promocodes added?",
+        "answer": "We add new promocodes every day and regularly update existing ones. Our team monitors daily the latest offers from the most popular stores and services in Uzbekistan. Yandex Eats, Uzum, Click, Payme, and other platforms announce new discounts and promotions daily, and we add them to our site immediately. Before special events and holidays — such as Navruz, Independence Day, or New Year — the number of promocodes increases significantly. To stay informed about the latest offers, check our site regularly or subscribe to our Telegram channel. We also create dedicated pages for popular stores where all current promocodes are collected."
+      }
+    ]
+  },
+  "privacy": {
+    "title": "PromoBozor Privacy Policy and Data Use",
+    "description": "Learn how PromoBozor collects, uses, protects, and stores visitor data, analytics information, and cookie preferences.",
+    "lastUpdated": "Last updated",
+    "sections": [
+      {
+        "title": "Data Collection",
+        "content": "We only collect information necessary to improve the site and enhance user experience. This includes cookies, analytics data, and user activity."
+      },
+      {
+        "title": "Cookies",
+        "content": "We use cookies for proper site functionality and to improve user experience. For detailed information about cookies, go to cookie settings."
+      },
+      {
+        "title": "Data Usage",
+        "content": "Collected data is used only for site improvement, analytics, and marketing purposes. Data is not shared with third parties."
+      },
+      {
+        "title": "Data Protection",
+        "content": "We use modern security technologies to securely store your data."
+      },
+      {
+        "title": "Contact",
+        "content": "For questions about privacy policy, please contact us."
+      }
+    ]
+  },
+  "terms": {
+    "title": "PromoBozor Terms of Service and Site Usage",
+    "description": "Review the rules for using PromoBozor, how promocode information is provided, and the limits of our platform responsibility.",
+    "lastUpdated": "Last updated",
+    "sections": [
+      {
+        "title": "Service Usage",
+        "content": "By using the PromoBozor site, you agree to these terms. The site should be used only for personal and non-commercial purposes."
+      },
+      {
+        "title": "Promocodes",
+        "content": "We do not guarantee the accuracy of promocodes. Each promocode is managed by the respective store or service. If a promocode doesn't work, we are not responsible."
+      },
+      {
+        "title": "Intellectual Property",
+        "content": "All site content belongs to PromoBozor. Copying or distributing content without permission is prohibited."
+      },
+      {
+        "title": "Liability Limitation",
+        "content": "We are not responsible for any damage resulting from the use of promocodes."
+      },
+      {
+        "title": "Terms Changes",
+        "content": "We reserve the right to change these terms at any time. Changes will be announced on the site."
+      }
+    ]
+  },
+  "promocodesPage": {
+    "title": "All Promocodes",
+    "description": "Best verified promocodes and discounts",
+    "metaTitle": "All Promocodes - Best Discounts | PromoBozor",
+    "metaDescription": "All active promocodes and discounts in Uzbekistan. Find the best offers from Yandex, Uzum, Click and other popular stores!"
+  },
+  "contact": {
+    "title": "Contact Us - PromoBozor Support",
+    "description": "Contact PromoBozor customer support for help with promocodes, reporting issues, or feedback. We're here to assist you with any questions!",
+    "subtitle": "If you have questions or suggestions, please contact us",
+    "contactInfo": "Contact Information",
+    "sendMessage": "Send a Message",
+    "email": "Email",
+    "emailValue": "jahongirergawev2@gmail.com",
+    "telegram": "Telegram",
+    "address": "Address",
+    "addressValue": "Tashkent, Uzbekistan",
+    "workingHours": "Working Hours",
+    "workingHoursValue": "Monday - Friday: 9:00 - 18:00",
+    "form": {
+      "name": "Name",
+      "phone": "Phone Number",
+      "phoneHint": "Example: +998901234567",
+      "phoneRequired": "Phone number is required",
+      "invalidOperatorCode": "Invalid mobile operator code",
+      "invalidPhoneFormat": "Invalid phone format. Use: +998XXXXXXXXX, 998XXXXXXXXX, or 90XXXXXXX",
+      "invalidPhoneNumber": "Invalid phone number",
+      "websiteHoneypot": "Website (leave blank)",
+      "message": "Message",
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Message sent successfully!",
+      "error": "An error occurred. Please try again."
+    }
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you are looking for does not exist or has been removed.",
+    "goHome": "Go to Homepage",
+    "popularPages": "Popular Pages",
+    "orSearch": "Or try searching for promocodes"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "tryAgain": "Try again",
+    "goHome": "Go home"
+  },
+  "about": {
+    "title": "About PromoBozor and Our Editorial Standards",
+    "description": "PromoBozor is a shopper-focused platform in Uzbekistan where verified promocodes, useful discounts, and clear usage terms are gathered in one place.",
+    "heroTitle": "About PromoBozor",
+    "heroDescription": "PromoBozor helps shoppers discover useful, clear, and trustworthy offers for everyday online purchases in Uzbekistan.",
+    "missionTitle": "Our Mission",
+    "missionDescription": "PromoBozor brings working promocodes and discounts together for the Uzbekistan market so shoppers can save time and find better-value offers faster.",
+    "howWeWork": "How We Work",
+    "howWeWorkDescription": "Our team reviews the source, expiry status, and usage conditions behind each offer. Expired, misleading, or low-confidence listings are updated or removed quickly.",
+    "statsTitle": "By the Numbers",
+    "statsStores": "Stores",
+    "statsCategories": "Categories",
+    "statsPromocodes": "Active Promo Codes",
+    "statsUsers": "Daily Users",
+    "whyUsTitle": "Why Choose Us?",
+    "reason1Title": "Verified Codes",
+    "reason1Description": "Every promo code is manually verified by our team",
+    "reason2Title": "Daily Updates",
+    "reason2Description": "New promo codes are added daily and expired ones are removed",
+    "reason3Title": "Free Service",
+    "reason3Description": "Using our platform is completely free",
+    "reason4Title": "3 Languages",
+    "reason4Description": "Available in Uzbek, Russian, and English",
+    "contactTitle": "Contact Us",
+    "contactDescription": "If you have a question, a partnership idea, or a broken code to report, reach out to our team.",
+    "founder": {
+      "badge": "Meet the Founder",
+      "name": "Jahongir Ergashev",
+      "role": "Founder and Full-stack Developer",
+      "bio": "Jahongir is a full-stack developer with 3+ years of experience in e-commerce and the promocode industry in Uzbekistan. He built PromoBozor to provide shoppers in Uzbekistan with a local source of verified promocodes instead of scattered, outdated coupon lists.",
+      "credentials": "3+ years e-commerce experience • Next.js & TypeScript specialist • Leading expert on promocodes in Uzbekistan's online market",
+      "quote": "We would rather publish fewer offers than leave shoppers with expired or misleading codes.",
+      "highlightsTitle": "What the founder focuses on",
+      "highlights": [
+        "Manual review of local brand campaigns and checkout rules",
+        "Cleaning up expired, duplicated and low-confidence offers",
+        "Building a multilingual savings resource for shoppers in Uzbekistan",
+        "Daily monitoring of new offers from 50+ stores"
+      ],
+      "experienceTitle": "Editorial standards behind the platform",
+      "experience": [
+        {
+          "title": "Market focus",
+          "description": "PromoBozor is built for Uzbekistan-first shopping behavior, payments and store categories."
+        },
+        {
+          "title": "Verification habit",
+          "description": "Every offer is checked for clarity, conditions and freshness before it is promoted."
+        },
+        {
+          "title": "Reader trust",
+          "description": "Listings are refreshed quickly when shoppers report an issue or a code expires."
+        }
+      ],
+      "cta": "See how we verify promocodes"
+    }
+  },
+  "verification": {
+    "title": "How We Verify Promocodes Before Publishing",
+    "description": "Learn how PromoBozor reviews sources, checks validity, confirms conditions, and refreshes promocodes before they appear on the site.",
+    "heroBadge": "Editorial Standards",
+    "heroTitle": "How PromoBozor Verifies Every Promocode",
+    "heroDescription": "We treat each offer like editorial content: source review, manual checks, terms validation and ongoing freshness monitoring for shoppers in Uzbekistan.",
+    "stepsTitle": "Our Verification Workflow",
+    "stepsDescription": "Every public offer goes through the same repeatable review process before it is labelled as active on PromoBozor.",
+    "steps": [
+      {
+        "title": "Source collection",
+        "description": "We collect offers from official brand pages, app screens, newsletters and campaign landing pages relevant to Uzbekistan."
+      },
+      {
+        "title": "Manual validation",
+        "description": "We review discount details, entry conditions, eligible products and whether the offer applies to local shoppers."
+      },
+      {
+        "title": "Freshness check",
+        "description": "We confirm start dates, expiry windows and whether the promocode or deal link is still visible on the source page."
+      },
+      {
+        "title": "Editorial publish",
+        "description": "Only clear, understandable offers with enough context are published with title, discount amount and usage conditions."
+      },
+      {
+        "title": "Ongoing cleanup",
+        "description": "Expired, misleading or duplicated deals are edited or removed as soon as we confirm they are no longer useful."
+      }
+    ],
+    "standardsTitle": "What an Offer Must Include",
+    "standardsDescription": "We prefer fewer high-quality offers over publishing low-confidence codes.",
+    "standards": [
+      {
+        "title": "Clear savings value",
+        "description": "The discount amount, bonus or benefit must be understandable before a shopper clicks through."
+      },
+      {
+        "title": "Usable conditions",
+        "description": "Minimum spend, first-order limits, product exclusions and regional restrictions must be stated."
+      },
+      {
+        "title": "Local relevance",
+        "description": "We prioritize offers that work for shoppers in Uzbekistan and match the store's local checkout flow."
+      }
+    ],
+    "exclusionsTitle": "What We Do Not Keep Published",
+    "exclusions": [
+      "Expired or inactive promocodes",
+      "Offers with unclear terms or hidden limitations",
+      "Duplicate listings for the same store campaign",
+      "Promotions we cannot trace to a reliable source"
+    ],
+    "ctaTitle": "Need Help With a Specific Code?",
+    "ctaDescription": "If you find an inactive or confusing promocode, send it to us. Reader feedback helps us refresh listings faster.",
+    "ctaPrimary": "Contact the team",
+    "ctaSecondary": "Read the FAQ"
+  }
+}

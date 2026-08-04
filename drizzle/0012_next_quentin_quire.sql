@@ -1,0 +1,1 @@
+CREATE INDEX "promocodes_created_by_id_idx" ON "promocodes" USING btree ("created_by_id");

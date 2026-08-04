@@ -1,0 +1,313 @@
+import { getBaseUrl } from "@/lib/metadata";
+import { MetadataRoute } from "next";
+
+import {
+  brands,
+  brandTranslations,
+  categories,
+  categoryTranslations,
+  db,
+  promocodes,
+  promocodeTranslations,
+  stores,
+  storeTranslations,
+} from "@/lib/db";
+import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
+
+export async function generateSitemaps() {
+  // Next.js will generate 3 sitemaps: /sitemap/uz.xml, /sitemap/ru.xml, /sitemap/en.xml
+  return [{ id: "uz" }, { id: "ru" }, { id: "en" }];
+}
+
+export default async function sitemap({
+  id,
+}: {
+  id: Promise<string>;
+}): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = getBaseUrl();
+  const now = new Date();
+  const locale = (await id) as "uz" | "ru" | "en";
+  const sitemapEntries: MetadataRoute.Sitemap = [];
+
+  // Homepage entry
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}`,
+    lastModified: now,
+    changeFrequency: "daily",
+    priority: 1.0,
+    alternates: {
+      languages: {
+        "x-default": `${baseUrl}/uz`,
+        uz: `${baseUrl}/uz`,
+        ru: `${baseUrl}/ru`,
+        en: `${baseUrl}/en`,
+      },
+    },
+  });
+
+  // List pages
+  const listPages = ["stores", "categories", "brands", "promocodes"];
+  for (const page of listPages) {
+    sitemapEntries.push({
+      url: `${baseUrl}/${locale}/${page}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          "x-default": `${baseUrl}/uz/${page}`,
+          uz: `${baseUrl}/uz/${page}`,
+          ru: `${baseUrl}/ru/${page}`,
+          en: `${baseUrl}/en/${page}`,
+        },
+      },
+    });
+  }
+
+  // Static pages
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}/faq`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  });
+
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}/privacy`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  });
+
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}/terms`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  });
+
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}/contact`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  });
+
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}/about`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  });
+
+  sitemapEntries.push({
+    url: `${baseUrl}/${locale}/how-we-verify-promocodes`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.7,
+    alternates: {
+      languages: {
+        "x-default": `${baseUrl}/uz/how-we-verify-promocodes`,
+        uz: `${baseUrl}/uz/how-we-verify-promocodes`,
+        ru: `${baseUrl}/ru/how-we-verify-promocodes`,
+        en: `${baseUrl}/en/how-we-verify-promocodes`,
+      },
+    },
+  });
+
+  // Dynamic pages
+  // Store pages
+  try {
+    // All stores data with translations for alternates
+    const allStoreTranslations = await db
+      .select({
+        storeId: storeTranslations.storeId,
+        language: storeTranslations.language,
+        slug: storeTranslations.slug,
+        updatedAt: stores.updatedAt,
+      })
+      .from(storeTranslations)
+      .innerJoin(stores, eq(storeTranslations.storeId, stores.id))
+      .where(eq(stores.isActive, true));
+
+    // Group translations by storeId
+    const storeMap = new Map<string, { language: string; slug: string }[]>();
+    allStoreTranslations.forEach((row) => {
+      if (!storeMap.has(row.storeId)) storeMap.set(row.storeId, []);
+      storeMap.get(row.storeId)!.push({ language: row.language, slug: row.slug });
+    });
+
+    for (const [storeId, translations] of storeMap.entries()) {
+      const currentTranslation = translations.find((t) => t.language === locale);
+      if (!currentTranslation) continue;
+
+      const languages: Record<string, string> = {};
+      translations.forEach((t) => {
+        languages[t.language] = `${baseUrl}/${t.language}/store/${t.slug}`;
+      });
+
+      // x-default: primary language (uz)
+      const uzTranslation = translations.find((t) => t.language === "uz");
+      if (uzTranslation) {
+        languages["x-default"] = `${baseUrl}/uz/store/${uzTranslation.slug}`;
+      }
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}/store/${currentTranslation.slug}`,
+        lastModified: allStoreTranslations.find((t) => t.storeId === storeId)?.updatedAt || now,
+        changeFrequency: "daily",
+        priority: 0.7,
+        alternates: { languages },
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching stores for sitemap:", error);
+  }
+
+  // Category pages
+  try {
+    const allCategoryTranslations = await db
+      .select({
+        categoryId: categoryTranslations.categoryId,
+        language: categoryTranslations.language,
+        slug: categoryTranslations.slug,
+        updatedAt: categories.updatedAt,
+      })
+      .from(categoryTranslations)
+      .innerJoin(categories, eq(categoryTranslations.categoryId, categories.id))
+      .where(eq(categories.isActive, true));
+
+    const categoryMap = new Map<string, { language: string; slug: string }[]>();
+    allCategoryTranslations.forEach((row) => {
+      if (!categoryMap.has(row.categoryId)) categoryMap.set(row.categoryId, []);
+      categoryMap.get(row.categoryId)!.push({ language: row.language, slug: row.slug });
+    });
+
+    for (const [categoryId, translations] of categoryMap.entries()) {
+      const currentTranslation = translations.find((t) => t.language === locale);
+      if (!currentTranslation) continue;
+
+      const languages: Record<string, string> = {};
+      translations.forEach((t) => {
+        languages[t.language] = `${baseUrl}/${t.language}/category/${t.slug}`;
+      });
+
+      const uzTranslation = translations.find((t) => t.language === "uz");
+      if (uzTranslation) {
+        languages["x-default"] = `${baseUrl}/uz/category/${uzTranslation.slug}`;
+      }
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}/category/${currentTranslation.slug}`,
+        lastModified:
+          allCategoryTranslations.find((t) => t.categoryId === categoryId)?.updatedAt || now,
+        changeFrequency: "daily",
+        priority: 0.7,
+        alternates: { languages },
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching categories for sitemap:", error);
+  }
+
+  // Brand pages
+  try {
+    const allBrandTranslations = await db
+      .select({
+        brandId: brandTranslations.brandId,
+        language: brandTranslations.language,
+        slug: brandTranslations.slug,
+        updatedAt: brands.updatedAt,
+      })
+      .from(brandTranslations)
+      .innerJoin(brands, eq(brandTranslations.brandId, brands.id))
+      .where(eq(brands.isActive, true));
+
+    const brandMap = new Map<string, { language: string; slug: string }[]>();
+    allBrandTranslations.forEach((row) => {
+      if (!brandMap.has(row.brandId)) brandMap.set(row.brandId, []);
+      brandMap.get(row.brandId)!.push({ language: row.language, slug: row.slug });
+    });
+
+    for (const [brandId, translations] of brandMap.entries()) {
+      const currentTranslation = translations.find((t) => t.language === locale);
+      if (!currentTranslation) continue;
+
+      const languages: Record<string, string> = {};
+      translations.forEach((t) => {
+        languages[t.language] = `${baseUrl}/${t.language}/brand/${t.slug}`;
+      });
+
+      const uzTranslation = translations.find((t) => t.language === "uz");
+      if (uzTranslation) {
+        languages["x-default"] = `${baseUrl}/uz/brand/${uzTranslation.slug}`;
+      }
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}/brand/${currentTranslation.slug}`,
+        lastModified: allBrandTranslations.find((t) => t.brandId === brandId)?.updatedAt || now,
+        changeFrequency: "daily",
+        priority: 0.7,
+        alternates: { languages },
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching brands for sitemap:", error);
+  }
+
+  // Promocode pages (only active and not expired)
+  try {
+    const allPromocodeTranslations = await db
+      .select({
+        promocodeId: promocodeTranslations.promocodeId,
+        language: promocodeTranslations.language,
+        slug: promocodeTranslations.slug,
+        updatedAt: promocodes.updatedAt,
+      })
+      .from(promocodeTranslations)
+      .innerJoin(promocodes, eq(promocodeTranslations.promocodeId, promocodes.id))
+      .where(
+        and(
+          eq(promocodes.status, "active"),
+          or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
+          or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
+        )
+      );
+
+    const promocodeMap = new Map<string, { language: string; slug: string }[]>();
+    allPromocodeTranslations.forEach((row) => {
+      if (!promocodeMap.has(row.promocodeId)) promocodeMap.set(row.promocodeId, []);
+      promocodeMap.get(row.promocodeId)!.push({ language: row.language, slug: row.slug });
+    });
+
+    for (const [promocodeId, translations] of promocodeMap.entries()) {
+      const currentTranslation = translations.find((t) => t.language === locale);
+      if (!currentTranslation) continue;
+
+      const languages: Record<string, string> = {};
+      translations.forEach((t) => {
+        languages[t.language] = `${baseUrl}/${t.language}/promocode/${t.slug}`;
+      });
+
+      const uzTranslation = translations.find((t) => t.language === "uz");
+      if (uzTranslation) {
+        languages["x-default"] = `${baseUrl}/uz/promocode/${uzTranslation.slug}`;
+      }
+
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}/promocode/${currentTranslation.slug}`,
+        lastModified:
+          allPromocodeTranslations.find((t) => t.promocodeId === promocodeId)?.updatedAt || now,
+        changeFrequency: "daily",
+        priority: 0.6,
+        alternates: { languages },
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching promocodes for sitemap:", error);
+  }
+
+  return sitemapEntries;
+}
+
+export const revalidate = 3600; // Update sitemap every hour

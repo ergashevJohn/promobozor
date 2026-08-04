@@ -1,0 +1,161 @@
+name: Weekly DB Backup
+
+on:
+  schedule:
+    # Sunday 02:00 UZT (Saturday 21:00 UTC)
+    - cron: "0 21 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-backup-weekly
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Build backup metadata
+        id: meta
+        run: |
+          set -euo pipefail
+
+          TS_UTC=$(date -u +"%Y-%m-%d_%H-%M-%S_UTC")
+          FILE_NAME="promocode-full-${TS_UTC}.dump"
+          LOCAL_PATH="/tmp/${FILE_NAME}"
+
+          echo "timestamp_utc=${TS_UTC}" >> "$GITHUB_OUTPUT"
+          echo "file_name=${FILE_NAME}" >> "$GITHUB_OUTPUT"
+          echo "local_path=${LOCAL_PATH}" >> "$GITHUB_OUTPUT"
+
+      - name: Create PostgreSQL dump
+        env:
+          BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKUP_DATABASE_URL:-}" ]; then
+            echo "BACKUP_DATABASE_URL is not configured." >&2
+            exit 1
+          fi
+
+          pg_dump \
+            "${BACKUP_DATABASE_URL}" \
+            --format=custom \
+            --no-owner \
+            --no-privileges \
+            --file "${{ steps.meta.outputs.local_path }}"
+
+      - name: Generate checksum
+        id: checksum
+        run: |
+          set -euo pipefail
+
+          cd /tmp
+          sha256sum "${{ steps.meta.outputs.file_name }}" > "${{ steps.meta.outputs.file_name }}.sha256"
+
+          SIZE_BYTES=$(stat -c%s "${{ steps.meta.outputs.file_name }}")
+          CHECKSUM=$(cut -d' ' -f1 "${{ steps.meta.outputs.file_name }}.sha256")
+
+          echo "size_bytes=${SIZE_BYTES}" >> "$GITHUB_OUTPUT"
+          echo "checksum=${CHECKSUM}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure S3 credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.BACKUP_S3_REGION }}
+
+      - name: Upload dump to S3/R2
+        id: upload
+        env:
+          BACKUP_S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+          BACKUP_S3_PREFIX: ${{ secrets.BACKUP_S3_PREFIX }}
+          BACKUP_S3_ENDPOINT: ${{ secrets.BACKUP_S3_ENDPOINT }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKUP_S3_BUCKET:-}" ]; then
+            echo "BACKUP_S3_BUCKET is not configured." >&2
+            exit 1
+          fi
+
+          PREFIX="${BACKUP_S3_PREFIX:-db-backups}"
+          PREFIX="${PREFIX%/}"
+          OBJECT_KEY="${PREFIX}/weekly/${{ steps.meta.outputs.file_name }}"
+          CHECKSUM_KEY="${OBJECT_KEY}.sha256"
+
+          AWS_ARGS=()
+          if [ -n "${BACKUP_S3_ENDPOINT:-}" ]; then
+            AWS_ARGS+=(--endpoint-url "${BACKUP_S3_ENDPOINT}")
+          fi
+
+          aws "${AWS_ARGS[@]}" s3 cp \
+            "${{ steps.meta.outputs.local_path }}" \
+            "s3://${BACKUP_S3_BUCKET}/${OBJECT_KEY}"
+
+          aws "${AWS_ARGS[@]}" s3 cp \
+            "/tmp/${{ steps.meta.outputs.file_name }}.sha256" \
+            "s3://${BACKUP_S3_BUCKET}/${CHECKSUM_KEY}"
+
+          echo "object_key=${OBJECT_KEY}" >> "$GITHUB_OUTPUT"
+          echo "checksum_key=${CHECKSUM_KEY}" >> "$GITHUB_OUTPUT"
+
+      - name: Send Telegram copy (secondary)
+        id: telegram
+        continue-on-error: true
+        env:
+          BACKUP_TELEGRAM_BOT_TOKEN: ${{ secrets.BACKUP_TELEGRAM_BOT_TOKEN }}
+          BACKUP_TELEGRAM_CHAT_ID: ${{ secrets.BACKUP_TELEGRAM_CHAT_ID }}
+          TELEGRAM_MAX_FILE_SIZE_BYTES: ${{ vars.TELEGRAM_MAX_FILE_SIZE_BYTES }}
+          BACKUP_S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+          BACKUP_S3_ENDPOINT: ${{ secrets.BACKUP_S3_ENDPOINT }}
+          BACKUP_S3_REGION: ${{ secrets.BACKUP_S3_REGION }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKUP_TELEGRAM_BOT_TOKEN:-}" ] || [ -z "${BACKUP_TELEGRAM_CHAT_ID:-}" ]; then
+            echo "Telegram backup copy skipped: BACKUP_TELEGRAM_BOT_TOKEN or BACKUP_TELEGRAM_CHAT_ID is missing."
+            exit 0
+          fi
+
+          node --import tsx scripts/backup/send-to-telegram.ts \
+            --file "${{ steps.meta.outputs.local_path }}" \
+            --object-key "${{ steps.upload.outputs.object_key }}" \
+            --checksum "${{ steps.checksum.outputs.checksum }}" \
+            --size-bytes "${{ steps.checksum.outputs.size_bytes }}" \
+            --bucket "${BACKUP_S3_BUCKET}" \
+            --endpoint "${BACKUP_S3_ENDPOINT}" \
+            --region "${BACKUP_S3_REGION}" \
+            --timestamp-utc "${{ steps.meta.outputs.timestamp_utc }}"
+
+      - name: Alert if Telegram copy failed
+        if: steps.telegram.outcome == 'failure'
+        run: |
+          echo "::warning::Primary S3 backup succeeded, but Telegram secondary copy failed. Check workflow logs."
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Weekly DB Backup Result"
+            echo ""
+            echo "- File: \`${{ steps.meta.outputs.file_name }}\`"
+            echo "- Size: \`${{ steps.checksum.outputs.size_bytes }} bytes\`"
+            echo "- SHA256: \`${{ steps.checksum.outputs.checksum }}\`"
+            echo "- S3 key: \`${{ steps.upload.outputs.object_key }}\`"
+            echo "- Telegram step outcome: \`${{ steps.telegram.outcome }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

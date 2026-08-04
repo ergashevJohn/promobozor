@@ -1,0 +1,116 @@
+/**
+ * SEO Redirects and 410 Gone Handling
+ */
+
+import { db, redirects } from "@/lib/db";
+import { and, eq } from "drizzle-orm";
+
+const MAX_REDIRECT_HOPS = 5;
+
+type RedirectLookup = (fromPath: string) => Promise<string | null>;
+
+/**
+ * Resolve redirect chains to a single final target.
+ * Returns null when no redirect exists or when an invalid/looping chain is detected.
+ */
+export async function resolveRedirectChain(
+  startPath: string,
+  lookup: RedirectLookup,
+  maxHops: number = MAX_REDIRECT_HOPS
+): Promise<string | null> {
+  const normalizedStart = startPath.trim();
+  if (!normalizedStart) {
+    return null;
+  }
+
+  let currentPath = normalizedStart;
+  let hasRedirect = false;
+  const visitedPaths = new Set<string>([normalizedStart]);
+
+  for (let hop = 0; hop < maxHops; hop += 1) {
+    const nextPath = await lookup(currentPath);
+    if (!nextPath) {
+      return hasRedirect ? currentPath : null;
+    }
+
+    const normalizedNextPath = nextPath.trim();
+    if (!normalizedNextPath || normalizedNextPath === currentPath) {
+      return null;
+    }
+
+    if (visitedPaths.has(normalizedNextPath)) {
+      return null;
+    }
+
+    visitedPaths.add(normalizedNextPath);
+    currentPath = normalizedNextPath;
+    hasRedirect = true;
+  }
+
+  // Chain exceeded maxHops. If another redirect exists, treat as invalid.
+  const overflowPath = await lookup(currentPath);
+  if (overflowPath && overflowPath.trim() && overflowPath.trim() !== currentPath) {
+    return null;
+  }
+
+  return hasRedirect ? currentPath : null;
+}
+
+/**
+ * Check database for redirects (for old slugs after slug unification)
+ * @param fullPath - Full path including locale, e.g., "/en/brand/uzum-bank-en"
+ * @returns The path to redirect to, or null if no redirect found
+ */
+export async function getRedirectPath(fullPath: string): Promise<string | null> {
+  try {
+    return await resolveRedirectChain(fullPath, async (fromPath) => {
+      const [redirect] = await db
+        .select({ toPath: redirects.toPath })
+        .from(redirects)
+        .where(and(eq(redirects.fromPath, fromPath), eq(redirects.isActive, true)))
+        .limit(1);
+
+      return redirect?.toPath || null;
+    });
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * List of slugs that are permanently removed (410 Gone)
+ * Format: "type:slug" or Just "slug"
+ */
+export const GONE_SLUGS = new Set<string>([
+  // Example: "promo:old-expired-promocode",
+]);
+
+function getGoneTypeAliases(type: string): string[] {
+  const normalizedType = type.trim().toLowerCase();
+
+  // Keep backwards compatibility between legacy "promo" and current "promocode".
+  if (normalizedType === "promo" || normalizedType === "promocode") {
+    return ["promo", "promocode"];
+  }
+
+  return [normalizedType];
+}
+
+/**
+ * Check if a slug is permanently gone
+ */
+export function isGone(type: string, slug: string): boolean {
+  const normalizedSlug = slug.trim();
+
+  if (!normalizedSlug) {
+    return false;
+  }
+
+  for (const alias of getGoneTypeAliases(type)) {
+    if (GONE_SLUGS.has(`${alias}:${normalizedSlug}`)) {
+      return true;
+    }
+  }
+
+  return GONE_SLUGS.has(normalizedSlug);
+}

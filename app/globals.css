@@ -1,0 +1,266 @@
+@import "tailwindcss";
+/* tw-animate-css removed to reduce unused CSS */
+/* If animations are needed, use Tailwind's built-in animate utilities */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-brand-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-accent-red: var(--accent-red);
+  --color-accent-foreground-red: var(--accent-foreground-red);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+:root {
+  --radius: 0.875rem;
+  --background: #ffffff;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #111827;
+  --primary-foreground: #ffffff;
+  --secondary: #f8fafc;
+  --secondary-foreground: #111827;
+  --muted: #f8fafc;
+  --muted-foreground: #6b7280;
+  --accent: #fff1ee;
+  --accent-foreground: #111827;
+  --accent-red: #ff5a4f;
+  --accent-foreground-red: #ffffff;
+  --destructive: #dc2626;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #ff5a4f;
+  --chart-1: #ff5a4f;
+  --chart-2: #111827;
+  --chart-3: #16a34a;
+  --chart-4: #f59e0b;
+  --chart-5: #6b7280;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #111827;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f8fafc;
+  --sidebar-accent-foreground: #111827;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #ff5a4f;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #111827;
+  --card-foreground: #f8fafc;
+  --popover: #111827;
+  --popover-foreground: #f8fafc;
+  --primary: #ff5a4f;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f8fafc;
+  --muted: #172033;
+  --muted-foreground: #cbd5e1;
+  --accent: #172033;
+  --accent-foreground: #f8fafc;
+  --accent-red: #ff5a4f;
+  --accent-foreground-red: #ffffff;
+  --destructive: #ef4444;
+  --border: rgba(229, 231, 235, 0.14);
+  --input: rgba(229, 231, 235, 0.16);
+  --ring: #ff5a4f;
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #ff5a4f;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #172033;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: rgba(229, 231, 235, 0.14);
+  --sidebar-ring: #ff5a4f;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 90, 79, 0.08), transparent 26%),
+      radial-gradient(circle at top right, rgba(17, 24, 39, 0.05), transparent 24%),
+      linear-gradient(180deg, rgba(248, 250, 252, 0.75), rgba(255, 255, 255, 0));
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .brand-kicker {
+    @apply text-muted-foreground inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/90 px-3 py-1 text-xs font-semibold tracking-[0.14em] uppercase;
+  }
+
+  .brand-panel {
+    @apply border-border rounded-[28px] border bg-white/90 shadow-[0_24px_80px_-48px_rgba(17,24,39,0.35)] backdrop-blur;
+  }
+
+  .brand-hero {
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 90, 79, 0.14), transparent 26%),
+      radial-gradient(circle at 80% 0%, rgba(17, 24, 39, 0.08), transparent 24%),
+      linear-gradient(180deg, rgba(248, 250, 252, 0.9), rgba(255, 255, 255, 0.96));
+  }
+
+  .brand-section-heading {
+    @apply text-foreground text-3xl font-semibold tracking-tight md:text-4xl;
+  }
+
+  .brand-chip {
+    @apply text-muted-foreground inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/85 px-4 py-2 text-sm font-medium shadow-[0_10px_40px_-28px_rgba(17,24,39,0.5)];
+  }
+
+  .page-shell {
+    @apply container mx-auto px-6 lg:px-8;
+  }
+
+  .page-hero-surface {
+    @apply relative overflow-hidden rounded-[28px] border border-[color:var(--border)] bg-white/90 p-8 shadow-[0_24px_80px_-48px_rgba(17,24,39,0.35)] backdrop-blur md:p-10 lg:p-12;
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 90, 79, 0.12), transparent 24%),
+      linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98));
+  }
+
+  .page-hero-heading {
+    @apply text-foreground text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl;
+  }
+
+  .page-hero-copy {
+    @apply text-muted-foreground max-w-3xl text-lg leading-8 md:text-xl;
+  }
+
+  .metric-card {
+    @apply rounded-[24px] border border-white/80 bg-white/90 p-5 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.45)];
+  }
+
+  .empty-state-card {
+    @apply rounded-[28px] border border-[color:var(--border)] bg-white px-8 py-14 text-center shadow-[0_24px_70px_-54px_rgba(17,24,39,0.45)];
+  }
+
+  .content-prose-panel {
+    @apply rounded-[24px] border border-[color:var(--border)] bg-white/90 p-6 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.3)];
+  }
+
+  .filter-shell {
+    @apply rounded-[28px] border border-[color:var(--border)] bg-white/92 p-5 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.3)] md:p-6;
+  }
+}
+
+/* Rich text content styles for Quill editor output */
+.rich-text-content {
+  @apply text-foreground;
+}
+
+.rich-text-content p {
+  @apply mb-4 leading-7;
+}
+
+.rich-text-content h1 {
+  @apply mt-6 mb-4 text-3xl font-bold;
+}
+
+.rich-text-content h2 {
+  @apply mt-5 mb-3 text-2xl font-bold;
+}
+
+.rich-text-content h3 {
+  @apply mt-4 mb-3 text-xl font-bold;
+}
+
+.rich-text-content h4 {
+  @apply mt-4 mb-2 text-lg font-bold;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  @apply mb-4 ml-6 list-disc;
+}
+
+.rich-text-content ol {
+  @apply list-decimal;
+}
+
+.rich-text-content li {
+  @apply mb-1;
+}
+
+.rich-text-content strong {
+  @apply font-bold;
+}
+
+.rich-text-content em {
+  @apply italic;
+}
+
+.rich-text-content u {
+  @apply underline;
+}
+
+.rich-text-content s {
+  @apply line-through;
+}
+
+.rich-text-content a {
+  @apply text-primary hover:text-primary/80 underline;
+}
+
+.rich-text-content code {
+  @apply bg-muted rounded px-1.5 py-0.5 font-mono text-sm;
+}
+
+.rich-text-content pre {
+  @apply bg-muted mb-4 rounded-lg p-4;
+}
+
+.rich-text-content pre code {
+  @apply bg-transparent p-0;
+}
+
+.rich-text-content blockquote {
+  @apply border-primary text-muted-foreground mb-4 border-l-4 pl-4 italic;
+}

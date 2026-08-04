@@ -1,0 +1,153 @@
+name: Monthly Backup Restore Check
+
+on:
+  schedule:
+    # Monthly on day 1 at 02:30 UZT (21:30 UTC previous day)
+    - cron: "30 21 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-restore-check-monthly
+  cancel-in-progress: false
+
+jobs:
+  restore-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: restore_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d restore_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Configure S3 credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.BACKUP_S3_REGION }}
+
+      - name: Download latest backup from S3/R2
+        id: latest
+        env:
+          BACKUP_S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+          BACKUP_S3_PREFIX: ${{ secrets.BACKUP_S3_PREFIX }}
+          BACKUP_S3_ENDPOINT: ${{ secrets.BACKUP_S3_ENDPOINT }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKUP_S3_BUCKET:-}" ]; then
+            echo "BACKUP_S3_BUCKET is not configured." >&2
+            exit 1
+          fi
+
+          PREFIX="${BACKUP_S3_PREFIX:-db-backups}"
+          PREFIX="${PREFIX%/}"
+          SEARCH_PREFIX="${PREFIX}/weekly/"
+
+          AWS_ARGS=()
+          if [ -n "${BACKUP_S3_ENDPOINT:-}" ]; then
+            AWS_ARGS+=(--endpoint-url "${BACKUP_S3_ENDPOINT}")
+          fi
+
+          LATEST_KEY=$(aws "${AWS_ARGS[@]}" s3api list-objects-v2 \
+            --bucket "${BACKUP_S3_BUCKET}" \
+            --prefix "${SEARCH_PREFIX}" \
+            --query 'sort_by(Contents,&LastModified)[-1].Key' \
+            --output text)
+
+          if [ -z "${LATEST_KEY}" ] || [ "${LATEST_KEY}" = "None" ]; then
+            echo "No backup file found at prefix ${SEARCH_PREFIX}." >&2
+            exit 1
+          fi
+
+          CHECKSUM_KEY="${LATEST_KEY}.sha256"
+
+          aws "${AWS_ARGS[@]}" s3 cp "s3://${BACKUP_S3_BUCKET}/${LATEST_KEY}" /tmp/latest-backup.dump
+          aws "${AWS_ARGS[@]}" s3 cp "s3://${BACKUP_S3_BUCKET}/${CHECKSUM_KEY}" /tmp/latest-backup.dump.sha256
+
+          EXPECTED_SHA=$(awk 'NR==1{print $1}' /tmp/latest-backup.dump.sha256)
+          ACTUAL_SHA=$(sha256sum /tmp/latest-backup.dump | awk '{print $1}')
+
+          if [ "${EXPECTED_SHA}" != "${ACTUAL_SHA}" ]; then
+            echo "Checksum mismatch for latest backup." >&2
+            echo "Expected: ${EXPECTED_SHA}" >&2
+            echo "Actual:   ${ACTUAL_SHA}" >&2
+            exit 1
+          fi
+
+          echo "key=${LATEST_KEY}" >> "$GITHUB_OUTPUT"
+          echo "checksum=${ACTUAL_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore latest backup into test database
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+
+          pg_restore \
+            --clean \
+            --if-exists \
+            --no-owner \
+            --no-privileges \
+            --host localhost \
+            --port 5432 \
+            --username postgres \
+            --dbname restore_test \
+            /tmp/latest-backup.dump
+
+      - name: Run restore smoke checks
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+
+          TABLE_COUNT=$(psql -h localhost -p 5432 -U postgres -d restore_test -tAc "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE';")
+          echo "Public table count: ${TABLE_COUNT}"
+
+          if [ "${TABLE_COUNT}" -lt 5 ]; then
+            echo "Unexpectedly low table count after restore." >&2
+            exit 1
+          fi
+
+          REQUIRED_TABLES=(users stores categories brands promocodes)
+          for TABLE in "${REQUIRED_TABLES[@]}"; do
+            EXISTS=$(psql -h localhost -p 5432 -U postgres -d restore_test -tAc "SELECT to_regclass('public.${TABLE}') IS NOT NULL;")
+            if [ "${EXISTS}" != "t" ]; then
+              echo "Missing required table after restore: ${TABLE}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Monthly Restore Check Result"
+            echo ""
+            echo "- Restored backup key: \`${{ steps.latest.outputs.key }}\`"
+            echo "- Verified SHA256: \`${{ steps.latest.outputs.checksum }}\`"
+            echo "- Smoke checks: completed"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,673 @@
+import { Breadcrumbs } from "@/components/public/Breadcrumbs";
+import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
+import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
+import { ItemListSchema } from "@/components/public/ItemListSchema";
+import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
+import StructuredData from "@/components/public/StructuredData";
+import { Link } from "@/i18n/navigation";
+import type { Promocode } from "@/components/public/types";
+import { getCachedCategoryPromocodeCounts } from "@/lib/cache/promocode-counts";
+import {
+  brands,
+  brandTranslations,
+  categories,
+  categoryTranslations,
+  db,
+  promocodes,
+  promocodeTranslations,
+  stores,
+  storeTranslations,
+} from "@/lib/db";
+import { isValidLanguage } from "@/lib/i18n";
+import {
+  generateCategoryDescription,
+  generateCategoryTitle,
+  generateFullMetadata,
+  generateOgImageUrl,
+  getBaseUrl,
+} from "@/lib/metadata";
+import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
+import type { Metadata } from "next";
+import { getMessages, getTranslations } from "next-intl/server";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { isGone } from "@/lib/redirects";
+import { NotFoundUI } from "@/components/public/NotFoundUI";
+
+export async function generateStaticParams() {
+  // Skip static generation for categories - render dynamically
+  return [];
+}
+
+// This route cannot be statically rendered because the app root layout reads
+// request headers (`x-nonce`, `x-pathname`) from proxy.ts. Leaving the detail
+// page in ISR mode causes Next.js to throw DYNAMIC_SERVER_USAGE in production.
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+
+  if (!isValidLanguage(locale)) {
+    return {};
+  }
+  const t = await getTranslations({ locale, namespace: "category" });
+  const categoryTitle = t("title");
+
+  // 410 Gone check
+  if (isGone("category", slug)) {
+    return {
+      title: "Gone",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  try {
+    const [categoryData] = await db
+      .select({
+        category: categories,
+        translation: categoryTranslations,
+      })
+      .from(categories)
+      .innerJoin(
+        categoryTranslations,
+        and(
+          eq(categoryTranslations.categoryId, categories.id),
+          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
+          eq(categoryTranslations.slug, slug)
+        )
+      )
+      .where(
+        and(
+          eq(categoryTranslations.slug, slug),
+          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
+          eq(categories.isActive, true)
+        )
+      )
+      .limit(1);
+
+    if (!categoryData) {
+      return {};
+    }
+
+    const translation = categoryData.translation;
+
+    // Get promocode counts from cache (5-min cache for performance)
+    const counts = await getCachedCategoryPromocodeCounts(categoryData.category.id);
+    const totalPromocodes = counts?.total ?? 0;
+    const totalStores = counts?.storeCount ?? 0;
+
+    // Generate SEO-optimized title and description
+    const title =
+      translation?.metaTitle ||
+      generateCategoryTitle(translation?.name || categoryTitle, totalPromocodes, locale);
+    const description =
+      translation?.metaDescription ||
+      generateCategoryDescription(
+        translation?.name || categoryTitle,
+        translation?.description || null,
+        totalPromocodes,
+        totalStores,
+        locale
+      );
+    const url = `/${locale}/category/${slug}`;
+
+    // Generate dynamic OG image
+    const ogImage = generateOgImageUrl({
+      title: translation?.name || categoryTitle,
+      description: translation?.description || description,
+      type: "category",
+      logo: categoryData.category.imageUrl || undefined,
+    });
+
+    // Get all language slugs for this category
+    const allTranslations = await db
+      .select({
+        language: categoryTranslations.language,
+        slug: categoryTranslations.slug,
+      })
+      .from(categoryTranslations)
+      .where(eq(categoryTranslations.categoryId, categoryData.category.id));
+
+    const languageAlternates: Record<string, string> = {};
+    allTranslations.forEach((t) => {
+      languageAlternates[t.language] = `/${t.language}/category/${t.slug}`;
+    });
+
+    return generateFullMetadata(
+      title,
+      description,
+      url,
+      ogImage,
+      "website",
+      locale,
+      "",
+      languageAlternates
+    );
+  } catch {
+    return {};
+  }
+}
+
+export const revalidate = 1800;
+
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+
+  if (!isValidLanguage(locale)) {
+    notFound();
+  }
+
+  // 410 Gone check
+  if (isGone("category", slug)) {
+    const messages = await getMessages();
+    return <NotFoundUI locale={locale} messages={messages} statusCode="410" />;
+  }
+
+  // Fetch category by slug
+  let categoryData;
+  let allPromocodes: Promocode[] = [];
+  let totalPromocodesCount = 0;
+  let featuredPromocodesCount = 0;
+  let totalViews = 0;
+  let totalCopies = 0;
+  let category;
+  let categoryTranslation;
+
+  try {
+    [categoryData] = await db
+      .select({
+        category: categories,
+        translation: categoryTranslations,
+      })
+      .from(categories)
+      .innerJoin(
+        categoryTranslations,
+        and(
+          eq(categoryTranslations.categoryId, categories.id),
+          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
+          eq(categoryTranslations.slug, slug)
+        )
+      )
+      .where(
+        and(
+          eq(categoryTranslations.slug, slug),
+          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
+          eq(categories.isActive, true)
+        )
+      )
+      .limit(1);
+
+    if (!categoryData) {
+      notFound();
+    }
+
+    category = categoryData.category;
+    categoryTranslation = categoryData.translation;
+
+    // Fetch promocodes for this category (exclude draft only)
+    const now = new Date();
+    const baseConditions = [
+      eq(promocodes.categoryId, category.id),
+      ne(promocodes.status, "draft"), // Exclude draft, show all others
+      or(isNull(promocodes.storeId), eq(stores.isActive, true)),
+      // Note: Allow expired promocodes to show
+      or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now)),
+    ];
+
+    const statsQuery = db
+      .select({
+        total: sql<number>`COUNT(*)::int`.as("total"),
+        featured: sql<number>`COUNT(*) FILTER (WHERE ${promocodes.isFeatured} = true)::int`.as(
+          "featured"
+        ),
+        totalViews: sql<number>`COALESCE(SUM(${promocodes.viewsCount}), 0)::int`.as("total_views"),
+        totalCopies: sql<number>`COALESCE(SUM(${promocodes.copyCount}), 0)::int`.as("total_copies"),
+      })
+      .from(promocodes)
+      .leftJoin(stores, eq(promocodes.storeId, stores.id))
+      .where(and(...baseConditions));
+
+    const allQuery = db
+      .select({
+        promocode: promocodes,
+        store: stores,
+        storeTranslation: storeTranslations,
+        category: categories,
+        categoryTranslation: categoryTranslations,
+        brand: brands,
+        brandTranslation: brandTranslations,
+        promocodeTranslation: promocodeTranslations,
+      })
+      .from(promocodes)
+      .leftJoin(stores, eq(promocodes.storeId, stores.id))
+      .innerJoin(categories, eq(promocodes.categoryId, categories.id))
+      .leftJoin(brands, eq(promocodes.brandId, brands.id))
+      .leftJoin(
+        promocodeTranslations,
+        and(
+          eq(promocodeTranslations.promocodeId, promocodes.id),
+          eq(promocodeTranslations.language, locale as "uz" | "ru" | "en")
+        )
+      )
+      .leftJoin(
+        storeTranslations,
+        and(
+          eq(storeTranslations.storeId, stores.id),
+          eq(storeTranslations.language, locale as "uz" | "ru" | "en")
+        )
+      )
+      .leftJoin(
+        categoryTranslations,
+        and(
+          eq(categoryTranslations.categoryId, categories.id),
+          eq(categoryTranslations.language, locale as "uz" | "ru" | "en")
+        )
+      )
+      .leftJoin(
+        brandTranslations,
+        and(
+          eq(brandTranslations.brandId, brands.id),
+          eq(brandTranslations.language, locale as "uz" | "ru" | "en")
+        )
+      )
+      .where(and(...baseConditions))
+      .orderBy(desc(promocodes.isFeatured), asc(promocodes.order))
+      .limit(20);
+
+    const [statsResult, allData] = await Promise.all([statsQuery, allQuery]);
+
+    const stats = statsResult[0];
+    totalPromocodesCount = stats?.total || 0;
+    featuredPromocodesCount = stats?.featured || 0;
+    totalViews = stats?.totalViews || 0;
+    totalCopies = stats?.totalCopies || 0;
+
+    const mapPromocode = (row: {
+      promocode: typeof promocodes.$inferSelect;
+      store: typeof stores.$inferSelect | null;
+      storeTranslation: typeof storeTranslations.$inferSelect | null;
+      category: typeof categories.$inferSelect | null;
+      categoryTranslation: typeof categoryTranslations.$inferSelect | null;
+      brand: typeof brands.$inferSelect | null;
+      brandTranslation: typeof brandTranslations.$inferSelect | null;
+      promocodeTranslation: typeof promocodeTranslations.$inferSelect | null;
+    }): Promocode => ({
+      id: row.promocode.id,
+      type: row.promocode.type as "code" | "link",
+      code: row.promocode.code,
+      link: row.promocode.link,
+      discountType: row.promocode.discountType,
+      discountValue: row.promocode.discountValue,
+      currency: row.promocode.currency,
+      originalPrice:
+        "originalPrice" in row.promocode
+          ? ((row.promocode as { originalPrice?: number | null }).originalPrice ?? null)
+          : null,
+      imageUrl:
+        "imageUrl" in row.promocode
+          ? ((row.promocode as { imageUrl?: string | null }).imageUrl ?? null)
+          : null,
+      isFeatured: row.promocode.isFeatured,
+      status: row.promocode.status,
+      viewsCount: row.promocode.viewsCount,
+      copyCount: row.promocode.copyCount,
+      likesCount: row.promocode.likesCount,
+      dislikesCount: row.promocode.dislikesCount,
+      expiresAt: row.promocode.expiresAt?.toISOString() || null,
+      translations: row.promocodeTranslation
+        ? [{ ...row.promocodeTranslation, slug: row.promocodeTranslation.slug }]
+        : [],
+      store: row.store
+        ? {
+            id: row.store.id,
+            logoUrl: row.store.logoUrl,
+            websiteUrl: row.store.websiteUrl,
+            translations: row.storeTranslation ? [{ ...row.storeTranslation }] : [],
+          }
+        : null,
+      category:
+        row.category && row.categoryTranslation
+          ? {
+              id: row.category.id,
+              imageUrl: row.category.imageUrl,
+              translations: [{ ...row.categoryTranslation, slug: row.categoryTranslation.slug }],
+            }
+          : null,
+      brand:
+        row.brand && row.brandTranslation
+          ? {
+              id: row.brand.id,
+              imageUrl: row.brand.imageUrl,
+              websiteUrl: row.brand.websiteUrl,
+              translations: [{ ...row.brandTranslation, slug: row.brandTranslation.slug }],
+            }
+          : null,
+    });
+
+    allPromocodes = allData.map(mapPromocode);
+  } catch (error) {
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+    console.error(`Error fetching category (slug: ${slug}, locale: ${locale}):`, errorObj);
+    notFound();
+  }
+
+  const t = await getTranslations({ locale, namespace: "category" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tEmpty = await getTranslations({ locale, namespace: "empty" });
+  const tCard = await getTranslations({ locale, namespace: "card" });
+  const tPromocode = await getTranslations({ locale, namespace: "promocode" });
+  const tStore = await getTranslations({ locale, namespace: "store" });
+  const categoryTitle = t("title");
+  const promocodeTitle = tPromocode("title");
+  const storeTitle = tStore("title");
+  const schemaPromocodes = allPromocodes.slice(0, 20);
+  const uniqueStoreCount = new Set(allPromocodes.map((item) => item.store?.id).filter(Boolean))
+    .size;
+  const uniqueBrandCount = new Set(allPromocodes.map((item) => item.brand?.id).filter(Boolean))
+    .size;
+  const relatedStores = Array.from(
+    new Map(
+      allPromocodes
+        .filter((item) => item.store?.translations?.[0]?.slug)
+        .map((item) => [
+          item.store?.id,
+          {
+            id: item.store?.id || "",
+            name: item.store?.translations?.[0]?.name || "",
+            slug: item.store?.translations?.[0]?.slug || "",
+          },
+        ])
+    ).values()
+  ).slice(0, 4);
+  const relatedBrands = Array.from(
+    new Map(
+      allPromocodes
+        .filter((item) => item.brand?.translations?.[0]?.slug)
+        .map((item) => [
+          item.brand?.id,
+          {
+            id: item.brand?.id || "",
+            name: item.brand?.translations?.[0]?.name || "",
+            slug: item.brand?.translations?.[0]?.slug || "",
+          },
+        ])
+    ).values()
+  ).slice(0, 4);
+
+  // Build breadcrumbs with full hierarchy
+  const breadcrumbItems = [
+    { name: tCommon("categories"), url: `/categories` },
+    {
+      name: categoryTranslation?.name || categoryTitle,
+      url: `/category/${slug}`,
+    },
+  ];
+
+  const baseUrl = getBaseUrl();
+
+  return (
+    <>
+      <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
+      <StructuredData
+        type="Category"
+        data={{ ...category, translations: [categoryTranslation] }}
+        lang={locale}
+        baseUrl={baseUrl}
+        promocodeCount={totalPromocodesCount}
+        entityDescription={categoryTranslation?.description || undefined}
+      />
+      <EntityFAQSchema
+        entityName={categoryTranslation?.name || categoryTitle}
+        entityType="category"
+        locale={locale}
+      />
+      {schemaPromocodes.length > 0 && (
+        <ItemListSchema
+          items={schemaPromocodes.map((promocode) => {
+            const translation = promocode.translations[0];
+            return {
+              name: translation?.title || promocodeTitle,
+              url: `/promocode/${translation?.slug || promocode.id}`,
+              image: promocode.imageUrl || undefined,
+              description: translation?.conditions || undefined,
+            };
+          })}
+          listName={`${categoryTranslation?.name || categoryTitle} ${t("promocodes")}`}
+          listDescription={`${t("activePromocodes")} ${categoryTranslation?.name || categoryTitle}`}
+        />
+      )}
+      <div>
+        <div className="page-shell py-6">
+          <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+        </div>
+        {/* Hero Section */}
+        <div className="page-shell pb-10">
+          <div className="page-hero-surface">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]">
+              <div>
+                <div className="mb-6 flex items-center gap-4">
+                  {category.imageUrl ? (
+                    <div className="bg-card border-border relative flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
+                      <Image
+                        src={category.imageUrl}
+                        alt={
+                          categoryTranslation?.name
+                            ? `${categoryTranslation.name} - ${tCommon("altCategoryImage")}`
+                            : tCommon("altCategoryImageWithSlug", { slug })
+                        }
+                        fill
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="bg-card flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] text-4xl md:size-20"
+                      aria-hidden="true"
+                    >
+                      📦
+                    </div>
+                  )}
+                  <div className="brand-kicker !mb-0">Market overview</div>
+                </div>
+                <h1 className="text-foreground mb-2 text-4xl font-semibold md:text-5xl">
+                  {t("h1Title", { name: categoryTranslation?.name || categoryTitle })}
+                </h1>
+                {categoryTranslation?.metaDescription && (
+                  <p className="text-muted-foreground max-w-3xl text-lg">
+                    {categoryTranslation.metaDescription}
+                  </p>
+                )}
+                <div className="mt-6 grid gap-4 md:grid-cols-3">
+                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                    <div className="text-3xl font-semibold text-[color:var(--foreground)]">
+                      {totalPromocodesCount}
+                    </div>
+                    <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                      {t("activePromocodes")}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                    <div className="text-3xl font-semibold text-[color:var(--foreground)]">
+                      {uniqueStoreCount}
+                    </div>
+                    <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                      store routes
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                    <div className="text-3xl font-semibold text-[color:var(--foreground)]">
+                      {uniqueBrandCount}
+                    </div>
+                    <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                      brand contexts
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                <div className="rounded-[28px] border border-[color:var(--accent-red)]/12 bg-[linear-gradient(160deg,rgba(255,90,79,0.08),rgba(255,255,255,0.97)_40%,rgba(248,250,252,0.96)_100%)] p-5 shadow-[0_24px_60px_-44px_rgba(255,90,79,0.35)]">
+                  <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
+                    Category snapshot
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                    Compare featured density, category popularity, and which routes currently drive
+                    the most savings in this topic.
+                  </p>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
+                      {tCommon("featured")}
+                    </div>
+                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
+                      {featuredPromocodesCount}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
+                      {t("views")}
+                    </div>
+                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
+                      {totalViews}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)] sm:col-span-2">
+                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
+                      {t("uses")}
+                    </div>
+                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
+                      {totalCopies}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="page-shell py-12">
+          <section className="mb-10 grid gap-4 lg:grid-cols-2">
+            <div className="rounded-[26px] border border-white/80 bg-white/92 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+              <div className="brand-kicker mb-3">Stores in this category</div>
+              <p className="text-muted-foreground mb-4 text-sm leading-6">
+                Browse the stores that are most active inside this category’s current savings map.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {relatedStores.length > 0 ? (
+                  relatedStores.map((store) => (
+                    <Link
+                      key={store.id}
+                      href={`/store/${store.slug}`}
+                      className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
+                    >
+                      {store.name}
+                    </Link>
+                  ))
+                ) : (
+                  <span className="text-sm text-[color:var(--muted-foreground)]">
+                    No linked stores yet.
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="rounded-[26px] border border-white/80 bg-white/92 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+              <div className="brand-kicker mb-3">Brands in this category</div>
+              <p className="text-muted-foreground mb-4 text-sm leading-6">
+                Follow related brands to compare who is currently driving the strongest offers here.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {relatedBrands.length > 0 ? (
+                  relatedBrands.map((brand) => (
+                    <Link
+                      key={brand.id}
+                      href={`/brand/${brand.slug}`}
+                      className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
+                    >
+                      {brand.name}
+                    </Link>
+                  ))
+                ) : (
+                  <span className="text-sm text-[color:var(--muted-foreground)]">
+                    No linked brands yet.
+                  </span>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* All Promocodes */}
+          <section>
+            <div className="mb-8">
+              <div className="brand-kicker mb-3">Best offers in this category</div>
+              <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
+              <p className="text-muted-foreground mt-2">
+                Explore live savings inside {categoryTranslation?.name || categoryTitle}, with
+                active offers across stores and related brands.
+              </p>
+            </div>
+            {totalPromocodesCount > 0 ? (
+              <PromocodeListWithPagination
+                initialPromocodes={allPromocodes}
+                totalCount={totalPromocodesCount}
+                limit={20}
+                filters={{
+                  categoryId: category.id,
+                }}
+                translations={{
+                  noPromocodes: tEmpty("noPromocodes"),
+                  noPromocodesDescription: tEmpty("noPromocodesDescription"),
+                  card: {
+                    featured: tCard("featured"),
+                    verified: tCard("verified"),
+                    fresh: tCard("fresh"),
+                    popular: tCard("popular"),
+                    endingSoon: tPromocode("expiresSoon"),
+                    unlimited: tCard("unlimited"),
+                    unknownStore: tCard("unknownStore"),
+                    storeTitle,
+                    promocodeTitle,
+                    activateLink: tCard("activateLink"),
+                    details: tCard("details"),
+                    viewDetails: tCard("viewDetails"),
+                    storeOffer: tCard("storeOffer"),
+                    brandOffer: tCard("brandOffer"),
+                    directDeal: tCard("directDeal"),
+                    codeReady: tCard("codeReady"),
+                    dealRoute: tCard("dealRoute"),
+                    promoCodeLabel: tCard("promoCodeLabel"),
+                    copy: tCard("copy"),
+                    copied: tCard("copied"),
+                    getDeal: tCard("getDeal"),
+                    like: tCard("like"),
+                    dislike: tCard("dislike"),
+                    expired: tCard("expired"),
+                    disabled: tCard("disabled"),
+                    codeCopied: tPromocode("codeCopied"),
+                    copyError: tPromocode("copyError"),
+                  },
+                }}
+              />
+            ) : totalPromocodesCount === 0 ? (
+              <div className="empty-state-card">
+                <div className="mb-4 text-6xl" aria-hidden="true">
+                  🔍
+                </div>
+                <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
+                <p className="text-muted-foreground">{t("checkBackLater")}</p>
+              </div>
+            ) : null}
+          </section>
+        </div>
+      </div>
+    </>
+  );
+}

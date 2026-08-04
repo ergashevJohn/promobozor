@@ -1,0 +1,125 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1768004370521,
+      "tag": "0000_shallow_molten_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768045053330,
+      "tag": "0001_outstanding_carmella_unuscione",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768095839652,
+      "tag": "0002_dry_paper_doll",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1768097733031,
+      "tag": "0003_powerful_richard_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1768141315866,
+      "tag": "0004_simple_black_panther",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768141664623,
+      "tag": "0005_big_ben_grimm",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1768407291474,
+      "tag": "0006_mighty_black_crow",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1768858111723,
+      "tag": "0007_zippy_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1768901582024,
+      "tag": "0008_puzzling_wind_dancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1769990400000,
+      "tag": "0009_add_fulltext_search_and_2fa",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1769594019051,
+      "tag": "0010_outstanding_genesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1770299601369,
+      "tag": "0011_tired_vertigo",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1772300198735,
+      "tag": "0012_next_quentin_quire",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1772300567486,
+      "tag": "0013_wide_princess_powerful",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1772464434754,
+      "tag": "0014_minor_proudstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1774851208078,
+      "tag": "0015_empty_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1785836254711,
+      "tag": "0016_organic_exiles",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,966 @@
+{
+  "common": {
+    "home": "Bosh sahifa",
+    "stores": "Do'konlar",
+    "categories": "Kategoriyalar",
+    "brands": "Brendlar",
+    "promocodes": "Promokodlar",
+    "view": "Ko'rish",
+    "viewAll": "Hammasini ko'rish",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "search": "Qidirish",
+    "searchPlaceholder": "Do'kon, brend yoki promokod qidiring",
+    "noResults": "Natijalar topilmadi",
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik yuz berdi",
+    "tryAgain": "Qayta urinib ko'ring",
+    "all": "Barcha",
+    "featured": "Tavsiya",
+    "verified": "Tekshirilgan",
+    "expires": "Tugaydi",
+    "views": "Ko'rishlar",
+    "copies": "Nusxalar",
+    "likes": "Yoqdi",
+    "dislikes": "Yoqmadi",
+    "clear": "Tozalash",
+    "loadMore": "Yana ko'rsatish",
+    "offersFound": "ta takliflar topildi",
+    "offers": "takliflar",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "create": "Yaratish",
+    "back": "Orqaga",
+    "next": "Keyingi",
+    "previous": "Oldingi",
+    "page": "Sahifa",
+    "close": "Yopish",
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish",
+    "toggleTheme": "Mavzuni almashtirish",
+    "skipToContent": "Asosiy kontentga o'tish",
+    "breadcrumb": "Navigatsiya yo'li",
+    "pagination": "Sahifalash",
+    "confirm": "Tasdiqlash",
+    "yes": "Ha",
+    "no": "Yo'q",
+    "currency": "UZS",
+    "pageNotFound": "Sahifa topilmadi",
+    "pageNotFoundDescription": "Kechirasiz, siz qidirayotgan sahifa mavjud emas yoki o'chirilgan.",
+    "goHome": "Bosh sahifaga qaytish",
+    "popularPages": "Mashhur sahifalar",
+    "orSearchPromocodes": "Yoki promokodlarni qidirib ko'ring:",
+    "viewAllStores": "Barcha do'konlarni ko'rish",
+    "viewCategories": "Kategoriyalarni ko'rish",
+    "lastUpdated": "Oxirgi yangilanish",
+    "firstPublished": "Birinchi nashr",
+    "readingTime": "daqiqa o'qish",
+    "minutes": "daqiqa",
+    "author": "Muallif",
+    "experience": "tajriba",
+    "years": "yil",
+    "expertise": "Mutaxassislik",
+    "viewBrands": "Brendlarni ko'rish",
+    "contact": "Aloqa",
+    "altStoreLogo": "Do'kon logosi",
+    "altStoreLogoWithSlug": "Do'kon logosi - {slug} sahifasi",
+    "altBrandLogo": "Brend logosi",
+    "altBrandLogoWithSlug": "Brend logosi - {slug} sahifasi",
+    "altCategoryImage": "Kategoriya rasmi",
+    "altCategoryImageWithSlug": "Kategoriya rasmi - {slug} sahifasi"
+  },
+  "LocaleLayout": {
+    "title": "PromoBozor — Chegirmalar va promokodlar bozori",
+    "description": "PromoBozor — foydali chegirmalar, promokodlar va kuponlarni bir joyda toping. Online do'konlar va servislar uchun eng yaxshi takliflarni ko'ring va xaridda ko'proq tejang."
+  },
+  "header": {
+    "title": "PromoBozor",
+    "tagline": "Chegirmalar va promokodlar bozori",
+    "menu": "Menyu"
+  },
+  "footer": {
+    "about": "Biz haqimizda",
+    "contact": "Aloqa",
+    "privacy": "Maxfiylik siyosati",
+    "terms": "Foydalanish shartlari",
+    "verification": "Promokodlarni qanday tekshiramiz",
+    "allRights": "Barcha huquqlar himoyalangan",
+    "description": "PromoBozor foydalanuvchilarga turli do'kon va xizmatlar uchun foydali promokodlar va chegirmalarni bir joyda topishga yordam beradi.",
+    "quickLinks": "Tezkor havolalar",
+    "legal": "Huquqiy ma'lumotlar",
+    "socialMedia": "Ijtimoiy tarmoqlar",
+    "followUs": "Ijtimoiy tarmoqlarda bizga qo'shiling",
+    "socialDescription": "Yangi promokodlar va chegirmalar uchun bizni kuzating",
+    "newsletter": "Yangiliklar",
+    "newsletterPlaceholder": "Email manzilingiz",
+    "subscribe": "Obuna bo'lish",
+    "copyright": "© 2026 PromoBozor. Barcha huquqlar himoyalangan.",
+    "createdBy": "Muallif"
+  },
+  "home": {
+    "title": "Chegirmalar va promokodlarni bir joyda toping",
+    "subtitle": "Online do'konlar, servislar va marketplace'lar uchun tekshirilgan takliflarni toping, shartlarini tez tushuning va xaridda ko'proq tejang.",
+    "description": "PromoBozor orqali online xaridlar uchun foydali, saralangan va ishonchli promokodlar hamda chegirmalarni toping.",
+    "featuredPromocodes": "Tavsiya etilgan promokod va chegirmalar",
+    "featuredDescription": "Qo'lda saralangan, dolzarb va foyda beradigan takliflar",
+    "allPromocodes": "Barcha tekshirilgan promokodlar",
+    "allPromocodesDescription": "Barcha aktiv chegirmalar va takliflar",
+    "popularStores": "Mashhur do'konlar",
+    "popularCategories": "Mashhur kategoriyalar",
+    "popularBrands": "Mashhur brendlar",
+    "trustPills": ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Tez va qulay qidiruv"],
+    "heroInsight": {
+      "label": "PromoBozor insight",
+      "title": "Marketplace, food delivery, bank va servislar uchun foydali takliflar",
+      "tags": ["Promo", "Kupon", "Tejash"]
+    },
+    "heroCards": {
+      "focus": {
+        "label": "Fokus",
+        "title": "Ishonchli va tushunarli promokodlar"
+      },
+      "cta": {
+        "label": "Natija",
+        "title": "Tez toping, xotirjam ishlating"
+      }
+    },
+    "overhaul": {
+      "heroQuickLinks": [
+        { "label": "Yangi takliflar", "href": "/uz/promocodes" },
+        { "label": "Food delivery", "href": "/uz/categories" },
+        { "label": "Top do'konlar", "href": "/uz/stores" },
+        { "label": "Ishonchli brendlar", "href": "/uz/brands" }
+      ],
+      "featured": {
+        "eyebrow": "Hozir foydali takliflar",
+        "description": "Tezroq qaror qilishga yordam beradigan, ayni paytda foyda berishi ehtimoli yuqori bo'lgan takliflar."
+      },
+      "routes": {
+        "eyebrow": "Niyat bo'yicha boshlang",
+        "title": "O'zingizga mos tejash yo'lini tez tanlang",
+        "description": "Oddiy kupon katalogini varaqlash o'rniga, hozir nima uchun tejamoqchi bo'lsangiz, o'sha yo'nalishdan to'g'ridan-to'g'ri boshlang.",
+        "cta": "Barcha takliflarni ko'rish",
+        "cardCta": "Yo'nalishni ochish",
+        "items": [
+          {
+            "kicker": "Yangi saralash",
+            "title": "Avval eng yangi tekshirilgan takliflarni ko'ring",
+            "description": "Yaqinda qayta ko'rib chiqilgan va darhol foyda berish ehtimoli yuqori bo'lgan takliflardan boshlang.",
+            "href": "/uz/promocodes"
+          },
+          {
+            "kicker": "Store finder",
+            "title": "Ishlatadigan do'koningizga to'g'ridan-to'g'ri o'ting",
+            "description": "Qaysi do'konda xarid qilishingizni bilsangiz, store bo'yicha tejash variantlarini tez toping.",
+            "href": "/uz/stores"
+          },
+          {
+            "kicker": "Kategoriya xaritasi",
+            "title": "Yetkazib berish, bank va marketplace takliflarini solishtiring",
+            "description": "Kategoriya bo'yicha yurib, food delivery, moliya, servis va boshqa yo'nalishlardagi foydali variantlarni ko'ring.",
+            "href": "/uz/categories"
+          },
+          {
+            "kicker": "Brend yo'llari",
+            "title": "Mashhur brendlar atrofidagi saralangan takliflarni ko'ring",
+            "description": "Tanishingiz bo'lgan nomlar ichida o'xshash takliflarni taqqoslash uchun brand sahifalaridan foydalaning.",
+            "href": "/uz/brands"
+          }
+        ]
+      },
+      "proof": {
+        "eyebrow": "Yangiligi va isboti",
+        "title": "Tejash taklifi qachon ishonchli ko'rinadi? Kontekst aniq bo'lganda",
+        "description": "PromoBozor foydalanuvchiga faqat taklifning o'zini emas, balki uni hozir nega ishlatish xavfsizroq ekanini ham ko'rsatishi kerak.",
+        "items": [
+          {
+            "title": "Har kunlik qayta ko'rib chiqish",
+            "description": "Ko'p ishlatiladigan takliflar muntazam tekshiriladi, shuning uchun eskirgan promolar uzoq turib qolmaydi."
+          },
+          {
+            "title": "Devordek uzun emas, ishlatiladigan shartlar",
+            "description": "Taklifdan foydalanishdan oldin aynan muhim bo'lgan shartlarni oldindan ko'rsatamiz."
+          },
+          {
+            "title": "Shovqin emas, tekshiruv birinchi",
+            "description": "Katalogni to'ldirishdan ko'ra, ishonsa bo'ladigan va foydali taklif muhimroq."
+          },
+          {
+            "title": "Bir joyda bir nechta bozordan tejash",
+            "description": "Marketplace, bank, servis va delivery takliflari bitta savings workflow ichida jamlanadi."
+          }
+        ]
+      },
+      "guide": {
+        "eyebrow": "Qaror berishga yordam",
+        "title": "Foydalanuvchi birinchi ko'rgan kodni emas, mos taklifni tanlashi kerak",
+        "description": "Kuchliroq PromoBozor tajribasi takliflarni qanday solishtirishni, qaysi dealga ishonish mumkinligini va qachon kod, qachon to'g'ridan-to'g'ri deal ishlatish kerakligini tushuntiradi.",
+        "primaryCta": "Tekshirish jarayonimizni ko'rish",
+        "secondaryCta": "Ko'p beriladigan savollar",
+        "items": [
+          {
+            "title": "Checkoutdan oldin yangiligini tekshiring",
+            "description": "Taklif yaqinda tekshirilgan bo'lsa, foydalanuvchi uning hanuz ishlashiga ko'proq ishonadi."
+          },
+          {
+            "title": "Nusxalashdan oldin shartni ko'ring",
+            "description": "Minimum summa, yangi foydalanuvchi limiti va to'lov cheklovlari boshidanoq aniq ko'rinishi kerak."
+          },
+          {
+            "title": "Tasodifiy qidirish emas, solishtirish yo'lidan yuring",
+            "description": "Store, kategoriya va brand bo'yicha yo'llar foydalanuvchini tezroq toraytirishi, chalkashtirmasligi kerak."
+          }
+        ]
+      },
+      "browse": {
+        "stores": {
+          "eyebrow": "Store-first savings",
+          "description": "Qayerdan xarid qilishingizni bilsangiz, store sahifalari sizni eng aktiv va foydali takliflarga tezroq olib boradi.",
+          "featuredLabel": "Bu haftadagi top yo'nalish",
+          "featuredCta": "Store takliflarini ko'rish"
+        },
+        "categories": {
+          "eyebrow": "Niyat bo'yicha tejash",
+          "description": "Kategoriyalar shunchaki taxonomy emas, foydalanuvchini maqsadiga qarab to'g'ri tejash yo'liga boshlashi kerak.",
+          "labels": [
+            "Tez aylanadigan",
+            "Ko'p ishlatiladigan",
+            "Har kunlik tejash",
+            "Saralangan yo'l"
+          ],
+          "cardDescriptions": [
+            "Shu yo'nalishdagi ayni paytda eng foydali takliflarni ko'rish uchun qulay.",
+            "Store tanlashdan oldin bir nechta tejash variantini solishtirishga yordam beradi.",
+            "Delivery, banking yoki takroriy online xaridlar kabi odatlar uchun foydali.",
+            "Tasodifiy kartalarni ko'rish o'rniga, intent bo'yicha toza yo'l beradi."
+          ],
+          "cardCta": "Kategoriyani ko'rish"
+        },
+        "brands": {
+          "eyebrow": "Saralangan brendlar",
+          "description": "Mashhur brendlar oddiy logo devori emas, foydali savings route sifatida ko'rinishi kerak.",
+          "cardLabel": "Brand yo'li"
+        }
+      }
+    },
+    "howItWorks": "Qanday ishlaydi?",
+    "step1Title": "Promokodni toping",
+    "step1Description": "Kerakli do'kon yoki kategoriyadan promokodni tanlang",
+    "step2Title": "Kodni nusxalang",
+    "step2Description": "Bir marta bosish bilan promokodni nusxalang",
+    "step3Title": "Tejang!",
+    "step3Description": "Do'konda xarid qilishda promokodni kiriting va tejang",
+    "stats": {
+      "stores": "Do'konlar",
+      "categories": "Kategoriyalar",
+      "promocodes": "Aktiv promokodlar",
+      "users": "Foydalanuvchilar"
+    },
+    "seo": {
+      "intro": {
+        "title": "O'zbekistondagi Eng Yaxshi Promokodlar 2026",
+        "premiumDeals": "2026 Premium Takliflar",
+        "content": "PromoBozor O'zbekistondagi xaridorlar uchun promokod va chegirmalarni tartibli, tushunarli va ishonchli ko'rinishda jamlaydi. Biz takliflarni manbasi, muddati va foydalanish shartlari bo'yicha tekshirib, foyda beradigan variantlarni oldinga olib chiqamiz.",
+        "benefitsTitle": "Nima uchun bizni tanlash kerak:",
+        "benefits": [
+          "Takliflar qo'lda tekshiriladi va yangilanadi",
+          "Foydalanish shartlari qisqa va tushunarli beriladi",
+          "Yandex, Uzum, Click va boshqa mashhur servislar jamlangan",
+          "Xaridorlar uchun bepul va ro'yxatdan o'tishsiz"
+        ],
+        "experience": "Bizning maqsadimiz ko'p sonli, lekin chalkash kupon katalogini yaratish emas, balki haqiqatan foyda beradigan takliflarni tez topishga yordam berishdir."
+      },
+      "howItWorks": {
+        "title": "Qanday Ishlaydi?",
+        "steps": [
+          {
+            "title": "Kerakli do'konni toping",
+            "description": "50+ brenddan o'zingizga ma'qulini tanlang"
+          },
+          {
+            "title": "Promokodni nusxalang",
+            "description": "Bir bosish bilan kodni saqlab oling"
+          },
+          {
+            "title": "Do'kon saytida qo'llang",
+            "description": "To'lov sahifasida kodni kiriting"
+          },
+          {
+            "title": "Tejaymiz!",
+            "description": "Avtomatik tarzda chegirmaga ega bo'ling"
+          }
+        ],
+        "footer": "Har bir kod oxirgi 24 soat ichida tekshirilgan va tasdiqlangan."
+      },
+      "categories": {
+        "title": "Mashhur Kategoriyalar",
+        "items": [
+          {
+            "title": "Oziq-ovqat yetkazib berish",
+            "description": "Yandex Eats, Bellissimo va boshqa xizmatlar uchun 40% gacha chegirmalar. Har hafta yangi aksiyalar va maxsus takliflar."
+          },
+          {
+            "title": "Elektron tijorat",
+            "description": "Uzum Market va Yandex Market uchun eksklyuziv kodlar. Elektronika, moda, uy-ro'zg'or buyumlari uchun eng yaxshi narxlar."
+          },
+          {
+            "title": "Moliya va banking",
+            "description": "TBC Bank, Uzum Bank va boshqa moliya xizmatlari uchun keshbeklar va bonusli takliflar."
+          }
+        ]
+      },
+      "results": {
+        "title": "Bizning Natijalarimiz",
+        "items": [
+          {
+            "label": "Faol promokod",
+            "value": "50+"
+          },
+          {
+            "label": "Hamkor brendlar",
+            "value": "20+"
+          },
+          {
+            "label": "Mijozlarimiz tejagani",
+            "value": "10M+"
+          },
+          {
+            "label": "Kodlar ishlash darajasi",
+            "value": "98.5%"
+          },
+          {
+            "label": "Oylik tashriflar",
+            "value": "3,000+"
+          }
+        ]
+      },
+      "trust": {
+        "title": "Ishonchli takliflar, ortiqcha shovqinsiz",
+        "content": "Har bir listingda manba, amal qilish muddati va foydalanish shartlarini qayta ko'rib chiqamiz. Ishlamaydigan yoki chalg'ituvchi takliflar signal berilishi bilan yangilanadi yoki olib tashlanadi, shuning uchun PromoBozor foydali takliflarni tez topish uchun ishonchli manba bo'lib qoladi.",
+        "successRate": "98.5% tekshiruvdan o'tish ko'rsatkichi",
+        "verifiedDaily": "Takliflar har kuni qayta ko'rib chiqiladi",
+        "monthlyUsers": "3,000+ oylik faol foydalanuvchi"
+      }
+    },
+    "faq": {
+      "eyebrow": "Tezkor javoblar",
+      "title": "Promokod ishlatishdan oldin eng ko'p beriladigan savollar",
+      "description": "Bu bo'lim PromoBozor qanday ishlashi, takliflar qanchalik tez yangilanishi va promokoddan foydalanishda nimalarga e'tibor berish kerakligini tez tushuntiradi.",
+      "seeAll": "Barcha savollarni ko'rish",
+      "verificationCta": "Promokodlarni qanday tekshirishimizni ko'rish",
+      "items": [
+        {
+          "question": "Qaysi do'konlarda odatda eng ko'p aktiv promokod bo'ladi?",
+          "answer": "Yandex, Uzum, Click, Payme va tez-tez yangilanadigan boshqa hamkorlarda odatda PromoBozor’dagi eng ko'p aktiv takliflar bo'ladi."
+        },
+        {
+          "question": "PromoBozor’dagi promokoddan qanday foydalanaman?",
+          "answer": "Taklifni oching, kodni nusxalang yoki promolinkni faollashtiring, so'ng do'kon sayti yoki ilovasida to'lov paytida kodni kiriting."
+        },
+        {
+          "question": "PromoBozor’dagi promokodlar bepulmi?",
+          "answer": "Ha. Promokodlarni ko'rish, nusxalash va ishlatish xaridorlar uchun mutlaqo bepul."
+        },
+        {
+          "question": "Takliflar qanchalik tez yangilanadi?",
+          "answer": "Jamoamiz takliflarni har kuni ko'rib chiqadi, yangi takliflarni qo'shadi va muddati tugagan yoki nofaol chegirmalarni tasdiqlanishi bilan olib tashlaydi."
+        },
+        {
+          "question": "Promokod ishlamay qolsa nima bo'ladi?",
+          "answer": "Kod ishlamasa, biz uning shartlari, amal qilish muddati va manba sahifasini qayta tekshiramiz, keyin listingni yangilaymiz yoki olib tashlaymiz."
+        },
+        {
+          "question": "Promokodlarni qanday tekshirasizlar?",
+          "answer": "Biz manba sahifalarni ko'rib chiqamiz, kod yoki link mavjudligini tekshiramiz, foydalanish shartlarini solishtiramiz va tugash muddatini kuzatib boramiz."
+        }
+      ]
+    }
+  },
+  "store": {
+    "title": "Do'kon",
+    "h1Title": "{name} - Promokodlar va Chegirmalar",
+    "allStores": "Barcha Do'konlar - Promokodlar va Chegirmalar",
+    "allStoresDescription": "Mashhur do'konlardagi tekshirilgan promokodlar, amaldagi chegirmalar va foydali takliflarni bir joyda ko'rib chiqing.",
+    "activeStores": "Aktiv do'konlar",
+    "promocodes": "Promokodlar",
+    "activePromocodes": "Aktiv promokodlar",
+    "noPromocodes": "Bu do'konda hozircha aktiv promokodlar yo'q",
+    "noPromocodesDescription": "Bu do'kon uchun hali aktiv taklif topilmadi. Boshqa do'konlarni ko'ring yoki keyinroq qaytib tekshiring.",
+    "noStoresFound": "Mos do'kon topilmadi",
+    "noStoresDescription": "Hozircha bu bo'limda ko'rsatish uchun do'konlar yo'q. Keyinroq qaytib tekshirib ko'ring.",
+    "searchHint": "Boshqa kalit so'zni kiriting yoki mashhur do'konlar ro'yxatiga qayting",
+    "about": "Do'kon haqida",
+    "website": "Veb-sayt",
+    "visitStore": "Do'konga o'tish",
+    "totalSaved": "Jami tejaldi",
+    "popularPromocodes": "Mashhur promokodlar",
+    "findStore": "Do'kon nomi bo'yicha qidiring",
+    "views": "Ko'rishlar",
+    "uses": "Foydalanishlar",
+    "allPromocodes": "Barcha promokodlar",
+    "featuredPromocodes": "Tavsiya etilgan promokodlar",
+    "bestOffers": "Eng yaxshi takliflar",
+    "checkBackLater": "Keyinroq qaytib ko'ring",
+    "visitWebsite": "Do'konga o'tish",
+    "viewOffers": "Takliflarni ko'rish"
+  },
+  "category": {
+    "title": "Kategoriya",
+    "h1Title": "{name} - Promokodlar va Chegirmalar",
+    "allCategories": "Barcha Kategoriyalar - Promokodlar va Kuponlar",
+    "allCategoriesDescription": "Xarid, oziq-ovqat, sayohat, moliya va boshqa mashhur kategoriyalardagi tekshirilgan promokodlar, kuponlar va chegirmalarni ko'rib chiqing.",
+    "directoryKicker": "Kategoriya bo'yicha tejash",
+    "trustLabel": "Kategoriya ko'rinishi",
+    "trustValue": "Faol yo'nalishlar saralangan",
+    "trustDescription": "Yangi takliflar, foydali niyat va mos chegirmalarga tezroq olib boradigan kategoriyalarni ko'rib chiqing.",
+    "featuredLabel": "Mashhur yo'nalish",
+    "featuredHint": "Xarid, food delivery, fintech va kundalik servislar bo'yicha eng kuchli kategoriyalardan boshlang.",
+    "activeCategories": "Aktiv kategoriyalar",
+    "promocodes": "Promokodlar",
+    "activePromocodes": "Aktiv promokodlar",
+    "noPromocodes": "Bu kategoriyada hozircha aktiv promokodlar yo'q",
+    "noPromocodesDescription": "Bu kategoriya uchun hali aktiv taklif topilmadi. Boshqa kategoriyalarni ko'ring yoki keyinroq qaytib tekshiring.",
+    "noCategoriesFound": "Mos kategoriya topilmadi",
+    "noCategoriesDescription": "Hozircha bu bo'limda ko'rsatish uchun kategoriyalar yo'q.",
+    "exploreCategory": "Kategoriyani ko'rish",
+    "trending": "Mashhur kategoriyalar",
+    "views": "Ko'rishlar",
+    "uses": "Foydalanishlar",
+    "allPromocodes": "Barcha promokodlar",
+    "featuredPromocodes": "Tavsiya etilgan promokodlar",
+    "bestOffers": "Eng yaxshi takliflar",
+    "checkBackLater": "Keyinroq qaytib ko'ring",
+    "viewOffers": "Takliflarni ko'rish",
+    "emptyCta": "Barcha takliflarni ko'rish"
+  },
+  "brand": {
+    "title": "Brend",
+    "h1Title": "{name} - Promokodlar va Chegirmalar",
+    "allBrands": "Barcha Brendlar - Promokodlar va Chegirmalar",
+    "description": "Mashhur brendlar uchun tekshirilgan kuponlar, bonuslar va faol chegirmalarni muntazam yangilanadigan ro'yxatda toping.",
+    "directoryKicker": "Saralangan brend takliflari",
+    "trustLabel": "Brend qamrovi",
+    "trustValue": "Tekshirilgan brend tejashlari",
+    "trustDescription": "Taniqli brendlar bo'yicha amaldagi takliflarni solishtiring va ishonchli tejash yo'liga tezroq o'ting.",
+    "featuredLabel": "Yangi brend",
+    "featuredHint": "Chegirma faolligi ko'rinib turgan, yangilanadigan va foydali takliflari bor brendlarni ko'rib chiqing.",
+    "activeBrands": "Aktiv brendlar",
+    "promocodes": "Promokodlar",
+    "activePromocodes": "Aktiv promokodlar",
+    "noPromocodes": "Bu brendda hozircha aktiv promokodlar yo'q",
+    "noPromocodesDescription": "Bu brend uchun hali aktiv taklif topilmadi. Boshqa brendlarni ko'ring yoki keyinroq qaytib tekshiring.",
+    "noBrandsFound": "Mos brend topilmadi",
+    "noBrandsDescription": "Hozircha bu bo'limda ko'rsatish uchun brendlar yo'q.",
+    "about": "Brend haqida",
+    "officialWebsite": "Rasmiy veb-sayt",
+    "views": "Ko'rishlar",
+    "uses": "Foydalanishlar",
+    "allPromocodes": "Barcha promokodlar",
+    "featuredPromocodes": "Tavsiya etilgan promokodlar",
+    "bestOffers": "Eng yaxshi takliflar",
+    "checkBackLater": "Keyinroq qaytib ko'ring",
+    "viewOffers": "Takliflarni ko'rish",
+    "emptyCta": "Aktiv promokodlarni ko'rish"
+  },
+  "promocode": {
+    "title": "Promokod tafsilotlari",
+    "copyCode": "Kodni olish",
+    "copied": "Nusxalandi",
+    "codeCopied": "Kod nusxalandi!",
+    "getCode": "Kodni olish",
+    "promoCode": "Promokod",
+    "promoLink": "Promo havola",
+    "showCode": "Kodni ko'rsatish",
+    "useCode": "Kodni ishlatish",
+    "activateLink": "Taklifni ochish",
+    "activateLinkToGetDiscount": "Chegirmani faollashtirish uchun taklif havolasini oching",
+    "linkActivated": "Havola faollashtirildi!",
+    "redirecting": "Do'konga o'tilmoqda...",
+    "copyError": "Nusxalashda xatolik",
+    "discount": "Chegirma",
+    "discountAmount": "Chegirma miqdori",
+    "terms": "Shartlar va qoidalar",
+    "termsConditions": "Foydalanish shartlari",
+    "termsAndConditions": "Shartlar va qoidalar",
+    "description": "Tavsif",
+    "details": "Batafsil ma'lumot",
+    "howToUse": "Qanday ishlatish",
+    "validUntil": "Amal qilish muddati",
+    "expiresOn": "Tugaydi",
+    "expiresSoon": "Tez orada tugaydi",
+    "expired": "Muddati tugagan",
+    "active": "Aktiv",
+    "exclusive": "Eksklyuziv",
+    "verified": "Tekshirilgan",
+    "related": "O'xshash takliflar",
+    "relatedOffers": "O'xshash takliflar",
+    "moreFrom": "dan yana",
+    "sharePromocode": "Promokodni ulashish",
+    "reportIssue": "Muammo haqida xabar berish",
+    "workingPromocode": "Ishlaydimi?",
+    "notWorking": "Ishlamayapti",
+    "isWorking": "Ishlayapti",
+    "thanksForFeedback": "Fikringiz uchun rahmat!",
+    "usedBy": "foydalanuvchi ishlatgan",
+    "successRate": "Muvaffaqiyat darajasi",
+    "views": "Ko'rishlar",
+    "copies": "Nusxalar",
+    "daysRemaining": "Qolgan kunlar",
+    "expiryDate": "Tugash sanasi",
+    "share": "Ulashish",
+    "amount": "Miqdor",
+    "percentage": "Foiz"
+  },
+  "filter": {
+    "filters": "Filtrlar",
+    "store": "Do'kon",
+    "category": "Kategoriya",
+    "brand": "Brend",
+    "sort": "Saralash",
+    "sortBy": "Saralash",
+    "kicker": "Qidiruv boshqaruvi",
+    "title": "Takliflarni tezroq filtrlang va saralang",
+    "description": "Kartalarni solishtirishdan oldin do'kon, kategoriya, brend va saralash mantiqi bo'yicha toraytiring.",
+    "activeFilters": "faol filtr",
+    "newest": "Eng yangi",
+    "popular": "Mashhur",
+    "ending": "Tugaydi",
+    "discount": "Eng yaxshi chegirma",
+    "allStores": "Barcha do'konlar",
+    "allCategories": "Barcha kategoriyalar",
+    "allBrands": "Barcha brendlar",
+    "selectStore": "Do'konni tanlang",
+    "selectCategory": "Kategoriyani tanlang",
+    "selectBrand": "Brendni tanlang",
+    "applyFilters": "Filtrlash",
+    "clearFilters": "Tozalash",
+    "resetFilters": "Qayta tiklash",
+    "showResults": "Natijalarni ko'rsatish"
+  },
+  "search": {
+    "placeholder": "Promokodlarni qidiring...",
+    "searching": "Qidirilmoqda...",
+    "noResults": "Natijalar topilmadi",
+    "noResultsDescription": "Bu so'rov bo'yicha mos taklif topilmadi. Kalit so'zni o'zgartirib ko'ring.",
+    "trySearching": "Qidirishga harakat qiling",
+    "popularSearches": "Mashhur qidiruvlar",
+    "recentSearches": "So'nggi qidiruvlar",
+    "clearHistory": "Tarixni tozalash",
+    "searchResults": "Qidiruv natijalari",
+    "resultsFor": "uchun natijalar"
+  },
+  "empty": {
+    "noPromocodes": "Promokodlar topilmadi",
+    "noPromocodesDescription": "Filtrlarni yumshating yoki boshqa do'kon va kategoriyalarni sinab ko'ring.",
+    "noPromocodesHint": "Ko'proq natija olish uchun bitta filtrni olib tashlang, kengroq kategoriya tanlang yoki eng yangi saralashni sinab ko'ring.",
+    "noStores": "Do'konlar topilmadi",
+    "noStoresDescription": "Hozircha bu bo'limda do'konlar yo'q. Keyinroq qaytib ko'ring.",
+    "noCategories": "Kategoriyalar topilmadi",
+    "noCategoriesDescription": "Hozircha bu bo'limda kategoriyalar yo'q. Keyinroq qaytib ko'ring.",
+    "noBrands": "Brendlar topilmadi",
+    "noBrandsDescription": "Hozircha bu bo'limda brendlar yo'q. Keyinroq qaytib ko'ring.",
+    "lowResultTitle": "Hozircha mos takliflar soni kam",
+    "lowResultDescription": "Ko'proq faol tejash yo'llarini ko'rish uchun bitta filtrni tozalang yoki saralash tartibini o'zgartirib ko'ring.",
+    "resetFiltersCta": "Filtrlarni tiklash",
+    "noDescription": "Tavsif mavjud emas.",
+    "noData": "Ma'lumot yo'q",
+    "comeBackLater": "Keyinroq qaytib ko'ring"
+  },
+  "card": {
+    "featured": "Maxsus",
+    "verified": "Tekshirilgan",
+    "fresh": "Yangi",
+    "popular": "Mashhur",
+    "exclusive": "Eksklyuziv",
+    "details": "Taklif tafsiloti",
+    "viewDetails": "Batafsil",
+    "storeOffer": "Do'kon taklifi",
+    "brandOffer": "Brend taklifi",
+    "directDeal": "To'g'ridan to'g'ri taklif",
+    "codeReady": "Kod tayyor",
+    "dealRoute": "Taklif yo'li",
+    "promoCodeLabel": "Promokod",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "getCode": "Kodni olish",
+    "getDeal": "Taklifni ko'rish",
+    "activateLink": "Taklifni oching",
+    "unknownStore": "Noma'lum do'kon",
+    "unlimited": "Cheksiz",
+    "off": "chegirma",
+    "upTo": "gacha",
+    "expiresIn": "Tugaydi",
+    "days": "kun",
+    "hours": "soat",
+    "minutes": "daqiqa",
+    "like": "Yoqdi",
+    "dislike": "Yoqmadi",
+    "expired": "Muddati tugagan",
+    "disabled": "Nofaol"
+  },
+  "admin": {
+    "dashboard": "Boshqaruv paneli",
+    "login": "Kirish",
+    "logout": "Chiqish",
+    "email": "Email",
+    "password": "Parol",
+    "signIn": "Kirish",
+    "welcome": "Xush kelibsiz",
+    "statistics": "Statistika",
+    "manage": "Boshqarish",
+    "add": "Qo'shish",
+    "addNew": "Yangi qo'shish",
+    "createNew": "Yangi yaratish",
+    "total": "Jami",
+    "active": "Aktiv",
+    "inactive": "Nofaol",
+    "draft": "Qoralama",
+    "published": "Nashr qilingan",
+    "actions": "Amallar",
+    "name": "Nomi",
+    "slug": "Slug",
+    "image": "Rasm",
+    "icon": "Belgi",
+    "description": "Tavsif",
+    "metaTitle": "Meta sarlavha",
+    "metaDescription": "Meta tavsif",
+    "status": "Holat",
+    "createdAt": "Yaratilgan",
+    "updatedAt": "Yangilangan",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "view": "Ko'rish",
+    "confirmDelete": "O'chirishni tasdiqlaysizmi?",
+    "deleteWarning": "Bu amalni qaytarib bo'lmaydi",
+    "successCreated": "Muvaffaqiyatli yaratildi",
+    "successUpdated": "Muvaffaqiyatli yangilandi",
+    "successDeleted": "Muvaffaqiyatli o'chirildi",
+    "errorOccurred": "Xatolik yuz berdi",
+    "stores": "Do'konlar",
+    "categories": "Kategoriyalar",
+    "brands": "Brendlar",
+    "promocodes": "Promokodlar",
+    "users": "Foydalanuvchilar",
+    "settings": "Sozlamalar",
+    "darkMode": "Tungi rejim",
+    "language": "Til",
+    "profile": "Profil",
+    "role": "Rol",
+    "telegram": {
+      "sendToTelegram": "Telegramga yuborish",
+      "sendNow": "Hozi yuborish",
+      "schedule": "Rejalashtirish",
+      "preview": "Oldindan ko'rish",
+      "template": "Shablon",
+      "templates": {
+        "minimal": "Minimal",
+        "standard": "Standart",
+        "rich": "Batafsil"
+      },
+      "customMessage": "Qo'shimcha xabar",
+      "customMessagePlaceholder": "Matn kiriting...",
+      "scheduleFor": "Qachon yuborish",
+      "history": "Yuborish tarixi",
+      "status": {
+        "pending": "Kutilmoqda",
+        "scheduled": "Rejalashtirilgan",
+        "sent": "Yuborilgan",
+        "failed": "Xatolik"
+      },
+      "broadcastCount": "Foydalanuvchilarga yuborildi",
+      "viewOnChannel": "Kanalda ko'rish",
+      "templateInfo": {
+        "minimal": "Faqat sarlavha, chegirma va kod",
+        "standard": "Sarlavha, do'kon, tavsif va kod",
+        "rich": "Barcha ma'lumotlar, shartlar va havolalar"
+      },
+      "info": {
+        "channelLanguage": "Kanalga o'zbek tilida yuboriladi",
+        "botLanguage": "Bot foydalanuvchilari o'z tilida oladi"
+      },
+      "success": "Promokod muvaffaqiyatli yuborildi!",
+      "sending": "Yuborilmoqda...",
+      "error": "Yuborishda xatolik yuz berdi"
+    }
+  },
+  "validation": {
+    "required": "Bu maydon majburiy",
+    "invalidEmail": "Noto'g'ri email manzil",
+    "invalidUrl": "Noto'g'ri URL manzil",
+    "minLength": "Minimal uzunlik {min} belgi",
+    "maxLength": "Maksimal uzunlik {max} belgi",
+    "passwordMismatch": "Parollar mos kelmaydi",
+    "invalidDate": "Noto'g'ri sana",
+    "invalidNumber": "Noto'g'ri raqam",
+    "selectOption": "Variantni tanlang"
+  },
+  "meta": {
+    "defaultTitle": "PromoBozor — Chegirmalar va promokodlar bozori",
+    "defaultDescription": "PromoBozor — foydali chegirmalar, promokodlar va kuponlarni bir joyda toping. Online do'konlar va servislar uchun eng yaxshi takliflarni ko'ring va xaridda ko'proq tejang.",
+    "keywords": "promokod, chegirma, takliflar, kuponlar, o'zbekiston, yandex, uzum"
+  },
+  "consent": {
+    "title": "Cookie va ma'lumotlardan foydalanish",
+    "description": "Biz sizning tajribangizni yaxshilash va saytni tahlil qilish uchun cookie va shunga o'xshash texnologiyalardan foydalanamiz. Rozilik berish orqali siz bizga shaxsiy ma'lumotlarni qayta ishlashga ruxsat berasiz.",
+    "accept": "Rozilik berish",
+    "reject": "Rad etish",
+    "settings": "Sozlamalar",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "necessary": "Zarur",
+    "analytics": "Analitika",
+    "marketing": "Marketing",
+    "necessaryDescription": "Saytning asosiy funksiyalari uchun zarur cookie'lar",
+    "analyticsDescription": "Saytni tahlil qilish va yaxshilash uchun cookie'lar",
+    "marketingDescription": "Shaxsiylashtirilgan reklama uchun cookie'lar",
+    "learnMore": "Batafsil ma'lumot",
+    "privacyPolicy": "Maxfiylik siyosati"
+  },
+  "faq": {
+    "title": "Promokodlar bo'yicha ko'p beriladigan savollar",
+    "description": "Promokodlar qanday ishlashi, qancha muddat amal qilishi va PromoBozor chegirmalarni qanday tekshirishi haqida batafsil javoblar.",
+    "questions": [
+      {
+        "question": "Promokoddan qanday foydalanaman?",
+        "answer": "Promokoddan foydalanish juda oson va 3 oddiy qadamni o'z ichiga oladi. Birinchi navbatda, bizning saytda sizga kerakli promokodni toping va 'Nusxalash' tugmasini bosing. Kod avtomatik ravishda nusxalanadi. Keyin do'kon yoki xizmat veb-saytiga o'ting — masalan, Yandex Eats, Uzum, Click yoki Payme. Xarid savatchangiz to'ldirilgach, to'lov sahifasida odatda 'promokod', 'kupon', 'promo code' yoki 'kod' deb belgilangan maxsus maydon topasiz. Bizdan nusxalagan kodingizni shu maydonga joylashtiring va 'Qo'llash' yoki 'Apply' tugmasini bosing. Agar kod haqiqiy va amal qilsa, chegirma avtomatik ravishda hisoblangan bo'ladi. Eslatma o'rinli: ba'zi do'konlar promokodni faqat ma'lum toifadagi mahsulotlar uchun qo'llaydi yoki minimum xarid summasi talab qilishi mumkin. Har bir promokodning shartlar va qoidalarini bizning saytda o'qib chiqishingiz mumkin. Bizning tekshirishlarimizga ko'ra, 2024-yilda promokodlarning 98.5% muvaffaqiyat bilan ishlagan."
+      },
+      {
+        "question": "Promokodlar qancha muddatga amal qiladi?",
+        "answer": "Har bir promokod o'z amal qilish muddatiga ega va bu muddat do'kon yoki xizmat tomonidan belgilanadi. Promokod sahifasida tugash sanasi aniq ko'rsatilgan bo'ladi. Ba'zi promokodlar cheksiz amal qiladi, ularning tugash sanasi yo'q. Ammo ko'p hollarda promokodlar 1-4 hafta, 1-3 oy yoki maxsus tadbirlar uchun qisqa muddatga amal qiladi. Promokod muddati tugagach, u avtomatik ravishda ishlamaydi va chegirma berilmaydi. Shuning uchun foydalanishdan oldin promokodning tugash sanasini tekshirish muhim ahamiyatga ega. Bizning saytimizda har bir promokodning tugash sanasi aniq ko'rsatilgan va muddati tugagan promokodlar avtomatik ravishda 'tugagan' holatiga o'tkaziladi. Shuningdek, ba'zi do'konlar promokodni faqat belgilangan vaqt ichida, masalan, 24 soat ichida ishlatishni talab qilishi mumkin. Bunday holatlarda promokod tavsifida batafsil ma'lumot beriladi."
+      },
+      {
+        "question": "Promokodlar bepulmi?",
+        "answer": "Ha, barcha promokodlar mutlaqo bepul. PromoBozor saytidan foydalanish hech qanday to'lov talab qilmaydi. Bizning vazifamiz — O'zbekiston foydalanuvchilari uchun eng yaxshi chegirmalarni topish va ularni bir joyda jam qilishdir. Siz promokodlarni nusxalash, ulardan foydalanish va chegirmalar olish uchun hech qanday to'lov to'lamaysiz. Biz do'konlar va brendlar bilan hamkorlik qilamiz, ammo bu sizga hech qanday qo'shimcha xarajat tug'dirmaydi. Shuningdek, ba'zi saytlardan farqli o'laroq, biz ro'yxatdan o'tishni talab qilmaymiz, shaxsiy ma'lumotlaringizni yig'maymiz yoki boshqa shartlarni yuklamaymiz. Biz saytda promokodlarni qidirish, topish va foydalanishni iloji qancha oson va qulay qilishga harakat qilamiz. Agar savollaringiz bo'lsa, biz bilan Telegram orqali bog'lanishingiz mumkin."
+      },
+      {
+        "question": "Promokod ishlamasa nima qilish kerak?",
+        "answer": "Agar promokod ishlamasa, avvalo uning amal qilish muddatini tekshiring. Muddat tugagan bo'lsa, promokod ishlamaydi. Agar muddat hali tugamagan bo'lsa, kodni to'g'ri kiritganingizga ishonch hosil qiling — ba'zilar katta-kichik harflarga sezgir. Shuningdek, promokodning qo'llash shartlarini o'qing — masalan, minimum xarid summasi, ma'lum toifadagi mahsulotlar yoki yangi mijozlar uchun cheklovlar bo'lishi mumkin. Hamma narsa to'g'ri bo'lgan holda kod ishlamay qolsa, do'kon yoki xizmatning mijozlarga xizmat ko'rsatish xizmati bilan bog'lanishni maslahat beramiz. Shuningdek, bizga xabar bering — biz promokodni tekshirib, kerak bo'lsa, uni yangilaymiz yoki o'chirib tashlaymiz. Bizning foydalanuvchilarimiz orqali promokodlarning sifatini nazorat qilamiz va 24 soat ichida muammolarni hal qilamiz. Telegram kanalimizda yoki sahifadagi 'Xabar berish' tugmasi orqali biz bilan bog'lanishingiz mumkin."
+      },
+      {
+        "question": "Yangi promokodlar qanchalik tez qo'shiladi?",
+        "answer": "Biz har kuni yangi promokodlar qo'shamiz va ularni muntazam ravishda yangilab boramiz. Jamoamiz kundalik ravishda O'zbekistondagi eng mashhur do'konlar va xizmatlarning yangi takliflarini kuzatib boradi. Yandex Eats, Uzum, Click, Payme va boshqa platformalar har kuni yangi chegirmalar va aksiyalarni e'lon qiladi, biz esa ularni darhol saytimizga qo'shamiz. Maxsus tadbirlar va bayramlar oldidan — masalan, Navro'z, Mustaqillik kuni yoki Yangi yil arafasida — promokodlar soni sezilarli darajada ortadi. Shuning uchun eng yangi takliflardan xabardor bo'lish uchun saytni muntazam tekshirib turing yoki bizning Telegram kanalimizga obuna bo'ling. Biz shuningdek, mashhur do'konlarning maxusi aksiyalari uchun alohida sahifalarni yaratamiz, u yerda barcha amaldagi promokodlar jamlangan bo'ladi."
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Maxfiylik siyosati va ma'lumotlar",
+    "description": "PromoBozor foydalanuvchi ma'lumotlari, analitika va cookie sozlamalarini qanday yig'ishi, ishlatishi va himoya qilishini bilib oling.",
+    "lastUpdated": "Oxirgi yangilanish",
+    "sections": [
+      {
+        "title": "Ma'lumotlar to'planishi",
+        "content": "Biz faqat saytni yaxshilash va foydalanuvchi tajribasini oshirish uchun zarur bo'lgan ma'lumotlarni to'playmiz. Bu ma'lumotlar orasiga cookie'lar, analytics ma'lumotlari va foydalanuvchi faolligi kiradi."
+      },
+      {
+        "title": "Cookie'lar",
+        "content": "Biz saytning to'g'ri ishlashi va foydalanuvchi tajribasini yaxshilash uchun cookie'lardan foydalanamiz. Cookie'lar haqida batafsil ma'lumot olish uchun cookie sozlamalariga o'ting."
+      },
+      {
+        "title": "Ma'lumotlardan foydalanish",
+        "content": "To'plangan ma'lumotlar faqat saytni yaxshilash, analytics va marketing maqsadlarida ishlatiladi. Ma'lumotlar uchinchi shaxslarga o'tkazilmaydi."
+      },
+      {
+        "title": "Ma'lumotlarni himoya qilish",
+        "content": "Biz sizning ma'lumotlaringizni xavfsiz saqlash uchun zamonaviy xavfsizlik texnologiyalaridan foydalanamiz."
+      },
+      {
+        "title": "Aloqa",
+        "content": "Maxfiylik siyosati bo'yicha savollar uchun biz bilan bog'laning."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Foydalanish shartlari va sayt qoidalari",
+    "description": "PromoBozor’dan foydalanish qoidalari, promokodlar qanday taqdim etilishi va platforma javobgarligi chegaralari bilan tanishing.",
+    "lastUpdated": "Oxirgi yangilanish",
+    "sections": [
+      {
+        "title": "Xizmatdan foydalanish",
+        "content": "PromoBozor saytidan foydalanish orqali siz ushbu shartlarga rozi bo'lasiz. Sayt faqat shaxsiy va tijorat bo'lmagan maqsadlarda ishlatilishi kerak."
+      },
+      {
+        "title": "Promokodlar",
+        "content": "Biz promokodlarning to'g'riligini kafolatlamaymiz. Har bir promokod tegishli do'kon yoki xizmat tomonidan boshqariladi. Promokod ishlamasa, biz javobgar emasmiz."
+      },
+      {
+        "title": "Intellektual mulk",
+        "content": "Saytning barcha kontenti PromoBozorga tegishli. Kontentni ruxsatsiz ko'chirish yoki tarqatish taqiqlanadi."
+      },
+      {
+        "title": "Javobgarlik cheklanishi",
+        "content": "Biz promokodlardan foydalanish natijasida yuzaga kelgan har qanday zarar uchun javobgar emasmiz."
+      },
+      {
+        "title": "Shartlarni o'zgartirish",
+        "content": "Biz istalgan vaqtda ushbu shartlarni o'zgartirish huquqini o'zimizda saqlaymiz. O'zgarishlar saytda e'lon qilinadi."
+      }
+    ]
+  },
+  "promocodesPage": {
+    "title": "Barcha Promokodlar",
+    "description": "Eng yaxshi tekshirilgan promokodlar va chegirmalar",
+    "metaTitle": "Barcha Promokodlar - Eng Yaxshi Chegirmalar | PromoBozor",
+    "metaDescription": "O'zbekistondagi barcha aktiv promokodlar va chegirmalar. Yandex, Uzum, Click va boshqa mashhur do'konlardan eng yaxshi takliflarni toping!"
+  },
+  "contact": {
+    "title": "Biz Bilan Bog'laning - PromoBozor Qo'llab-quvvatlash",
+    "description": "PromoBozor mijozlari qo'llab-quvvatlash xizmati bilan bog'laning. Promokodlar bo'yicha yordam oling, muammolarni xabar qiling yoki fikr bildiring.",
+    "subtitle": "Savollar yoki takliflar bo'lsa, biz bilan bog'laning",
+    "contactInfo": "Biz bilan bog'lanish",
+    "sendMessage": "Xabar yuborish",
+    "email": "Email",
+    "emailValue": "jahongirergawev2@gmail.com",
+    "telegram": "Telegram",
+    "address": "Manzil",
+    "addressValue": "Toshkent, O'zbekiston",
+    "workingHours": "Ish vaqti",
+    "workingHoursValue": "Dushanba - Juma: 9:00 - 18:00",
+    "form": {
+      "name": "Ism",
+      "phone": "Telefon raqami",
+      "phoneHint": "Masalan: +998901234567",
+      "phoneRequired": "Telefon raqami majburiy",
+      "invalidOperatorCode": "Mobil operator kodi noto'g'ri",
+      "invalidPhoneFormat": "Telefon formati noto'g'ri. Foydalaning: +998XXXXXXXXX, 998XXXXXXXXX yoki 90XXXXXXX",
+      "invalidPhoneNumber": "Telefon raqami noto'g'ri",
+      "websiteHoneypot": "Veb-sayt (bo'sh qoldiring)",
+      "message": "Xabar",
+      "send": "Yuborish",
+      "sending": "Yuborilmoqda...",
+      "success": "Xabar muvaffaqiyatli yuborildi!",
+      "error": "Xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+    }
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "description": "Kechirasiz, siz qidirayotgan sahifa mavjud emas yoki o'chirilgan.",
+    "goHome": "Bosh sahifaga qaytish",
+    "popularPages": "Mashhur sahifalar",
+    "orSearch": "Yoki promokodlarni qidirib ko'ring"
+  },
+  "error": {
+    "title": "Xatolik yuz berdi",
+    "description": "Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+    "tryAgain": "Qayta urinish",
+    "goHome": "Bosh sahifaga qaytish"
+  },
+  "about": {
+    "title": "PromoBozor haqida va editorial standartlar",
+    "description": "PromoBozor — O'zbekiston xaridorlari uchun tekshirilgan promokodlar, foydali chegirmalar va aniq foydalanish shartlarini bir joyda jamlaydigan platforma.",
+    "heroTitle": "PromoBozor haqida",
+    "heroDescription": "PromoBozor foydalanuvchiga foydali, tushunarli va ishonchli takliflarni topishga yordam beradigan mahalliy promokod platformasidir.",
+    "missionTitle": "Bizning maqsadimiz",
+    "missionDescription": "PromoBozor O'zbekiston bozorida ishlaydigan promokod va chegirmalarni bir joyga to'plab, xaridorlarga vaqtni tejash va foydali taklifni tez topish imkonini beradi.",
+    "howWeWork": "Qanday ishlaymiz",
+    "howWeWorkDescription": "Jamoamiz har bir taklifning manbasi, muddati va qo'llanish shartlarini ko'rib chiqadi. Ishonch past bo'lgan yoki muddati tugagan listinglar tezda yangilanadi yoki olib tashlanadi.",
+    "statsTitle": "Raqamlarda",
+    "statsStores": "Do'konlar",
+    "statsCategories": "Kategoriyalar",
+    "statsPromocodes": "Aktiv promokodlar",
+    "statsUsers": "Kundalik foydalanuvchilar",
+    "whyUsTitle": "Nega aynan biz?",
+    "reason1Title": "Tekshirilgan kodlar",
+    "reason1Description": "Har bir promokod jamoamiz tomonidan qo'lda tekshiriladi",
+    "reason2Title": "Kundalik yangilanish",
+    "reason2Description": "Har kuni yangi promokodlar qo'shiladi va eskirganlari olib tashlanadi",
+    "reason3Title": "Bepul xizmat",
+    "reason3Description": "Platformamizdan foydalanish to'liq bepul",
+    "reason4Title": "3 tilda",
+    "reason4Description": "O'zbek, rus va ingliz tillarida foydalanish mumkin",
+    "contactTitle": "Bog'lanish",
+    "contactDescription": "Savol, hamkorlik yoki nofaol kod bo'lsa, jamoamizga yozing.",
+    "founder": {
+      "badge": "Asoschi bilan tanishing",
+      "name": "Jahongir Ergashev",
+      "role": "Asoschi va Full-stack dasturchi",
+      "bio": "Jahongir — O'zbekistonda filial savdosi va promokod sanoatida 3+ yillik tajribaga ega full-stack dasturchi. U O'zbekiston xaridorlari uchun tarqoq va eskirgan kupon ro'yxatlari o'rniga tekshirilgan promokodlarning mahalliy manbasi bo'ladigan PromoBozor platformasini yaratgan.",
+      "credentials": "3+ yil e-commerce tajribasi • Next.js va TypeScript mutaxassisi • O'zbekiston online bozoridagi promokodlar bo'yicha yetakchi ekspert",
+      "quote": "Muddati o'tgan yoki chalg'ituvchi kodlarni qoldirgandan ko'ra, kamroq taklif e'lon qilganimiz afzal.",
+      "highlightsTitle": "Asoschining asosiy e'tibori",
+      "highlights": [
+        "Mahalliy brend kampaniyalari va checkout qoidalarini qo'lda tahlil qilish",
+        "Muddati o'tgan, takrorlangan va ishonchi past takliflarni tozalash",
+        "O'zbekiston xaridorlari uchun ko'p tilli tejash platformasini qurish",
+        "Har kuni 50+ do'konlarning yangi takliflarini kuzatib borish"
+      ],
+      "experienceTitle": "Platforma ortidagi editorial standartlar",
+      "experience": [
+        {
+          "title": "Bozor fokusi",
+          "description": "PromoBozor O'zbekiston xarid odatlari, to'lov usullari va do'kon kategoriyalariga moslab qurilgan."
+        },
+        {
+          "title": "Tekshirish odati",
+          "description": "Har bir taklif promo qilinishidan oldin aniqlik, shartlar va dolzarblik bo'yicha tekshiriladi."
+        },
+        {
+          "title": "O'quvchi ishonchi",
+          "description": "Foydalanuvchilar muammo bildirsa yoki kod muddati tugasa, listinglar tezda yangilanadi."
+        }
+      ],
+      "cta": "Promokodlarni qanday tekshirishimizni ko'ring"
+    }
+  },
+  "verification": {
+    "title": "Promokodlarni nashrdan oldin qanday tekshiramiz",
+    "description": "PromoBozor manbalarni, amal qilish shartlarini, dolzarblikni qanday tekshirishi va promokodlarni nashrdan oldin qanday yangilashini bilib oling.",
+    "heroBadge": "Editorial standartlar",
+    "heroTitle": "PromoBozor har bir promokodni qanday tekshiradi",
+    "heroDescription": "Biz har bir taklifga editorial kontent kabi yondashamiz: manbani ko'rib chiqish, qo'lda tekshirish, shartlarni tasdiqlash va O'zbekiston xaridorlari uchun dolzarblikni kuzatish.",
+    "stepsTitle": "Bizning tekshirish jarayonimiz",
+    "stepsDescription": "Har bir ommaviy taklif PromoBozor’da aktiv deb belgilanishidan oldin bir xil takrorlanuvchi tekshiruv bosqichlaridan o'tadi.",
+    "steps": [
+      {
+        "title": "Manbani yig'ish",
+        "description": "Biz takliflarni rasmiy brend sahifalari, ilova ekranlari, xabarnomalar va O'zbekiston bozoriga tegishli landing page'lardan yig'amiz."
+      },
+      {
+        "title": "Qo'lda validatsiya",
+        "description": "Chegirma tafsilotlari, kirish shartlari, qaysi mahsulotlarga amal qilishi va mahalliy xaridorlarga mosligini ko'rib chiqamiz."
+      },
+      {
+        "title": "Dolzarblik tekshiruvi",
+        "description": "Boshlanish sanasi, tugash oynasi va promokod yoki link hali ham manba sahifada ko'rinib turganini tasdiqlaymiz."
+      },
+      {
+        "title": "Editorial nashr",
+        "description": "Faqat tushunarli, yetarli kontekstga ega takliflar sarlavha, chegirma miqdori va foydalanish shartlari bilan nashr qilinadi."
+      },
+      {
+        "title": "Doimiy tozalash",
+        "description": "Muddati tugagan, chalg'ituvchi yoki takroriy takliflar foydasiz ekanini tasdiqlaganimiz zahoti tahrirlanadi yoki olib tashlanadi."
+      }
+    ],
+    "standardsTitle": "Taklifda nimalar bo'lishi shart",
+    "standardsDescription": "Ishonchsiz ko'p kodlar o'rniga kamroq, ammo sifatli takliflarni afzal ko'ramiz.",
+    "standards": [
+      {
+        "title": "Aniq tejash qiymati",
+        "description": "Chegirma miqdori, bonus yoki foyda xaridor bosishidan oldin tushunarli bo'lishi kerak."
+      },
+      {
+        "title": "Ishlatish mumkin bo'lgan shartlar",
+        "description": "Minimal xarid summasi, birinchi buyurtma cheklovi, mahsulot istisnolari va hududiy cheklovlar ko'rsatilishi kerak."
+      },
+      {
+        "title": "Mahalliy relevatlik",
+        "description": "Biz O'zbekiston xaridorlari uchun ishlaydigan va do'konning mahalliy checkout flow'iga mos takliflarni ustun qo'yamiz."
+      }
+    ],
+    "exclusionsTitle": "Nimalarni nashrda qoldirmaymiz",
+    "exclusions": [
+      "Muddati tugagan yoki nofaol promokodlar",
+      "Noaniq shartlar yoki yashirin cheklovlarga ega takliflar",
+      "Bir xil kampaniya uchun takroriy listinglar",
+      "Ishonchli manbaga bog'lay olmaydigan aksiyalar"
+    ],
+    "ctaTitle": "Muayyan kod bo'yicha yordam kerakmi?",
+    "ctaDescription": "Agar siz nofaol yoki tushunarsiz promokod topsangiz, bizga yuboring. O'quvchi feedback'i listinglarni tezroq yangilashga yordam beradi.",
+    "ctaPrimary": "Jamoa bilan bog'lanish",
+    "ctaSecondary": "FAQ ni o'qish"
+  }
+}

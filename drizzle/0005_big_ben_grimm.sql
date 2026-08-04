@@ -1,0 +1,22 @@
+CREATE INDEX IF NOT EXISTS "brand_translations_brand_id_language_idx" ON "brand_translations" USING btree ("brand_id","language");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "brand_translations_language_slug_idx" ON "brand_translations" USING btree ("language","slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "brands_is_active_created_idx" ON "brands" USING btree ("is_active","created_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "brands_is_active_idx" ON "brands" USING btree ("is_active");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "categories_is_active_sort_order_idx" ON "categories" USING btree ("is_active","sort_order");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "categories_is_active_idx" ON "categories" USING btree ("is_active");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "category_translations_category_id_language_idx" ON "category_translations" USING btree ("category_id","language");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "category_translations_language_slug_idx" ON "category_translations" USING btree ("language","slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocode_translations_promocode_id_language_idx" ON "promocode_translations" USING btree ("promocode_id","language");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocode_translations_language_slug_idx" ON "promocode_translations" USING btree ("language","slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocode_translations_title_search_idx" ON "promocode_translations" USING btree ("title");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_status_featured_expires_starts_created_idx" ON "promocodes" USING btree ("status","is_featured","expires_at","starts_at","created_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_store_status_expires_starts_idx" ON "promocodes" USING btree ("store_id","status","expires_at","starts_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_category_status_expires_starts_idx" ON "promocodes" USING btree ("category_id","status","expires_at","starts_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_brand_status_expires_starts_idx" ON "promocodes" USING btree ("brand_id","status","expires_at","starts_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_status_featured_copy_created_idx" ON "promocodes" USING btree ("status","is_featured","copy_count","created_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_status_featured_discount_created_idx" ON "promocodes" USING btree ("status","is_featured","discount_value","created_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "promocodes_status_featured_expires_created_idx" ON "promocodes" USING btree ("status","is_featured","expires_at","created_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "store_translations_store_id_language_idx" ON "store_translations" USING btree ("store_id","language");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "store_translations_language_slug_idx" ON "store_translations" USING btree ("language","slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "stores_is_active_priority_created_idx" ON "stores" USING btree ("is_active","priority","created_at");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "stores_is_active_idx" ON "stores" USING btree ("is_active");
