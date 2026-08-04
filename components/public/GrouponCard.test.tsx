@@ -43,6 +43,7 @@ vi.mock("sonner", () => ({
 
 // Mock Lucide icons
 vi.mock("lucide-react", () => ({
+  BadgeCheck: ({ className }: any) => <span data-testid="icon-badge-check" className={className} />,
   Check: ({ className }: any) => <span data-testid="icon-check" className={className} />,
   Clock: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
   Clock3: ({ className }: any) => <span data-testid="icon-clock-3" className={className} />,
@@ -126,8 +127,10 @@ describe("GrouponCard", () => {
 
     expect(screen.getByText("Test Store")).toBeInTheDocument();
     expect(screen.getByText("Test Promo")).toBeInTheDocument();
-    expect(screen.getByText("50000 UZS")).toBeInTheDocument(); // Currency check
+    expect(screen.getByText("-50000 UZS")).toBeInTheDocument();
     expect(screen.getByText("TESTCODE")).toBeInTheDocument();
+    expect(screen.queryByText("Fresh")).not.toBeInTheDocument();
+    expect(screen.queryByText("Popular")).not.toBeInTheDocument();
   });
 
   it("renders with percent discount", () => {
@@ -138,7 +141,7 @@ describe("GrouponCard", () => {
     };
 
     render(<GrouponCard promocode={percentPromo} translations={mockTranslations} />);
-    expect(screen.getByText("20%")).toBeInTheDocument();
+    expect(screen.getByText("-20%")).toBeInTheDocument();
   });
 
   it("renders with different currency (USD)", () => {
@@ -149,21 +152,15 @@ describe("GrouponCard", () => {
     };
 
     render(<GrouponCard promocode={usdPromo} translations={mockTranslations} />);
-    expect(screen.getByText("10 USD")).toBeInTheDocument();
+    expect(screen.getByText("-10 USD")).toBeInTheDocument();
   });
 
-  it("shows freshness and popularity signals when thresholds match", () => {
-    const signaledPromo = {
-      ...mockPromocode,
-      startsAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      viewsCount: 250,
-      copyCount: 20,
-    };
+  it("does not use a full-card stretch link", () => {
+    const { container } = render(
+      <GrouponCard promocode={mockPromocode} translations={mockTranslations} />
+    );
 
-    render(<GrouponCard promocode={signaledPromo} translations={mockTranslations} />);
-
-    expect(screen.getByText("Fresh")).toBeInTheDocument();
-    expect(screen.getByText("Popular")).toBeInTheDocument();
+    expect(container.querySelector("a.absolute.inset-0")).toBeNull();
   });
 
   it("shows promo link activation for link type", () => {
@@ -213,11 +210,10 @@ describe("GrouponCard", () => {
     // Should show "Expired" badge
     expect(screen.getByText("Expired")).toBeInTheDocument();
 
-    // Link should NOT be present
-    const detailsLink = screen.queryByLabelText(/Details/);
-    expect(detailsLink).not.toBeInTheDocument();
+    // Title should not be an active detail link when inactive
+    expect(screen.queryByLabelText(/^Details -/)).not.toBeInTheDocument();
+    expect(screen.getByText("View Details")).toBeInTheDocument();
 
-    // Inactive appearance should be applied (opacity and grayscale)
     const cardContainer = screen.getByRole("article");
     expect(cardContainer).toHaveClass("opacity-60");
     expect(cardContainer).toHaveClass("grayscale");
@@ -231,14 +227,10 @@ describe("GrouponCard", () => {
 
     render(<GrouponCard promocode={disabledPromo} translations={mockTranslations} />);
 
-    // Should show "Disabled" badge
     expect(screen.getByText("Disabled")).toBeInTheDocument();
+    expect(screen.queryByLabelText(/^Details -/)).not.toBeInTheDocument();
+    expect(screen.getByText("View Details")).toBeInTheDocument();
 
-    // Link should NOT be present
-    const detailsLink = screen.queryByLabelText(/Details/);
-    expect(detailsLink).not.toBeInTheDocument();
-
-    // Inactive appearance should be applied
     const cardContainer = screen.getByRole("article");
     expect(cardContainer).toHaveClass("opacity-60");
     expect(cardContainer).toHaveClass("grayscale");

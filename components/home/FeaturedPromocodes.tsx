@@ -98,6 +98,7 @@ const getFeatured = (locale: string) =>
         copyCount: row.promocode.copyCount,
         likesCount: row.promocode.likesCount,
         dislikesCount: row.promocode.dislikesCount,
+        startsAt: row.promocode.startsAt?.toISOString() || null,
         expiresAt: row.promocode.expiresAt?.toISOString() || null,
         translations: row.promocodeTranslation
           ? [
@@ -105,6 +106,7 @@ const getFeatured = (locale: string) =>
                 language: row.promocodeTranslation.language,
                 title: row.promocodeTranslation.title,
                 slug: row.promocodeTranslation.slug,
+                conditions: row.promocodeTranslation.conditions,
               },
             ]
           : [],
@@ -161,13 +163,43 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
   } = translations;
 
   if (featuredPromocodes.length === 0) {
-    return null;
+    return (
+      <section className="my-12">
+        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="brand-kicker mb-3">{t("overhaul.featured.eyebrow")}</div>
+            <h2 className="brand-section-heading">{t("featuredPromocodes")}</h2>
+            <p className="text-muted-foreground mt-2 max-w-2xl text-base md:text-lg">
+              {t("overhaul.featured.description")}
+            </p>
+          </div>
+          <Link
+            href="/promocodes"
+            className="text-foreground inline-flex min-h-11 items-center gap-1 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
+          >
+            {tCommon("viewAll")}
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+        <div className="empty-state-card">
+          <h3 className="text-foreground mb-2 text-xl font-semibold">{tEmpty("noPromocodes")}</h3>
+          <p className="text-muted-foreground mx-auto max-w-xl text-sm leading-6">
+            {tEmpty("noPromocodesDescription")}
+          </p>
+          <Link
+            href="/promocodes"
+            className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            {tCommon("promocodes")}
+          </Link>
+        </div>
+      </section>
+    );
   }
 
-  // Transform data
   return (
     <section className="my-12">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="brand-kicker mb-3">{t("overhaul.featured.eyebrow")}</div>
           <h2 className="brand-section-heading">{t("featuredPromocodes")}</h2>
@@ -177,7 +209,7 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
         </div>
         <Link
           href="/promocodes?featured=true"
-          className="text-foreground flex items-center gap-1 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
+          className="text-foreground inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
           aria-label={`${t("featuredPromocodes")} - ${tCommon("viewAll")}`}
         >
           {tCommon("viewAll")}
@@ -217,6 +249,7 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
             dislike: tCard("dislike"),
             expired: tCard("expired"),
             disabled: tCard("disabled"),
+            conditionsLabel: tCard("conditionsLabel"),
             codeCopied: tPromocode("codeCopied"),
             copyError: tPromocode("copyError"),
           },

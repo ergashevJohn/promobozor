@@ -69,7 +69,10 @@
     "altBrandLogo": "Brend logosi",
     "altBrandLogoWithSlug": "Brend logosi - {slug} sahifasi",
     "altCategoryImage": "Kategoriya rasmi",
-    "altCategoryImageWithSlug": "Kategoriya rasmi - {slug} sahifasi"
+    "altCategoryImageWithSlug": "Kategoriya rasmi - {slug} sahifasi",
+    "listKicker": "PromoBozor ro'yxati",
+    "searchLabel": "Qidiruv:",
+    "email": "Email"
   },
   "LocaleLayout": {
     "title": "PromoBozor — Chegirmalar va promokodlar bozori",
@@ -110,11 +113,19 @@
     "popularStores": "Mashhur do'konlar",
     "popularCategories": "Mashhur kategoriyalar",
     "popularBrands": "Mashhur brendlar",
-    "trustPills": ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Tez va qulay qidiruv"],
+    "trustPills": [
+      "Tekshirilgan takliflar",
+      "Har kuni yangilanadi",
+      "Tez va qulay qidiruv"
+    ],
     "heroInsight": {
       "label": "PromoBozor insight",
       "title": "Marketplace, food delivery, bank va servislar uchun foydali takliflar",
-      "tags": ["Promo", "Kupon", "Tejash"]
+      "tags": [
+        "Promo",
+        "Kupon",
+        "Tejash"
+      ]
     },
     "heroCards": {
       "focus": {
@@ -128,10 +139,22 @@
     },
     "overhaul": {
       "heroQuickLinks": [
-        { "label": "Yangi takliflar", "href": "/uz/promocodes" },
-        { "label": "Food delivery", "href": "/uz/categories" },
-        { "label": "Top do'konlar", "href": "/uz/stores" },
-        { "label": "Ishonchli brendlar", "href": "/uz/brands" }
+        {
+          "label": "Yangi takliflar",
+          "href": "/uz/promocodes"
+        },
+        {
+          "label": "Food delivery",
+          "href": "/uz/categories"
+        },
+        {
+          "label": "Top do'konlar",
+          "href": "/uz/stores"
+        },
+        {
+          "label": "Ishonchli brendlar",
+          "href": "/uz/brands"
+        }
       ],
       "featured": {
         "eyebrow": "Hozir foydali takliflar",
@@ -404,7 +427,29 @@
     "bestOffers": "Eng yaxshi takliflar",
     "checkBackLater": "Keyinroq qaytib ko'ring",
     "visitWebsite": "Do'konga o'tish",
-    "viewOffers": "Takliflarni ko'rish"
+    "viewOffers": "Takliflarni ko'rish",
+    "relatedBrandsKicker": "Bog'liq brendlar",
+    "relatedCategoriesKicker": "Bog'liq kategoriyalar",
+    "offersKicker": "Do'kon chekoutdagi tejash",
+    "emptyCta": "Barcha takliflarni ko'rish",
+    "relatedBrandsDescription": "Shu do'konning faol tejash aralashmasida eng ko'p uchraydigan brendlarga o'ting.",
+    "relatedCategoriesDescription": "Shu do'konda hozir faol takliflari ko'rinadigan yaqin kategoriyalarni ko'ring.",
+    "noLinkedBrands": "Hali bog'langan brendlar yo'q.",
+    "noLinkedCategories": "Hali bog'langan kategoriyalar yo'q.",
+    "activeRouteLabel": "Faol yo'nalish",
+    "brandMixLabel": "Brend aralashmasi",
+    "connectedBrandsLabel": "bog'langan brendlar",
+    "categorySpreadLabel": "Kategoriya qamrovi",
+    "activeCategoryPathsLabel": "faol kategoriya yo'llari",
+    "storeTrustTitle": "Do'kon ishonchi",
+    "storeTrustDescription": "Hozirgi tejash yo'llari, ko'rinadigan mashhurlik va bu do'konning faol taklif oqimiga to'g'ridan-to'g'ri kirish.",
+    "allPromocodesDescription": "{name} uchun eng yaxshi yo'llar — aktiv kodlar, to'g'ridan-to'g'ri takliflar va isbot bir ro'yxatda.",
+    "heroKicker": "Do'kon tejash markazi",
+    "directoryKicker": "Do'konlar katalogi",
+    "directoryBadge": "Do'kon bo'yicha tejash",
+    "curatedRoutesCount": "{count} ta yo'nalish",
+    "highActivityBadge": "Faol yo'nalish",
+    "viewStorePromocodesAria": "{name} promokodlarini ko'rish"
   },
   "category": {
     "title": "Kategoriya",
@@ -433,7 +478,20 @@
     "bestOffers": "Eng yaxshi takliflar",
     "checkBackLater": "Keyinroq qaytib ko'ring",
     "viewOffers": "Takliflarni ko'rish",
-    "emptyCta": "Barcha takliflarni ko'rish"
+    "emptyCta": "Barcha takliflarni ko'rish",
+    "heroKicker": "Bozor ko'rinishi",
+    "storeRoutesLabel": "do'kon yo'llari",
+    "brandContextsLabel": "brend kontekstlari",
+    "snapshotTitle": "Kategoriya qisqacha",
+    "snapshotDescription": "Featured zichligi, mashhurlik va bu mavzuda eng ko'p tejash berayotgan yo'llarni solishtiring.",
+    "relatedStoresKicker": "Shu kategoriyadagi do'konlar",
+    "relatedStoresDescription": "Shu kategoriyaning hozirgi tejash xaritasida eng faol do'konlarni ko'ring.",
+    "relatedBrandsKicker": "Shu kategoriyadagi brendlar",
+    "relatedBrandsDescription": "Bu yerda eng kuchli takliflarni berayotgan bog'liq brendlarni solishtiring.",
+    "noLinkedStores": "Hali bog'langan do'konlar yo'q.",
+    "noLinkedBrands": "Hali bog'langan brendlar yo'q.",
+    "offersKicker": "Shu kategoriyadagi eng yaxshi takliflar",
+    "allPromocodesDescription": "{name} ichidagi jonli tejashlar — do'konlar va bog'liq brendlar bo'yicha faol takliflar."
   },
   "brand": {
     "title": "Brend",
@@ -462,7 +520,21 @@
     "bestOffers": "Eng yaxshi takliflar",
     "checkBackLater": "Keyinroq qaytib ko'ring",
     "viewOffers": "Takliflarni ko'rish",
-    "emptyCta": "Aktiv promokodlarni ko'rish"
+    "emptyCta": "Aktiv promokodlarni ko'rish",
+    "heroKicker": "Saralangan brend sahifasi",
+    "coverageLabel": "Brend qamrovi",
+    "storePlacementsLabel": "do'kon joylashuvlari",
+    "categoryContextsLabel": "kategoriya kontekstlari",
+    "editorialLensTitle": "Tahririy ko'rinish",
+    "editorialLensDescription": "Faol promolarning brend-markazli ko'rinishi: do'konlararo mavjudlik va taklif qayerda ko'proq uchrashini aniqroq signal.",
+    "relatedStoresKicker": "Brend qayerda uchraydi",
+    "relatedStoresDescription": "Shu brend hozir faol tejashga ega bo'lgan do'konlarga o'ting.",
+    "relatedCategoriesKicker": "Bog'liq kategoriyalar",
+    "relatedCategoriesDescription": "Shu brend takliflari guruhlangan eng kuchli kategoriyalarni ko'ring.",
+    "noLinkedStores": "Hali bog'langan do'konlar yo'q.",
+    "noLinkedCategories": "Hali bog'langan kategoriyalar yo'q.",
+    "offersKicker": "Saralangan brend takliflari",
+    "allPromocodesDescription": "{name} bilan bog'liq tejashlar — bir nechta do'kon va faol joylashuvlar bo'yicha."
   },
   "promocode": {
     "title": "Promokod tafsilotlari",
@@ -511,7 +583,13 @@
     "expiryDate": "Tugash sanasi",
     "share": "Ulashish",
     "amount": "Miqdor",
-    "percentage": "Foiz"
+    "percentage": "Foiz",
+    "proofKicker": "Taklif isboti",
+    "proofDescription": "Chegirma miqdori, holat, muddat va eng muhim amallarni nusxalash yoki ochishdan oldin shu sahifada ko'rib chiqing.",
+    "discountLabel": "Chegirma",
+    "exploreKicker": "Davom etib ko'ring",
+    "exploreDescription": "Shu taklif atrofidagi do'kon, brend yoki kategoriya kontekstiga o'tib, boshqa faol tejash yo'llarini solishtiring.",
+    "relatedDealsKicker": "O'xshash takliflar"
   },
   "filter": {
     "filters": "Filtrlar",
@@ -598,7 +676,8 @@
     "like": "Yoqdi",
     "dislike": "Yoqmadi",
     "expired": "Muddati tugagan",
-    "disabled": "Nofaol"
+    "disabled": "Nofaol",
+    "conditionsLabel": "Shart"
   },
   "admin": {
     "dashboard": "Boshqaruv paneli",
@@ -744,7 +823,8 @@
         "question": "Yangi promokodlar qanchalik tez qo'shiladi?",
         "answer": "Biz har kuni yangi promokodlar qo'shamiz va ularni muntazam ravishda yangilab boramiz. Jamoamiz kundalik ravishda O'zbekistondagi eng mashhur do'konlar va xizmatlarning yangi takliflarini kuzatib boradi. Yandex Eats, Uzum, Click, Payme va boshqa platformalar har kuni yangi chegirmalar va aksiyalarni e'lon qiladi, biz esa ularni darhol saytimizga qo'shamiz. Maxsus tadbirlar va bayramlar oldidan — masalan, Navro'z, Mustaqillik kuni yoki Yangi yil arafasida — promokodlar soni sezilarli darajada ortadi. Shuning uchun eng yangi takliflardan xabardor bo'lish uchun saytni muntazam tekshirib turing yoki bizning Telegram kanalimizga obuna bo'ling. Biz shuningdek, mashhur do'konlarning maxusi aksiyalari uchun alohida sahifalarni yaratamiz, u yerda barcha amaldagi promokodlar jamlangan bo'ladi."
       }
-    ]
+    ],
+    "heroKicker": "FAQ"
   },
   "privacy": {
     "title": "Maxfiylik siyosati va ma'lumotlar",
@@ -771,7 +851,8 @@
         "title": "Aloqa",
         "content": "Maxfiylik siyosati bo'yicha savollar uchun biz bilan bog'laning."
       }
-    ]
+    ],
+    "heroKicker": "Maxfiylik"
   },
   "terms": {
     "title": "Foydalanish shartlari va sayt qoidalari",
@@ -798,7 +879,8 @@
         "title": "Shartlarni o'zgartirish",
         "content": "Biz istalgan vaqtda ushbu shartlarni o'zgartirish huquqini o'zimizda saqlaymiz. O'zgarishlar saytda e'lon qilinadi."
       }
-    ]
+    ],
+    "heroKicker": "Shartlar"
   },
   "promocodesPage": {
     "title": "Barcha Promokodlar",
@@ -833,7 +915,10 @@
       "sending": "Yuborilmoqda...",
       "success": "Xabar muvaffaqiyatli yuborildi!",
       "error": "Xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
-    }
+    },
+    "heroKicker": "Aloqa",
+    "directKicker": "To'g'ridan-to'g'ri aloqa",
+    "formKicker": "Xabar yuborish"
   },
   "notFound": {
     "title": "Sahifa topilmadi",
@@ -903,7 +988,11 @@
         }
       ],
       "cta": "Promokodlarni qanday tekshirishimizni ko'ring"
-    }
+    },
+    "heroKicker": "PromoBozor haqida",
+    "statsKicker": "Statistika",
+    "whyUsKicker": "Nega biz",
+    "contactKicker": "Aloqa"
   },
   "verification": {
     "title": "Promokodlarni nashrdan oldin qanday tekshiramiz",
@@ -962,5 +1051,14 @@
     "ctaDescription": "Agar siz nofaol yoki tushunarsiz promokod topsangiz, bizga yuboring. O'quvchi feedback'i listinglarni tezroq yangilashga yordam beradi.",
     "ctaPrimary": "Jamoa bilan bog'lanish",
     "ctaSecondary": "FAQ ni o'qish"
+  },
+  "listing": {
+    "heroKicker": "Taklif izlash",
+    "liveOffers": "Jonli takliflar",
+    "verifiedRoutes": "Tekshirilgan yo'llar",
+    "sorting": "Saralash",
+    "sortingValue": "Yangi, mashhur, tugayotgan",
+    "saveTime": "Vaqt tejang",
+    "saveTimeValue": "Ko'rishdan oldin filtrlang"
   }
 }

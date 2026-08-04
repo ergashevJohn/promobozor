@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { Copy, Eye, Star, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Copy, Eye, Star } from "lucide-react";
 import { useReducer } from "react";
 import { toast } from "sonner";
 
@@ -30,7 +30,7 @@ type Props = {
   link: string | null;
   detailsHref: string;
   translations: Translations;
-  stats: {
+  stats?: {
     views: number;
     copies: number;
     likes: number;
@@ -39,43 +39,15 @@ type Props = {
   disabled?: boolean;
 };
 
-type State = {
-  likes: number;
-  dislikes: number;
-  copied: boolean;
-  userAction: "like" | "dislike" | null;
-  copyCount: number;
-};
-
-type Action =
-  | { type: "LIKED"; prevAction: "like" | "dislike" | null }
-  | { type: "DISLIKED"; prevAction: "like" | "dislike" | null }
-  | { type: "CODE_COPIED" }
-  | { type: "LINK_USED" }
-  | { type: "RESET_COPIED" };
+type State = { copied: boolean };
+type Action = { type: "CODE_COPIED" } | { type: "RESET_COPIED" };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case "LIKED":
-      return {
-        ...state,
-        likes: state.likes + 1,
-        dislikes: action.prevAction === "dislike" ? state.dislikes - 1 : state.dislikes,
-        userAction: "like",
-      };
-    case "DISLIKED":
-      return {
-        ...state,
-        dislikes: state.dislikes + 1,
-        likes: action.prevAction === "like" ? state.likes - 1 : state.likes,
-        userAction: "dislike",
-      };
     case "CODE_COPIED":
-      return { ...state, copied: true, copyCount: state.copyCount + 1 };
-    case "LINK_USED":
-      return { ...state, copyCount: state.copyCount + 1 };
+      return { copied: true };
     case "RESET_COPIED":
-      return { ...state, copied: false };
+      return { copied: false };
   }
 }
 
@@ -86,53 +58,15 @@ export function GrouponCardActions({
   link,
   detailsHref,
   translations,
-  stats,
   disabled = false,
 }: Props) {
-  const [state, dispatch] = useReducer(reducer, {
-    likes: stats.likes,
-    dislikes: stats.dislikes,
-    copied: false,
-    userAction: null,
-    copyCount: stats.copies,
-  });
-
-  const { likes, dislikes, copied, userAction, copyCount } = state;
-
-  const handleLike = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (disabled || userAction === "like") return;
-    try {
-      const res = await fetch(`/api/promocodes/${promocodeId}/like`, { method: "POST" });
-      if (res.ok) {
-        dispatch({ type: "LIKED", prevAction: userAction });
-      }
-    } catch (error) {
-      console.error("Failed to like promocode:", error);
-    }
-  };
-
-  const handleDislike = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (disabled || userAction === "dislike") return;
-    try {
-      const res = await fetch(`/api/promocodes/${promocodeId}/dislike`, { method: "POST" });
-      if (res.ok) {
-        dispatch({ type: "DISLIKED", prevAction: userAction });
-      }
-    } catch (error) {
-      console.error("Failed to dislike promocode:", error);
-    }
-  };
+  const [state, dispatch] = useReducer(reducer, { copied: false });
+  const { copied } = state;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (disabled) {
-      return;
-    }
+    if (disabled) return;
     try {
       if (type === "code") {
         await navigator.clipboard.writeText(code || "");
@@ -143,7 +77,6 @@ export function GrouponCardActions({
       }
 
       await fetch(`/api/promocodes/${promocodeId}/copy`, { method: "POST" });
-      if (type !== "code") dispatch({ type: "LINK_USED" });
       if (type === "code") {
         setTimeout(() => dispatch({ type: "RESET_COPIED" }), 2000);
       }
@@ -154,113 +87,51 @@ export function GrouponCardActions({
   };
 
   return (
-    <>
-      <div className="mt-auto grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
-        <Button
-          onClick={handleCopy}
-          className={`h-12 w-full transition-all duration-200 ${
-            type === "link"
-              ? "bg-[color:var(--foreground)] text-white hover:bg-[#1f2937]"
-              : "bg-[color:var(--accent-red)] text-white hover:bg-[#ef4f44]"
-          } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
-          size="default"
-          disabled={disabled || (copied && type === "code")}
-          aria-label={
-            type === "link"
-              ? translations.getDeal
-              : copied
-                ? translations.copied
-                : translations.copy
-          }
-        >
-          {type === "link" ? (
-            <>
-              <Star size={16} className="mr-1.5" />
-              {translations.getDeal}
-            </>
-          ) : copied ? (
-            <>
-              <Copy size={16} className="mr-1.5" />
-              {translations.copied}
-            </>
-          ) : (
-            <>
-              <Copy size={16} className="mr-1.5" />
-              {translations.copy}
-            </>
-          )}
-        </Button>
-
-        <Button asChild variant="outline" className="h-12 rounded-xl bg-white/90 px-4">
-          <Link href={detailsHref} aria-label={translations.viewDetails}>
-            <Eye size={16} className="mr-1.5" />
-            {translations.viewDetails}
-          </Link>
-        </Button>
-      </div>
-
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div className="inline-flex items-center gap-2 rounded-full bg-[color:var(--secondary)] px-3 py-1.5 text-[color:var(--muted-foreground)]">
-          <span className="font-semibold text-[color:var(--foreground)]">
-            {translations.verified}
-          </span>
-          <span className="h-1 w-1 rounded-full bg-[color:var(--border)]" />
-          <span>{type === "link" ? translations.getDeal : translations.copy}</span>
-        </div>
-        {copied && type === "code" && (
-          <div className="rounded-full bg-emerald-50 px-3 py-1.5 font-medium text-emerald-700">
-            {translations.codeCopied}
-          </div>
+    <div className="flex flex-col gap-2">
+      <Button
+        onClick={handleCopy}
+        className={`h-12 w-full min-h-11 rounded-xl transition-all duration-200 ${
+          type === "link"
+            ? "ink-surface hover:opacity-90"
+            : "bg-[color:var(--accent-red)] text-white hover:bg-[#b83a33]"
+        } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+        disabled={disabled || (copied && type === "code")}
+        aria-label={
+          type === "link"
+            ? translations.getDeal
+            : copied
+              ? translations.copied
+              : translations.copy
+        }
+      >
+        {type === "link" ? (
+          <>
+            <Star size={16} className="mr-1.5" />
+            {translations.getDeal}
+          </>
+        ) : copied ? (
+          <>
+            <Copy size={16} className="mr-1.5" />
+            {translations.copied}
+          </>
+        ) : (
+          <>
+            <Copy size={16} className="mr-1.5" />
+            {translations.copy}
+          </>
         )}
-      </div>
+      </Button>
 
-      <div className="border-t border-[color:var(--border)] px-5 pt-3">
-        <div className="flex items-center justify-between text-xs">
-          <div className="text-muted-foreground flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <Eye size={14} />
-              <span className="font-medium">{stats.views.toLocaleString()}</span>
-            </div>
-            <div className="bg-muted-foreground h-3 w-px"></div>
-            <div className="flex items-center gap-1.5">
-              <Copy size={14} />
-              <span className="font-medium">{copyCount.toLocaleString()}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleLike}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all duration-200 ${
-                userAction === "like"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-muted text-muted-foreground hover:bg-emerald-50 hover:text-emerald-700"
-              } ${disabled ? "pointer-events-none cursor-not-allowed opacity-50" : ""}`}
-              aria-label={`${translations.like} ${likes.toLocaleString()}`}
-              aria-pressed={userAction === "like"}
-              disabled={disabled}
-            >
-              <ThumbsUp size={14} className={userAction === "like" ? "fill-current" : ""} />
-              <span className="font-semibold">{likes.toLocaleString()}</span>
-            </button>
-
-            <button
-              onClick={handleDislike}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all duration-200 ${
-                userAction === "dislike"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-muted text-muted-foreground hover:bg-[color:var(--accent)] hover:text-[color:var(--accent-red)]"
-              } ${disabled ? "pointer-events-none cursor-not-allowed opacity-50" : ""}`}
-              aria-label={`${translations.dislike} ${dislikes.toLocaleString()}`}
-              aria-pressed={userAction === "dislike"}
-              disabled={disabled}
-            >
-              <ThumbsDown size={14} className={userAction === "dislike" ? "fill-current" : ""} />
-              <span className="font-semibold">{dislikes.toLocaleString()}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
+      <Button
+        asChild
+        variant="outline"
+        className="h-10 min-h-10 w-full rounded-xl bg-card/95 text-sm"
+      >
+        <Link href={detailsHref} aria-label={translations.viewDetails}>
+          <Eye size={16} className="mr-1.5" />
+          {translations.viewDetails}
+        </Link>
+      </Button>
+    </div>
   );
 }

@@ -106,7 +106,11 @@ export default function SearchBar({
       <Label htmlFor={searchInputId} className="sr-only">
         {placeholderText}
       </Label>
-      <div className="flex w-full items-center gap-2">
+      <div
+        className={`flex w-full gap-2 ${
+          navigationMode === "submit" ? "flex-col sm:flex-row sm:items-center" : "items-center"
+        }`}
+      >
         <div className="relative flex-1">
           <Search
             className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform"
@@ -119,11 +123,11 @@ export default function SearchBar({
             onChange={handleSearchChange}
             placeholder={placeholderText}
             aria-label={placeholderText}
-            className={`h-14 rounded-2xl border-white/80 bg-white/95 pl-10 text-base shadow-[0_24px_60px_-36px_rgba(17,24,39,0.55)] ${
-              navigationMode === "submit" ? "pr-12" : "pr-20"
+            className={`h-12 rounded-2xl border-[color:var(--border)] bg-card/95 pl-10 text-base shadow-[0_24px_60px_-36px_rgba(17,24,39,0.55)] sm:h-14 ${
+              navigationMode === "submit" ? "pr-12" : "pr-14"
             }`}
           />
-          <div className="absolute top-1/2 right-2 flex -translate-y-1/2 transform items-center gap-1">
+          <div className="absolute top-1/2 right-1 flex -translate-y-1/2 transform items-center gap-1">
             {navigationMode === "live" && isLoading && (
               <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
             )}
@@ -133,7 +137,8 @@ export default function SearchBar({
                 variant="ghost"
                 size="sm"
                 onClick={handleClear}
-                className="h-8 w-8 p-0"
+                aria-label={t("clear")}
+                className="h-11 w-11 min-h-11 min-w-11 p-0"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -141,7 +146,11 @@ export default function SearchBar({
           </div>
         </div>
         {navigationMode === "submit" && (
-          <Button type="submit" className="h-14 rounded-2xl px-5" aria-label={t("search")}>
+          <Button
+            type="submit"
+            className="h-12 w-full rounded-2xl px-5 sm:h-14 sm:w-auto"
+            aria-label={t("search")}
+          >
             {t("search")}
           </Button>
         )}

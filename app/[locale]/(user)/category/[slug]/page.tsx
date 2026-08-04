@@ -475,7 +475,7 @@ export default async function CategoryPage({
                       📦
                     </div>
                   )}
-                  <div className="brand-kicker !mb-0">Market overview</div>
+                  <div className="brand-kicker !mb-0">{t("heroKicker")}</div>
                 </div>
                 <h1 className="text-foreground mb-2 text-4xl font-semibold md:text-5xl">
                   {t("h1Title", { name: categoryTranslation?.name || categoryTitle })}
@@ -486,7 +486,7 @@ export default async function CategoryPage({
                   </p>
                 )}
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
                     <div className="text-3xl font-semibold text-[color:var(--foreground)]">
                       {totalPromocodesCount}
                     </div>
@@ -494,20 +494,20 @@ export default async function CategoryPage({
                       {t("activePromocodes")}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
                     <div className="text-3xl font-semibold text-[color:var(--foreground)]">
                       {uniqueStoreCount}
                     </div>
                     <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      store routes
+                      {t("storeRoutesLabel")}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
                     <div className="text-3xl font-semibold text-[color:var(--foreground)]">
                       {uniqueBrandCount}
                     </div>
                     <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      brand contexts
+                      {t("brandContextsLabel")}
                     </div>
                   </div>
                 </div>
@@ -516,15 +516,14 @@ export default async function CategoryPage({
               <div className="grid gap-4">
                 <div className="rounded-[28px] border border-[color:var(--accent-red)]/12 bg-[linear-gradient(160deg,rgba(255,90,79,0.08),rgba(255,255,255,0.97)_40%,rgba(248,250,252,0.96)_100%)] p-5 shadow-[0_24px_60px_-44px_rgba(255,90,79,0.35)]">
                   <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                    Category snapshot
+                    {t("snapshotTitle")}
                   </div>
                   <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                    Compare featured density, category popularity, and which routes currently drive
-                    the most savings in this topic.
+                    {t("snapshotDescription")}
                   </p>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
                     <div className="text-sm font-semibold text-[color:var(--foreground)]">
                       {tCommon("featured")}
                     </div>
@@ -532,7 +531,7 @@ export default async function CategoryPage({
                       {featuredPromocodesCount}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
                     <div className="text-sm font-semibold text-[color:var(--foreground)]">
                       {t("views")}
                     </div>
@@ -540,7 +539,7 @@ export default async function CategoryPage({
                       {totalViews}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-white/80 bg-white/92 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)] sm:col-span-2">
+                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)] sm:col-span-2">
                     <div className="text-sm font-semibold text-[color:var(--foreground)]">
                       {t("uses")}
                     </div>
@@ -556,10 +555,10 @@ export default async function CategoryPage({
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[26px] border border-white/80 bg-white/92 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
-              <div className="brand-kicker mb-3">Stores in this category</div>
+            <div className="rounded-[26px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+              <div className="brand-kicker mb-3">{t("relatedStoresKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
-                Browse the stores that are most active inside this category’s current savings map.
+                {t("relatedStoresDescription")}
               </p>
               <div className="flex flex-wrap gap-3">
                 {relatedStores.length > 0 ? (
@@ -574,15 +573,15 @@ export default async function CategoryPage({
                   ))
                 ) : (
                   <span className="text-sm text-[color:var(--muted-foreground)]">
-                    No linked stores yet.
+                    {t("noLinkedStores")}
                   </span>
                 )}
               </div>
             </div>
-            <div className="rounded-[26px] border border-white/80 bg-white/92 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
-              <div className="brand-kicker mb-3">Brands in this category</div>
+            <div className="rounded-[26px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+              <div className="brand-kicker mb-3">{t("relatedBrandsKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
-                Follow related brands to compare who is currently driving the strongest offers here.
+                {t("relatedBrandsDescription")}
               </p>
               <div className="flex flex-wrap gap-3">
                 {relatedBrands.length > 0 ? (
@@ -597,7 +596,7 @@ export default async function CategoryPage({
                   ))
                 ) : (
                   <span className="text-sm text-[color:var(--muted-foreground)]">
-                    No linked brands yet.
+                    {t("noLinkedBrands")}
                   </span>
                 )}
               </div>
@@ -607,11 +606,12 @@ export default async function CategoryPage({
           {/* All Promocodes */}
           <section>
             <div className="mb-8">
-              <div className="brand-kicker mb-3">Best offers in this category</div>
+              <div className="brand-kicker mb-3">{t("offersKicker")}</div>
               <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
               <p className="text-muted-foreground mt-2">
-                Explore live savings inside {categoryTranslation?.name || categoryTitle}, with
-                active offers across stores and related brands.
+                {t("allPromocodesDescription", {
+                  name: categoryTranslation?.name || categoryTitle,
+                })}
               </p>
             </div>
             {totalPromocodesCount > 0 ? (

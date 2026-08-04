@@ -29,7 +29,7 @@ export function ThemeToggle() {
   // Render a placeholder during SSR to avoid hydration mismatch
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" aria-label={tCommon("toggleTheme")} className="h-9 w-9">
+      <Button variant="ghost" size="icon" aria-label={tCommon("toggleTheme")} className="!size-11 min-h-11 min-w-11">
         <Sun className="h-5 w-5" />
       </Button>
     );
@@ -41,7 +41,7 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       aria-label={tCommon("toggleTheme")}
-      className="h-9 w-9"
+      className="!size-11 min-h-11 min-w-11"
     >
       {theme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
     </Button>

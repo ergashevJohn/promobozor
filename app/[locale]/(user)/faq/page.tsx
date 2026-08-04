@@ -71,7 +71,7 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
                 <HelpCircle className="h-12 w-12" />
               </div>
             </div>
-            <div className="brand-kicker mb-4">FAQ</div>
+            <div className="brand-kicker mb-4">{t("heroKicker")}</div>
             <h1 className="page-hero-heading mb-4">{t("title")}</h1>
             <p className="page-hero-copy mx-auto">{t("description")}</p>
           </div>

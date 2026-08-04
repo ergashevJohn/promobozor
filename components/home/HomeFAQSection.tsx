@@ -32,7 +32,7 @@ export async function HomeFAQSection({ locale }: HomeFAQSectionProps) {
           {items.map((item, index) => (
             <article
               key={item.question}
-              className="rounded-[24px] border border-white/80 bg-white/92 p-5 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)]"
+              className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)]"
             >
               <div className="mb-4 text-sm font-semibold tracking-[0.24em] text-[color:var(--accent-red)] uppercase">
                 {String(index + 1).padStart(2, "0")}

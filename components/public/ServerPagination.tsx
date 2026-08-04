@@ -60,6 +60,11 @@ function getPageNumbers(current: number, total: number): (number | "ellipsis")[]
   return pages;
 }
 
+const navBtnClass =
+  "text-muted-foreground hover:text-foreground inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full border border-transparent bg-card/80 px-3 py-2 text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-card sm:px-4";
+const navBtnDisabledClass =
+  "text-muted-foreground/40 inline-flex min-h-11 min-w-11 cursor-not-allowed items-center justify-center gap-1 rounded-full border border-transparent bg-card/50 px-3 py-2 text-sm font-medium sm:px-4";
+
 export default function ServerPagination({
   currentPage,
   totalPages,
@@ -74,25 +79,31 @@ export default function ServerPagination({
   return (
     <nav
       aria-label={translations.ariaLabel}
-      className="mt-10 flex items-center justify-center gap-2"
+      className="mt-10 flex items-center justify-center gap-1.5 sm:gap-2"
     >
       {currentPage > 1 ? (
         <Link
           href={buildPageUrl(baseUrl, currentPage - 1, searchParams)}
-          className="text-muted-foreground hover:text-foreground flex items-center gap-1 rounded-full border border-transparent bg-white/70 px-4 py-2 text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-white"
+          className={navBtnClass}
           aria-label={translations.previous}
         >
           <ChevronLeft size={16} />
           <span className="hidden sm:inline">{translations.previous}</span>
         </Link>
       ) : (
-        <span className="text-muted-foreground/40 flex cursor-not-allowed items-center gap-1 rounded-full border border-transparent bg-white/40 px-4 py-2 text-sm font-medium">
+        <span className={navBtnDisabledClass}>
           <ChevronLeft size={16} />
           <span className="hidden sm:inline">{translations.previous}</span>
         </span>
       )}
 
-      <div className="flex items-center gap-2">
+      {/* Mobile: compact page indicator */}
+      <div className="min-w-[5.5rem] rounded-full border border-[color:var(--border)] bg-card/90 px-3 py-2 text-center text-sm font-medium sm:hidden">
+        {translations.page} {currentPage}/{totalPages}
+      </div>
+
+      {/* Desktop/tablet: full page list */}
+      <div className="hidden items-center gap-2 sm:flex">
         {pages.map((page, i) => {
           if (page === "ellipsis") {
             const ellipsisKey = `ellipsis-${i < pages.length / 2 ? "start" : "end"}`;
@@ -117,7 +128,7 @@ export default function ServerPagination({
             <Link
               key={page}
               href={buildPageUrl(baseUrl, page, searchParams)}
-              className="text-muted-foreground hover:text-foreground min-w-[42px] rounded-full border border-transparent bg-white/70 px-3 py-2 text-center text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-white"
+              className="text-muted-foreground hover:text-foreground min-w-[42px] rounded-full border border-transparent bg-card/80 px-3 py-2 text-center text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-card"
               aria-label={`${translations.page} ${page}`}
             >
               {page}
@@ -129,14 +140,14 @@ export default function ServerPagination({
       {currentPage < totalPages ? (
         <Link
           href={buildPageUrl(baseUrl, currentPage + 1, searchParams)}
-          className="text-muted-foreground hover:text-foreground flex items-center gap-1 rounded-full border border-transparent bg-white/70 px-4 py-2 text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-white"
+          className={navBtnClass}
           aria-label={translations.next}
         >
           <span className="hidden sm:inline">{translations.next}</span>
           <ChevronRight size={16} />
         </Link>
       ) : (
-        <span className="text-muted-foreground/40 flex cursor-not-allowed items-center gap-1 rounded-full border border-transparent bg-white/40 px-4 py-2 text-sm font-medium">
+        <span className={navBtnDisabledClass}>
           <span className="hidden sm:inline">{translations.next}</span>
           <ChevronRight size={16} />
         </span>

@@ -36,7 +36,7 @@ export function LanguageSwitcher() {
         value={locale}
         onChange={handleLanguageChange}
         disabled={isLoading}
-        className="border-input text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 w-20 appearance-none rounded-full border bg-white/90 pr-8 pl-3 text-xs font-medium shadow-[0_16px_36px_-30px_rgba(17,24,39,0.45)] transition-[border-color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-60 md:w-[148px] md:pl-4 md:text-sm"
+        className="border-input text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-11 w-[7.5rem] appearance-none rounded-full border bg-card/90 pr-8 pl-3 text-xs font-medium shadow-[0_16px_36px_-30px_rgba(17,24,39,0.45)] transition-[border-color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 md:w-[148px] md:pl-4 md:text-sm"
       >
         {languageOptions.map((option) => (
           <option key={option.value} value={option.value}>

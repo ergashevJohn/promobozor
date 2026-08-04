@@ -43,7 +43,7 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
             <Link
               key={item.title}
               href={item.href}
-              className="group rounded-[28px] border border-[color:var(--border)] bg-white p-5 shadow-[0_24px_60px_-44px_rgba(17,24,39,0.35)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40"
+              className="group rounded-[28px] border border-[color:var(--border)] bg-card p-5 shadow-[0_24px_60px_-44px_rgba(17,24,39,0.35)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-3">

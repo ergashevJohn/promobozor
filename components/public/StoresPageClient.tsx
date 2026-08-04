@@ -57,6 +57,7 @@ interface StoresPageClientProps {
 export default function StoresPageClient({ storesData, translations: t }: StoresPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const tCommon = useTranslations("common");
+  const tStore = useTranslations("store");
 
   // Filter stores based on search query
   const filteredStores = useMemo(() => {
@@ -78,16 +79,16 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
         <div className="page-hero-surface">
           <div className="mb-8 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <div className="brand-kicker mb-4">Store directory</div>
+              <div className="brand-kicker mb-4">{tStore("directoryKicker")}</div>
               <h1 className="page-hero-heading mb-3">{t.allStores}</h1>
               <p className="page-hero-copy">{t.allStoresDescription}</p>
             </div>
-            <div className="rounded-[24px] border border-white/80 bg-white/92 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+            <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
               <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                Store-first savings
+                {tStore("directoryBadge")}
               </div>
               <div className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                {storesData.length} curated routes
+                {tStore("curatedRoutesCount", { count: storesData.length })}
               </div>
             </div>
           </div>
@@ -106,7 +107,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               placeholder={t.findStore}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-14 rounded-2xl border-white/80 bg-white pr-4 pl-12 text-base shadow-[0_20px_50px_-32px_rgba(17,24,39,0.45)]"
+              className="h-14 rounded-2xl border-[color:var(--border)] bg-card pr-4 pl-12 text-base shadow-[0_20px_50px_-32px_rgba(17,24,39,0.45)]"
             />
           </div>
         </div>
@@ -165,13 +166,13 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
 
                     {index < 3 && (
                       <div className="inline-flex rounded-full bg-[color:var(--accent)] px-3 py-1 text-xs font-semibold text-[color:var(--accent-red)]">
-                        High-activity route
+                        {tStore("highActivityBadge")}
                       </div>
                     )}
 
                     <Link
                       href={`/store/${translation?.slug || store.id}`}
-                      aria-label={`${t.view} ${storeName} promocodes`}
+                      aria-label={tStore("viewStorePromocodesAria", { name: storeName })}
                     >
                       <Button
                         className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
@@ -193,11 +194,25 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
                 🔍
               </div>
               <h2 className="text-foreground mb-2 text-xl font-semibold">
-                {searchQuery ? t.noStoresFound : t.noStoresFound}
+                {t.noStoresFound}
               </h2>
               <p className="text-muted-foreground mt-2 text-sm">
                 {searchQuery ? t.searchHint : t.noStoresDescription}
               </p>
+              <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/promocodes"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                  {t.viewOffers}
+                </Link>
+                <Link
+                  href="/stores"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-[color:var(--border)] bg-card px-5 text-sm font-semibold text-[color:var(--foreground)]"
+                >
+                  {t.allStores}
+                </Link>
+              </div>
             </CardContent>
           </Card>
         )}

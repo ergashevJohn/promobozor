@@ -208,7 +208,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
           <div className="grid gap-4 sm:grid-cols-2">
             {secondaryStores.slice(0, 6).map((store) => (
               <Link key={store.id} href={`/store/${store.slug}`}>
-                <Card className="group h-full border-[color:var(--border)] bg-white py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
+                <Card className="group h-full border-[color:var(--border)] bg-card py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
                   <CardContent className="flex h-full items-center gap-4 p-5">
                     {store.logoUrl ? (
                       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)]">

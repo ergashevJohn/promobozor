@@ -1,6 +1,5 @@
 /**
- * Redis caching layer for frequently accessed data
- * Uses Upstash Redis for distributed caching
+ * Next.js Data Cache helpers for frequently accessed data.
  *
  * Cache keys follow this pattern:
  * - promocodes:list:{lang}:{storeId}:{categoryId}:{brandId}:{search}:{sortBy}

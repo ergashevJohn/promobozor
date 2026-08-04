@@ -2,7 +2,14 @@ import { getBaseUrl } from "@/lib/metadata";
 import { MetadataRoute } from "next";
 
 const LOCALES = ["uz", "ru", "en"] as const;
-const COMMON_DISALLOW = ["/api/"];
+const COMMON_DISALLOW = [
+  "/api/",
+  "/johasuper/",
+  "/*/johasuper/",
+  "/uz/johasuper/",
+  "/ru/johasuper/",
+  "/en/johasuper/",
+];
 
 // AI Search Crawlers - Allow these for GEO (Generative Engine Optimization)
 const AI_SEARCH_CRAWLERS = [

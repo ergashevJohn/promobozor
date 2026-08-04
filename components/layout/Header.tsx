@@ -1,4 +1,5 @@
 import { MobileMenuToggle } from "@/components/public/headers/MobileMenuToggle";
+import { MobileNavLinks } from "@/components/public/headers/MobileNavLinks";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "@/i18n/navigation";
@@ -19,7 +20,7 @@ export async function Header() {
   return (
     <header className="bg-background/90 border-border sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="flex h-[4.5rem] items-center justify-between gap-4 py-3">
+        <div className="flex h-14 items-center justify-between gap-3 py-2 sm:h-[4.5rem] sm:gap-4 sm:py-3">
           <Link href="/" className="flex items-center">
             <Image
               src="/promobozor-logo.png"
@@ -31,7 +32,7 @@ export async function Header() {
             />
           </Link>
 
-          <nav className="hidden items-center gap-1 rounded-full border border-white/80 bg-white/90 p-1 shadow-[0_18px_40px_-28px_rgba(17,24,39,0.45)] md:flex">
+          <nav className="border-border bg-card/90 hidden items-center gap-1 rounded-full border p-1 shadow-[0_18px_40px_-28px_rgba(17,24,39,0.45)] md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -44,23 +45,13 @@ export async function Header() {
           </nav>
 
           <div className="flex items-center gap-1 md:gap-4">
-            <div className="hidden rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-3 py-2 text-xs font-semibold tracking-[0.12em] text-[color:var(--muted-foreground)] uppercase xl:block">
+            <div className="border-border bg-secondary text-muted-foreground hidden rounded-full border px-3 py-2 text-xs font-semibold tracking-[0.12em] uppercase xl:block">
               PromoBozor
             </div>
             <LanguageSwitcher />
             <ThemeToggle />
             <MobileMenuToggle>
-              <nav className="flex flex-col gap-2 md:hidden">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-foreground rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3 text-sm font-medium shadow-[0_16px_36px_-28px_rgba(17,24,39,0.55)] transition-colors hover:bg-[color:var(--accent)]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
+              <MobileNavLinks links={navLinks} />
             </MobileMenuToggle>
           </div>
         </div>

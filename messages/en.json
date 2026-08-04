@@ -69,7 +69,10 @@
     "altBrandLogo": "Brand logo",
     "altBrandLogoWithSlug": "Brand logo - {slug} page",
     "altCategoryImage": "Category image",
-    "altCategoryImageWithSlug": "Category image - {slug} page"
+    "altCategoryImageWithSlug": "Category image - {slug} page",
+    "listKicker": "PromoBozor list",
+    "searchLabel": "Search:",
+    "email": "Email"
   },
   "LocaleLayout": {
     "title": "PromoBozor — Deals and promo code marketplace",
@@ -129,7 +132,8 @@
     "like": "Like",
     "dislike": "Dislike",
     "expired": "Expired",
-    "disabled": "Inactive"
+    "disabled": "Inactive",
+    "conditionsLabel": "Terms"
   },
   "home": {
     "title": "Find discounts and promo codes in one place",
@@ -142,11 +146,19 @@
     "popularStores": "Popular Stores",
     "popularCategories": "Popular Categories",
     "popularBrands": "Popular Brands",
-    "trustPills": ["Verified offers", "Updated daily", "Fast, simple search"],
+    "trustPills": [
+      "Verified offers",
+      "Updated daily",
+      "Fast, simple search"
+    ],
     "heroInsight": {
       "label": "PromoBozor insight",
       "title": "Useful offers across marketplaces, food delivery, banking, and services",
-      "tags": ["Promo", "Coupon", "Savings"]
+      "tags": [
+        "Promo",
+        "Coupon",
+        "Savings"
+      ]
     },
     "heroCards": {
       "focus": {
@@ -160,10 +172,22 @@
     },
     "overhaul": {
       "heroQuickLinks": [
-        { "label": "Latest deals", "href": "/en/promocodes" },
-        { "label": "Food delivery", "href": "/en/categories" },
-        { "label": "Top stores", "href": "/en/stores" },
-        { "label": "Trusted brands", "href": "/en/brands" }
+        {
+          "label": "Latest deals",
+          "href": "/en/promocodes"
+        },
+        {
+          "label": "Food delivery",
+          "href": "/en/categories"
+        },
+        {
+          "label": "Top stores",
+          "href": "/en/stores"
+        },
+        {
+          "label": "Trusted brands",
+          "href": "/en/brands"
+        }
       ],
       "featured": {
         "eyebrow": "Best deals right now",
@@ -256,7 +280,12 @@
         "categories": {
           "eyebrow": "Shop by need",
           "description": "Categories should guide users by intent, not just list taxonomy labels.",
-          "labels": ["Fast-moving", "High-use", "Daily savings", "Curated path"],
+          "labels": [
+            "Fast-moving",
+            "High-use",
+            "Daily savings",
+            "Curated path"
+          ],
           "cardDescriptions": [
             "Useful when you want the strongest currently active offers in this area.",
             "Great for comparing multiple saving options before choosing a store.",
@@ -431,7 +460,29 @@
     "bestOffers": "Best Offers",
     "checkBackLater": "Check back later",
     "visitWebsite": "Visit Website",
-    "viewOffers": "View offers"
+    "viewOffers": "View offers",
+    "relatedBrandsKicker": "Related brands",
+    "relatedCategoriesKicker": "Related categories",
+    "offersKicker": "Store checkout savings",
+    "emptyCta": "Browse all offers",
+    "relatedBrandsDescription": "Jump into the brands that appear most often inside this store’s active savings mix.",
+    "relatedCategoriesDescription": "Explore adjacent categories where this store currently has visible offer activity.",
+    "noLinkedBrands": "No linked brands yet.",
+    "noLinkedCategories": "No linked categories yet.",
+    "activeRouteLabel": "Active route",
+    "brandMixLabel": "Brand mix",
+    "connectedBrandsLabel": "connected brands",
+    "categorySpreadLabel": "Category spread",
+    "activeCategoryPathsLabel": "active category paths",
+    "storeTrustTitle": "Store trust",
+    "storeTrustDescription": "Current savings routes, visible popularity, and direct access to this store’s active offer flow.",
+    "allPromocodesDescription": "Best available routes for {name}, with active codes, direct deals, and offer proof in one list.",
+    "heroKicker": "Store savings hub",
+    "directoryKicker": "Store directory",
+    "directoryBadge": "Store-first savings",
+    "curatedRoutesCount": "{count} curated routes",
+    "highActivityBadge": "High-activity route",
+    "viewStorePromocodesAria": "View {name} promocodes"
   },
   "category": {
     "title": "Category",
@@ -460,7 +511,20 @@
     "bestOffers": "Best Offers",
     "checkBackLater": "Check back later",
     "viewOffers": "View offers",
-    "emptyCta": "Browse all offers"
+    "emptyCta": "Browse all offers",
+    "heroKicker": "Market overview",
+    "storeRoutesLabel": "store routes",
+    "brandContextsLabel": "brand contexts",
+    "snapshotTitle": "Category snapshot",
+    "snapshotDescription": "Compare featured density, category popularity, and which routes currently drive the most savings in this topic.",
+    "relatedStoresKicker": "Stores in this category",
+    "relatedStoresDescription": "Browse the stores that are most active inside this category's current savings map.",
+    "relatedBrandsKicker": "Brands in this category",
+    "relatedBrandsDescription": "Follow related brands to compare who is currently driving the strongest offers here.",
+    "noLinkedStores": "No linked stores yet.",
+    "noLinkedBrands": "No linked brands yet.",
+    "offersKicker": "Best offers in this category",
+    "allPromocodesDescription": "Explore live savings inside {name}, with active offers across stores and related brands."
   },
   "brand": {
     "title": "Brand",
@@ -489,7 +553,21 @@
     "bestOffers": "Best Offers",
     "checkBackLater": "Check back later",
     "viewOffers": "View offers",
-    "emptyCta": "Explore active promocodes"
+    "emptyCta": "Explore active promocodes",
+    "heroKicker": "Curated brand page",
+    "coverageLabel": "Brand coverage",
+    "storePlacementsLabel": "store placements",
+    "categoryContextsLabel": "category contexts",
+    "editorialLensTitle": "Editorial lens",
+    "editorialLensDescription": "A brand-first view of active promos, with cross-store presence and stronger signal on where the offer appears most.",
+    "relatedStoresKicker": "Where this brand appears",
+    "relatedStoresDescription": "Move into the stores where this brand currently has active savings presence.",
+    "relatedCategoriesKicker": "Related categories",
+    "relatedCategoriesDescription": "Explore the strongest categories where this brand's offers are currently grouped.",
+    "noLinkedStores": "No linked stores yet.",
+    "noLinkedCategories": "No linked categories yet.",
+    "offersKicker": "Curated brand offers",
+    "allPromocodesDescription": "A tighter look at savings tied to {name}, across multiple stores and active placements."
   },
   "promocode": {
     "title": "Promocode Details",
@@ -538,7 +616,13 @@
     "expiryDate": "Expiry Date",
     "share": "Share",
     "amount": "Amount",
-    "percentage": "Percentage"
+    "percentage": "Percentage",
+    "proofKicker": "Offer proof",
+    "proofDescription": "Use this page to review the discount value, status, expiry timing, and the most important actions before opening or copying the offer.",
+    "discountLabel": "Discount",
+    "exploreKicker": "Keep exploring",
+    "exploreDescription": "Move sideways into the store, brand, or category context around this offer to compare more active savings routes.",
+    "relatedDealsKicker": "Related deals"
   },
   "filter": {
     "filters": "Filters",
@@ -739,7 +823,8 @@
         "question": "How often are new promocodes added?",
         "answer": "We add new promocodes every day and regularly update existing ones. Our team monitors daily the latest offers from the most popular stores and services in Uzbekistan. Yandex Eats, Uzum, Click, Payme, and other platforms announce new discounts and promotions daily, and we add them to our site immediately. Before special events and holidays — such as Navruz, Independence Day, or New Year — the number of promocodes increases significantly. To stay informed about the latest offers, check our site regularly or subscribe to our Telegram channel. We also create dedicated pages for popular stores where all current promocodes are collected."
       }
-    ]
+    ],
+    "heroKicker": "FAQ"
   },
   "privacy": {
     "title": "PromoBozor Privacy Policy and Data Use",
@@ -766,7 +851,8 @@
         "title": "Contact",
         "content": "For questions about privacy policy, please contact us."
       }
-    ]
+    ],
+    "heroKicker": "Privacy"
   },
   "terms": {
     "title": "PromoBozor Terms of Service and Site Usage",
@@ -793,7 +879,8 @@
         "title": "Terms Changes",
         "content": "We reserve the right to change these terms at any time. Changes will be announced on the site."
       }
-    ]
+    ],
+    "heroKicker": "Terms"
   },
   "promocodesPage": {
     "title": "All Promocodes",
@@ -828,7 +915,10 @@
       "sending": "Sending...",
       "success": "Message sent successfully!",
       "error": "An error occurred. Please try again."
-    }
+    },
+    "heroKicker": "Contact",
+    "directKicker": "Direct contact",
+    "formKicker": "Send message"
   },
   "notFound": {
     "title": "Page Not Found",
@@ -898,7 +988,11 @@
         }
       ],
       "cta": "See how we verify promocodes"
-    }
+    },
+    "heroKicker": "About PromoBozor",
+    "statsKicker": "Stats",
+    "whyUsKicker": "Why us",
+    "contactKicker": "Contact"
   },
   "verification": {
     "title": "How We Verify Promocodes Before Publishing",
@@ -957,5 +1051,14 @@
     "ctaDescription": "If you find an inactive or confusing promocode, send it to us. Reader feedback helps us refresh listings faster.",
     "ctaPrimary": "Contact the team",
     "ctaSecondary": "Read the FAQ"
+  },
+  "listing": {
+    "heroKicker": "Offer discovery",
+    "liveOffers": "Live offers",
+    "verifiedRoutes": "Verified routes",
+    "sorting": "Sorting",
+    "sortingValue": "Newest, popular, ending",
+    "saveTime": "Save time",
+    "saveTimeValue": "Filter before browsing"
   }
 }

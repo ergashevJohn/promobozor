@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import LoadMore from "./LoadMore";
 import PromocodeList from "./PromocodeList";
 import type { Promocode } from "./types";
@@ -52,6 +53,7 @@ interface PromocodeListWithPaginationProps {
       dislike: string;
       expired: string;
       disabled: string;
+      conditionsLabel?: string;
       codeCopied: string;
       copyError: string;
     };
@@ -65,6 +67,7 @@ export default function PromocodeListWithPagination({
   filters = EMPTY_FILTERS,
   translations,
 }: PromocodeListWithPaginationProps) {
+  const tCommon = useTranslations("common");
   const [additionalPromocodes, setAdditionalPromocodes] = useState<Promocode[]>([]);
 
   const filtersKey = useMemo(() => JSON.stringify(filters), [filters]);
@@ -103,12 +106,12 @@ export default function PromocodeListWithPagination({
   return (
     <>
       {totalCount > 0 && (
-        <div className="mb-6 flex items-center justify-between gap-4 rounded-[22px] border border-[color:var(--border)] bg-white/90 px-4 py-3 shadow-[0_18px_40px_-30px_rgba(17,24,39,0.35)]">
+        <div className="mb-6 flex items-center justify-between gap-4 rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 shadow-[0_18px_40px_-30px_rgba(17,24,39,0.35)]">
           <div className="text-sm text-[color:var(--muted-foreground)]">
             <span className="text-foreground font-semibold">{promocodes.length}</span> /{" "}
             {totalCount}
           </div>
-          <div className="brand-kicker !mb-0">PromoBozor list</div>
+          <div className="brand-kicker !mb-0">{tCommon("listKicker")}</div>
         </div>
       )}
       <PromocodeList promocodes={promocodes} translations={translations} />

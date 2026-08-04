@@ -13,50 +13,79 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
   const icons = [TicketPercent, ShieldAlert, BadgeHelp];
 
   return (
-    <section className="my-14 grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
-      <div className="rounded-[32px] bg-[#111827] p-6 text-white shadow-[0_30px_80px_-46px_rgba(17,24,39,0.72)] md:p-8">
-        <div className="brand-kicker border-white/10 bg-white/5 text-white">{t("eyebrow")}</div>
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{t("title")}</h2>
-        <p className="mt-4 max-w-xl text-base leading-7 text-white/72 md:text-lg">
-          {t("description")}
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button asChild size="lg" className="rounded-full bg-[color:var(--accent-red)]">
-            <Link href="/how-we-verify-promocodes">
-              {t("primaryCta")}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="rounded-full border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-          >
-            <Link href="/faq">
-              {t("secondaryCta")}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </div>
+    <section className="my-14">
+      <div className="overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-card shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)]">
+        <div className="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          {/* Intro — one dark plane, not a competing card wall */}
+          <div className="relative overflow-hidden bg-[#111827] px-6 py-8 text-white md:px-8 md:py-10 lg:px-10">
+            <div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,90,79,0.22),transparent_42%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.06),transparent_40%)]"
+              aria-hidden="true"
+            />
+            <div className="relative flex h-full flex-col">
+              <div className="brand-kicker border-white/10 bg-white/5 text-white">{t("eyebrow")}</div>
+              <h2 className="mt-5 max-w-xl text-3xl font-semibold tracking-tight text-balance md:text-4xl">
+                {t("title")}
+              </h2>
+              <p className="mt-4 max-w-lg text-base leading-7 text-white/72 md:text-lg">
+                {t("description")}
+              </p>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {items.map((item, index) => {
-          const Icon = icons[index % icons.length];
-          return (
-            <article
-              key={item.title}
-              className="rounded-[28px] border border-[color:var(--border)] bg-white p-5 shadow-[0_22px_56px_-44px_rgba(17,24,39,0.32)]"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
-                <Icon className="h-5 w-5" />
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:mt-auto lg:pt-10">
+                <Button
+                  asChild
+                  size="lg"
+                  className="h-12 min-h-11 rounded-full bg-[color:var(--accent-red)] hover:bg-[#b83a33]"
+                >
+                  <Link href="/how-we-verify-promocodes">
+                    {t("primaryCta")}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="h-12 min-h-11 rounded-full border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                >
+                  <Link href="/faq">
+                    {t("secondaryCta")}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
-              <h3 className="text-foreground text-lg font-semibold">{item.title}</h3>
-              <p className="text-muted-foreground mt-3 text-sm leading-6">{item.description}</p>
-            </article>
-          );
-        })}
+            </div>
+          </div>
+
+          {/* Steps — vertical list reads better than 3 cramped cards */}
+          <ol className="divide-border flex flex-col divide-y bg-card">
+            {items.map((item, index) => {
+              const Icon = icons[index % icons.length];
+              const step = String(index + 1).padStart(2, "0");
+
+              return (
+                <li key={item.title} className="group flex gap-4 px-6 py-6 md:gap-5 md:px-8 md:py-7">
+                  <div className="flex shrink-0 flex-col items-center gap-3">
+                    <span className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)]">
+                      {step}
+                    </span>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)] transition-colors group-hover:bg-[color:var(--accent-red)] group-hover:text-white">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                  </div>
+                  <div className="min-w-0 pt-0.5">
+                    <h3 className="text-foreground text-lg font-semibold leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground mt-2 text-sm leading-6 md:text-[0.95rem]">
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
     </section>
   );

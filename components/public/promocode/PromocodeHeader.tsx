@@ -29,7 +29,7 @@ export function PromocodeHeader({
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[20px] border border-white/80 bg-white shadow-[0_18px_48px_-40px_rgba(17,24,39,0.45)]">
+        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[20px] border border-[color:var(--border)] bg-card shadow-[0_18px_48px_-40px_rgba(17,24,39,0.45)]">
           {displayImage ? (
             <Image
               src={displayImage}

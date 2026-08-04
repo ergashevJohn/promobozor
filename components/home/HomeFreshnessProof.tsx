@@ -30,7 +30,7 @@ export async function HomeFreshnessProof({
           </p>
         </div>
 
-        <div className="rounded-[24px] border border-white/80 bg-white/90 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.32)]">
+        <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.32)]">
           <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
             {todayLabel}
           </div>
@@ -50,7 +50,7 @@ export async function HomeFreshnessProof({
           return (
             <div
               key={item.title}
-              className="rounded-[24px] border border-white/80 bg-white/92 p-5 shadow-[0_22px_56px_-44px_rgba(17,24,39,0.32)]"
+              className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_22px_56px_-44px_rgba(17,24,39,0.32)]"
             >
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
                 <Icon className="h-5 w-5" />

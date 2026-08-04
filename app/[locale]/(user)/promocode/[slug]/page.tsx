@@ -730,6 +730,12 @@ export default async function PromocodeDetailPage({
               terms: tPromocode("terms"),
               amount: tPromocode("amount"),
               percentage: tPromocode("percentage"),
+              proofKicker: tPromocode("proofKicker"),
+              proofDescription: tPromocode("proofDescription"),
+              discountLabel: tPromocode("discountLabel"),
+              exploreKicker: tPromocode("exploreKicker"),
+              exploreDescription: tPromocode("exploreDescription"),
+              relatedDealsKicker: tPromocode("relatedDealsKicker"),
             },
             common: {
               featured: tCommon("featured"),

@@ -618,13 +618,13 @@ async function PromocodesSection({
           {totalPromocodesCount} {tCommon("offersFound")}
         </div>
         {totalPages > 1 && (
-          <div className="rounded-full border border-[color:var(--border)] bg-white px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
+          <div className="rounded-full border border-[color:var(--border)] bg-card px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
             {tCommon("page")} {currentPage}/{totalPages}
           </div>
         )}
         {sanitizedSearchQuery && (
-          <div className="rounded-full border border-[color:var(--border)] bg-white px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
-            Search:{" "}
+          <div className="rounded-full border border-[color:var(--border)] bg-card px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
+            {tCommon("searchLabel")}{" "}
             <span className="font-semibold text-[color:var(--foreground)]">
               {sanitizedSearchQuery}
             </span>
@@ -720,6 +720,7 @@ export default async function PromocodesPage({
 
   const t = await getTranslations({ locale, namespace: "promocodesPage" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
+  const tListing = await getTranslations({ locale, namespace: "listing" });
 
   // Check if filters are applied (excluding page parameter)
   const hasFilters = Object.keys(resolvedSearchParams).some((k) => k !== "page");
@@ -746,55 +747,55 @@ export default async function PromocodesPage({
         </>
       )}
       <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
-        <div className="mb-8 rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(135deg,rgba(255,90,79,0.07),rgba(255,255,255,0.98)_36%,rgba(17,24,39,0.02)_100%)] p-6 shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)] md:p-8">
-          <div className="brand-kicker mb-4">Offer discovery</div>
-          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="mb-6 rounded-[28px] border border-[color:var(--border)] bg-card p-5 shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)] md:mb-8 md:rounded-[32px] md:p-8">
+          <div className="brand-kicker mb-3 md:mb-4">{tListing("heroKicker")}</div>
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end md:gap-6">
             <div>
-              <h1 className="text-foreground mb-3 text-3xl font-semibold tracking-tight md:text-5xl">
+              <h1 className="text-foreground mb-2 text-3xl font-semibold tracking-tight md:mb-3 md:text-5xl">
                 {t("title")}
               </h1>
-              <p className="text-muted-foreground max-w-3xl text-base leading-7 md:text-lg">
+              <p className="text-muted-foreground line-clamp-3 max-w-3xl text-base leading-7 md:line-clamp-none md:text-lg">
                 {t("description")}
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+            <div className="hidden gap-3 sm:grid sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              <div className="rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
                 <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  Live offers
+                  {tListing("liveOffers")}
                 </div>
                 <div className="mt-1 font-semibold text-[color:var(--foreground)]">
-                  Verified routes
+                  {tListing("verifiedRoutes")}
                 </div>
               </div>
-              <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+              <div className="rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
                 <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  Sorting
+                  {tListing("sorting")}
                 </div>
                 <div className="mt-1 font-semibold text-[color:var(--foreground)]">
-                  Newest, popular, ending
+                  {tListing("sortingValue")}
                 </div>
               </div>
-              <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+              <div className="rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
                 <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  Save time
+                  {tListing("saveTime")}
                 </div>
                 <div className="mt-1 font-semibold text-[color:var(--foreground)]">
-                  Filter before browsing
+                  {tListing("saveTimeValue")}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-6 flex justify-center">
+        {/* Search + filters closer on mobile */}
+        <div className="mb-4 flex justify-center md:mb-6">
           <SearchBar currentParams={resolvedSearchParams as Record<string, string>} />
         </div>
 
         {/* Filters Section */}
         <Suspense
           fallback={
-            <div className="bg-card border-border mb-8 min-h-[10rem] animate-pulse rounded-lg border" />
+            <div className="bg-card border-border mb-6 min-h-[6rem] animate-pulse rounded-lg border md:mb-8 md:min-h-[10rem]" />
           }
         >
           <FiltersSection

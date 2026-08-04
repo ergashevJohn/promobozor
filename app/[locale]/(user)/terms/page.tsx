@@ -68,7 +68,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
                 <FileText className="h-12 w-12" />
               </div>
             </div>
-            <div className="brand-kicker mb-4">Terms</div>
+            <div className="brand-kicker mb-4">{t("heroKicker")}</div>
             <h1 className="page-hero-heading mb-4">{t("title")}</h1>
             <p className="page-hero-copy mx-auto mb-2">{t("description")}</p>
             <p className="text-muted-foreground text-sm">

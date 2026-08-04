@@ -61,7 +61,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         <div className="mx-auto">
           {/* Header */}
           <div className="page-hero-surface mb-12 text-center">
-            <div className="brand-kicker mb-4">Contact</div>
+            <div className="brand-kicker mb-4">{t("heroKicker")}</div>
             <h1 className="page-hero-heading mb-4">{t("title")}</h1>
             <p className="page-hero-copy mx-auto">{t("subtitle")}</p>
           </div>
@@ -70,7 +70,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             {/* Contact Information */}
             <div className="space-y-6">
               <div>
-                <div className="brand-kicker mb-3">Direct contact</div>
+                <div className="brand-kicker mb-3">{t("directKicker")}</div>
                 <h2 className="text-foreground text-xl font-semibold">{t("contactInfo")}</h2>
               </div>
               <div className="brand-panel p-6">
@@ -112,7 +112,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
             {/* Contact Form */}
             <div>
-              <div className="brand-kicker mb-3">Send message</div>
+              <div className="brand-kicker mb-3">{t("formKicker")}</div>
               <h2 className="text-foreground mb-6 text-xl font-semibold">{t("sendMessage")}</h2>
               <ReCaptchaProvider>
                 <ContactForm />

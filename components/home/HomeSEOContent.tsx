@@ -46,7 +46,7 @@ export async function HomeSEOIntro({ locale }: HomeSEOProps) {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="group rounded-[24px] border border-white/80 bg-white/90 p-4 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/25"
+                className="group rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/25"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)] transition-colors">
                   <CheckCircle2 size={20} />
@@ -108,7 +108,7 @@ export async function HomeSEOExtended({ locale }: HomeSEOProps) {
             </div>
           ))}
         </div>
-        <div className="mt-6 rounded-[24px] border border-dashed border-[color:var(--border)] bg-white/70 p-4 text-center text-sm text-[color:var(--muted-foreground)] md:mt-12">
+        <div className="mt-6 rounded-[24px] border border-dashed border-[color:var(--border)] bg-card/80 p-4 text-center text-sm text-[color:var(--muted-foreground)] md:mt-12">
           <p>{t("howItWorks.footer")}</p>
         </div>
       </section>

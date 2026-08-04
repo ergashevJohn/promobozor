@@ -125,26 +125,37 @@
     @apply bg-background text-foreground;
     background-image:
       radial-gradient(circle at top left, rgba(255, 90, 79, 0.08), transparent 26%),
-      radial-gradient(circle at top right, rgba(17, 24, 39, 0.05), transparent 24%),
-      linear-gradient(180deg, rgba(248, 250, 252, 0.75), rgba(255, 255, 255, 0));
+      radial-gradient(circle at top right, rgba(17, 24, 39, 0.05), transparent 24%);
     min-height: 100vh;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 90, 79, 0.1), transparent 28%),
+      radial-gradient(circle at top right, rgba(248, 250, 252, 0.04), transparent 26%);
   }
 }
 
 @layer components {
   .brand-kicker {
-    @apply text-muted-foreground inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/90 px-3 py-1 text-xs font-semibold tracking-[0.14em] uppercase;
+    @apply text-muted-foreground inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-card/90 px-3 py-1 text-xs font-semibold tracking-[0.14em] uppercase;
   }
 
   .brand-panel {
-    @apply border-border rounded-[28px] border bg-white/90 shadow-[0_24px_80px_-48px_rgba(17,24,39,0.35)] backdrop-blur;
+    @apply border-border rounded-[28px] border bg-card/90 shadow-[0_24px_80px_-48px_rgba(17,24,39,0.35)] backdrop-blur;
   }
 
   .brand-hero {
     background-image:
       radial-gradient(circle at top left, rgba(255, 90, 79, 0.14), transparent 26%),
-      radial-gradient(circle at 80% 0%, rgba(17, 24, 39, 0.08), transparent 24%),
-      linear-gradient(180deg, rgba(248, 250, 252, 0.9), rgba(255, 255, 255, 0.96));
+      radial-gradient(circle at 80% 0%, rgba(17, 24, 39, 0.08), transparent 24%);
+    background-color: color-mix(in oklab, var(--card) 92%, transparent);
+  }
+
+  .dark .brand-hero {
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 90, 79, 0.16), transparent 28%),
+      radial-gradient(circle at 80% 0%, rgba(248, 250, 252, 0.05), transparent 26%);
   }
 
   .brand-section-heading {
@@ -152,18 +163,16 @@
   }
 
   .brand-chip {
-    @apply text-muted-foreground inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/85 px-4 py-2 text-sm font-medium shadow-[0_10px_40px_-28px_rgba(17,24,39,0.5)];
+    @apply text-muted-foreground inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-card/90 px-4 py-2 text-sm font-medium shadow-[0_10px_40px_-28px_rgba(17,24,39,0.5)];
   }
 
   .page-shell {
-    @apply container mx-auto px-6 lg:px-8;
+    @apply container mx-auto px-4 md:px-6 lg:px-8;
   }
 
   .page-hero-surface {
-    @apply relative overflow-hidden rounded-[28px] border border-[color:var(--border)] bg-white/90 p-8 shadow-[0_24px_80px_-48px_rgba(17,24,39,0.35)] backdrop-blur md:p-10 lg:p-12;
-    background-image:
-      radial-gradient(circle at top left, rgba(255, 90, 79, 0.12), transparent 24%),
-      linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98));
+    @apply relative overflow-hidden rounded-[28px] border border-[color:var(--border)] bg-card/95 p-8 shadow-[0_24px_80px_-48px_rgba(17,24,39,0.35)] backdrop-blur md:p-10 lg:p-12;
+    background-image: radial-gradient(circle at top left, rgba(255, 90, 79, 0.12), transparent 24%);
   }
 
   .page-hero-heading {
@@ -175,19 +184,19 @@
   }
 
   .metric-card {
-    @apply rounded-[24px] border border-white/80 bg-white/90 p-5 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.45)];
+    @apply rounded-[24px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.45)];
   }
 
   .empty-state-card {
-    @apply rounded-[28px] border border-[color:var(--border)] bg-white px-8 py-14 text-center shadow-[0_24px_70px_-54px_rgba(17,24,39,0.45)];
+    @apply rounded-[28px] border border-[color:var(--border)] bg-card px-8 py-14 text-center shadow-[0_24px_70px_-54px_rgba(17,24,39,0.45)];
   }
 
   .content-prose-panel {
-    @apply rounded-[24px] border border-[color:var(--border)] bg-white/90 p-6 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.3)];
+    @apply rounded-[24px] border border-[color:var(--border)] bg-card/95 p-6 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.3)];
   }
 
   .filter-shell {
-    @apply rounded-[28px] border border-[color:var(--border)] bg-white/92 p-5 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.3)] md:p-6;
+    @apply rounded-[28px] border border-[color:var(--border)] bg-card p-5 shadow-[0_24px_60px_-46px_rgba(17,24,39,0.3)] md:p-6;
   }
 }
 

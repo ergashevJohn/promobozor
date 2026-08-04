@@ -28,7 +28,7 @@ export function PromocodeCodeBox({
       >
         <code
           aria-label={`Promo code: ${promocode.code}`}
-          className={`text-center font-mono text-xl font-bold sm:text-2xl md:text-3xl ${
+          className={`break-all text-center font-mono text-xl font-bold sm:text-2xl md:text-3xl ${
             isInactive ? "text-slate-500 blur-[1px]" : "text-[color:var(--primary)]"
           }`}
         >

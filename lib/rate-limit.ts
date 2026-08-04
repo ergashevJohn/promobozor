@@ -1,16 +1,13 @@
 /**
- * Redis-based rate limiter for production
- * Uses Upstash Redis for distributed rate limiting
+ * In-memory rate limiter for API routes.
  *
- * IMPORTANT: Redis is REQUIRED in production!
- * In-memory fallback is only allowed in development.
+ * Note: On multi-instance serverless deployments each instance has its own
+ * counter, so limits are per-instance rather than globally shared. This is
+ * intentional until a distributed store is reintroduced.
  *
  * Environment variables:
- * - UPSTASH_REDIS_REST_URL: Redis REST API URL (required in production)
- * - UPSTASH_REDIS_REST_TOKEN: Redis authentication token (required in production)
  * - RATE_LIMIT_DISABLED: Set to "true" to disable rate limiting (testing only)
  */
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
 
 interface RateLimitEntry {
@@ -18,57 +15,12 @@ interface RateLimitEntry {
   resetTime: number;
 }
 
-// Initialize Redis client
-let redis: Redis | null = null;
 const inMemoryStore = new Map<string, RateLimitEntry>();
 
-// Track if we've already warned about missing Redis
-let hasWarnedAboutMissingRedis = false;
-
-// Check for Redis configuration
-const hasRedisConfig = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
-
-if (hasRedisConfig) {
-  redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL!,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-  });
-  console.log("✅ Redis rate limiter initialized");
-} else if (process.env.NODE_ENV !== "production") {
-  console.warn("⚠️  Using in-memory rate limiting (development only)");
-  console.warn("   This will NOT work correctly in multi-instance deployments!");
-}
-
 /**
- * Check Redis requirement for production at runtime
- * This allows the module to be imported during build
- */
-function checkProductionRedisRequirement(): void {
-  const isProduction = process.env.NODE_ENV === "production";
-  const isRateLimitDisabled = process.env.RATE_LIMIT_DISABLED === "true";
-
-  if (isProduction && !hasRedisConfig && !isRateLimitDisabled) {
-    if (!hasWarnedAboutMissingRedis) {
-      hasWarnedAboutMissingRedis = true;
-      console.error("❌ CRITICAL: Redis is not configured in production!");
-      console.error("   Rate limiting requires Redis for distributed environments.");
-      console.error("   Please set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.");
-      console.error("   Or set RATE_LIMIT_DISABLED=true to disable (NOT RECOMMENDED).");
-    }
-
-    throw new Error(
-      "Redis configuration is required in production. " +
-        "Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN environment variables."
-    );
-  }
-}
-
-/**
- * Clean up expired in-memory entries (fallback only)
+ * Clean up expired in-memory entries
  */
 function cleanupRateLimitStore() {
-  if (redis) return; // Skip cleanup if using Redis
-
   const now = Date.now();
   for (const [key, entry] of inMemoryStore.entries()) {
     if (now > entry.resetTime) {
@@ -77,7 +29,7 @@ function cleanupRateLimitStore() {
   }
 }
 
-// Cleanup every 5 minutes (in-memory fallback only)
+// Cleanup every 5 minutes
 if (typeof setInterval !== "undefined") {
   setInterval(cleanupRateLimitStore, 5 * 60 * 1000);
 }
@@ -103,8 +55,6 @@ async function rateLimit(
   config: RateLimitConfig
 ): Promise<{ success: boolean; limit: number; remaining: number; resetTime: number }> {
   const now = Date.now();
-  const windowStart = Math.floor(now / config.window) * config.window;
-  const key = `ratelimit:${identifier}:${windowStart}`;
 
   // Skip rate limiting if disabled (testing only)
   const isRateLimitDisabled = process.env.RATE_LIMIT_DISABLED === "true";
@@ -113,75 +63,11 @@ async function rateLimit(
       success: true,
       limit: config.limit,
       remaining: config.limit,
-      resetTime: windowStart + config.window,
+      resetTime: now + config.window,
     };
   }
 
-  // Check Redis requirement for production at runtime (not during build)
-  checkProductionRedisRequirement();
-
-  // Use Redis for distributed rate limiting
-  if (redis) {
-    try {
-      // Redis-based rate limiting with atomic increment
-      const current = await redis.incr(key);
-
-      // Set expiration on first request
-      if (current === 1) {
-        await redis.expireat(key, Math.floor((windowStart + config.window) / 1000));
-      }
-
-      const success = current <= config.limit;
-      const remaining = Math.max(0, config.limit - current);
-
-      return {
-        success,
-        limit: config.limit,
-        remaining,
-        resetTime: windowStart + config.window,
-      };
-    } catch (error) {
-      // Log Redis error but don't fail the request
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      console.error("❌ Redis rate limit error:", errorMsg);
-
-      // Check if it's a connection error (ENOTFOUND, ECONNREFUSED, etc.)
-      const isConnectionError =
-        errorMsg.includes("ENOTFOUND") ||
-        errorMsg.includes("ECONNREFUSED") ||
-        errorMsg.includes("ETIMEDOUT") ||
-        errorMsg.includes("fetch failed");
-
-      // For connection errors, fail open in all environments
-      // Redis might be temporarily unavailable
-      if (isConnectionError) {
-        console.warn("⚠️  Redis unavailable - using fallback (request allowed)");
-        return {
-          success: true,
-          limit: config.limit,
-          remaining: config.limit,
-          resetTime: windowStart + config.window,
-        };
-      }
-
-      // In production, fail open for other Redis errors too
-      if (process.env.NODE_ENV === "production") {
-        console.error("⚠️  Rate limiting bypassed due to Redis error - monitor for abuse!");
-        return {
-          success: true,
-          limit: config.limit,
-          remaining: config.limit,
-          resetTime: windowStart + config.window,
-        };
-      }
-
-      // In development, fall through to in-memory
-      console.warn("⚠️  Falling back to in-memory rate limiting");
-    }
-  }
-
-  // Fallback to in-memory (development only)
-  // This should never be reached in production due to the startup check
+  const key = `ratelimit:${identifier}`;
   let entry = inMemoryStore.get(key);
 
   // Reset if window expired

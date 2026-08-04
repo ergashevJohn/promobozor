@@ -158,7 +158,7 @@ export default async function VerificationPage({
           </aside>
         </section>
 
-        <section className="brand-panel mt-14 bg-gradient-to-br from-[color:var(--accent)]/70 to-white px-6 py-8 md:px-8 md:py-10">
+        <section className="brand-panel mt-14 bg-gradient-to-br from-[color:var(--accent)]/70 to-[color:var(--secondary)] px-6 py-8 md:px-8 md:py-10">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="brand-section-heading text-3xl">{t("ctaTitle")}</h2>
             <p className="text-muted-foreground mt-3 text-lg leading-7">{t("ctaDescription")}</p>

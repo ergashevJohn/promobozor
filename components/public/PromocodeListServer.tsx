@@ -42,6 +42,7 @@ interface PromocodeListServerProps {
       dislike: string;
       expired: string;
       disabled: string;
+      conditionsLabel?: string;
       codeCopied: string;
       copyError: string;
     };

@@ -134,6 +134,18 @@ export function ContactForm() {
     setPhoneError(null);
 
     try {
+      const csrfResponse = await fetch("/api/csrf", {
+        method: "GET",
+        cache: "no-store",
+      });
+      if (!csrfResponse.ok) {
+        throw new Error(t("form.error"));
+      }
+      const csrfData = (await csrfResponse.json()) as { token?: string };
+      if (!csrfData.token) {
+        throw new Error(t("form.error"));
+      }
+
       const recaptchaToken =
         typeof executeRecaptcha === "function"
           ? await executeRecaptcha("contact_submit")
@@ -143,6 +155,7 @@ export function ContactForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-csrf-token": csrfData.token,
         },
         body: JSON.stringify({
           name: formData.name.trim(),
@@ -208,7 +221,7 @@ export function ContactForm() {
             required
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 h-11 rounded-xl bg-white"
+            className="mt-1 h-11 rounded-xl bg-card"
           />
         </div>
 
@@ -243,7 +256,7 @@ export function ContactForm() {
             rows={5}
             value={formData.message}
             onChange={handleChange}
-            className="mt-1 rounded-xl bg-white"
+            className="mt-1 rounded-xl bg-card"
           />
         </div>
 

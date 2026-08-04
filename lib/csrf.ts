@@ -1,6 +1,9 @@
 /**
  * CSRF Protection using HMAC-signed tokens
  * Prevents Cross-Site Request Forgery attacks
+ *
+ * Secret: CSRF_SECRET (preferred). NEXTAUTH_SECRET is accepted as a temporary
+ * fallback for environments that have not migrated yet.
  */
 import crypto from "crypto";
 
@@ -9,16 +12,30 @@ const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds
 const DEFAULT_SECRET = "default-secret-change-in-production";
 
 function getSecret(): string {
-  const secret = process.env.NEXTAUTH_SECRET;
+  const secret = process.env.CSRF_SECRET || process.env.NEXTAUTH_SECRET;
+
   if (process.env.NODE_ENV === "production") {
     if (!secret || secret === DEFAULT_SECRET || secret.length < 32) {
       throw new Error(
-        "NEXTAUTH_SECRET must be set and at least 32 characters in production for CSRF protection"
+        "CSRF_SECRET must be set and at least 32 characters in production for CSRF protection"
       );
     }
     return secret;
   }
+
   return secret || DEFAULT_SECRET;
+}
+
+/**
+ * Generate a signed CSRF token for the client to send back on mutating requests
+ */
+export function generateCsrfToken(): string {
+  const timestamp = Date.now().toString();
+  const random = crypto.randomBytes(16).toString("hex");
+  const data = `${timestamp}.${random}`;
+  const signature = crypto.createHmac("sha256", getSecret()).update(data).digest("hex");
+
+  return Buffer.from(`${data}.${signature}`).toString("base64");
 }
 
 /**

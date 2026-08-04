@@ -165,8 +165,8 @@ export function ConsentBanner() {
   ];
 
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-50 p-3 md:p-6">
-      <Card className="mx-auto max-h-[calc(100vh-1.5rem)] max-w-5xl overflow-y-auto rounded-[28px] border border-[color:var(--border)] bg-white/95 p-3 shadow-[0_30px_90px_-52px_rgba(17,24,39,0.65)] backdrop-blur md:max-h-[calc(100vh-3rem)] md:p-6">
+    <div className="fixed right-0 bottom-0 left-0 z-50 p-2 sm:p-3 md:p-6">
+      <Card className="mx-auto max-h-[calc(100vh-1rem)] max-w-5xl overflow-y-auto rounded-[22px] border border-[color:var(--border)] bg-white/95 p-3 shadow-[0_30px_90px_-52px_rgba(17,24,39,0.65)] backdrop-blur sm:rounded-[28px] md:max-h-[calc(100vh-3rem)] md:p-6">
         {!showSettings ? (
           <>
             <div className="mb-3 flex flex-col gap-2 md:mb-5 md:flex-row md:items-start md:justify-between">
@@ -187,14 +187,14 @@ export function ConsentBanner() {
               <Button
                 variant="outline"
                 onClick={() => setShowSettings(true)}
-                className="h-10 rounded-full"
+                className="h-11 min-h-11 rounded-full"
               >
                 {t("settings")}
               </Button>
-              <Button variant="outline" onClick={handleRejectAll} className="h-10 rounded-full">
+              <Button variant="outline" onClick={handleRejectAll} className="h-11 min-h-11 rounded-full">
                 {t("reject")}
               </Button>
-              <Button onClick={handleAcceptAll} className="h-10 rounded-full">
+              <Button onClick={handleAcceptAll} className="h-11 min-h-11 rounded-full">
                 {t("accept")}
               </Button>
             </div>
@@ -213,7 +213,7 @@ export function ConsentBanner() {
                       className="flex h-full flex-col rounded-[24px] border border-[color:var(--border)] bg-[color:var(--secondary)]/65 p-4 shadow-[0_18px_48px_-42px_rgba(17,24,39,0.45)]"
                     >
                       <div className="mb-4 flex items-start justify-between gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[color:var(--accent-red)]">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card text-[color:var(--accent-red)]">
                           <Icon className="h-5 w-5" />
                         </div>
                         <input
@@ -221,7 +221,7 @@ export function ConsentBanner() {
                           checked={item.checked}
                           disabled={item.disabled}
                           onChange={item.disabled ? undefined : () => togglePreference(item.key)}
-                          className="border-input mt-1 h-4 w-4 rounded text-[color:var(--accent-red)] focus:ring-[color:var(--ring)]"
+                          className="border-input mt-1 h-5 w-5 rounded text-[color:var(--accent-red)] focus:ring-[color:var(--ring)]"
                         />
                       </div>
                       <span className="text-foreground text-base font-semibold">{item.title}</span>
@@ -237,11 +237,11 @@ export function ConsentBanner() {
                 <Button
                   variant="outline"
                   onClick={() => setShowSettings(false)}
-                  className="rounded-full"
+                  className="h-11 min-h-11 rounded-full"
                 >
                   {t("cancel")}
                 </Button>
-                <Button onClick={handleSaveSettings} className="rounded-full">
+                <Button onClick={handleSaveSettings} className="h-11 min-h-11 rounded-full">
                   {t("save")}
                 </Button>
               </div>

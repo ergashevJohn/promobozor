@@ -115,7 +115,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               <Users className="h-12 w-12" />
             </div>
           </div>
-          <div className="brand-kicker mb-4">About PromoBozor</div>
+          <div className="brand-kicker mb-4">{t("heroKicker")}</div>
           <h1 className="page-hero-heading mb-4">{t("heroTitle")}</h1>
           <p className="page-hero-copy mx-auto">{t("heroDescription")}</p>
         </div>
@@ -161,7 +161,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         {/* Stats */}
         <section className="mb-16">
           <div className="mb-8 text-center">
-            <div className="brand-kicker mb-4">Stats</div>
+            <div className="brand-kicker mb-4">{t("statsKicker")}</div>
             <h2 className="text-foreground text-2xl font-semibold">{t("statsTitle")}</h2>
           </div>
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
@@ -181,7 +181,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         {/* Why Us */}
         <section className="mb-16">
           <div className="mb-8 text-center">
-            <div className="brand-kicker mb-4">Why us</div>
+            <div className="brand-kicker mb-4">{t("whyUsKicker")}</div>
             <h2 className="text-foreground text-2xl font-semibold">{t("whyUsTitle")}</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
@@ -218,7 +218,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
           <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
             <Card className="brand-panel overflow-hidden">
-              <CardContent className="bg-gradient-to-br from-[color:var(--accent)] via-white to-white p-8">
+              <CardContent className="bg-gradient-to-br from-[color:var(--accent)] via-card to-[color:var(--secondary)] p-8">
                 <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-[color:var(--foreground)] text-2xl font-bold text-white">
                   JE
                 </div>
@@ -311,7 +311,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
         {/* Contact */}
         <section className="page-hero-surface text-center">
-          <div className="brand-kicker mb-4">Contact</div>
+          <div className="brand-kicker mb-4">{t("contactKicker")}</div>
           <h2 className="text-foreground mb-4 text-2xl font-semibold">{t("contactTitle")}</h2>
           <p className="text-muted-foreground mb-6">{t("contactDescription")}</p>
           <div className="flex justify-center gap-4">
