@@ -25,7 +25,7 @@ export function PromocodeActionButton() {
           copied
             ? "bg-green-500 hover:bg-green-600"
             : isInactive
-              ? "cursor-not-allowed bg-slate-400 text-white"
+              ? "cursor-not-allowed bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
               : "bg-accent-red text-accent-red-foreground hover:bg-accent-red/90"
         }`}
         disabled={copied || isInactive}
@@ -43,7 +43,7 @@ export function PromocodeActionButton() {
         size="lg"
         disabled={isInactive}
         aria-label={isInactive ? t.expired : t.activateLink}
-        className={`w-full rounded-full py-4 sm:py-3 ${isInactive ? "cursor-not-allowed bg-slate-400 text-white" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}
+        className={`w-full rounded-full py-4 sm:py-3 ${isInactive ? "cursor-not-allowed bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}
       >
         <ArrowSquareOut size={18} className="mr-2" />
         {isInactive ? t.expired : t.activateLink}

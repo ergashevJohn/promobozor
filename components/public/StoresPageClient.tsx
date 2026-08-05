@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, MagnifyingGlass, SmileySad, Storefront as StoreIcon } from "@phosphor-icons/react";
+import {
+  ArrowRight,
+  MagnifyingGlass,
+  SmileySad,
+  Storefront as StoreIcon,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -83,7 +88,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               <h1 className="page-hero-heading mb-3">{t.allStores}</h1>
               <p className="page-hero-copy">{t.allStoresDescription}</p>
             </div>
-            <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+            <div className="surface-stat px-5 py-4">
               <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
                 {tStore("directoryBadge")}
               </div>
@@ -109,7 +114,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               autoComplete="off"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-14 rounded-2xl border-[color:var(--border)] bg-card pr-4 pl-12 text-base shadow-[0_20px_50px_-32px_rgba(17,24,39,0.45)]"
+              className="bg-card h-14 rounded-2xl border-[color:var(--border)] pr-4 pl-12 text-base shadow-[0_20px_50px_-32px_rgba(17,24,39,0.45)]"
             />
           </div>
         </div>
@@ -127,7 +132,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               return (
                 <Card
                   key={store.id}
-                  className="group overflow-hidden border-white/80 py-0 shadow-[0_22px_60px_-46px_rgba(17,24,39,0.45)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
+                  className="group overflow-hidden border-[color:var(--border)] py-0 shadow-[0_22px_60px_-46px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/60 hover:shadow-[0_28px_72px_-50px_rgba(232,78,66,0.3)]"
                 >
                   <CardContent className="space-y-4 p-4 md:space-y-6 md:p-6">
                     <div className="flex items-center gap-4">
@@ -193,10 +198,11 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <SmileySad className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
-              <h2 className="text-foreground mb-2 text-xl font-semibold">
-                {t.noStoresFound}
-              </h2>
+              <SmileySad
+                className="text-muted-foreground mx-auto mb-4 h-12 w-12"
+                aria-hidden="true"
+              />
+              <h2 className="text-foreground mb-2 text-xl font-semibold">{t.noStoresFound}</h2>
               <p className="text-muted-foreground mt-2 text-sm">
                 {searchQuery ? t.searchHint : t.noStoresDescription}
               </p>
@@ -209,7 +215,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
                 </Link>
                 <Link
                   href="/stores"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-[color:var(--border)] bg-card px-5 text-sm font-semibold text-[color:var(--foreground)]"
+                  className="bg-card inline-flex min-h-11 items-center justify-center rounded-full border border-[color:var(--border)] px-5 text-sm font-semibold text-[color:var(--foreground)]"
                 >
                   {t.allStores}
                 </Link>

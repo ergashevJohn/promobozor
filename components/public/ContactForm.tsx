@@ -97,7 +97,6 @@ export function ContactForm() {
       ...prev,
       phone: value,
     }));
-
   };
 
   const handlePhoneBlur = () => {
@@ -215,7 +214,7 @@ export function ContactForm() {
             autoComplete="name"
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 h-11 rounded-xl bg-card"
+            className="bg-card mt-1 h-11 rounded-xl"
           />
         </div>
 
@@ -233,7 +232,7 @@ export function ContactForm() {
             onChange={handleChange}
             onBlur={handlePhoneBlur}
             placeholder="+998 90 123 45 67…"
-            className={`mt-1 h-11 rounded-xl bg-white ${phoneError ? "border-destructive" : ""}`}
+            className={`bg-card mt-1 h-11 rounded-xl ${phoneError ? "border-destructive" : ""}`}
             aria-invalid={phoneError ? "true" : "false"}
             aria-describedby={phoneError ? "phone-error" : undefined}
           />
@@ -255,7 +254,7 @@ export function ContactForm() {
             rows={5}
             value={formData.message}
             onChange={handleChange}
-            className="mt-1 rounded-xl bg-card"
+            className="bg-card mt-1 rounded-xl"
           />
         </div>
 

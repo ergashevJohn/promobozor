@@ -43,9 +43,7 @@ export function PromocodeCardVisual({
       : `-${promocode.discountValue} ${promocode.currency || "UZS"}`;
 
   return (
-    <article
-      className={`deal-card group ${isInactive ? "opacity-60 grayscale" : ""}`}
-    >
+    <article className={`deal-card group ${isInactive ? "opacity-60 grayscale" : ""}`}>
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <div className="flex items-start gap-3">
           {promocode.store?.logoUrl || promocode.brand?.imageUrl ? (
@@ -73,7 +71,7 @@ export function PromocodeCardVisual({
                   {t.verified}
                 </span>
               ) : (
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                <span className="rounded-full bg-[color:var(--secondary)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--muted-foreground)]">
                   {isExpiredByDate ? t.expired : t.disabled}
                 </span>
               )}
@@ -109,12 +107,12 @@ export function PromocodeCardVisual({
             className="relative z-20 block"
             aria-label={`${t.details} - ${displayName} ${promocodeTitle}`}
           >
-            <h3 className="line-clamp-2 text-base font-semibold leading-snug text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)] sm:text-[1.05rem]">
+            <h3 className="line-clamp-2 text-base leading-snug font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)] sm:text-[1.05rem]">
               {promocodeTitle}
             </h3>
           </Link>
         ) : (
-          <h3 className="line-clamp-2 text-base font-semibold leading-snug text-[color:var(--foreground)] sm:text-[1.05rem]">
+          <h3 className="line-clamp-2 text-base leading-snug font-semibold text-[color:var(--foreground)] sm:text-[1.05rem]">
             {promocodeTitle}
           </h3>
         )}
@@ -122,7 +120,7 @@ export function PromocodeCardVisual({
         {(conditionsText || timeRemaining) && (
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-[color:var(--muted-foreground)]">
             {conditionsText && (
-              <p className="min-w-0 flex-1 line-clamp-1">
+              <p className="line-clamp-1 min-w-0 flex-1">
                 <span className="font-medium text-[color:var(--foreground)]">
                   {t.conditionsLabel || "Shart"}:
                 </span>{" "}
@@ -143,7 +141,7 @@ export function PromocodeCardVisual({
             {promocode.type === "link" ? t.dealRoute : t.promoCodeLabel}
           </div>
           {promocode.type === "code" ? (
-            <div className="break-all font-mono text-lg font-bold tracking-wide text-[color:var(--accent-red)] sm:text-xl">
+            <div className="font-mono text-lg font-bold tracking-wide break-all text-[color:var(--accent-red)] sm:text-xl">
               {promocode.code}
             </div>
           ) : (

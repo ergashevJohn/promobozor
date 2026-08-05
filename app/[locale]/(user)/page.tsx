@@ -1,9 +1,7 @@
 import FeaturedPromocodes from "@/components/home/FeaturedPromocodes";
 import { HomeFAQSection } from "@/components/home/HomeFAQSection";
 import { HomeEditorialGuide } from "@/components/home/HomeEditorialGuide";
-import { HomeFreshnessProof } from "@/components/home/HomeFreshnessProof";
 import { HomeIntentRoutes } from "@/components/home/HomeIntentRoutes";
-import { HomeSEOIntro } from "@/components/home/HomeSEOContent";
 import PopularStoresCategories from "@/components/home/PopularStoresCategories";
 import HeroSection from "@/components/public/HeroSection";
 import { OrganizationSchema } from "@/components/public/OrganizationSchema";
@@ -72,13 +70,6 @@ export default async function HomePage({
     notFound();
   }
 
-  const localeForDate =
-    locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "en-US";
-  const todayLabel = new Intl.RelativeTimeFormat(localeForDate, { numeric: "auto" }).format(
-    0,
-    "day"
-  );
-
   const baseUrl = getBaseUrl();
   const hasFilters = Object.keys(resolvedSearchParams).length > 0;
   if (hasFilters) {
@@ -122,7 +113,7 @@ export default async function HomePage({
           searchBarTargetPath="/promocodes"
         />
 
-      <div className="page-shell space-y-0">
+        <div className="page-shell space-y-0">
           <HomeIntentRoutes locale={locale} />
 
           {/* Featured Section - Streaming */}
@@ -136,14 +127,6 @@ export default async function HomePage({
             <FeaturedPromocodes locale={locale} />
           </Suspense>
 
-          <HomeFreshnessProof
-            locale={locale}
-            todayLabel={todayLabel}
-            localeForDate={localeForDate}
-          />
-
-          <HomeSEOIntro locale={locale} />
-
           {/* Popular Stores & Categories - Internal linking */}
           <Suspense fallback={<SkeletonPopularSection />}>
             <PopularStoresCategories locale={locale} />
@@ -153,7 +136,7 @@ export default async function HomePage({
 
           {/* FAQ Section with localized content */}
           <HomeFAQSection locale={locale} />
-      </div>
+        </div>
       </div>
     </>
   );

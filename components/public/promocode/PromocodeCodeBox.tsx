@@ -20,23 +20,25 @@ export function PromocodeCodeBox({
   return (
     <div className="space-y-3">
       <div
-        className={`relative flex items-center justify-center rounded-[24px] border border-dashed px-4 py-5 ${
+        className={`relative flex items-center justify-center rounded-xl border border-dashed px-4 py-5 ${
           isInactive
-            ? "border-slate-300 bg-slate-100"
+            ? "border-[color:var(--border)] bg-[color:var(--secondary)]"
             : "border-[color:var(--accent-red)]/35 bg-[color:var(--accent)]/75"
         }`}
       >
         <code
           aria-label={`Promo code: ${promocode.code}`}
-          className={`break-all text-center font-mono text-xl font-bold sm:text-2xl md:text-3xl ${
-            isInactive ? "text-slate-500 blur-[1px]" : "text-[color:var(--primary)]"
+          className={`text-center font-mono text-xl font-bold break-all sm:text-2xl md:text-3xl ${
+            isInactive
+              ? "text-[color:var(--muted-foreground)] blur-[1px]"
+              : "text-[color:var(--primary)]"
           }`}
         >
           {promocode.code}
         </code>
         {isInactive && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-[24px] bg-white/55 backdrop-blur-[1px]">
-            <span className="text-xl font-semibold text-slate-600">
+          <div className="bg-card/70 absolute inset-0 flex items-center justify-center rounded-xl backdrop-blur-[1px]">
+            <span className="text-xl font-semibold text-[color:var(--muted-foreground)]">
               {isInactive ? t.expired : ""}
             </span>
           </div>

@@ -27,6 +27,13 @@ Main findings:
 
 ## Backlog
 
+### PB-21 Validate catalogue media assets
+
+Priority: High
+Status: Backlog
+Issue: https://github.com/ergashevJohn/promobozor/issues/2
+Notes: browser auditda ayrim category/store media URL'lari yuklanmay, card va detail sahifasida buzilgan rasm holati ko'rindi. Tasdiqlangan assetlar bilan almashtirish yoki icon fallback'ni ishga tushirish kerak.
+
 ### PB-20 Replace inherited social handles
 
 Priority: High

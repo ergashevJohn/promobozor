@@ -4,7 +4,15 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
-import { ArrowRight, SealCheck, Clock, ArrowsClockwise, MagnifyingGlass, ShieldCheck, Warning } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowRight,
+  SealCheck,
+  Clock,
+  ArrowsClockwise,
+  MagnifyingGlass,
+  ShieldCheck,
+  Warning,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -117,10 +125,7 @@ export default async function VerificationPage({
                 const Icon = standardIcons[index] || SealCheck;
 
                 return (
-                  <div
-                    key={item.title}
-                    className="flex gap-4 rounded-[24px] border border-white/80 bg-white/92 p-5 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)]"
-                  >
+                  <div key={item.title} className="surface-card flex gap-4 p-5">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
                       <Icon className="h-5 w-5" />
                     </div>
@@ -140,7 +145,7 @@ export default async function VerificationPage({
               {exclusions.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-3 rounded-[20px] border border-white/80 bg-white/92 px-4 py-3 shadow-[0_18px_48px_-42px_rgba(17,24,39,0.38)]"
+                  className="bg-card flex items-start gap-3 rounded-xl border border-[color:var(--border)] px-4 py-3"
                 >
                   <Warning className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--accent-red)]" />
                   <span className="text-foreground leading-7">{item}</span>

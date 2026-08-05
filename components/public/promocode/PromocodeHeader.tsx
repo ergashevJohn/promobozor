@@ -29,7 +29,7 @@ export function PromocodeHeader({
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[20px] border border-[color:var(--border)] bg-card shadow-[0_18px_48px_-40px_rgba(17,24,39,0.45)]">
+        <div className="bg-card flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[20px] border border-[color:var(--border)] shadow-[0_18px_48px_-40px_rgba(17,24,39,0.45)]">
           {displayImage ? (
             <Image
               src={displayImage}
@@ -73,7 +73,9 @@ export function PromocodeHeader({
         {isInactive && (
           <div
             className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
-              isExpired ? "bg-red-50 text-red-700" : "bg-slate-100 text-slate-600"
+              isExpired
+                ? "bg-[color:var(--accent)] text-[color:var(--accent-red)]"
+                : "bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
             }`}
           >
             <WarningCircle size={14} />

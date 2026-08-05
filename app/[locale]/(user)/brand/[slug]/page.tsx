@@ -38,7 +38,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { Buildings, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 export async function generateStaticParams() {
   // Skip static generation for brands - render dynamically
@@ -468,7 +468,7 @@ export default async function BrandPage({
         <div className="page-shell pb-10">
           <div className="page-hero-surface">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)]">
-              <div className="rounded-[30px] border border-white/80 bg-white/80 p-6 shadow-[0_24px_68px_-48px_rgba(17,24,39,0.35)]">
+              <div className="surface-card p-6">
                 <div className="mb-5 flex items-center gap-4">
                   {brand.imageUrl ? (
                     <div className="bg-card border-border relative flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
@@ -487,8 +487,8 @@ export default async function BrandPage({
                       />
                     </div>
                   ) : (
-                    <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-4xl md:size-20">
-                      ⭐
+                    <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-[color:var(--accent-red)] md:size-20">
+                      <Buildings className="h-8 w-8 md:h-9 md:w-9" aria-hidden="true" />
                     </div>
                   )}
                   <div className="brand-kicker !mb-0">{t("heroKicker")}</div>
@@ -504,7 +504,7 @@ export default async function BrandPage({
                     href={brand.websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer nofollow sponsored"
-                    className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-5 py-3 text-sm font-semibold text-[color:var(--foreground)] transition-transform hover:-translate-y-0.5"
+                    className="bg-card mt-6 inline-flex min-h-11 items-center gap-2 rounded-full border border-[color:var(--border)] px-5 py-3 text-sm font-semibold text-[color:var(--foreground)] transition-transform hover:-translate-y-0.5"
                   >
                     {t("officialWebsite")}
                   </a>
@@ -512,7 +512,7 @@ export default async function BrandPage({
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-[28px] border border-[color:var(--foreground)]/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.96),rgba(248,250,252,0.95))] p-5 shadow-[0_24px_60px_-42px_rgba(17,24,39,0.3)] sm:col-span-2">
+                <div className="surface-card border-[color:var(--accent-red)]/20 bg-[color:var(--accent)]/35 p-5 sm:col-span-2">
                   <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
                     {t("coverageLabel")}
                   </div>
@@ -544,7 +544,7 @@ export default async function BrandPage({
                   </div>
                 </div>
 
-                <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                <div className="surface-stat">
                   <div className="text-sm font-semibold text-[color:var(--foreground)]">
                     {tCommon("featured")}
                   </div>
@@ -552,7 +552,7 @@ export default async function BrandPage({
                     {featuredPromocodesCount}
                   </div>
                 </div>
-                <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                <div className="surface-stat">
                   <div className="text-sm font-semibold text-[color:var(--foreground)]">
                     {t("views")}
                   </div>
@@ -560,7 +560,7 @@ export default async function BrandPage({
                     {totalViews}
                   </div>
                 </div>
-                <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                <div className="surface-stat">
                   <div className="text-sm font-semibold text-[color:var(--foreground)]">
                     {t("uses")}
                   </div>
@@ -568,7 +568,7 @@ export default async function BrandPage({
                     {totalCopies}
                   </div>
                 </div>
-                <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)] sm:col-span-2">
+                <div className="surface-stat sm:col-span-2">
                   <div className="text-sm font-semibold text-[color:var(--foreground)]">
                     {t("editorialLensTitle")}
                   </div>
@@ -583,7 +583,7 @@ export default async function BrandPage({
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[26px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+            <div className="surface-card p-5">
               <div className="brand-kicker mb-3">{t("relatedStoresKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedStoresDescription")}
@@ -606,7 +606,7 @@ export default async function BrandPage({
                 )}
               </div>
             </div>
-            <div className="rounded-[26px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+            <div className="surface-card p-5">
               <div className="brand-kicker mb-3">{t("relatedCategoriesKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedCategoriesDescription")}
@@ -686,7 +686,10 @@ export default async function BrandPage({
               />
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
-                <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
+                <MagnifyingGlass
+                  className="text-muted-foreground mx-auto mb-4 h-12 w-12"
+                  aria-hidden="true"
+                />
                 <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
                 <p className="text-muted-foreground">{t("checkBackLater")}</p>
               </div>

@@ -618,12 +618,12 @@ async function PromocodesSection({
           {totalPromocodesCount} {tCommon("offersFound")}
         </div>
         {totalPages > 1 && (
-          <div className="rounded-full border border-[color:var(--border)] bg-card px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
+          <div className="bg-card rounded-full border border-[color:var(--border)] px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
             {tCommon("page")} {currentPage}/{totalPages}
           </div>
         )}
         {sanitizedSearchQuery && (
-          <div className="rounded-full border border-[color:var(--border)] bg-card px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
+          <div className="bg-card rounded-full border border-[color:var(--border)] px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
             {tCommon("searchLabel")}{" "}
             <span className="font-semibold text-[color:var(--foreground)]">
               {sanitizedSearchQuery}
@@ -746,10 +746,10 @@ export default async function PromocodesPage({
           />
         </>
       )}
-      <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
-        <div className="mb-6 rounded-[28px] border border-[color:var(--border)] bg-card p-5 shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)] md:mb-8 md:rounded-[32px] md:p-8">
+      <div className="page-shell py-8 md:py-10">
+        <div className="page-hero-surface mb-6 md:mb-8">
           <div className="brand-kicker mb-3 md:mb-4">{tListing("heroKicker")}</div>
-          <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end md:gap-6">
+          <div className="grid gap-4 md:gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <h1 className="text-foreground mb-2 text-3xl font-semibold tracking-tight md:mb-3 md:text-5xl">
                 {t("title")}
@@ -759,7 +759,7 @@ export default async function PromocodesPage({
               </p>
             </div>
             <div className="hidden gap-3 sm:grid sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              <div className="rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+              <div className="surface-stat px-4 py-3 text-sm">
                 <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
                   {tListing("liveOffers")}
                 </div>
@@ -767,7 +767,7 @@ export default async function PromocodesPage({
                   {tListing("verifiedRoutes")}
                 </div>
               </div>
-              <div className="rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+              <div className="surface-stat px-4 py-3 text-sm">
                 <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
                   {tListing("sorting")}
                 </div>
@@ -775,7 +775,7 @@ export default async function PromocodesPage({
                   {tListing("sortingValue")}
                 </div>
               </div>
-              <div className="rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 text-sm shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+              <div className="surface-stat px-4 py-3 text-sm">
                 <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
                   {tListing("saveTime")}
                 </div>

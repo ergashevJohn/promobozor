@@ -470,7 +470,10 @@ export default async function CategoryPage({
                     </div>
                   ) : (
                     <div className="bg-card flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] md:size-20">
-                      <Package className="text-muted-foreground h-8 w-8 md:h-9 md:w-9" aria-hidden="true" />
+                      <Package
+                        className="text-muted-foreground h-8 w-8 md:h-9 md:w-9"
+                        aria-hidden="true"
+                      />
                     </div>
                   )}
                   <div className="brand-kicker !mb-0">{t("heroKicker")}</div>
@@ -484,7 +487,7 @@ export default async function CategoryPage({
                   </p>
                 )}
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="surface-stat">
                     <div className="text-3xl font-semibold text-[color:var(--foreground)]">
                       {totalPromocodesCount}
                     </div>
@@ -492,7 +495,7 @@ export default async function CategoryPage({
                       {t("activePromocodes")}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="surface-stat">
                     <div className="text-3xl font-semibold text-[color:var(--foreground)]">
                       {uniqueStoreCount}
                     </div>
@@ -500,7 +503,7 @@ export default async function CategoryPage({
                       {t("storeRoutesLabel")}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="surface-stat">
                     <div className="text-3xl font-semibold text-[color:var(--foreground)]">
                       {uniqueBrandCount}
                     </div>
@@ -512,7 +515,7 @@ export default async function CategoryPage({
               </div>
 
               <div className="grid gap-4">
-                <div className="rounded-[28px] border border-[color:var(--accent-red)]/12 bg-[linear-gradient(160deg,rgba(255,90,79,0.08),rgba(255,255,255,0.97)_40%,rgba(248,250,252,0.96)_100%)] p-5 shadow-[0_24px_60px_-44px_rgba(255,90,79,0.35)]">
+                <div className="surface-card border-[color:var(--accent-red)]/25 bg-[color:var(--accent)]/45 p-5">
                   <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
                     {t("snapshotTitle")}
                   </div>
@@ -521,7 +524,7 @@ export default async function CategoryPage({
                   </p>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="surface-stat">
                     <div className="text-sm font-semibold text-[color:var(--foreground)]">
                       {tCommon("featured")}
                     </div>
@@ -529,7 +532,7 @@ export default async function CategoryPage({
                       {featuredPromocodesCount}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+                  <div className="surface-stat">
                     <div className="text-sm font-semibold text-[color:var(--foreground)]">
                       {t("views")}
                     </div>
@@ -537,7 +540,7 @@ export default async function CategoryPage({
                       {totalViews}
                     </div>
                   </div>
-                  <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)] sm:col-span-2">
+                  <div className="surface-stat sm:col-span-2">
                     <div className="text-sm font-semibold text-[color:var(--foreground)]">
                       {t("uses")}
                     </div>
@@ -553,7 +556,7 @@ export default async function CategoryPage({
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[26px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+            <div className="surface-card p-5">
               <div className="brand-kicker mb-3">{t("relatedStoresKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedStoresDescription")}
@@ -576,7 +579,7 @@ export default async function CategoryPage({
                 )}
               </div>
             </div>
-            <div className="rounded-[26px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.26)]">
+            <div className="surface-card p-5">
               <div className="brand-kicker mb-3">{t("relatedBrandsKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedBrandsDescription")}
@@ -656,7 +659,10 @@ export default async function CategoryPage({
               />
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
-                <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
+                <MagnifyingGlass
+                  className="text-muted-foreground mx-auto mb-4 h-12 w-12"
+                  aria-hidden="true"
+                />
                 <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
                 <p className="text-muted-foreground">{t("checkBackLater")}</p>
               </div>

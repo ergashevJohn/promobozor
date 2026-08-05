@@ -18,7 +18,7 @@ export function PromocodeExpiry({
 
   return (
     <div className="space-y-3">
-      <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-42px_rgba(17,24,39,0.35)]">
+      <div className="surface-stat">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-muted-foreground text-sm">{t.expiryDate}</p>

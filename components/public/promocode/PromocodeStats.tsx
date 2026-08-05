@@ -14,11 +14,11 @@ export function PromocodeStats() {
     <>
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2 rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 text-center shadow-[0_18px_48px_-42px_rgba(17,24,39,0.35)]">
+        <div className="surface-stat space-y-2 text-center">
           <p className="text-muted-foreground text-xs tracking-widest uppercase">{t.views}</p>
           <p className="text-foreground text-2xl font-bold sm:text-3xl">{promocode.viewsCount}</p>
         </div>
-        <div className="space-y-2 rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 text-center shadow-[0_18px_48px_-42px_rgba(17,24,39,0.35)]">
+        <div className="surface-stat space-y-2 text-center">
           <p className="text-muted-foreground text-xs tracking-widest uppercase">{t.copies}</p>
           <p className="text-foreground text-2xl font-bold sm:text-3xl">{promocode.copyCount}</p>
         </div>
@@ -29,7 +29,7 @@ export function PromocodeStats() {
         <div className="flex gap-3">
           <Button
             variant="outline"
-            className="h-11 flex-1 gap-2 rounded-full bg-card/95"
+            className="bg-card/95 h-11 flex-1 gap-2 rounded-full"
             onClick={handleShare}
             aria-label={t.share}
           >
@@ -39,7 +39,7 @@ export function PromocodeStats() {
           <Button
             variant="outline"
             onClick={handleLike}
-            className={`h-11 flex-1 gap-2 rounded-full bg-card/95 ${
+            className={`bg-card/95 h-11 flex-1 gap-2 rounded-full ${
               liked
                 ? "border-accent-red/50 bg-accent-red/10 text-accent-red hover:bg-accent-red/20"
                 : ""
@@ -54,7 +54,7 @@ export function PromocodeStats() {
           <Button
             variant="outline"
             onClick={handleDislike}
-            className={`h-11 flex-1 gap-2 rounded-full bg-card/95 ${
+            className={`bg-card/95 h-11 flex-1 gap-2 rounded-full ${
               disliked ? "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20" : ""
             }`}
             aria-label={`${tCard.dislike} (${promocode.dislikesCount})`}

@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, Buildings, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
@@ -137,7 +137,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
               <h1 className="page-hero-heading mb-3">{t("allBrands")}</h1>
               <p className="page-hero-copy">{t("description")}</p>
             </div>
-            <div className="rounded-[24px] border border-white/80 bg-white/92 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+            <div className="surface-stat px-5 py-4">
               <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
                 {t("trustLabel")}
               </div>
@@ -151,7 +151,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
           </div>
 
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.24)]">
+            <div className="surface-stat">
               <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
                 {t("featuredLabel")}
               </div>
@@ -159,7 +159,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                 {t("featuredHint")}
               </p>
             </div>
-            <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.24)]">
+            <div className="surface-stat">
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("trustValue")}
               </div>
@@ -167,7 +167,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                 {t("trustDescription")}
               </p>
             </div>
-            <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.24)]">
+            <div className="surface-stat">
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("bestOffers")}
               </div>
@@ -206,7 +206,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                 <Link
                   key={brand.id}
                   href={`/brand/${translation?.slug || brand.id}`}
-                  className="group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-card p-6 transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
+                  className="surface-card group relative overflow-hidden p-5 transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/60 hover:shadow-[0_28px_72px_-50px_rgba(232,78,66,0.3)]"
                 >
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div className="flex size-16 items-center justify-start">
@@ -229,8 +229,8 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                           />
                         </div>
                       ) : (
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[color:var(--foreground)] text-3xl font-bold text-white shadow-[0_18px_40px_-24px_rgba(17,24,39,0.45)]">
-                          {brandName.charAt(0) || "B"}
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
+                          <Buildings className="h-7 w-7" aria-hidden="true" />
                         </div>
                       )}
                     </div>
@@ -262,13 +262,11 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                     <div className="text-foreground text-2xl font-semibold">{promocodesCount}</div>
                   </div>
 
-                  <div className="mt-5 text-center">
-                    <Button variant="secondary" className="w-full justify-between">
-                      <span>
-                        {t("viewOffers")} {brandName}
-                      </span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
+                  <div className="text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-full bg-[color:var(--secondary)] px-5 text-sm font-medium transition-colors group-hover:bg-[color:var(--accent)]">
+                    <span>
+                      {t("viewOffers")} {brandName}
+                    </span>
+                    <ArrowRight className="h-4 w-4" />
                   </div>
                 </Link>
               );
@@ -277,7 +275,10 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
+              <MagnifyingGlass
+                className="text-muted-foreground mx-auto mb-4 h-12 w-12"
+                aria-hidden="true"
+              />
               <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noBrandsFound")}</h2>
               <p className="text-muted-foreground text-sm">{t("noBrandsDescription")}</p>
               <div className="mt-5">

@@ -1,6 +1,6 @@
 function SkeletonCard() {
   return (
-    <div className="relative flex h-full animate-pulse flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
+    <div className="border-border bg-card relative flex h-full animate-pulse flex-col overflow-hidden rounded-xl border">
       {/* Top Badge Placeholders (Absolute) */}
       <div className="absolute top-3 left-3 z-10 h-6 w-20 rounded-full bg-zinc-200 dark:bg-zinc-700" />
       <div className="absolute top-3 right-3 z-10 h-6 w-24 rounded-full bg-zinc-200 dark:bg-zinc-700" />

@@ -117,7 +117,7 @@ export default function PromocodeDetail({
   return (
     <div className="page-shell py-8">
       <div className="mb-8 grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)]">
-        <div className="rounded-[30px] border border-[color:var(--border)] bg-card p-6 shadow-[0_24px_64px_-46px_rgba(17,24,39,0.34)]">
+        <div className="surface-card p-6">
           <div className="brand-kicker mb-4">{translations.promocode.proofKicker}</div>
           <h2 className="text-foreground text-2xl font-semibold sm:text-3xl">
             {displayData.displayName}
@@ -130,7 +130,7 @@ export default function PromocodeDetail({
               {signalLabels.map((label) => (
                 <span
                   key={label}
-                  className="rounded-full border border-[color:var(--border)] bg-white px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-[color:var(--foreground)] uppercase"
+                  className="bg-card rounded-full border border-[color:var(--border)] px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-[color:var(--foreground)] uppercase"
                 >
                   {label}
                 </span>
@@ -140,7 +140,7 @@ export default function PromocodeDetail({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-          <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+          <div className="surface-stat">
             <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
               {translations.promocode.discountLabel}
             </div>
@@ -148,7 +148,7 @@ export default function PromocodeDetail({
               {displayData.discountDisplay}
             </div>
           </div>
-          <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+          <div className="surface-stat">
             <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
               {translations.promocode.views}
             </div>
@@ -156,7 +156,7 @@ export default function PromocodeDetail({
               {promocode.viewsCount}
             </div>
           </div>
-          <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_18px_48px_-38px_rgba(17,24,39,0.24)]">
+          <div className="surface-stat">
             <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
               {translations.promocode.copies}
             </div>
@@ -168,7 +168,7 @@ export default function PromocodeDetail({
       </div>
 
       {contextualLinks.length > 0 && (
-        <div className="mb-8 rounded-[28px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_20px_56px_-42px_rgba(17,24,39,0.28)]">
+        <div className="surface-card mb-8 p-5">
           <div className="brand-kicker mb-3">{translations.promocode.exploreKicker}</div>
           <p className="text-muted-foreground mb-4 text-sm leading-6">
             {translations.promocode.exploreDescription}

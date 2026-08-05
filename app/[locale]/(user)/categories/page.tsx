@@ -145,7 +145,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
               <h1 className="page-hero-heading mb-3">{t("allCategories")}</h1>
               <p className="page-hero-copy">{t("allCategoriesDescription")}</p>
             </div>
-            <div className="rounded-[24px] border border-white/80 bg-white/92 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.28)]">
+            <div className="surface-stat px-5 py-4">
               <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
                 {t("trustLabel")}
               </div>
@@ -159,7 +159,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
           </div>
 
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.24)]">
+            <div className="surface-stat">
               <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
                 {t("featuredLabel")}
               </div>
@@ -167,7 +167,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                 {t("featuredHint")}
               </p>
             </div>
-            <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.24)]">
+            <div className="surface-stat">
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("trustValue")}
               </div>
@@ -175,7 +175,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                 {t("trustDescription")}
               </p>
             </div>
-            <div className="rounded-[22px] border border-white/80 bg-white/92 px-4 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.24)]">
+            <div className="surface-stat">
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("bestOffers")}
               </div>
@@ -214,7 +214,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                 <Link
                   key={category.id}
                   href={`/category/${translation?.slug || category.id}`}
-                  className="group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-card p-6 transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
+                  className="surface-card group relative overflow-hidden p-5 transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/60 hover:shadow-[0_28px_72px_-50px_rgba(232,78,66,0.3)]"
                 >
                   {/* Category Image/Icon */}
                   <div className="mb-5 flex items-start justify-between gap-4">
@@ -271,13 +271,11 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                     <div className="text-foreground text-2xl font-semibold">{promocodesCount}</div>
                   </div>
 
-                  <div className="mt-5 text-center">
-                    <Button variant="outline" className="w-full justify-between">
-                      <span>
-                        {t("viewOffers")} {categoryName}
-                      </span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
+                  <div className="bg-background text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-full border border-[color:var(--border)] px-5 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
+                    <span>
+                      {t("viewOffers")} {categoryName}
+                    </span>
+                    <ArrowRight className="h-4 w-4" />
                   </div>
                 </Link>
               );
@@ -286,7 +284,10 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
+              <MagnifyingGlass
+                className="text-muted-foreground mx-auto mb-4 h-12 w-12"
+                aria-hidden="true"
+              />
               <h2 className="text-foreground mb-2 text-xl font-semibold">
                 {t("noCategoriesFound")}
               </h2>

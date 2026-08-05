@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { InstagramLogo, TelegramLogo, YoutubeLogo } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
@@ -7,11 +8,11 @@ export async function Footer() {
   const tCommon = await getTranslations("common");
   const currentYear = new Date().getFullYear();
 
-  const socialLinks = {
-    telegram: "https://t.me/promokoduz_app",
-    instagram: "https://www.instagram.com/promokoduz_app",
-    youtube: "https://www.youtube.com/@promokoduz_app",
-  } as const;
+  const socialLinks = [
+    { name: "Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogo },
+    { name: "Instagram", href: "https://www.instagram.com/promokoduz_app", icon: InstagramLogo },
+    { name: "YouTube", href: "https://www.youtube.com/@promokoduz_app", icon: YoutubeLogo },
+  ] as const;
 
   const mainLinks = [
     { href: "/" as const, label: tCommon("home") },
@@ -34,33 +35,36 @@ export async function Footer() {
     "text-muted-foreground hover:text-[color:var(--accent-red)] inline-flex min-h-11 items-center text-sm transition-colors";
 
   return (
-    <footer className="border-border mt-auto border-t bg-card/80">
+    <footer className="border-border bg-card/80 mt-auto border-t">
       <div className="page-shell py-12 md:py-16">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.9fr_0.9fr]">
           <div>
             <Link href="/" className="inline-flex items-center" translate="no">
-              <Image
-                src="/promobozor-logo.png"
-                alt="PromoBozor"
-                width={200}
-                height={48}
-                sizes="200px"
-                className="h-10 w-auto"
-              />
+              <span className="relative h-10 w-36 overflow-hidden">
+                <Image
+                  src="/promobozor-logo.png"
+                  alt="PromoBozor"
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                />
+              </span>
             </Link>
             <p className="text-muted-foreground mt-4 max-w-sm text-sm leading-7">
               {t("description")}
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {Object.entries(socialLinks).map(([name, href]) => (
+              {socialLinks.map(({ name, href, icon: Icon }) => (
                 <a
                   key={name}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-border text-muted-foreground hover:border-[color:var(--accent-red)]/40 hover:text-foreground inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 text-sm font-medium capitalize transition-colors"
+                  className="border-border text-muted-foreground inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 transition-[color,background-color,border-color] hover:border-[color:var(--accent-red)]/40 hover:bg-[color:var(--accent)] hover:text-[color:var(--accent-red)]"
+                  aria-label={name}
                 >
-                  {name}
+                  <Icon size={20} weight="regular" aria-hidden="true" />
+                  <span className="sr-only">{name}</span>
                 </a>
               ))}
             </div>
@@ -107,7 +111,7 @@ export async function Footer() {
               href="https://t.me/jahongirergashev"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground hover:text-[color:var(--accent-red)] font-medium transition-colors"
+              className="text-foreground font-medium transition-colors hover:text-[color:var(--accent-red)]"
             >
               Jahongir Ergashev
             </a>

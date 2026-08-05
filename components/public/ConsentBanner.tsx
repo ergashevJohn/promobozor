@@ -165,8 +165,8 @@ export function ConsentBanner() {
   ];
 
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-50 p-2 sm:p-3 md:p-6">
-      <Card className="mx-auto max-h-[calc(100vh-1rem)] max-w-5xl overflow-y-auto rounded-[22px] border border-[color:var(--border)] bg-white/95 p-3 shadow-[0_30px_90px_-52px_rgba(17,24,39,0.65)] backdrop-blur sm:rounded-[28px] md:max-h-[calc(100vh-3rem)] md:p-6">
+    <div className="fixed right-0 bottom-0 left-0 z-50 p-3 sm:p-4 md:p-6">
+      <Card className="bg-card/95 mx-auto max-h-[calc(100vh-1.5rem)] max-w-4xl overflow-y-auto rounded-[1.25rem] border border-[color:var(--border)] p-3 shadow-[0_30px_90px_-52px_rgba(17,24,39,0.65)] backdrop-blur sm:p-4 md:max-h-[calc(100vh-3rem)] md:p-5">
         {!showSettings ? (
           <>
             <div className="mb-3 flex flex-col gap-2 md:mb-5 md:flex-row md:items-start md:justify-between">
@@ -175,26 +175,33 @@ export function ConsentBanner() {
                   <ShieldCheck className="h-4 w-4" />
                   <span>{t("title")}</span>
                 </div>
-                <p className="text-muted-foreground line-clamp-4 text-sm leading-6 md:line-clamp-none md:text-base">
+                <p className="text-muted-foreground line-clamp-2 text-sm leading-6 md:line-clamp-none md:text-base">
                   {t("description")}
                 </p>
               </div>
-              <div className="hidden rounded-[22px] border border-[color:var(--border)] bg-[color:var(--secondary)]/90 px-4 py-3 text-sm text-[color:var(--muted-foreground)] md:block">
+              <div className="hidden rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/90 px-4 py-3 text-sm text-[color:var(--muted-foreground)] md:block">
                 PromoBozor faqat kerakli cookie ruxsatlari bilan ishlaydi.
               </div>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <div className="grid grid-cols-3 gap-2 sm:flex sm:justify-end">
               <Button
                 variant="outline"
                 onClick={() => setShowSettings(true)}
-                className="h-11 min-h-11 rounded-full"
+                className="h-11 min-h-11 rounded-full px-2 text-xs sm:px-5 sm:text-sm"
               >
                 {t("settings")}
               </Button>
-              <Button variant="outline" onClick={handleRejectAll} className="h-11 min-h-11 rounded-full">
+              <Button
+                variant="outline"
+                onClick={handleRejectAll}
+                className="h-11 min-h-11 rounded-full px-2 text-xs sm:px-5 sm:text-sm"
+              >
                 {t("reject")}
               </Button>
-              <Button onClick={handleAcceptAll} className="h-11 min-h-11 rounded-full">
+              <Button
+                onClick={handleAcceptAll}
+                className="h-11 min-h-11 rounded-full px-2 text-xs sm:px-5 sm:text-sm"
+              >
                 {t("accept")}
               </Button>
             </div>
@@ -210,10 +217,10 @@ export function ConsentBanner() {
                   return (
                     <label
                       key={item.key}
-                      className="flex h-full flex-col rounded-[24px] border border-[color:var(--border)] bg-[color:var(--secondary)]/65 p-4 shadow-[0_18px_48px_-42px_rgba(17,24,39,0.45)]"
+                      className="flex h-full flex-col rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/65 p-4"
                     >
                       <div className="mb-4 flex items-start justify-between gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card text-[color:var(--accent-red)]">
+                        <div className="bg-card flex h-11 w-11 items-center justify-center rounded-2xl text-[color:var(--accent-red)]">
                           <Icon className="h-5 w-5" />
                         </div>
                         <input

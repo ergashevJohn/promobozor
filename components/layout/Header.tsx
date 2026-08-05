@@ -23,15 +23,16 @@ export async function Header() {
       <div className="page-shell pointer-events-auto">
         <div className="border-border bg-card/90 flex items-center justify-between gap-2 rounded-full border px-3 py-2 shadow-[0_18px_50px_-28px_rgba(17,24,39,0.4)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-2.5">
           <Link href="/" className="flex min-w-0 items-center" translate="no">
-            <Image
-              src="/promobozor-logo.png"
-              alt="PromoBozor — chegirmalar va promokodlar"
-              width={200}
-              height={48}
-              sizes="(max-width: 768px) 140px, 200px"
-              className="h-8 w-auto sm:h-10"
-              priority
-            />
+            <span className="relative h-8 w-28 overflow-hidden sm:h-10 sm:w-36">
+              <Image
+                src="/promobozor-logo.png"
+                alt="PromoBozor — chegirmalar va promokodlar"
+                fill
+                sizes="(max-width: 768px) 112px, 144px"
+                className="object-cover"
+                priority
+              />
+            </span>
           </Link>
 
           <DesktopNavLinks links={navLinks} label={t("promocodes")} />

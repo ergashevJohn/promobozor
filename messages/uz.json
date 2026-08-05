@@ -104,7 +104,7 @@
   },
   "home": {
     "title": "Chegirmalar va promokodlarni bir joyda toping",
-    "subtitle": "Online do'konlar, servislar va marketplace'lar uchun tekshirilgan takliflarni toping, shartlarini tez tushuning va xaridda ko'proq tejang.",
+    "subtitle": "Onlayn do'konlar va servislar uchun tekshirilgan takliflarni toping, shartlarini tez tushuning va xaridda ko'proq tejang.",
     "description": "PromoBozor orqali online xaridlar uchun foydali, saralangan va ishonchli promokodlar hamda chegirmalarni toping.",
     "featuredPromocodes": "Tavsiya etilgan promokod va chegirmalar",
     "featuredDescription": "Qo'lda saralangan, dolzarb va foyda beradigan takliflar",
@@ -113,19 +113,11 @@
     "popularStores": "Mashhur do'konlar",
     "popularCategories": "Mashhur kategoriyalar",
     "popularBrands": "Mashhur brendlar",
-    "trustPills": [
-      "Tekshirilgan takliflar",
-      "Har kuni yangilanadi",
-      "Tez va qulay qidiruv"
-    ],
+    "trustPills": ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Tez va qulay qidiruv"],
     "heroInsight": {
-      "label": "PromoBozor insight",
-      "title": "Marketplace, food delivery, bank va servislar uchun foydali takliflar",
-      "tags": [
-        "Promo",
-        "Kupon",
-        "Tejash"
-      ]
+      "label": "PromoBozor tavsiyasi",
+      "title": "Marketpleyslar, yetkazib berish, bank va servislar uchun foydali takliflar",
+      "tags": ["Promo", "Kupon", "Tejash"]
     },
     "heroCards": {
       "focus": {
@@ -144,7 +136,7 @@
           "href": "/promocodes"
         },
         {
-          "label": "Food delivery",
+          "label": "Yetkazib berish",
           "href": "/categories"
         },
         {
@@ -174,21 +166,21 @@
             "href": "/promocodes"
           },
           {
-            "kicker": "Store finder",
+            "kicker": "Do'kon qidiruvi",
             "title": "Ishlatadigan do'koningizga to'g'ridan-to'g'ri o'ting",
-            "description": "Qaysi do'konda xarid qilishingizni bilsangiz, store bo'yicha tejash variantlarini tez toping.",
+            "description": "Qaysi do'konda xarid qilishingizni bilsangiz, aynan shu do'kondagi tejash variantlarini tez toping.",
             "href": "/stores"
           },
           {
             "kicker": "Kategoriya xaritasi",
-            "title": "Yetkazib berish, bank va marketplace takliflarini solishtiring",
-            "description": "Kategoriya bo'yicha yurib, food delivery, moliya, servis va boshqa yo'nalishlardagi foydali variantlarni ko'ring.",
+            "title": "Yetkazib berish, bank va marketpleys takliflarini solishtiring",
+            "description": "Kategoriya bo'yicha yurib, yetkazib berish, moliya, servis va boshqa yo'nalishlardagi foydali variantlarni ko'ring.",
             "href": "/categories"
           },
           {
             "kicker": "Brend yo'llari",
             "title": "Mashhur brendlar atrofidagi saralangan takliflarni ko'ring",
-            "description": "Tanishingiz bo'lgan nomlar ichida o'xshash takliflarni taqqoslash uchun brand sahifalaridan foydalaning.",
+            "description": "Tanishingiz bo'lgan nomlar ichida o'xshash takliflarni taqqoslash uchun brend sahifalaridan foydalaning.",
             "href": "/brands"
           }
         ]
@@ -212,37 +204,37 @@
           },
           {
             "title": "Bir joyda bir nechta bozordan tejash",
-            "description": "Marketplace, bank, servis va delivery takliflari bitta savings workflow ichida jamlanadi."
+            "description": "Marketpleys, bank, servis va yetkazib berish takliflari bitta joyda jamlanadi."
           }
         ]
       },
       "guide": {
         "eyebrow": "Qaror berishga yordam",
         "title": "Foydalanuvchi birinchi ko'rgan kodni emas, mos taklifni tanlashi kerak",
-        "description": "Kuchliroq PromoBozor tajribasi takliflarni qanday solishtirishni, qaysi dealga ishonish mumkinligini va qachon kod, qachon to'g'ridan-to'g'ri deal ishlatish kerakligini tushuntiradi.",
+        "description": "PromoBozor takliflarni qanday solishtirishni, qaysi taklifga ishonish mumkinligini va qachon kod, qachon to'g'ridan-to'g'ri chegirma ishlatish kerakligini tushuntiradi.",
         "primaryCta": "Tekshirish jarayonimizni ko'rish",
         "secondaryCta": "Ko'p beriladigan savollar",
         "items": [
           {
-            "title": "Checkoutdan oldin yangiligini tekshiring",
+            "title": "To'lovdan oldin yangiligini tekshiring",
             "description": "Taklif yaqinda tekshirilgan bo'lsa, foydalanuvchi uning hanuz ishlashiga ko'proq ishonadi."
           },
           {
             "title": "Nusxalashdan oldin shartni ko'ring",
-            "description": "Minimum summa, yangi foydalanuvchi limiti va to'lov cheklovlari boshidanoq aniq ko'rinishi kerak."
+            "description": "Minimal summa, yangi foydalanuvchi limiti va to'lov cheklovlari boshidanoq aniq ko'rinishi kerak."
           },
           {
             "title": "Tasodifiy qidirish emas, solishtirish yo'lidan yuring",
-            "description": "Store, kategoriya va brand bo'yicha yo'llar foydalanuvchini tezroq toraytirishi, chalkashtirmasligi kerak."
+            "description": "Do'kon, kategoriya va brend bo'yicha yo'llar foydalanuvchini tezroq kerakli taklifga olib borishi kerak."
           }
         ]
       },
       "browse": {
         "stores": {
-          "eyebrow": "Store-first savings",
-          "description": "Qayerdan xarid qilishingizni bilsangiz, store sahifalari sizni eng aktiv va foydali takliflarga tezroq olib boradi.",
+          "eyebrow": "Do'kondan boshlang",
+          "description": "Qayerdan xarid qilishingizni bilsangiz, do'kon sahifalari sizni eng faol va foydali takliflarga tezroq olib boradi.",
           "featuredLabel": "Bu haftadagi top yo'nalish",
-          "featuredCta": "Store takliflarini ko'rish"
+          "featuredCta": "Do'kon takliflarini ko'rish"
         },
         "categories": {
           "eyebrow": "Niyat bo'yicha tejash",
@@ -255,16 +247,16 @@
           ],
           "cardDescriptions": [
             "Shu yo'nalishdagi ayni paytda eng foydali takliflarni ko'rish uchun qulay.",
-            "Store tanlashdan oldin bir nechta tejash variantini solishtirishga yordam beradi.",
-            "Delivery, banking yoki takroriy online xaridlar kabi odatlar uchun foydali.",
-            "Tasodifiy kartalarni ko'rish o'rniga, intent bo'yicha toza yo'l beradi."
+            "Do'konni tanlashdan oldin bir nechta tejash variantini solishtirishga yordam beradi.",
+            "Yetkazib berish, bank xizmatlari yoki takroriy onlayn xaridlar uchun foydali.",
+            "Tasodifiy kartalarni ko'rish o'rniga, maqsadga mos aniq yo'l beradi."
           ],
           "cardCta": "Kategoriyani ko'rish"
         },
         "brands": {
           "eyebrow": "Saralangan brendlar",
-          "description": "Mashhur brendlar oddiy logo devori emas, foydali savings route sifatida ko'rinishi kerak.",
-          "cardLabel": "Brand yo'li"
+          "description": "Mashhur brendlar oddiy logo devori emas, foydali takliflarni topish yo'li sifatida ko'rinishi kerak.",
+          "cardLabel": "Brend yo'li"
         }
       }
     },
@@ -461,7 +453,7 @@
     "trustValue": "Faol yo'nalishlar saralangan",
     "trustDescription": "Yangi takliflar, foydali niyat va mos chegirmalarga tezroq olib boradigan kategoriyalarni ko'rib chiqing.",
     "featuredLabel": "Mashhur yo'nalish",
-    "featuredHint": "Xarid, food delivery, fintech va kundalik servislar bo'yicha eng kuchli kategoriyalardan boshlang.",
+    "featuredHint": "Xarid, yetkazib berish, moliyaviy texnologiyalar va kundalik servislar bo'yicha eng kuchli kategoriyalardan boshlang.",
     "activeCategories": "Aktiv kategoriyalar",
     "promocodes": "Promokodlar",
     "activePromocodes": "Aktiv promokodlar",
