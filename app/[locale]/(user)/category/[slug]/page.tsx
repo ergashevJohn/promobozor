@@ -26,6 +26,15 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
+import {
+  getCachedCategoryBySlug,
+  getCategoryLanguageAlternates,
+} from "@/lib/queries/entities";
+import {
+  mapPromocodeListRow,
+  promocodeListSelectWithCategory,
+  type PromocodeListRow,
+} from "@/lib/queries/promocode-list";
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -40,10 +49,7 @@ export async function generateStaticParams() {
   return [];
 }
 
-// This route cannot be statically rendered because the app root layout reads
-// request headers (`x-nonce`, `x-pathname`) from proxy.ts. Leaving the detail
-// page in ISR mode causes Next.js to throw DYNAMIC_SERVER_USAGE in production.
-export const dynamic = "force-dynamic";
+export const revalidate = 1800;
 
 export async function generateMetadata({
   params,
@@ -67,28 +73,7 @@ export async function generateMetadata({
   }
 
   try {
-    const [categoryData] = await db
-      .select({
-        category: categories,
-        translation: categoryTranslations,
-      })
-      .from(categories)
-      .innerJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(categoryTranslations.slug, slug)
-        )
-      )
-      .where(
-        and(
-          eq(categoryTranslations.slug, slug),
-          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(categories.isActive, true)
-        )
-      )
-      .limit(1);
+    const categoryData = await getCachedCategoryBySlug(locale, slug);
 
     if (!categoryData) {
       return {};
@@ -125,14 +110,7 @@ export async function generateMetadata({
     });
 
     // Get all language slugs for this category
-    const allTranslations = await db
-      .select({
-        language: categoryTranslations.language,
-        slug: categoryTranslations.slug,
-      })
-      .from(categoryTranslations)
-      .where(eq(categoryTranslations.categoryId, categoryData.category.id));
-
+    const allTranslations = await getCategoryLanguageAlternates(categoryData.category.id);
     const languageAlternates: Record<string, string> = {};
     allTranslations.forEach((t) => {
       languageAlternates[t.language] = `/${t.language}/category/${t.slug}`;
@@ -153,8 +131,6 @@ export async function generateMetadata({
   }
 }
 
-export const revalidate = 1800;
-
 export default async function CategoryPage({
   params,
 }: {
@@ -173,7 +149,6 @@ export default async function CategoryPage({
   }
 
   // Fetch category by slug
-  let categoryData;
   let allPromocodes: Promocode[] = [];
   let totalPromocodesCount = 0;
   let featuredPromocodesCount = 0;
@@ -183,28 +158,7 @@ export default async function CategoryPage({
   let categoryTranslation;
 
   try {
-    [categoryData] = await db
-      .select({
-        category: categories,
-        translation: categoryTranslations,
-      })
-      .from(categories)
-      .innerJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(categoryTranslations.slug, slug)
-        )
-      )
-      .where(
-        and(
-          eq(categoryTranslations.slug, slug),
-          eq(categoryTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(categories.isActive, true)
-        )
-      )
-      .limit(1);
+    const categoryData = await getCachedCategoryBySlug(locale, slug);
 
     if (!categoryData) {
       notFound();
@@ -237,16 +191,7 @@ export default async function CategoryPage({
       .where(and(...baseConditions));
 
     const allQuery = db
-      .select({
-        promocode: promocodes,
-        store: stores,
-        storeTranslation: storeTranslations,
-        category: categories,
-        categoryTranslation: categoryTranslations,
-        brand: brands,
-        brandTranslation: brandTranslations,
-        promocodeTranslation: promocodeTranslations,
-      })
+      .select(promocodeListSelectWithCategory)
       .from(promocodes)
       .leftJoin(stores, eq(promocodes.storeId, stores.id))
       .innerJoin(categories, eq(promocodes.categoryId, categories.id))
@@ -291,69 +236,14 @@ export default async function CategoryPage({
     totalViews = stats?.totalViews || 0;
     totalCopies = stats?.totalCopies || 0;
 
-    const mapPromocode = (row: {
-      promocode: typeof promocodes.$inferSelect;
-      store: typeof stores.$inferSelect | null;
-      storeTranslation: typeof storeTranslations.$inferSelect | null;
-      category: typeof categories.$inferSelect | null;
-      categoryTranslation: typeof categoryTranslations.$inferSelect | null;
-      brand: typeof brands.$inferSelect | null;
-      brandTranslation: typeof brandTranslations.$inferSelect | null;
-      promocodeTranslation: typeof promocodeTranslations.$inferSelect | null;
-    }): Promocode => ({
-      id: row.promocode.id,
-      type: row.promocode.type as "code" | "link",
-      code: row.promocode.code,
-      link: row.promocode.link,
-      discountType: row.promocode.discountType,
-      discountValue: row.promocode.discountValue,
-      currency: row.promocode.currency,
-      originalPrice:
-        "originalPrice" in row.promocode
-          ? ((row.promocode as { originalPrice?: number | null }).originalPrice ?? null)
-          : null,
-      imageUrl:
-        "imageUrl" in row.promocode
-          ? ((row.promocode as { imageUrl?: string | null }).imageUrl ?? null)
-          : null,
-      isFeatured: row.promocode.isFeatured,
-      status: row.promocode.status,
-      viewsCount: row.promocode.viewsCount,
-      copyCount: row.promocode.copyCount,
-      likesCount: row.promocode.likesCount,
-      dislikesCount: row.promocode.dislikesCount,
-      expiresAt: row.promocode.expiresAt?.toISOString() || null,
-      translations: row.promocodeTranslation
-        ? [{ ...row.promocodeTranslation, slug: row.promocodeTranslation.slug }]
-        : [],
-      store: row.store
-        ? {
-            id: row.store.id,
-            logoUrl: row.store.logoUrl,
-            websiteUrl: row.store.websiteUrl,
-            translations: row.storeTranslation ? [{ ...row.storeTranslation }] : [],
-          }
-        : null,
-      category:
-        row.category && row.categoryTranslation
-          ? {
-              id: row.category.id,
-              imageUrl: row.category.imageUrl,
-              translations: [{ ...row.categoryTranslation, slug: row.categoryTranslation.slug }],
-            }
-          : null,
-      brand:
-        row.brand && row.brandTranslation
-          ? {
-              id: row.brand.id,
-              imageUrl: row.brand.imageUrl,
-              websiteUrl: row.brand.websiteUrl,
-              translations: [{ ...row.brandTranslation, slug: row.brandTranslation.slug }],
-            }
-          : null,
-    });
-
-    allPromocodes = allData.map(mapPromocode);
+    allPromocodes = (allData as PromocodeListRow[]).map((row) =>
+      mapPromocodeListRow(row, {
+        includeStartsAt: false,
+        includeConditions: true,
+        includeMedia: true,
+        includeCategory: true,
+      })
+    );
   } catch (error) {
     const errorObj = error instanceof Error ? error : new Error(String(error));
     console.error(`Error fetching category (slug: ${slug}, locale: ${locale}):`, errorObj);

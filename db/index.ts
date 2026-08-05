@@ -7,7 +7,7 @@ import * as schema from "./schema";
  *
  * Environment variables:
  * - DATABASE_URL: PostgreSQL connection string (required)
- * - DB_POOL_MAX: Maximum connections (default: 10 for production, 5 for development)
+ * - DB_POOL_MAX: Maximum connections (default: 5 for production and development; 1 during build)
  * - DB_POOL_IDLE_TIMEOUT: Idle timeout in seconds (default: 20)
  * - DB_POOL_CONNECT_TIMEOUT: Connection timeout in seconds (default: 10)
  * - DB_POOL_MAX_LIFETIME: Max connection lifetime in seconds (default: 1800 = 30 min)
@@ -21,7 +21,8 @@ const isBuild =
 
 function getDefaultPoolMax(): string {
   if (isBuild) return "1"; // Limit to 1 connection per worker during build to avoid Supabase limits
-  if (isProduction) return "10"; // Reduced from 20 to 10 for better serverless safety
+  // Serverless + Supabase pooler: keep low to avoid connection exhaustion across instances
+  if (isProduction) return "5";
   return "5";
 }
 
@@ -34,11 +35,8 @@ function shouldUseSsl(dbUrl: string): boolean | "require" {
   }
 }
 
-// Build paytida max=15 — 11 concurrent workers uchun
 const poolConfig = {
-  max: isBuild
-    ? parseInt(process.env.DB_POOL_MAX || "15", 10)
-    : parseInt(process.env.DB_POOL_MAX || getDefaultPoolMax(), 10),
+  max: parseInt(process.env.DB_POOL_MAX || getDefaultPoolMax(), 10),
   idle_timeout: parseInt(process.env.DB_POOL_IDLE_TIMEOUT || (isBuild ? "2" : "20"), 10),
   connect_timeout: parseInt(process.env.DB_POOL_CONNECT_TIMEOUT || "15", 10),
   max_lifetime: parseInt(process.env.DB_POOL_MAX_LIFETIME || (isBuild ? "60" : "1800"), 10),
@@ -47,6 +45,7 @@ const poolConfig = {
 // Singleton pattern for database client in development/HMR
 declare global {
   var dbClient: postgres.Sql | undefined;
+  var dbExitHandlersRegistered: boolean | undefined;
 }
 
 let client: postgres.Sql;
@@ -112,8 +111,8 @@ if (!process.env.DATABASE_URL) {
 // Create drizzle instance
 export const db = drizzle(client, { schema });
 
-// Close connection on process exit (only if it's the client we created)
-if (typeof process !== "undefined" && !isProduction) {
+// Close connection on process exit (register once to avoid HMR MaxListeners leaks)
+if (typeof process !== "undefined" && !isProduction && !globalThis.dbExitHandlersRegistered) {
   const handleExit = async () => {
     if (globalThis.dbClient) {
       console.log("🔌 Closing database connections...");
@@ -123,4 +122,5 @@ if (typeof process !== "undefined" && !isProduction) {
   };
   process.on("SIGINT", handleExit);
   process.on("SIGTERM", handleExit);
+  globalThis.dbExitHandlersRegistered = true;
 }

@@ -39,13 +39,7 @@ const getHomepageData = (locale: string) =>
             logoUrl: stores.logoUrl,
             name: storeTranslations.name,
             slug: storeTranslations.slug,
-            count: sql<number>`(
-              SELECT CAST(COUNT(*) AS INTEGER)
-              FROM ${promocodes}
-              WHERE ${promocodes.storeId} = ${stores.id}
-              AND ${promocodes.status} = 'active'
-              AND (${promocodes.expiresAt} IS NULL OR ${promocodes.expiresAt} > ${now}::timestamp)
-            )`.as("promo_count"),
+            count: sql<number>`CAST(COUNT(${promocodes.id}) AS INTEGER)`.as("promo_count"),
           })
           .from(stores)
           .leftJoin(
@@ -55,7 +49,22 @@ const getHomepageData = (locale: string) =>
               eq(storeTranslations.language, locale as "uz" | "ru" | "en")
             )
           )
+          .leftJoin(
+            promocodes,
+            and(
+              eq(promocodes.storeId, stores.id),
+              eq(promocodes.status, "active"),
+              sql`(${promocodes.expiresAt} IS NULL OR ${promocodes.expiresAt} > ${now}::timestamp)`
+            )
+          )
           .where(eq(stores.isActive, true))
+          .groupBy(
+            stores.id,
+            stores.logoUrl,
+            stores.priority,
+            storeTranslations.name,
+            storeTranslations.slug
+          )
           .orderBy(desc(stores.priority))
           .limit(8),
 

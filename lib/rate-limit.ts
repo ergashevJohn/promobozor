@@ -132,8 +132,14 @@ export const RateLimits = {
   // API endpoints: 60 requests per minute
   api: { limit: 60, window: 60 * 1000 },
 
-  // Public actions (like, view, copy): 10 per minute
+  // Public actions (like, copy, dislike): 10 per minute
   publicAction: { limit: 10, window: 60 * 1000 },
+
+  // Views: slightly higher, still capped per IP
+  publicView: { limit: 30, window: 60 * 1000 },
+
+  // View dedup window per IP + promocode (skip increment if exceeded)
+  viewDedup: { limit: 1, window: 10 * 60 * 1000 },
 
   // Contact form: 3 per hour
   contact: { limit: 3, window: 60 * 60 * 1000 },
@@ -144,6 +150,16 @@ export const RateLimits = {
   // Admin API: 60 requests per minute
   admin: { limit: 60, window: 60 * 1000 },
 } as const;
+
+/**
+ * Rate limit by arbitrary key (IP + resource id, etc.)
+ */
+export async function checkRateLimitKey(
+  key: string,
+  config: RateLimitConfig
+): Promise<{ success: boolean; limit: number; remaining: number; resetTime: number }> {
+  return rateLimit(key, config);
+}
 
 /**
  * Helper to enforce rate limiting with a standard JSON response

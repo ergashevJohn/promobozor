@@ -11,9 +11,7 @@ import type { Promocode } from "@/components/public/types";
 import { Locale } from "@/i18n/routing";
 import { getCachedBrandPromocodeCounts } from "@/lib/cache/promocode-counts";
 import {
-  Brand,
   brands,
-  BrandTranslation,
   brandTranslations,
   categories,
   categoryTranslations,
@@ -31,6 +29,15 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
+import {
+  getBrandLanguageAlternates,
+  getCachedBrandBySlug,
+} from "@/lib/queries/entities";
+import {
+  mapPromocodeListRow,
+  promocodeListSelectWithCategory,
+  type PromocodeListRow,
+} from "@/lib/queries/promocode-list";
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -46,11 +53,7 @@ export async function generateStaticParams() {
   return [];
 }
 
-// This route cannot be statically rendered because the app root layout reads
-// request headers (`x-nonce`, `x-pathname`) from proxy.ts. Leaving the detail
-// page in ISR mode causes Next.js to throw DYNAMIC_SERVER_USAGE in production.
-export const dynamic = "force-dynamic";
-
+export const revalidate = 1800;
 export async function generateMetadata({
   params,
 }: {
@@ -73,28 +76,7 @@ export async function generateMetadata({
   }
 
   try {
-    const [brandData] = await db
-      .select({
-        brand: brands,
-        translation: brandTranslations,
-      })
-      .from(brands)
-      .innerJoin(
-        brandTranslations,
-        and(
-          eq(brandTranslations.brandId, brands.id),
-          eq(brandTranslations.language, locale as Locale),
-          eq(brandTranslations.slug, slug)
-        )
-      )
-      .where(
-        and(
-          eq(brandTranslations.slug, slug),
-          eq(brandTranslations.language, locale as Locale),
-          eq(brands.isActive, true)
-        )
-      )
-      .limit(1);
+    const brandData = await getCachedBrandBySlug(locale, slug);
 
     if (!brandData) {
       return {};
@@ -129,13 +111,7 @@ export async function generateMetadata({
     });
 
     // Get all language slugs for this brand
-    const allTranslations = await db
-      .select({
-        language: brandTranslations.language,
-        slug: brandTranslations.slug,
-      })
-      .from(brandTranslations)
-      .where(eq(brandTranslations.brandId, brandData.brand.id));
+    const allTranslations = await getBrandLanguageAlternates(brandData.brand.id);
 
     const languageAlternates: Record<string, string> = {};
     allTranslations.forEach((t) => {
@@ -157,8 +133,6 @@ export async function generateMetadata({
   }
 }
 
-export const revalidate = 1800;
-
 export default async function BrandPage({
   params,
 }: {
@@ -177,38 +151,30 @@ export default async function BrandPage({
   }
 
   // Fetch brand by slug
-  let brandData;
   let allPromocodes: Promocode[] = [];
   let totalPromocodesCount = 0;
   let featuredPromocodesCount = 0;
   let totalViews = 0;
   let totalCopies = 0;
-  let brand: Brand;
-  let brandTranslation: BrandTranslation;
+  let brand: {
+    id: string;
+    imageUrl: string | null;
+    websiteUrl: string | null;
+    isActive: boolean;
+  };
+  let brandTranslation: {
+    id: string;
+    brandId: string;
+    language: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    metaTitle: string | null;
+    metaDescription: string | null;
+  };
 
   try {
-    [brandData] = await db
-      .select({
-        brand: brands,
-        translation: brandTranslations,
-      })
-      .from(brands)
-      .innerJoin(
-        brandTranslations,
-        and(
-          eq(brandTranslations.brandId, brands.id),
-          eq(brandTranslations.language, locale as Locale),
-          eq(brandTranslations.slug, slug)
-        )
-      )
-      .where(
-        and(
-          eq(brandTranslations.slug, slug),
-          eq(brandTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(brands.isActive, true)
-        )
-      )
-      .limit(1);
+    const brandData = await getCachedBrandBySlug(locale, slug);
 
     if (!brandData) {
       notFound();
@@ -241,17 +207,11 @@ export default async function BrandPage({
       .where(and(...baseConditions));
 
     const allQuery = db
-      .select({
-        promocode: promocodes,
-        store: stores,
-        storeTranslation: storeTranslations,
-        category: categories,
-        categoryTranslation: categoryTranslations,
-        promocodeTranslation: promocodeTranslations,
-      })
+      .select(promocodeListSelectWithCategory)
       .from(promocodes)
       .leftJoin(stores, eq(promocodes.storeId, stores.id))
       .leftJoin(categories, eq(promocodes.categoryId, categories.id))
+      .leftJoin(brands, eq(promocodes.brandId, brands.id))
       .leftJoin(
         promocodeTranslations,
         and(
@@ -273,6 +233,13 @@ export default async function BrandPage({
           eq(categoryTranslations.language, locale as Locale)
         )
       )
+      .leftJoin(
+        brandTranslations,
+        and(
+          eq(brandTranslations.brandId, brands.id),
+          eq(brandTranslations.language, locale as Locale)
+        )
+      )
       .where(and(...baseConditions))
       .orderBy(desc(promocodes.isFeatured), asc(promocodes.order))
       .limit(20);
@@ -285,70 +252,28 @@ export default async function BrandPage({
     totalViews = stats?.totalViews || 0;
     totalCopies = stats?.totalCopies || 0;
 
-    const mapPromocode = (row: {
-      promocode: typeof promocodes.$inferSelect;
-      store: typeof stores.$inferSelect | null;
-      storeTranslation: typeof storeTranslations.$inferSelect | null;
-      category: typeof categories.$inferSelect | null;
-      categoryTranslation: typeof categoryTranslations.$inferSelect | null;
-      promocodeTranslation: typeof promocodeTranslations.$inferSelect | null;
-    }): Promocode => ({
-      id: row.promocode.id,
-      type: row.promocode.type as "code" | "link",
-      code: row.promocode.code,
-      link: row.promocode.link,
-      discountType: row.promocode.discountType,
-      discountValue: row.promocode.discountValue,
-      currency: row.promocode.currency,
-      originalPrice:
-        "originalPrice" in row.promocode
-          ? ((row.promocode as { originalPrice?: number | null }).originalPrice ?? null)
-          : null,
-      imageUrl:
-        "imageUrl" in row.promocode
-          ? ((row.promocode as { imageUrl?: string | null }).imageUrl ?? null)
-          : null,
-      isFeatured: row.promocode.isFeatured,
-      status: row.promocode.status,
-      viewsCount: row.promocode.viewsCount,
-      copyCount: row.promocode.copyCount,
-      likesCount: row.promocode.likesCount,
-      dislikesCount: row.promocode.dislikesCount,
-      expiresAt: row.promocode.expiresAt?.toISOString() || null,
-      translations: row.promocodeTranslation
-        ? [{ ...row.promocodeTranslation, slug: row.promocodeTranslation.slug }]
-        : [],
-      store: row.store
-        ? {
-            id: row.store.id,
-            logoUrl: row.store.logoUrl,
-            websiteUrl: row.store.websiteUrl,
-            translations: row.storeTranslation ? [{ ...row.storeTranslation }] : [],
-          }
-        : null,
-      category:
-        row.category && row.categoryTranslation
-          ? {
-              id: row.category.id,
-              imageUrl: row.category.imageUrl,
-              translations: [{ ...row.categoryTranslation, slug: row.categoryTranslation.slug }],
-            }
-          : null,
-      brand: {
-        id: brand.id,
-        imageUrl: brand.imageUrl,
-        websiteUrl: brand.websiteUrl,
-        translations: [
-          {
-            language: brandTranslation.language,
-            name: brandTranslation.name,
-            slug: brandTranslation.slug,
-          },
-        ],
-      },
-    });
+    const brandFallback = {
+      id: brand.id,
+      imageUrl: brand.imageUrl,
+      websiteUrl: brand.websiteUrl,
+      translations: [
+        {
+          language: brandTranslation.language,
+          name: brandTranslation.name,
+          slug: brandTranslation.slug,
+        },
+      ],
+    };
 
-    allPromocodes = allData.map(mapPromocode);
+    allPromocodes = (allData as PromocodeListRow[]).map((row) =>
+      mapPromocodeListRow(row, {
+        includeStartsAt: false,
+        includeConditions: true,
+        includeMedia: true,
+        includeCategory: true,
+        brandFallback,
+      })
+    );
   } catch (error) {
     const errorObj = error instanceof Error ? error : new Error(String(error));
     console.error("Error fetching brand:", errorObj);

@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  customType,
+  foreignKey,
   index,
   integer,
   pgEnum,
@@ -21,8 +23,15 @@ export const promocodeStatusEnum = pgEnum("promocode_status", [
   "disabled",
 ]);
 export const promocodeTypeEnum = pgEnum("promocode_type", ["code", "link"]);
-export const userRoleEnum = pgEnum("user_role", ["superadmin", "admin"]);
+/** Aligned with live Supabase enum values */
+export const userRoleEnum = pgEnum("user_role", ["admin", "editor"]);
 export const activityTypeEnum = pgEnum("activity_type", ["view", "copy", "like", "dislike"]);
+
+const tsvector = customType<{ data: string }>({
+  dataType() {
+    return "tsvector";
+  },
+});
 
 export const users = pgTable("users", {
   id: text("id")
@@ -74,6 +83,7 @@ export const storeTranslations = pgTable(
     description: text("description"),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
+    searchVector: tsvector("search_vector"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -87,6 +97,7 @@ export const storeTranslations = pgTable(
       table.language
     ),
     languageSlugIdx: index("store_translations_language_slug_idx").on(table.language, table.slug),
+    searchIdx: index("store_translations_search_idx").using("gin", table.searchVector),
   })
 );
 
@@ -105,12 +116,18 @@ export const categories = pgTable(
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
   (table) => ({
+    parentFk: foreignKey({
+      columns: [table.parentId],
+      foreignColumns: [table.id],
+      name: "categories_parent_id_fkey",
+    }).onDelete("set null"),
     // Composite index for categories listing query
     isActiveSortOrderIdx: index("categories_is_active_sort_order_idx").on(
       table.isActive,
       table.sortOrder
     ),
     isActiveIdx: index("categories_is_active_idx").on(table.isActive),
+    parentIdIdx: index("categories_parent_id_idx").on(table.parentId),
   })
 );
 
@@ -129,6 +146,7 @@ export const categoryTranslations = pgTable(
     description: text("description"),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
+    searchVector: tsvector("search_vector"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -145,6 +163,7 @@ export const categoryTranslations = pgTable(
       table.language,
       table.slug
     ),
+    searchIdx: index("category_translations_search_idx").using("gin", table.searchVector),
   })
 );
 
@@ -182,6 +201,7 @@ export const brandTranslations = pgTable(
     description: text("description"),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
+    searchVector: tsvector("search_vector"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -195,6 +215,7 @@ export const brandTranslations = pgTable(
       table.language
     ),
     languageSlugIdx: index("brand_translations_language_slug_idx").on(table.language, table.slug),
+    searchIdx: index("brand_translations_search_idx").using("gin", table.searchVector),
   })
 );
 
@@ -309,6 +330,23 @@ export const promocodes = pgTable(
     activeBrandIdx: index("promocodes_active_brand_idx")
       .on(table.brandId, table.expiresAt)
       .where(sql`status = 'active'`),
+
+    // Partial indexes for common public listing sorts (from orphaned 0014 SQL)
+    activeCopyCountIdx: index("promocodes_active_copy_count_idx")
+      .on(table.copyCount.desc(), table.isFeatured.desc())
+      .where(sql`status = 'active'`),
+    activeExpiresIdx: index("promocodes_active_expires_idx")
+      .on(table.expiresAt, table.isFeatured.desc())
+      .where(sql`status = 'active' AND expires_at IS NOT NULL`),
+    activeCreatedIdx: index("promocodes_active_created_idx")
+      .on(table.createdAt.desc(), table.isFeatured.desc())
+      .where(sql`status = 'active'`),
+    activeViewsIdx: index("promocodes_active_views_idx")
+      .on(table.viewsCount.desc(), table.isFeatured.desc())
+      .where(sql`status = 'active'`),
+    featuredActiveIdx: index("promocodes_featured_active_idx")
+      .on(table.order, table.expiresAt.desc())
+      .where(sql`is_featured = true AND status = 'active'`),
   })
 );
 
@@ -328,6 +366,7 @@ export const promocodeTranslations = pgTable(
     conditions: text("conditions"),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
+    searchVector: tsvector("search_vector"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -349,6 +388,8 @@ export const promocodeTranslations = pgTable(
     ),
     // Full-text search index for title (PostgreSQL GIN index)
     titleSearchIdx: index("promocode_translations_title_search_idx").on(table.title),
+    searchIdx: index("promocode_translations_search_idx").using("gin", table.searchVector),
+    langTitleIdx: index("promocode_translations_lang_title_idx").on(table.language, table.title),
   })
 );
 

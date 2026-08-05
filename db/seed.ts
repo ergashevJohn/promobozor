@@ -42,7 +42,7 @@ async function seed() {
           email: defaultAdminEmail,
           // Placeholder — admin auth UI removed; kept for promocodes.createdById FK
           password: "unused-no-login",
-          role: "superadmin",
+          role: "admin",
         })
         .returning();
 

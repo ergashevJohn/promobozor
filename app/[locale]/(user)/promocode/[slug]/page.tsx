@@ -35,10 +35,7 @@ export async function generateStaticParams() {
   return [];
 }
 
-// This route cannot be statically rendered because the app root layout reads
-// request headers (`x-nonce`, `x-pathname`) from proxy.ts. Leaving the detail
-// page in ISR mode causes Next.js to throw DYNAMIC_SERVER_USAGE in production.
-export const dynamic = "force-dynamic";
+export const revalidate = 1800;
 
 export async function generateMetadata({
   params,
@@ -181,8 +178,6 @@ export async function generateMetadata({
     return {};
   }
 }
-
-export const revalidate = 1800;
 
 export default async function PromocodeDetailPage({
   params,

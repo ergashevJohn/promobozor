@@ -20,6 +20,11 @@ import { getFiltersData } from "@/lib/filters";
 import { fullTextSearchCondition, toTsQuery } from "@/lib/full-text-search";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
+import {
+  mapPromocodeListRow,
+  promocodeListSelect,
+  type PromocodeListRow,
+} from "@/lib/queries/promocode-list";
 import { sanitizeSearchQuery } from "@/lib/search";
 import { and, asc, desc, eq, ilike, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Metadata } from "next";
@@ -45,14 +50,7 @@ type PromocodesSearchParams = {
 
 type EntityType = "store" | "category" | "brand";
 
-type PromocodeQueryRow = {
-  promocode: typeof promocodes.$inferSelect;
-  store: typeof stores.$inferSelect | null;
-  storeTranslation: typeof storeTranslations.$inferSelect | null;
-  brand: typeof brands.$inferSelect | null;
-  brandTranslation: typeof brandTranslations.$inferSelect | null;
-  promocodeTranslation: typeof promocodeTranslations.$inferSelect | null;
-};
+type PromocodeQueryRow = PromocodeListRow;
 
 type PromocodesSectionData = {
   currentPage: number;
@@ -325,14 +323,7 @@ async function fetchPromocodesSectionData(
     const [countResult, result] = await Promise.all([
       countQuery,
       db
-        .select({
-          promocode: promocodes,
-          store: stores,
-          storeTranslation: storeTranslations,
-          brand: brands,
-          brandTranslation: brandTranslations,
-          promocodeTranslation: promocodeTranslations,
-        })
+        .select(promocodeListSelect)
         .from(promocodes)
         .leftJoin(stores, eq(promocodes.storeId, stores.id))
         .leftJoin(brands, eq(promocodes.brandId, brands.id))
@@ -364,67 +355,15 @@ async function fetchPromocodesSectionData(
     ]);
 
     totalPromocodesCount = countResult[0]?.count || 0;
-    promocodesData = result;
+    promocodesData = result as PromocodeQueryRow[];
   } catch (error) {
     console.error("Error fetching promocodes:", error);
   }
 
   const totalPages = Math.ceil(totalPromocodesCount / ITEMS_PER_PAGE);
-  const promocodesList = promocodesData.map((row) => ({
-    id: row.promocode.id,
-    type: row.promocode.type as "code" | "link",
-    code: row.promocode.code,
-    link: row.promocode.link,
-    discountType: row.promocode.discountType,
-    discountValue: row.promocode.discountValue,
-    currency: row.promocode.currency,
-    isFeatured: row.promocode.isFeatured,
-    status: row.promocode.status,
-    viewsCount: row.promocode.viewsCount,
-    copyCount: row.promocode.copyCount,
-    likesCount: row.promocode.likesCount,
-    dislikesCount: row.promocode.dislikesCount,
-    expiresAt: row.promocode.expiresAt?.toISOString() || null,
-    translations: row.promocodeTranslation
-      ? [
-          {
-            language: row.promocodeTranslation.language,
-            title: row.promocodeTranslation.title,
-            slug: row.promocodeTranslation.slug,
-          },
-        ]
-      : [],
-    store: row.store
-      ? {
-          id: row.store.id,
-          logoUrl: row.store.logoUrl,
-          translations: row.storeTranslation
-            ? [
-                {
-                  language: row.storeTranslation.language,
-                  name: row.storeTranslation.name,
-                  slug: row.storeTranslation.slug,
-                },
-              ]
-            : [],
-        }
-      : null,
-    brand:
-      row.brand && row.brandTranslation
-        ? {
-            id: row.brand.id,
-            imageUrl: row.brand.imageUrl,
-            translations: [
-              {
-                language: row.brandTranslation.language,
-                name: row.brandTranslation.name,
-                slug: row.brandTranslation.slug,
-              },
-            ],
-          }
-        : null,
-  }));
-
+  const promocodesList = promocodesData.map((row) =>
+    mapPromocodeListRow(row, { includeStartsAt: false, includeConditions: false })
+  );
   return {
     currentPage,
     totalPages,

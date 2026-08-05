@@ -9,6 +9,11 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
+import {
+  mapPromocodeListRow,
+  promocodeListSelect,
+  type PromocodeListRow,
+} from "@/lib/queries/promocode-list";
 import { getHomeTranslations } from "@/lib/translations";
 import { and, asc, eq, isNull, lte, ne, or } from "drizzle-orm";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
@@ -33,25 +38,11 @@ const getFeatured = (locale: string) =>
         or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now)),
       ];
 
-      let promocodesData: Array<{
-        promocode: typeof promocodes.$inferSelect;
-        store: typeof stores.$inferSelect | null;
-        storeTranslation: typeof storeTranslations.$inferSelect | null;
-        brand: typeof brands.$inferSelect | null;
-        brandTranslation: typeof brandTranslations.$inferSelect | null;
-        promocodeTranslation: typeof promocodeTranslations.$inferSelect | null;
-      }> = [];
+      let promocodesData: PromocodeListRow[] = [];
 
       try {
-        promocodesData = await db
-          .select({
-            promocode: promocodes,
-            store: stores,
-            storeTranslation: storeTranslations,
-            brand: brands,
-            brandTranslation: brandTranslations,
-            promocodeTranslation: promocodeTranslations,
-          })
+        promocodesData = (await db
+          .select(promocodeListSelect)
           .from(promocodes)
           .leftJoin(stores, eq(promocodes.storeId, stores.id))
           .leftJoin(brands, eq(promocodes.brandId, brands.id))
@@ -78,68 +69,15 @@ const getFeatured = (locale: string) =>
           )
           .where(and(...whereConditions))
           .orderBy(asc(promocodes.order))
-          .limit(6); // Limit featured items
+          .limit(6)) as PromocodeListRow[];
       } catch (error) {
         console.error("Error fetching featured promocodes:", error);
         promocodesData = [];
       }
 
-      const featuredPromocodes = promocodesData.map((row) => ({
-        id: row.promocode.id,
-        type: row.promocode.type as "code" | "link",
-        code: row.promocode.code,
-        link: row.promocode.link,
-        discountType: row.promocode.discountType,
-        discountValue: row.promocode.discountValue,
-        currency: row.promocode.currency,
-        isFeatured: row.promocode.isFeatured,
-        status: row.promocode.status,
-        viewsCount: row.promocode.viewsCount,
-        copyCount: row.promocode.copyCount,
-        likesCount: row.promocode.likesCount,
-        dislikesCount: row.promocode.dislikesCount,
-        startsAt: row.promocode.startsAt?.toISOString() || null,
-        expiresAt: row.promocode.expiresAt?.toISOString() || null,
-        translations: row.promocodeTranslation
-          ? [
-              {
-                language: row.promocodeTranslation.language,
-                title: row.promocodeTranslation.title,
-                slug: row.promocodeTranslation.slug,
-                conditions: row.promocodeTranslation.conditions,
-              },
-            ]
-          : [],
-        store: row.store
-          ? {
-              id: row.store.id,
-              logoUrl: row.store.logoUrl,
-              translations: row.storeTranslation
-                ? [
-                    {
-                      language: row.storeTranslation.language,
-                      name: row.storeTranslation.name,
-                      slug: row.storeTranslation.slug,
-                    },
-                  ]
-                : [],
-            }
-          : null,
-        brand:
-          row.brand && row.brandTranslation
-            ? {
-                id: row.brand.id,
-                imageUrl: row.brand.imageUrl,
-                translations: [
-                  {
-                    language: row.brandTranslation.language,
-                    name: row.brandTranslation.name,
-                    slug: row.brandTranslation.slug,
-                  },
-                ],
-              }
-            : null,
-      }));
+      const featuredPromocodes = promocodesData.map((row) =>
+        mapPromocodeListRow(row, { includeStartsAt: true, includeConditions: true })
+      );
 
       return { featuredPromocodes };
     },

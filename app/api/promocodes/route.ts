@@ -9,6 +9,11 @@ import {
 } from "@/lib/db";
 import { fullTextSearchCondition, toTsQuery } from "@/lib/full-text-search";
 import { isValidLanguage } from "@/lib/i18n";
+import {
+  mapPromocodeListRow,
+  promocodeListSelect,
+  type PromocodeListRow,
+} from "@/lib/queries/promocode-list";
 import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { sanitizeSearchQuery } from "@/lib/search";
 import { CacheTTL, isCacheEnabled, promocodesCacheKey, withCache } from "@/lib/cache";
@@ -186,15 +191,8 @@ export async function GET(request: NextRequest) {
       const totalCount = countResult[0]?.count || 0;
 
       // Fetch promocodes with translations
-      const promocodesData = await db
-        .select({
-          promocode: promocodes,
-          store: stores,
-          brand: brands,
-          storeTranslation: storeTranslations,
-          brandTranslation: brandTranslations,
-          promocodeTranslation: promocodeTranslations,
-        })
+      const promocodesData = (await db
+        .select(promocodeListSelect)
         .from(promocodes)
         .leftJoin(stores, eq(promocodes.storeId, stores.id))
         .leftJoin(brands, eq(promocodes.brandId, brands.id))
@@ -222,64 +220,12 @@ export async function GET(request: NextRequest) {
         .where(and(...whereConditions))
         .orderBy(...orderByClause)
         .limit(limit)
-        .offset(offset);
+        .offset(offset)) as PromocodeListRow[];
 
       // Transform data
-      const promocodesList = promocodesData.map((row) => ({
-        id: row.promocode.id,
-        type: row.promocode.type as "code" | "link" | null,
-        code: row.promocode.code,
-        link: row.promocode.link,
-        discountType: row.promocode.discountType,
-        discountValue: row.promocode.discountValue,
-        currency: row.promocode.currency,
-        isFeatured: row.promocode.isFeatured,
-        viewsCount: row.promocode.viewsCount,
-        copyCount: row.promocode.copyCount,
-        likesCount: row.promocode.likesCount,
-        dislikesCount: row.promocode.dislikesCount,
-        expiresAt: row.promocode.expiresAt ? row.promocode.expiresAt.toISOString() : null,
-        translations: row.promocodeTranslation
-          ? [
-              {
-                language: row.promocodeTranslation.language,
-                title: row.promocodeTranslation.title,
-                slug: row.promocodeTranslation.slug,
-              },
-            ]
-          : [],
-        store: row.store
-          ? {
-              id: row.store.id,
-              logoUrl: row.store.logoUrl,
-              translations: row.storeTranslation
-                ? [
-                    {
-                      language: row.storeTranslation.language,
-                      name: row.storeTranslation.name,
-                      slug: row.storeTranslation.slug,
-                    },
-                  ]
-                : [],
-            }
-          : null,
-        brand: row.brand
-          ? {
-              id: row.brand.id,
-              imageUrl: row.brand.imageUrl,
-              translations: row.brandTranslation
-                ? [
-                    {
-                      language: row.brandTranslation.language,
-                      name: row.brandTranslation.name,
-                      slug: row.brandTranslation.slug,
-                    },
-                  ]
-                : [],
-            }
-          : null,
-      }));
-
+      const promocodesList = promocodesData.map((row) =>
+        mapPromocodeListRow(row, { includeStartsAt: false, includeConditions: false })
+      );
       const hasMore = offset + promocodesList.length < totalCount;
 
       return {

@@ -115,22 +115,63 @@ export default async function sitemap({
     },
   });
 
-  // Dynamic pages
-  // Store pages
+  // Dynamic pages — fetch all entity translations in parallel
   try {
-    // All stores data with translations for alternates
-    const allStoreTranslations = await db
-      .select({
-        storeId: storeTranslations.storeId,
-        language: storeTranslations.language,
-        slug: storeTranslations.slug,
-        updatedAt: stores.updatedAt,
-      })
-      .from(storeTranslations)
-      .innerJoin(stores, eq(storeTranslations.storeId, stores.id))
-      .where(eq(stores.isActive, true));
+    const [
+      allStoreTranslations,
+      allCategoryTranslations,
+      allBrandTranslations,
+      allPromocodeTranslations,
+    ] = await Promise.all([
+      db
+        .select({
+          storeId: storeTranslations.storeId,
+          language: storeTranslations.language,
+          slug: storeTranslations.slug,
+          updatedAt: stores.updatedAt,
+        })
+        .from(storeTranslations)
+        .innerJoin(stores, eq(storeTranslations.storeId, stores.id))
+        .where(eq(stores.isActive, true)),
+      db
+        .select({
+          categoryId: categoryTranslations.categoryId,
+          language: categoryTranslations.language,
+          slug: categoryTranslations.slug,
+          updatedAt: categories.updatedAt,
+        })
+        .from(categoryTranslations)
+        .innerJoin(categories, eq(categoryTranslations.categoryId, categories.id))
+        .where(eq(categories.isActive, true)),
+      db
+        .select({
+          brandId: brandTranslations.brandId,
+          language: brandTranslations.language,
+          slug: brandTranslations.slug,
+          updatedAt: brands.updatedAt,
+        })
+        .from(brandTranslations)
+        .innerJoin(brands, eq(brandTranslations.brandId, brands.id))
+        .where(eq(brands.isActive, true)),
+      db
+        .select({
+          promocodeId: promocodeTranslations.promocodeId,
+          language: promocodeTranslations.language,
+          slug: promocodeTranslations.slug,
+          updatedAt: promocodes.updatedAt,
+        })
+        .from(promocodeTranslations)
+        .innerJoin(promocodes, eq(promocodeTranslations.promocodeId, promocodes.id))
+        .where(
+          and(
+            eq(promocodes.status, "active"),
+            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
+            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
+          )
+        ),
+    ]);
 
-    // Group translations by storeId
+    // Store pages
     const storeMap = new Map<string, { language: string; slug: string }[]>();
     allStoreTranslations.forEach((row) => {
       if (!storeMap.has(row.storeId)) storeMap.set(row.storeId, []);
@@ -146,7 +187,6 @@ export default async function sitemap({
         languages[t.language] = `${baseUrl}/${t.language}/store/${t.slug}`;
       });
 
-      // x-default: primary language (uz)
       const uzTranslation = translations.find((t) => t.language === "uz");
       if (uzTranslation) {
         languages["x-default"] = `${baseUrl}/uz/store/${uzTranslation.slug}`;
@@ -160,23 +200,8 @@ export default async function sitemap({
         alternates: { languages },
       });
     }
-  } catch (error) {
-    console.error("Error fetching stores for sitemap:", error);
-  }
 
-  // Category pages
-  try {
-    const allCategoryTranslations = await db
-      .select({
-        categoryId: categoryTranslations.categoryId,
-        language: categoryTranslations.language,
-        slug: categoryTranslations.slug,
-        updatedAt: categories.updatedAt,
-      })
-      .from(categoryTranslations)
-      .innerJoin(categories, eq(categoryTranslations.categoryId, categories.id))
-      .where(eq(categories.isActive, true));
-
+    // Category pages
     const categoryMap = new Map<string, { language: string; slug: string }[]>();
     allCategoryTranslations.forEach((row) => {
       if (!categoryMap.has(row.categoryId)) categoryMap.set(row.categoryId, []);
@@ -206,23 +231,8 @@ export default async function sitemap({
         alternates: { languages },
       });
     }
-  } catch (error) {
-    console.error("Error fetching categories for sitemap:", error);
-  }
 
-  // Brand pages
-  try {
-    const allBrandTranslations = await db
-      .select({
-        brandId: brandTranslations.brandId,
-        language: brandTranslations.language,
-        slug: brandTranslations.slug,
-        updatedAt: brands.updatedAt,
-      })
-      .from(brandTranslations)
-      .innerJoin(brands, eq(brandTranslations.brandId, brands.id))
-      .where(eq(brands.isActive, true));
-
+    // Brand pages
     const brandMap = new Map<string, { language: string; slug: string }[]>();
     allBrandTranslations.forEach((row) => {
       if (!brandMap.has(row.brandId)) brandMap.set(row.brandId, []);
@@ -251,29 +261,8 @@ export default async function sitemap({
         alternates: { languages },
       });
     }
-  } catch (error) {
-    console.error("Error fetching brands for sitemap:", error);
-  }
 
-  // Promocode pages (only active and not expired)
-  try {
-    const allPromocodeTranslations = await db
-      .select({
-        promocodeId: promocodeTranslations.promocodeId,
-        language: promocodeTranslations.language,
-        slug: promocodeTranslations.slug,
-        updatedAt: promocodes.updatedAt,
-      })
-      .from(promocodeTranslations)
-      .innerJoin(promocodes, eq(promocodeTranslations.promocodeId, promocodes.id))
-      .where(
-        and(
-          eq(promocodes.status, "active"),
-          or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
-          or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
-        )
-      );
-
+    // Promocode pages (only active and not expired)
     const promocodeMap = new Map<string, { language: string; slug: string }[]>();
     allPromocodeTranslations.forEach((row) => {
       if (!promocodeMap.has(row.promocodeId)) promocodeMap.set(row.promocodeId, []);
@@ -304,7 +293,7 @@ export default async function sitemap({
       });
     }
   } catch (error) {
-    console.error("Error fetching promocodes for sitemap:", error);
+    console.error("Error fetching dynamic pages for sitemap:", error);
   }
 
   return sitemapEntries;

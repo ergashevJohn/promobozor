@@ -25,24 +25,32 @@ export const getFiltersData = (locale: string) =>
   unstable_cache(
     async () => {
       let storesData: Array<{
-        store: typeof stores.$inferSelect;
-        translation: typeof storeTranslations.$inferSelect | null;
+        id: string;
+        language: string | null;
+        name: string | null;
+        slug: string | null;
       }> = [];
       let categoriesData: Array<{
-        category: typeof categories.$inferSelect;
-        translation: typeof categoryTranslations.$inferSelect | null;
+        id: string;
+        language: string | null;
+        name: string | null;
+        slug: string | null;
       }> = [];
       let brandsData: Array<{
-        brand: typeof brands.$inferSelect;
-        translation: typeof brandTranslations.$inferSelect | null;
+        id: string;
+        language: string | null;
+        name: string | null;
+        slug: string | null;
       }> = [];
 
       try {
         [storesData, categoriesData, brandsData] = await Promise.all([
           db
             .select({
-              store: stores,
-              translation: storeTranslations,
+              id: stores.id,
+              language: storeTranslations.language,
+              name: storeTranslations.name,
+              slug: storeTranslations.slug,
             })
             .from(stores)
             .leftJoin(
@@ -56,8 +64,10 @@ export const getFiltersData = (locale: string) =>
             .orderBy(desc(stores.createdAt)),
           db
             .select({
-              category: categories,
-              translation: categoryTranslations,
+              id: categories.id,
+              language: categoryTranslations.language,
+              name: categoryTranslations.name,
+              slug: categoryTranslations.slug,
             })
             .from(categories)
             .leftJoin(
@@ -71,8 +81,10 @@ export const getFiltersData = (locale: string) =>
             .orderBy(desc(categories.createdAt)),
           db
             .select({
-              brand: brands,
-              translation: brandTranslations,
+              id: brands.id,
+              language: brandTranslations.language,
+              name: brandTranslations.name,
+              slug: brandTranslations.slug,
             })
             .from(brands)
             .leftJoin(
@@ -92,22 +104,24 @@ export const getFiltersData = (locale: string) =>
         brandsData = [];
       }
 
-      const storesList: FilterItem[] = storesData.map((row) => ({
-        id: row.store.id,
-        translations: row.translation ? [row.translation] : [],
-      }));
+      const toFilterItem = (row: {
+        id: string;
+        language: string | null;
+        name: string | null;
+        slug: string | null;
+      }): FilterItem => ({
+        id: row.id,
+        translations:
+          row.language && row.name && row.slug
+            ? [{ language: row.language, name: row.name, slug: row.slug }]
+            : [],
+      });
 
-      const categoriesList: FilterItem[] = categoriesData.map((row) => ({
-        id: row.category.id,
-        translations: row.translation ? [row.translation] : [],
-      }));
-
-      const brandsList: FilterItem[] = brandsData.map((row) => ({
-        id: row.brand.id,
-        translations: row.translation ? [row.translation] : [],
-      }));
-
-      return { storesList, categoriesList, brandsList };
+      return {
+        storesList: storesData.map(toFilterItem),
+        categoriesList: categoriesData.map(toFilterItem),
+        brandsList: brandsData.map(toFilterItem),
+      };
     },
     ["filters-data", locale],
     { revalidate: 600, tags: ["filters", `filters-${locale}`] }

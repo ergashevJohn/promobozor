@@ -28,6 +28,15 @@ import {
   generateStoreTitle,
   getBaseUrl,
 } from "@/lib/metadata";
+import {
+  getCachedStoreBySlug,
+  getStoreLanguageAlternates,
+} from "@/lib/queries/entities";
+import {
+  mapPromocodeListRow,
+  promocodeListSelectWithCategory,
+  type PromocodeListRow,
+} from "@/lib/queries/promocode-list";
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import { MagnifyingGlass, Storefront } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
@@ -42,11 +51,7 @@ export async function generateStaticParams() {
   return [];
 }
 
-// This route cannot be statically rendered because the app root layout reads
-// request headers (`x-nonce`, `x-pathname`) from proxy.ts. Leaving the detail
-// page in ISR mode causes Next.js to throw DYNAMIC_SERVER_USAGE in production.
-export const dynamic = "force-dynamic";
-
+export const revalidate = 1800;
 export async function generateMetadata({
   params,
 }: {
@@ -69,28 +74,7 @@ export async function generateMetadata({
   }
 
   try {
-    const [storeData] = await db
-      .select({
-        store: stores,
-        translation: storeTranslations,
-      })
-      .from(stores)
-      .innerJoin(
-        storeTranslations,
-        and(
-          eq(storeTranslations.storeId, stores.id),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(storeTranslations.slug, slug)
-        )
-      )
-      .where(
-        and(
-          eq(storeTranslations.slug, slug),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(stores.isActive, true)
-        )
-      )
-      .limit(1);
+    const storeData = await getCachedStoreBySlug(locale, slug);
 
     if (!storeData) {
       return {};
@@ -127,14 +111,7 @@ export async function generateMetadata({
     });
 
     // Get all language slugs for this store
-    const allTranslations = await db
-      .select({
-        language: storeTranslations.language,
-        slug: storeTranslations.slug,
-      })
-      .from(storeTranslations)
-      .where(eq(storeTranslations.storeId, storeData.store.id));
-
+    const allTranslations = await getStoreLanguageAlternates(storeData.store.id);
     const languageAlternates: Record<string, string> = {};
     allTranslations.forEach((t) => {
       languageAlternates[t.language] = `/${t.language}/store/${t.slug}`;
@@ -155,8 +132,6 @@ export async function generateMetadata({
   }
 }
 
-export const revalidate = 1800;
-
 export default async function StorePage({
   params,
 }: {
@@ -175,7 +150,6 @@ export default async function StorePage({
   }
 
   // Fetch store by slug
-  let storeData;
   let allPromocodes: Promocode[] = [];
   let totalPromocodesCount = 0;
   let featuredPromocodesCount = 0;
@@ -185,28 +159,7 @@ export default async function StorePage({
   let storeTranslation;
 
   try {
-    [storeData] = await db
-      .select({
-        store: stores,
-        translation: storeTranslations,
-      })
-      .from(stores)
-      .innerJoin(
-        storeTranslations,
-        and(
-          eq(storeTranslations.storeId, stores.id),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(storeTranslations.slug, slug)
-        )
-      )
-      .where(
-        and(
-          eq(storeTranslations.slug, slug),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(stores.isActive, true)
-        )
-      )
-      .limit(1);
+    const storeData = await getCachedStoreBySlug(locale, slug);
 
     if (!storeData) {
       notFound();
@@ -239,16 +192,7 @@ export default async function StorePage({
       .where(and(...baseConditions));
 
     const allQuery = db
-      .select({
-        promocode: promocodes,
-        store: stores,
-        storeTranslation: storeTranslations,
-        category: categories,
-        categoryTranslation: categoryTranslations,
-        brand: brands,
-        brandTranslation: brandTranslations,
-        promocodeTranslation: promocodeTranslations,
-      })
+      .select(promocodeListSelectWithCategory)
       .from(promocodes)
       .leftJoin(stores, eq(promocodes.storeId, stores.id))
       .leftJoin(categories, eq(promocodes.categoryId, categories.id))
@@ -293,69 +237,14 @@ export default async function StorePage({
     totalViews = stats?.totalViews || 0;
     totalCopies = stats?.totalCopies || 0;
 
-    const mapPromocode = (row: {
-      promocode: typeof promocodes.$inferSelect;
-      store: typeof stores.$inferSelect | null;
-      storeTranslation: typeof storeTranslations.$inferSelect | null;
-      category: typeof categories.$inferSelect | null;
-      categoryTranslation: typeof categoryTranslations.$inferSelect | null;
-      brand: typeof brands.$inferSelect | null;
-      brandTranslation: typeof brandTranslations.$inferSelect | null;
-      promocodeTranslation: typeof promocodeTranslations.$inferSelect | null;
-    }): Promocode => ({
-      id: row.promocode.id,
-      type: row.promocode.type as "code" | "link",
-      code: row.promocode.code,
-      link: row.promocode.link,
-      discountType: row.promocode.discountType,
-      discountValue: row.promocode.discountValue,
-      currency: row.promocode.currency,
-      originalPrice:
-        "originalPrice" in row.promocode
-          ? ((row.promocode as { originalPrice?: number | null }).originalPrice ?? null)
-          : null,
-      imageUrl:
-        "imageUrl" in row.promocode
-          ? ((row.promocode as { imageUrl?: string | null }).imageUrl ?? null)
-          : null,
-      isFeatured: row.promocode.isFeatured,
-      status: row.promocode.status,
-      viewsCount: row.promocode.viewsCount,
-      copyCount: row.promocode.copyCount,
-      likesCount: row.promocode.likesCount,
-      dislikesCount: row.promocode.dislikesCount,
-      expiresAt: row.promocode.expiresAt?.toISOString() || null,
-      translations: row.promocodeTranslation
-        ? [{ ...row.promocodeTranslation, slug: row.promocodeTranslation.slug }]
-        : [],
-      store: row.store
-        ? {
-            id: row.store.id,
-            logoUrl: row.store.logoUrl,
-            websiteUrl: row.store.websiteUrl,
-            translations: row.storeTranslation ? [{ ...row.storeTranslation }] : [],
-          }
-        : null,
-      category:
-        row.category && row.categoryTranslation
-          ? {
-              id: row.category.id,
-              imageUrl: row.category.imageUrl,
-              translations: [{ ...row.categoryTranslation, slug: row.categoryTranslation.slug }],
-            }
-          : null,
-      brand:
-        row.brand && row.brandTranslation
-          ? {
-              id: row.brand.id,
-              imageUrl: row.brand.imageUrl,
-              websiteUrl: row.brand.websiteUrl,
-              translations: [{ ...row.brandTranslation, slug: row.brandTranslation.slug }],
-            }
-          : null,
-    });
-
-    allPromocodes = allData.map(mapPromocode);
+    allPromocodes = (allData as PromocodeListRow[]).map((row) =>
+      mapPromocodeListRow(row, {
+        includeStartsAt: false,
+        includeConditions: true,
+        includeMedia: true,
+        includeCategory: true,
+      })
+    );
   } catch (error) {
     const errorObj = error instanceof Error ? error : new Error(String(error));
     console.error("Error fetching store:", errorObj);
@@ -364,7 +253,6 @@ export default async function StorePage({
     console.error("Language:", locale);
     notFound();
   }
-
   const t = await getTranslations({ locale, namespace: "store" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const tEmpty = await getTranslations({ locale, namespace: "empty" });
