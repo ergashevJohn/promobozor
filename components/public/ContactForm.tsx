@@ -98,18 +98,11 @@ export function ContactForm() {
       phone: value,
     }));
 
-    // Real-time validatsiya
-    if (value.trim() === "") {
-      setPhoneError(null);
-      return;
-    }
+  };
 
-    const validation = validateUzbekPhone(value);
-    if (!validation.isValid) {
-      setPhoneError(getPhoneErrorMessage(validation.errorKey));
-    } else {
-      setPhoneError(null);
-    }
+  const handlePhoneBlur = () => {
+    const validation = validateUzbekPhone(formData.phone);
+    setPhoneError(validation.isValid ? null : getPhoneErrorMessage(validation.errorKey));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -219,6 +212,7 @@ export function ContactForm() {
             name="name"
             type="text"
             required
+            autoComplete="name"
             value={formData.name}
             onChange={handleChange}
             className="mt-1 h-11 rounded-xl bg-card"
@@ -232,15 +226,19 @@ export function ContactForm() {
             name="phone"
             type="tel"
             required
+            autoComplete="tel"
+            inputMode="tel"
+            spellCheck={false}
             value={formData.phone}
             onChange={handleChange}
-            placeholder="+998901234567"
+            onBlur={handlePhoneBlur}
+            placeholder="+998 90 123 45 67…"
             className={`mt-1 h-11 rounded-xl bg-white ${phoneError ? "border-destructive" : ""}`}
             aria-invalid={phoneError ? "true" : "false"}
             aria-describedby={phoneError ? "phone-error" : undefined}
           />
           {phoneError && (
-            <p id="phone-error" className="text-destructive mt-1 text-sm">
+            <p id="phone-error" role="alert" className="text-destructive mt-1 text-sm">
               {phoneError}
             </p>
           )}
@@ -253,6 +251,7 @@ export function ContactForm() {
             id="message"
             name="message"
             required
+            autoComplete="off"
             rows={5}
             value={formData.message}
             onChange={handleChange}

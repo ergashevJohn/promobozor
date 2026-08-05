@@ -141,19 +141,19 @@
       "heroQuickLinks": [
         {
           "label": "Yangi takliflar",
-          "href": "/uz/promocodes"
+          "href": "/promocodes"
         },
         {
           "label": "Food delivery",
-          "href": "/uz/categories"
+          "href": "/categories"
         },
         {
           "label": "Top do'konlar",
-          "href": "/uz/stores"
+          "href": "/stores"
         },
         {
           "label": "Ishonchli brendlar",
-          "href": "/uz/brands"
+          "href": "/brands"
         }
       ],
       "featured": {
@@ -171,25 +171,25 @@
             "kicker": "Yangi saralash",
             "title": "Avval eng yangi tekshirilgan takliflarni ko'ring",
             "description": "Yaqinda qayta ko'rib chiqilgan va darhol foyda berish ehtimoli yuqori bo'lgan takliflardan boshlang.",
-            "href": "/uz/promocodes"
+            "href": "/promocodes"
           },
           {
             "kicker": "Store finder",
             "title": "Ishlatadigan do'koningizga to'g'ridan-to'g'ri o'ting",
             "description": "Qaysi do'konda xarid qilishingizni bilsangiz, store bo'yicha tejash variantlarini tez toping.",
-            "href": "/uz/stores"
+            "href": "/stores"
           },
           {
             "kicker": "Kategoriya xaritasi",
             "title": "Yetkazib berish, bank va marketplace takliflarini solishtiring",
             "description": "Kategoriya bo'yicha yurib, food delivery, moliya, servis va boshqa yo'nalishlardagi foydali variantlarni ko'ring.",
-            "href": "/uz/categories"
+            "href": "/categories"
           },
           {
             "kicker": "Brend yo'llari",
             "title": "Mashhur brendlar atrofidagi saralangan takliflarni ko'ring",
             "description": "Tanishingiz bo'lgan nomlar ichida o'xshash takliflarni taqqoslash uchun brand sahifalaridan foydalaning.",
-            "href": "/uz/brands"
+            "href": "/brands"
           }
         ]
       },

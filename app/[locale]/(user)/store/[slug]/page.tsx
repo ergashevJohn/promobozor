@@ -29,7 +29,7 @@ import {
   getBaseUrl,
 } from "@/lib/metadata";
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
-import { Storefront } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlass, Storefront } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
 import Image from "next/image";
@@ -700,9 +700,7 @@ export default async function StorePage({
               />
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
-                <div className="mb-4 text-6xl" aria-hidden="true">
-                  🔍
-                </div>
+                <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
                 <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
                 <p className="text-muted-foreground">{t("checkBackLater")}</p>
                 <Link

@@ -125,7 +125,7 @@ export async function HomeSEOExtended({ locale }: HomeSEOProps) {
         </div>
       </section>
 
-      <section className="ticket-stub p-6 md:p-10">
+      <section className="brand-panel p-6 md:p-10">
         <div className="max-w-3xl text-left">
           <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
             <ShieldCheck size={28} weight="light" aria-hidden="true" />

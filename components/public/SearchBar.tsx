@@ -119,9 +119,11 @@ export default function SearchBar({
           <Input
             id={searchInputId}
             type="text"
+            name="search"
             value={searchValue}
             onChange={handleSearchChange}
-            placeholder={placeholderText}
+            placeholder={`${placeholderText}…`}
+            autoComplete="off"
             aria-label={placeholderText}
             className={`h-12 rounded-2xl border-[color:var(--border)] bg-card/95 pl-10 text-base shadow-[0_24px_60px_-36px_rgba(17,24,39,0.55)] sm:h-14 ${
               navigationMode === "submit" ? "pr-12" : "pr-14"

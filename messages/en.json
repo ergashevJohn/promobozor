@@ -174,19 +174,19 @@
       "heroQuickLinks": [
         {
           "label": "Latest deals",
-          "href": "/en/promocodes"
+          "href": "/promocodes"
         },
         {
           "label": "Food delivery",
-          "href": "/en/categories"
+          "href": "/categories"
         },
         {
           "label": "Top stores",
-          "href": "/en/stores"
+          "href": "/stores"
         },
         {
           "label": "Trusted brands",
-          "href": "/en/brands"
+          "href": "/brands"
         }
       ],
       "featured": {
@@ -204,25 +204,25 @@
             "kicker": "Fresh picks",
             "title": "See the latest verified deals first",
             "description": "Start with the offers that were checked recently and are most likely to be immediately useful.",
-            "href": "/en/promocodes"
+            "href": "/promocodes"
           },
           {
             "kicker": "Store finder",
             "title": "Go straight to the store you already use",
             "description": "Browse store-specific savings when you already know where you plan to order or shop.",
-            "href": "/en/stores"
+            "href": "/stores"
           },
           {
             "kicker": "Category map",
             "title": "Explore delivery, banking, and marketplace savings",
             "description": "Use categories to compare savings paths across food delivery, finance, services, and more.",
-            "href": "/en/categories"
+            "href": "/categories"
           },
           {
             "kicker": "Brand routes",
             "title": "Discover curated offers around popular brands",
             "description": "Jump into brand-focused pages when you're comparing similar offers across familiar names.",
-            "href": "/en/brands"
+            "href": "/brands"
           }
         ]
       },

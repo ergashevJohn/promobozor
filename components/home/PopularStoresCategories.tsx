@@ -208,7 +208,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
           <div className="grid gap-4 sm:grid-cols-2">
             {secondaryStores.slice(0, 6).map((store) => (
               <Link key={store.id} href={`/store/${store.slug}`}>
-                <Card className="group h-full border-[color:var(--border)] bg-card py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
+                <Card className="group h-full border-[color:var(--border)] bg-card py-0 shadow-[0_24px_60px_-48px_rgba(17,43,45,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
                   <CardContent className="flex h-full items-center gap-4 p-5">
                     {store.logoUrl ? (
                       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)]">
@@ -268,7 +268,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
           <div className="stagger-reveal grid gap-6 md:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr_0.9fr]">
             {categoriesData.slice(0, 4).map((cat, index) => (
               <Link key={cat.id} href={`/category/${cat.slug}`}>
-                <Card className="group h-full border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.96))] py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
+                <Card className="group h-full border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(240,248,244,0.96))] py-0 shadow-[0_24px_60px_-48px_rgba(17,43,45,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
                   <CardContent className="flex h-full flex-col gap-5 p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
@@ -342,7 +342,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
           <div className="stagger-reveal grid gap-6 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.95fr_1.05fr_0.9fr]">
             {brandsData.map((brand) => (
               <Link key={brand.id} href={`/brand/${brand.slug}`}>
-                <div className="group rounded-[24px] border border-white/10 bg-white/6 p-5 transition-all duration-200 hover:-translate-y-1 hover:bg-white/9">
+                <div className="group rounded-[20px] border border-white/10 bg-white/6 p-5 transition-[transform,background-color] duration-200 hover:-translate-y-1 hover:bg-white/9">
                   <div className="flex items-center gap-4">
                     {brand.imageUrl ? (
                       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-white/10">

@@ -38,6 +38,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 export async function generateStaticParams() {
   // Skip static generation for brands - render dynamically
@@ -685,9 +686,7 @@ export default async function BrandPage({
               />
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
-                <div className="mb-4 text-6xl" aria-hidden="true">
-                  🔍
-                </div>
+                <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
                 <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
                 <p className="text-muted-foreground">{t("checkBackLater")}</p>
               </div>

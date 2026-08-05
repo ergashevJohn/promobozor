@@ -27,6 +27,13 @@ Main findings:
 
 ## Backlog
 
+### PB-20 Replace inherited social handles
+
+Priority: High
+Status: Backlog
+Issue: https://github.com/ergashevJohn/promobozor/issues/1
+Notes: `promokoduz_app` Telegram, Instagram and YouTube URLs still appear in public UI and structured data. Replace them together after PromoBozor’s official handles are confirmed.
+
 ### PB-08 Full Visual & IA Overhaul Plan
 
 Priority: High

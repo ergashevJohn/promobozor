@@ -43,15 +43,9 @@ export function PromocodeCardVisual({
       : `-${promocode.discountValue} ${promocode.currency || "UZS"}`;
 
   return (
-    <div className="double-bezel h-full">
-      <article
-        role="article"
-        className={`double-bezel-inner group relative flex h-full flex-col overflow-hidden transition-[transform,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          isInactive
-            ? "opacity-60 grayscale"
-            : "hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/45"
-        }`}
-      >
+    <article
+      className={`deal-card group ${isInactive ? "opacity-60 grayscale" : ""}`}
+    >
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <div className="flex items-start gap-3">
           {promocode.store?.logoUrl || promocode.brand?.imageUrl ? (
@@ -163,6 +157,5 @@ export function PromocodeCardVisual({
         {footer ? <div className="relative z-20">{footer}</div> : null}
       </div>
     </article>
-    </div>
   );
 }

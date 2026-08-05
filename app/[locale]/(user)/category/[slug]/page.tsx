@@ -33,6 +33,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
+import { MagnifyingGlass, Package } from "@phosphor-icons/react/dist/ssr";
 
 export async function generateStaticParams() {
   // Skip static generation for categories - render dynamically
@@ -468,11 +469,8 @@ export default async function CategoryPage({
                       />
                     </div>
                   ) : (
-                    <div
-                      className="bg-card flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] text-4xl md:size-20"
-                      aria-hidden="true"
-                    >
-                      📦
+                    <div className="bg-card flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] md:size-20">
+                      <Package className="text-muted-foreground h-8 w-8 md:h-9 md:w-9" aria-hidden="true" />
                     </div>
                   )}
                   <div className="brand-kicker !mb-0">{t("heroKicker")}</div>
@@ -658,9 +656,7 @@ export default async function CategoryPage({
               />
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
-                <div className="mb-4 text-6xl" aria-hidden="true">
-                  🔍
-                </div>
+                <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
                 <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
                 <p className="text-muted-foreground">{t("checkBackLater")}</p>
               </div>

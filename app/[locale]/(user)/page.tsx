@@ -3,7 +3,7 @@ import { HomeFAQSection } from "@/components/home/HomeFAQSection";
 import { HomeEditorialGuide } from "@/components/home/HomeEditorialGuide";
 import { HomeFreshnessProof } from "@/components/home/HomeFreshnessProof";
 import { HomeIntentRoutes } from "@/components/home/HomeIntentRoutes";
-import { HomeSEOExtended, HomeSEOIntro } from "@/components/home/HomeSEOContent";
+import { HomeSEOIntro } from "@/components/home/HomeSEOContent";
 import PopularStoresCategories from "@/components/home/PopularStoresCategories";
 import HeroSection from "@/components/public/HeroSection";
 import { OrganizationSchema } from "@/components/public/OrganizationSchema";
@@ -150,9 +150,6 @@ export default async function HomePage({
           </Suspense>
 
           <HomeEditorialGuide locale={locale} />
-
-          {/* Extended SEO Content - Depth for search engines */}
-          <HomeSEOExtended locale={locale} />
 
           {/* FAQ Section with localized content */}
           <HomeFAQSection locale={locale} />

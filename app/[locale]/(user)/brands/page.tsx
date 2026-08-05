@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
@@ -277,15 +277,13 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <div className="mb-4 text-6xl" aria-hidden="true">
-                🔍
-              </div>
+              <MagnifyingGlass className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
               <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noBrandsFound")}</h2>
               <p className="text-muted-foreground text-sm">{t("noBrandsDescription")}</p>
               <div className="mt-5">
-                <Link href="/promocodes">
-                  <Button>{t("emptyCta")}</Button>
-                </Link>
+                <Button asChild>
+                  <Link href="/promocodes">{t("emptyCta")}</Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

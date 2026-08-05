@@ -1,5 +1,6 @@
 import { MobileMenuToggle } from "@/components/public/headers/MobileMenuToggle";
 import { MobileNavLinks } from "@/components/public/headers/MobileNavLinks";
+import { DesktopNavLinks } from "@/components/public/headers/DesktopNavLinks";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "@/i18n/navigation";
@@ -33,20 +34,7 @@ export async function Header() {
             />
           </Link>
 
-          <nav
-            className="hidden items-center gap-0.5 md:flex"
-            aria-label={t("promocodes")}
-          >
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-muted-foreground hover:text-foreground inline-flex min-h-11 items-center rounded-full px-3.5 py-2 text-sm font-medium transition-colors duration-200 hover:bg-[color:var(--accent)]"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <DesktopNavLinks links={navLinks} label={t("promocodes")} />
 
           <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher />

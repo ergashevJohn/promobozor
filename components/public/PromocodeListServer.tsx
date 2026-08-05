@@ -89,9 +89,9 @@ export function PromocodeListOptimized({
         )}
         {translations.emptyActionLabel && translations.emptyActionHref && (
           <div className="mt-6">
-            <Link href={translations.emptyActionHref}>
-              <Button>{translations.emptyActionLabel}</Button>
-            </Link>
+            <Button asChild>
+              <Link href={translations.emptyActionHref}>{translations.emptyActionLabel}</Link>
+            </Button>
           </div>
         )}
       </div>

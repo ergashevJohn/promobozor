@@ -112,13 +112,16 @@ export function MobileMenuToggle({ children }: Props) {
             </div>
           </div>
 
-          <div
+          <button
+            type="button"
             className="fixed inset-x-0 top-[4.5rem] bottom-0 z-30 bg-black/25 sm:top-[5rem]"
             onClick={() => {
               setOpen(false);
               toggleRef.current?.focus();
             }}
+            aria-label={tCommon("closeMenu")}
             aria-hidden="true"
+            tabIndex={-1}
           />
         </>
       )}

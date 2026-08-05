@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, MagnifyingGlass, Storefront as StoreIcon } from "@phosphor-icons/react";
+import { ArrowRight, MagnifyingGlass, SmileySad, Storefront as StoreIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -103,8 +103,10 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
             />
             <Input
               id="store-search"
+              name="store-search"
               type="text"
-              placeholder={t.findStore}
+              placeholder={`${t.findStore}…`}
+              autoComplete="off"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-14 rounded-2xl border-[color:var(--border)] bg-card pr-4 pl-12 text-base shadow-[0_20px_50px_-32px_rgba(17,24,39,0.45)]"
@@ -125,7 +127,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               return (
                 <Card
                   key={store.id}
-                  className="group overflow-hidden border-white/80 py-0 shadow-[0_22px_60px_-46px_rgba(17,24,39,0.45)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
+                  className="group overflow-hidden border-white/80 py-0 shadow-[0_22px_60px_-46px_rgba(17,43,45,0.45)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
                 >
                   <CardContent className="space-y-4 p-4 md:space-y-6 md:p-6">
                     <div className="flex items-center gap-4">
@@ -170,18 +172,19 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
                       </div>
                     )}
 
-                    <Link
-                      href={`/store/${translation?.slug || store.id}`}
-                      aria-label={tStore("viewStorePromocodesAria", { name: storeName })}
+                    <Button
+                      asChild
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+                      size="default"
                     >
-                      <Button
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
-                        size="default"
+                      <Link
+                        href={`/store/${translation?.slug || store.id}`}
+                        aria-label={tStore("viewStorePromocodesAria", { name: storeName })}
                       >
                         {t.viewOffers} {storeName}
                         <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </CardContent>
                 </Card>
               );
@@ -190,9 +193,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <div className="mb-4 text-6xl" aria-hidden="true">
-                🔍
-              </div>
+              <SmileySad className="text-muted-foreground mx-auto mb-4 h-12 w-12" aria-hidden="true" />
               <h2 className="text-foreground mb-2 text-xl font-semibold">
                 {t.noStoresFound}
               </h2>
