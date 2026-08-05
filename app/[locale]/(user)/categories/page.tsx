@@ -238,7 +238,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                           />
                         </div>
                       ) : (
-                        <div className="bg-muted flex h-24 w-24 items-center justify-center rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,43,45,0.24)]">
+                        <div className="bg-muted flex h-24 w-24 items-center justify-center rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
                           <Package className="text-muted-foreground h-9 w-9" aria-hidden="true" />
                         </div>
                       )}

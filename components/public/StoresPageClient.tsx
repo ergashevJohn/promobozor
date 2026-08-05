@@ -127,7 +127,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               return (
                 <Card
                   key={store.id}
-                  className="group overflow-hidden border-white/80 py-0 shadow-[0_22px_60px_-46px_rgba(17,43,45,0.45)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
+                  className="group overflow-hidden border-white/80 py-0 shadow-[0_22px_60px_-46px_rgba(17,24,39,0.45)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
                 >
                   <CardContent className="space-y-4 p-4 md:space-y-6 md:p-6">
                     <div className="flex items-center gap-4">
