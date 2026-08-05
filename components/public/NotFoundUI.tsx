@@ -97,7 +97,7 @@ export function NotFoundUI({
                   href={link.href}
                   className="border-border group flex items-center gap-3 rounded-[20px] border bg-[color:var(--secondary)] p-4 transition-colors hover:bg-[color:var(--accent)]"
                 >
-                  <div className="rounded-xl bg-card p-2 text-[color:var(--accent-red)] shadow-[0_14px_30px_-22px_rgba(17,24,39,0.6)]">
+                  <div className="bg-card rounded-xl p-2 text-[color:var(--accent-red)] shadow-[0_14px_30px_-22px_rgba(17,24,39,0.6)]">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="text-left">

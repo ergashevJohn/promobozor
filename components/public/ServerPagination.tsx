@@ -98,7 +98,7 @@ export default function ServerPagination({
       )}
 
       {/* Mobile: compact page indicator */}
-      <div className="min-w-[5.5rem] rounded-full border border-[color:var(--border)] bg-card/90 px-3 py-2 text-center text-sm font-medium sm:hidden">
+      <div className="bg-card/90 min-w-[5.5rem] rounded-full border border-[color:var(--border)] px-3 py-2 text-center text-sm font-medium sm:hidden">
         {translations.page} {currentPage}/{totalPages}
       </div>
 
@@ -128,7 +128,7 @@ export default function ServerPagination({
             <Link
               key={page}
               href={buildPageUrl(baseUrl, page, searchParams)}
-              className="text-muted-foreground hover:text-foreground min-w-[42px] rounded-full border border-transparent bg-card/80 px-3 py-2 text-center text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-[color,background-color,border-color,box-shadow] hover:border-[color:var(--accent-red)]/30 hover:bg-card"
+              className="text-muted-foreground hover:text-foreground bg-card/80 hover:bg-card min-w-[42px] rounded-full border border-transparent px-3 py-2 text-center text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-[color,background-color,border-color,box-shadow] hover:border-[color:var(--accent-red)]/30"
               aria-label={`${translations.page} ${page}`}
             >
               {page}

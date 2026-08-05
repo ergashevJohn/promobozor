@@ -106,7 +106,7 @@ export default function PromocodeListWithPagination({
   return (
     <>
       {totalCount > 0 && (
-        <div className="mb-6 flex items-center justify-between gap-4 rounded-[22px] border border-[color:var(--border)] bg-card/95 px-4 py-3 shadow-[0_18px_40px_-30px_rgba(17,24,39,0.35)]">
+        <div className="bg-card/95 mb-6 flex items-center justify-between gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-3 shadow-[0_18px_40px_-30px_rgba(17,24,39,0.35)]">
           <div className="text-sm text-[color:var(--muted-foreground)]">
             <span className="text-foreground font-semibold">{promocodes.length}</span> /{" "}
             {totalCount}

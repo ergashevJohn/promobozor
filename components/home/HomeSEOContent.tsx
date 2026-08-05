@@ -1,4 +1,15 @@
-import { CheckCircle, CreditCard, CursorClick, ShieldCheck, ShoppingBag, Sparkle, Star, TrendUp, Users, Lightning } from "@phosphor-icons/react/dist/ssr";
+import {
+  CheckCircle,
+  CreditCard,
+  CursorClick,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkle,
+  Star,
+  TrendUp,
+  Users,
+  Lightning,
+} from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HomeSEOProps {
@@ -116,7 +127,7 @@ export async function HomeSEOExtended({ locale }: HomeSEOProps) {
         <div className="grid grid-cols-2 gap-8 md:grid-cols-[1.1fr_0.9fr_1.05fr_0.95fr_1fr]">
           {stats.map((stat, index) => (
             <div key={index} className="metric-card">
-              <div className="font-mono text-2xl font-semibold tracking-tight tabular-nums text-[color:var(--accent-red)] md:text-3xl">
+              <div className="font-mono text-2xl font-semibold tracking-tight text-[color:var(--accent-red)] tabular-nums md:text-3xl">
                 {stat.value}
               </div>
               <div className="text-muted-foreground mt-1 text-sm">{stat.label}</div>

@@ -1,9 +1,6 @@
 import { GrouponCardActions } from "./GrouponCardActions";
 import { PromocodeCardVisual } from "./PromocodeCardVisual";
-import {
-  getCardInactiveState,
-  type PromocodeCardTranslations,
-} from "./promocode-card-helpers";
+import { getCardInactiveState, type PromocodeCardTranslations } from "./promocode-card-helpers";
 import type { Promocode } from "./types";
 
 interface GrouponCardProps {

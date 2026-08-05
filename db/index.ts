@@ -25,6 +25,15 @@ function getDefaultPoolMax(): string {
   return "5";
 }
 
+function shouldUseSsl(dbUrl: string): boolean | "require" {
+  try {
+    const host = new URL(dbUrl).hostname;
+    return host === "localhost" || host === "127.0.0.1" ? false : "require";
+  } catch {
+    return false;
+  }
+}
+
 // Build paytida max=15 — 11 concurrent workers uchun
 const poolConfig = {
   max: isBuild
@@ -52,6 +61,8 @@ if (!process.env.DATABASE_URL) {
 } else {
   const dbUrl = process.env.DATABASE_URL;
 
+  const ssl = shouldUseSsl(dbUrl);
+
   if (isProduction) {
     // Production: Always create a new client (serverless handles its own lifecycle)
     client = postgres(dbUrl, {
@@ -64,7 +75,7 @@ if (!process.env.DATABASE_URL) {
       transform: {
         undefined: null,
       },
-      ssl: "require",
+      ssl,
     });
   } else {
     // Development: Use singleton to prevent connection leaks during HMR
@@ -82,7 +93,7 @@ if (!process.env.DATABASE_URL) {
         transform: {
           undefined: null,
         },
-        ssl: false,
+        ssl,
       });
 
       // Test connection

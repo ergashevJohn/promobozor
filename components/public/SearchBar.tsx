@@ -125,7 +125,7 @@ export default function SearchBar({
             placeholder={`${placeholderText}…`}
             autoComplete="off"
             aria-label={placeholderText}
-            className={`h-12 rounded-2xl border-[color:var(--border)] bg-card/95 pl-10 text-base shadow-[0_24px_60px_-36px_rgba(17,24,39,0.55)] sm:h-14 ${
+            className={`bg-card/95 h-12 rounded-2xl border-[color:var(--border)] pl-10 text-base shadow-[0_24px_60px_-36px_rgba(17,24,39,0.55)] sm:h-14 ${
               navigationMode === "submit" ? "pr-12" : "pr-14"
             }`}
           />
@@ -140,7 +140,7 @@ export default function SearchBar({
                 size="sm"
                 onClick={handleClear}
                 aria-label={t("clear")}
-                className="h-11 w-11 min-h-11 min-w-11 p-0"
+                className="h-11 min-h-11 w-11 min-w-11 p-0"
               >
                 <X className="h-4 w-4" />
               </Button>

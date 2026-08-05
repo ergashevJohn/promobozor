@@ -90,18 +90,14 @@ export function GrouponCardActions({
     <div className="flex flex-col gap-2">
       <Button
         onClick={handleCopy}
-        className={`h-12 w-full min-h-11 rounded-xl transition-[color,background-color,opacity,transform] duration-200 ${
+        className={`h-12 min-h-11 w-full rounded-xl transition-[color,background-color,opacity,transform] duration-200 ${
           type === "link"
             ? "ink-surface hover:opacity-90"
             : "bg-[color:var(--accent-red)] text-white hover:bg-[#b83a33]"
         } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
         disabled={disabled || (copied && type === "code")}
         aria-label={
-          type === "link"
-            ? translations.getDeal
-            : copied
-              ? translations.copied
-              : translations.copy
+          type === "link" ? translations.getDeal : copied ? translations.copied : translations.copy
         }
       >
         {type === "link" ? (
@@ -125,7 +121,7 @@ export function GrouponCardActions({
       <Button
         asChild
         variant="outline"
-        className="h-10 min-h-10 w-full rounded-xl bg-card/95 text-sm"
+        className="bg-card/95 h-10 min-h-10 w-full rounded-xl text-sm"
       >
         <Link href={detailsHref} aria-label={translations.viewDetails}>
           <Eye size={16} className="mr-1.5" />

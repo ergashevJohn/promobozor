@@ -31,7 +31,10 @@ export async function HomeFAQSection({ locale }: HomeFAQSectionProps) {
 
         <div className="divide-border divide-y">
           {items.map((item) => (
-            <article key={item.question} className="grid gap-3 py-6 md:grid-cols-[0.9fr_1.1fr] md:gap-10">
+            <article
+              key={item.question}
+              className="grid gap-3 py-6 md:grid-cols-[0.9fr_1.1fr] md:gap-10"
+            >
               <h3 className="text-foreground text-lg font-semibold text-balance md:text-xl">
                 {item.question}
               </h3>

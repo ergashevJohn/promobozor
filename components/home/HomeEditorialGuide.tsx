@@ -15,7 +15,7 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
 
   return (
     <section className="my-14">
-      <div className="overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-card shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)]">
+      <div className="bg-card overflow-hidden rounded-[32px] border border-[color:var(--border)] shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)]">
         <div className="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
           {/* Intro — one dark plane, not a competing card wall */}
           <div className="ink-surface relative overflow-hidden px-6 py-8 md:px-8 md:py-10 lg:px-10">
@@ -24,7 +24,9 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
               aria-hidden="true"
             />
             <div className="relative flex h-full flex-col">
-              <div className="brand-kicker border-white/10 bg-white/5 text-white">{t("eyebrow")}</div>
+              <div className="brand-kicker border-white/10 bg-white/5 text-white">
+                {t("eyebrow")}
+              </div>
               <h2 className="mt-5 max-w-xl text-3xl font-semibold tracking-tight text-balance md:text-4xl">
                 {t("title")}
               </h2>
@@ -59,13 +61,16 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
           </div>
 
           {/* Steps — vertical list reads better than 3 cramped cards */}
-          <ol className="divide-border flex flex-col divide-y bg-card">
+          <ol className="divide-border bg-card flex flex-col divide-y">
             {items.map((item, index) => {
               const Icon = icons[index % icons.length];
               const step = String(index + 1).padStart(2, "0");
 
               return (
-                <li key={item.title} className="group flex gap-4 px-6 py-6 md:gap-5 md:px-8 md:py-7">
+                <li
+                  key={item.title}
+                  className="group flex gap-4 px-6 py-6 md:gap-5 md:px-8 md:py-7"
+                >
                   <div className="flex shrink-0 flex-col items-center gap-3">
                     <span className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)]">
                       {step}
@@ -75,7 +80,7 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
                     </div>
                   </div>
                   <div className="min-w-0 pt-0.5">
-                    <h3 className="text-foreground text-lg font-semibold leading-snug">
+                    <h3 className="text-foreground text-lg leading-snug font-semibold">
                       {item.title}
                     </h3>
                     <p className="text-muted-foreground mt-2 text-sm leading-6 md:text-[0.95rem]">

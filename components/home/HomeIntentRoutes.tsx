@@ -52,7 +52,7 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
             <Link
               key={item.title}
               href={item.href}
-              className="group metric-card hover:border-[color:var(--accent-red)]/30 transition-colors"
+              className="group metric-card transition-colors hover:border-[color:var(--accent-red)]/30"
             >
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div className="text-[10px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
@@ -62,7 +62,9 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
                   <Icon size={20} weight="light" aria-hidden="true" />
                 </div>
               </div>
-              <div className="text-foreground text-xl leading-tight font-semibold">{item.title}</div>
+              <div className="text-foreground text-xl leading-tight font-semibold">
+                {item.title}
+              </div>
               <p className="text-muted-foreground mt-3 text-sm leading-6">{item.description}</p>
               <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
                 <span>{t("cardCta")}</span>

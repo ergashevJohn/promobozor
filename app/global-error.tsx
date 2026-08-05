@@ -2,7 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { routing, type Locale } from "@/i18n/routing";
-import { Warning, House, ArrowsClockwise, MagnifyingGlass, Storefront, Tag } from "@phosphor-icons/react";
+import {
+  Warning,
+  House,
+  ArrowsClockwise,
+  MagnifyingGlass,
+  Storefront,
+  Tag,
+} from "@phosphor-icons/react";
 import NextLink from "next/link";
 import { useEffect, useMemo } from "react";
 

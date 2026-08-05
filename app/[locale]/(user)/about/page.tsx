@@ -5,7 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
-import { ArrowRight, CheckCircle, Globe, Envelope, ArrowsClockwise, Shield, YoutubeLogo, Users, Lightning } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowRight,
+  CheckCircle,
+  Globe,
+  Envelope,
+  ArrowsClockwise,
+  Shield,
+  YoutubeLogo,
+  Users,
+  Lightning,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -207,7 +217,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
           <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
             <Card className="brand-panel overflow-hidden">
-              <CardContent className="bg-gradient-to-br from-[color:var(--accent)] via-card to-[color:var(--secondary)] p-8">
+              <CardContent className="via-card bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--secondary)] p-8">
                 <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-[color:var(--foreground)] text-2xl font-bold text-white">
                   JE
                 </div>

@@ -19,10 +19,7 @@ const nextConfig: NextConfig = {
   // cacheComponents yoqish uchun runtime/dynamic route config'larni olib tashlash kerak
   experimental: {
     // Optimize package imports for better tree shaking
-    optimizePackageImports: [
-      "@phosphor-icons/react",
-      "sonner",
-    ],
+    optimizePackageImports: ["@phosphor-icons/react", "sonner"],
     // Optimize CSS for smaller bundles
     optimizeCss: true,
     // Optimize server components

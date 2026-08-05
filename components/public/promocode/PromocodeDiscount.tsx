@@ -15,7 +15,7 @@ export function PromocodeDiscount({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-center rounded-[24px] border border-[color:var(--accent-red)]/10 bg-gradient-to-br from-[color:var(--accent)] via-card to-[color:var(--secondary)] px-6 py-6 shadow-[0_20px_48px_-38px_rgba(255,90,79,0.55)]">
+      <div className="via-card flex items-center justify-center rounded-[24px] border border-[color:var(--accent-red)]/10 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--secondary)] px-6 py-6 shadow-[0_20px_48px_-38px_rgba(255,90,79,0.55)]">
         <div className="text-center">
           <p className="text-muted-foreground text-sm font-medium">
             {promocode.discountType === "percent" ? t.percentage : t.amount}

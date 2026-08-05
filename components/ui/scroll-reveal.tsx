@@ -44,8 +44,8 @@ export function ScrollReveal({ children, className, as: Tag = "div" }: ScrollRev
       ref={ref as never}
       className={cn(
         "translate-y-8 opacity-0 blur-sm transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
-        "data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100 data-[visible=true]:blur-0",
-        "motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:blur-0",
+        "data-[visible=true]:blur-0 data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100",
+        "motion-reduce:blur-0 motion-reduce:translate-y-0 motion-reduce:opacity-100",
         className
       )}
     >

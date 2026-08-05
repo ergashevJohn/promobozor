@@ -23,7 +23,7 @@ export function DesktopNavLinks({ links, label }: { links: NavLink[]; label: str
             className={`inline-flex min-h-11 items-center rounded-lg px-3.5 py-2 text-sm font-medium transition-[color,background-color] duration-200 ${
               isActive
                 ? "bg-[color:var(--accent)] text-[color:var(--accent-red)]"
-                : "text-muted-foreground hover:bg-[color:var(--secondary)] hover:text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-[color:var(--secondary)]"
             }`}
           >
             {link.label}

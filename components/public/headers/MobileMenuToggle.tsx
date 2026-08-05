@@ -77,7 +77,7 @@ export function MobileMenuToggle({ children }: Props) {
         aria-label={open ? tCommon("closeMenu") : tCommon("openMenu")}
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        className="!size-11 relative min-h-11 min-w-11"
+        className="relative !size-11 min-h-11 min-w-11"
       >
         <span className="relative flex size-5 items-center justify-center" aria-hidden="true">
           <span

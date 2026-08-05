@@ -34,7 +34,7 @@ export async function HomeFreshnessProof({
           <div className="text-[10px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
             {todayLabel}
           </div>
-          <div className="mt-2 font-mono text-lg font-semibold tabular-nums text-[color:var(--foreground)]">
+          <div className="mt-2 font-mono text-lg font-semibold text-[color:var(--foreground)] tabular-nums">
             {new Date().toLocaleDateString(localeForDate, {
               year: "numeric",
               month: "long",

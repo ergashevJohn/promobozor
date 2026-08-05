@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
-import { WarningCircle, House, MagnifyingGlass, Storefront, Tag } from "@phosphor-icons/react/dist/ssr";
+import {
+  WarningCircle,
+  House,
+  MagnifyingGlass,
+  Storefront,
+  Tag,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 

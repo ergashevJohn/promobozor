@@ -107,12 +107,14 @@ export default function FilterBar({
   );
 
   return (
-    <div className="filter-shell mb-6 rounded-[24px] border border-[color:var(--border)] bg-card p-4 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.35)] md:mb-8 md:rounded-[28px] md:p-6">
+    <div className="filter-shell bg-card mb-6 rounded-[24px] border border-[color:var(--border)] p-4 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.35)] md:mb-8 md:rounded-[28px] md:p-6">
       <form action={pathname} method="get">
         <div className="mb-4 flex flex-col gap-3 md:mb-5 md:flex-row md:items-start md:justify-between md:gap-4">
           <div className="max-w-2xl">
             <div className="brand-kicker mb-2 md:mb-3">{translations.kicker}</div>
-            <h2 className="text-foreground text-lg font-semibold md:text-xl">{translations.title}</h2>
+            <h2 className="text-foreground text-lg font-semibold md:text-xl">
+              {translations.title}
+            </h2>
             <p className="text-muted-foreground mt-1 hidden text-sm leading-6 sm:mt-2 sm:block">
               {translations.description}
             </p>

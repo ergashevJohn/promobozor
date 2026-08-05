@@ -1,10 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { Eye, Star } from "@phosphor-icons/react/dist/ssr";
 import { PromocodeCardVisual } from "./PromocodeCardVisual";
-import {
-  getCardInactiveState,
-  type PromocodeCardTranslations,
-} from "./promocode-card-helpers";
+import { getCardInactiveState, type PromocodeCardTranslations } from "./promocode-card-helpers";
 import type { Promocode } from "./types";
 
 interface GrouponCardServerProps {
@@ -72,7 +69,7 @@ export default function GrouponCardServer({
           </button>
           <Link
             href={promocodeLink}
-            className="inline-flex h-10 min-h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-[color:var(--border)] bg-card/95 px-4 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
+            className="bg-card/95 inline-flex h-10 min-h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-[color:var(--border)] px-4 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
           >
             <Eye size={16} aria-hidden="true" />
             {t.viewDetails}

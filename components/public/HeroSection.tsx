@@ -33,7 +33,7 @@ export default async function HeroSection({
                 <div className="brand-kicker" translate="no">
                   PromoBozor
                 </div>
-                <span className="text-[color:var(--accent-red)] text-xs font-semibold tracking-[0.12em] uppercase">
+                <span className="text-xs font-semibold tracking-[0.12em] text-[color:var(--accent-red)] uppercase">
                   {t("heroInsight.label")}
                 </span>
               </div>
@@ -58,7 +58,7 @@ export default async function HeroSection({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="border-border text-muted-foreground hover:border-[color:var(--accent-red)]/40 hover:text-foreground inline-flex min-h-11 items-center rounded-full border bg-card/80 px-4 py-2 text-sm font-medium transition-colors"
+                    className="border-border text-muted-foreground hover:text-foreground bg-card/80 inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:border-[color:var(--accent-red)]/40"
                   >
                     {item.label}
                   </Link>

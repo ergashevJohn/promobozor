@@ -87,7 +87,7 @@ export default function LoadMore({ initialOffset, limit, filters, onLoadMore }: 
         disabled={isLoading}
         variant="outline"
         size="lg"
-        className="min-w-[220px] rounded-2xl border-[color:var(--border)] bg-card transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent-red)] hover:shadow-[0_20px_40px_-28px_rgba(17,24,39,0.45)] active:scale-95"
+        className="bg-card min-w-[220px] rounded-2xl border-[color:var(--border)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent-red)] hover:shadow-[0_20px_40px_-28px_rgba(17,24,39,0.45)] active:scale-95"
       >
         {isLoading ? (
           <>
