@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink } from "lucide-react";
+import { Copy, ArrowSquareOut } from "@phosphor-icons/react";
 import { usePromocode, usePromocodeDisplay } from "../PromocodeContext";
 
 export function PromocodeActionButton() {
@@ -21,7 +21,7 @@ export function PromocodeActionButton() {
               ? `${t.promoCode}: ${t.copied}`
               : `${t.promoCode}: ${t.copyCode}`
         }
-        className={`w-full rounded-full py-4 transition-all sm:py-3 ${
+        className={`w-full rounded-full py-4 transition-[color,background-color,transform,opacity] sm:py-3 ${
           copied
             ? "bg-green-500 hover:bg-green-600"
             : isInactive
@@ -45,7 +45,7 @@ export function PromocodeActionButton() {
         aria-label={isInactive ? t.expired : t.activateLink}
         className={`w-full rounded-full py-4 sm:py-3 ${isInactive ? "cursor-not-allowed bg-slate-400 text-white" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}
       >
-        <ExternalLink size={18} className="mr-2" />
+        <ArrowSquareOut size={18} className="mr-2" />
         {isInactive ? t.expired : t.activateLink}
       </Button>
     );

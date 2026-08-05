@@ -119,16 +119,16 @@ export default async function HomePage({
           locale={locale}
           searchParams={resolvedSearchParams as Record<string, string>}
           searchBarNavigationMode="submit"
-          searchBarTargetPath={`/${locale}/promocodes`}
+          searchBarTargetPath="/promocodes"
         />
 
-        <div className="container mx-auto px-4 md:px-6 lg:px-8">
+      <div className="page-shell space-y-0">
           <HomeIntentRoutes locale={locale} />
 
           {/* Featured Section - Streaming */}
           <Suspense
             fallback={
-              <div className="mb-6">
+              <div className="section-rhythm">
                 <SkeletonCardGrid count={3} />
               </div>
             }
@@ -156,7 +156,7 @@ export default async function HomePage({
 
           {/* FAQ Section with localized content */}
           <HomeFAQSection locale={locale} />
-        </div>
+      </div>
       </div>
     </>
   );

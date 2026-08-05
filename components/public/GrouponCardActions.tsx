@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import { Copy, Eye, Star } from "lucide-react";
+import { Copy, Eye, Star } from "@phosphor-icons/react";
 import { useReducer } from "react";
 import { toast } from "sonner";
 
@@ -90,7 +90,7 @@ export function GrouponCardActions({
     <div className="flex flex-col gap-2">
       <Button
         onClick={handleCopy}
-        className={`h-12 w-full min-h-11 rounded-xl transition-all duration-200 ${
+        className={`h-12 w-full min-h-11 rounded-xl transition-[color,background-color,opacity,transform] duration-200 ${
           type === "link"
             ? "ink-surface hover:opacity-90"
             : "bg-[color:var(--accent-red)] text-white hover:bg-[#b83a33]"

@@ -2,7 +2,7 @@ import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
-import { FileText } from "lucide-react";
+import { FileText } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";

@@ -3,7 +3,7 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { FAQSchema } from "@/components/public/FAQSchema";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
-import { HelpCircle } from "lucide-react";
+import { Question } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -68,7 +68,7 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
           <div className="page-hero-surface mb-12 text-center">
             <div className="mb-4 flex justify-center">
               <div className="rounded-full bg-[color:var(--accent)] p-4 text-[color:var(--accent-red)]">
-                <HelpCircle className="h-12 w-12" />
+                <Question className="h-12 w-12" />
               </div>
             </div>
             <div className="brand-kicker mb-4">{t("heroKicker")}</div>

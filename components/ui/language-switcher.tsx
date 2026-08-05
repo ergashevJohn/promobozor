@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { type ChangeEvent } from "react";
-import { ChevronDown } from "lucide-react";
+import { CaretDown } from "@phosphor-icons/react";
 import { useLocaleSwitch } from "@/lib/use-locale-switch";
 
 const languageOptions = [
@@ -44,7 +44,7 @@ export function LanguageSwitcher() {
           </option>
         ))}
       </select>
-      <ChevronDown className="text-muted-foreground pointer-events-none absolute right-3 h-4 w-4" />
+      <CaretDown className="text-muted-foreground pointer-events-none absolute right-3 h-4 w-4" />
     </div>
   );
 }

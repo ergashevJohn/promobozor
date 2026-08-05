@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { BadgeCheck, Clock3 } from "lucide-react";
+import { SealCheck, Clock } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import {
@@ -43,14 +43,15 @@ export function PromocodeCardVisual({
       : `-${promocode.discountValue} ${promocode.currency || "UZS"}`;
 
   return (
-    <article
-      role="article"
-      className={`group relative flex h-full flex-col overflow-hidden rounded-[24px] border border-[color:var(--border)] bg-card transition-all duration-200 ${
-        isInactive
-          ? "opacity-60 grayscale"
-          : "hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/45 hover:shadow-[0_20px_48px_-40px_rgba(17,24,39,0.5)]"
-      }`}
-    >
+    <div className="double-bezel h-full">
+      <article
+        role="article"
+        className={`double-bezel-inner group relative flex h-full flex-col overflow-hidden transition-[transform,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          isInactive
+            ? "opacity-60 grayscale"
+            : "hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/45"
+        }`}
+      >
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <div className="flex items-start gap-3">
           {promocode.store?.logoUrl || promocode.brand?.imageUrl ? (
@@ -73,8 +74,8 @@ export function PromocodeCardVisual({
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               {!isInactive ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                  <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--accent-red)]">
+                  <SealCheck className="h-3.5 w-3.5" aria-hidden="true" />
                   {t.verified}
                 </span>
               ) : (
@@ -135,8 +136,8 @@ export function PromocodeCardVisual({
               </p>
             )}
             {timeRemaining && (
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 font-medium text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-                <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 font-medium text-[color:var(--accent-red)]">
+                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                 {timeRemaining}
               </span>
             )}
@@ -162,5 +163,6 @@ export function PromocodeCardVisual({
         {footer ? <div className="relative z-20">{footer}</div> : null}
       </div>
     </article>
+    </div>
   );
 }

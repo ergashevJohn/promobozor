@@ -5,18 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
-import {
-  ArrowRight,
-  CheckCircle,
-  Globe,
-  Mail,
-  RefreshCcw,
-  RefreshCw,
-  Shield,
-  Youtube,
-  Users,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, CheckCircle, Globe, Envelope, ArrowsClockwise, Shield, YoutubeLogo, Users, Lightning } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -61,8 +50,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   const reasons = [
     { icon: CheckCircle, title: t("reason1Title"), description: t("reason1Description") },
-    { icon: RefreshCw, title: t("reason2Title"), description: t("reason2Description") },
-    { icon: Zap, title: t("reason3Title"), description: t("reason3Description") },
+    { icon: ArrowsClockwise, title: t("reason2Title"), description: t("reason2Description") },
+    { icon: Lightning, title: t("reason3Title"), description: t("reason3Description") },
     { icon: Globe, title: t("reason4Title"), description: t("reason4Description") },
   ];
 
@@ -145,7 +134,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <CardContent className="p-8">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 rounded-2xl bg-[color:var(--accent)] p-3 text-[color:var(--accent-red)]">
-                  <RefreshCw className="h-8 w-8" />
+                  <ArrowsClockwise className="h-8 w-8" />
                 </div>
                 <div>
                   <h2 className="text-foreground mb-3 text-2xl font-semibold">{t("howWeWork")}</h2>
@@ -231,7 +220,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     href="mailto:jahongirergawev2@gmail.com"
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
-                    <Mail className="h-4 w-4" />
+                    <Envelope className="h-4 w-4" />
                     Email
                   </a>
                   <a
@@ -240,7 +229,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     rel="noopener noreferrer"
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
-                    <RefreshCcw className="h-4 w-4" />
+                    <ArrowsClockwise className="h-4 w-4" />
                     Telegram
                   </a>
                   <a
@@ -257,7 +246,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     rel="noopener noreferrer"
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
-                    <Youtube className="h-4 w-4" />
+                    <YoutubeLogo className="h-4 w-4" />
                     YouTube
                   </a>
                 </div>

@@ -4,7 +4,7 @@ import { ContactForm } from "@/components/public/ContactForm";
 import { ReCaptchaProvider } from "@/components/providers/ReCaptchaProvider";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
-import { Clock, Mail, MapPin } from "lucide-react";
+import { Clock, Envelope, MapPin } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -76,7 +76,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               <div className="brand-panel p-6">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="rounded-xl bg-[color:var(--accent)] p-2 text-[color:var(--accent-red)]">
-                    <Mail className="h-5 w-5" />
+                    <Envelope className="h-5 w-5" />
                   </div>
                   <div>
                     <h3 className="text-foreground font-semibold">{t("email")}</h3>

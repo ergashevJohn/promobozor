@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { CONSENT_STORAGE_KEY, type ConsentPreferences } from "@/lib/consent";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { BarChart3, Megaphone, ShieldCheck } from "lucide-react";
+import { ChartBar, Megaphone, ShieldCheck } from "@phosphor-icons/react";
 
 const CONSENT_EXPIRY_DAYS = 365;
 
@@ -150,7 +150,7 @@ export function ConsentBanner() {
       key: "analytics" as const,
       title: t("analytics"),
       description: t("analyticsDescription"),
-      icon: BarChart3,
+      icon: ChartBar,
       checked: preferences.analytics,
       disabled: false,
     },

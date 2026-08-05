@@ -1,7 +1,8 @@
 import { FAQSchema } from "@/components/public/FAQSchema";
 import { Button } from "@/components/ui/button";
+import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, BadgeHelp } from "lucide-react";
+import { ArrowRight, Question } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HomeFAQSectionProps {
@@ -16,44 +17,44 @@ export async function HomeFAQSection({ locale }: HomeFAQSectionProps) {
     <>
       <FAQSchema questions={items} />
 
-      <section className="brand-panel mb-16 px-5 py-8 md:px-8 md:py-12">
-        <div className="mx-auto max-w-4xl text-center">
+      <section className="section-rhythm">
+        <div className="mb-10 max-w-2xl text-left">
           <div className="brand-kicker mb-4">
-            <BadgeHelp className="h-4 w-4" />
+            <Question size={14} weight="light" aria-hidden="true" />
             <span>{t("eyebrow")}</span>
           </div>
-          <h2 className="brand-section-heading text-center">{t("title")}</h2>
-          <p className="text-muted-foreground mx-auto mt-4 max-w-3xl text-base leading-7 md:text-lg">
+          <h2 className="brand-section-heading text-left">{t("title")}</h2>
+          <p className="text-muted-foreground mt-4 max-w-[55ch] text-base leading-7 md:text-lg">
             {t("description")}
           </p>
         </div>
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-2">
-          {items.map((item, index) => (
-            <article
-              key={item.question}
-              className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)]"
-            >
-              <div className="mb-4 text-sm font-semibold tracking-[0.24em] text-[color:var(--accent-red)] uppercase">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-              <h3 className="text-foreground text-xl font-semibold">{item.question}</h3>
-              <p className="text-muted-foreground mt-3 leading-7">{item.answer}</p>
+        <div className="divide-border divide-y">
+          {items.map((item) => (
+            <article key={item.question} className="grid gap-3 py-6 md:grid-cols-[0.9fr_1.1fr] md:gap-10">
+              <h3 className="text-foreground text-lg font-semibold text-balance md:text-xl">
+                {item.question}
+              </h3>
+              <p className="text-muted-foreground leading-7">{item.answer}</p>
             </article>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button asChild size="lg" className="rounded-full">
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button asChild size="lg" className="group">
             <Link href="/faq">
               {t("seeAll")}
-              <ArrowRight className="h-4 w-4" />
+              <CtaIcon>
+                <ArrowRight size={16} weight="light" />
+              </CtaIcon>
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="rounded-full">
+          <Button asChild size="lg" variant="outline" className="group">
             <Link href="/how-we-verify-promocodes">
               {t("verificationCta")}
-              <ArrowRight className="h-4 w-4" />
+              <CtaIcon>
+                <ArrowRight size={16} weight="light" />
+              </CtaIcon>
             </Link>
           </Button>
         </div>

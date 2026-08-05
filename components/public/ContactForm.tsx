@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useRecaptcha } from "@/lib/hooks/use-recaptcha";
-import { Send } from "lucide-react";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -267,7 +267,7 @@ export function ContactForm() {
             </>
           ) : (
             <>
-              <Send className="mr-2 h-4 w-4" />
+              <PaperPlaneTilt className="mr-2 h-4 w-4" />
               {t("form.send")}
             </>
           )}

@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { ChevronRight, Home } from "lucide-react";
+import { CaretRight, House } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface BreadcrumbItem {
@@ -25,9 +25,9 @@ export async function Breadcrumbs({ items, homeName }: BreadcrumbsProps) {
           return (
             <li key={item.url} className="flex items-center gap-1 sm:gap-2">
               {index === 0 ? (
-                <Home className="text-muted-foreground h-4 w-4" />
+                <House className="text-muted-foreground h-4 w-4" />
               ) : (
-                <ChevronRight className="text-muted-foreground h-4 w-4" />
+                <CaretRight className="text-muted-foreground h-4 w-4" />
               )}
               {isLast ? (
                 <span

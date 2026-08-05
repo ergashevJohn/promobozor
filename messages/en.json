@@ -372,30 +372,30 @@
         "items": [
           {
             "label": "Active promo codes",
-            "value": "50+"
+            "value": "47+"
           },
           {
             "label": "Partner brands",
-            "value": "20+"
+            "value": "18"
           },
           {
             "label": "Saved by our clients",
-            "value": "10M+"
+            "value": "9.4K"
           },
           {
             "label": "Code success rate",
-            "value": "98.5%"
+            "value": "94.7%"
           },
           {
             "label": "Monthly visits",
-            "value": "3,000+"
+            "value": "2,840+"
           }
         ]
       },
       "trust": {
         "title": "Trust and Safety",
         "content": "All promo codes are manually checked and verified. We only publish verified and actually working codes. If you find that a code doesn't work, let us know and we will update or remove it within 24 hours. Your savings are our top priority.",
-        "successRate": "98.5% Success Rate",
+        "successRate": "94.7% Success Rate",
         "verifiedDaily": "Verified Daily",
         "monthlyUsers": "3,000+ Monthly Users"
       }
@@ -805,7 +805,7 @@
     "questions": [
       {
         "question": "How do I use a promocode?",
-        "answer": "Using a promocode is simple and involves 3 easy steps. First, find the promocode you need on our site and click the 'Copy' button. The code will be automatically copied to your clipboard. Then, navigate to the store or service website — for example, Yandex Eats, Uzum, Click, or Payme. Once you've filled your shopping cart and proceed to checkout, you'll find a designated field labeled 'promocode', 'coupon', 'promo code', 'kupon', or 'code' on the payment page. Paste the code you copied from us into this field and click the 'Apply' button. If the code is valid and active, the discount will be automatically calculated and reflected in your total. Note: some stores may apply promocodes only to specific product categories or require a minimum purchase amount. You can find the terms and conditions for each promocode on our site. According to our verification, 98.5% of promocodes worked successfully in 2024."
+        "answer": "Using a promocode is simple and involves 3 easy steps. First, find the promocode you need on our site and click the 'Copy' button. The code will be automatically copied to your clipboard. Then, navigate to the store or service website — for example, Yandex Eats, Uzum, Click, or Payme. Once you've filled your shopping cart and proceed to checkout, you'll find a designated field labeled 'promocode', 'coupon', 'promo code', 'kupon', or 'code' on the payment page. Paste the code you copied from us into this field and click the 'Apply' button. If the code is valid and active, the discount will be automatically calculated and reflected in your total. Note: some stores may apply promocodes only to specific product categories or require a minimum purchase amount. You can find the terms and conditions for each promocode on our site. According to our verification, 94.7% of promocodes worked successfully in 2024."
       },
       {
         "question": "How long are promocodes valid?",

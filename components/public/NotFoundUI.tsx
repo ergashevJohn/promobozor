@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Home, Search, Store, Tag } from "lucide-react";
+import { WarningCircle, House, MagnifyingGlass, Storefront, Tag } from "@phosphor-icons/react";
 import NextLink from "next/link";
 
 interface NotFoundUIProps {
@@ -27,13 +27,13 @@ export function NotFoundUI({
     {
       href: `/${locale}`,
       label: c("home"),
-      icon: Home,
+      icon: House,
       description: c("goHome"),
     },
     {
       href: `/${locale}/stores`,
       label: c("stores"),
-      icon: Store,
+      icon: Storefront,
       description: c("viewAllStores"),
     },
     {
@@ -63,7 +63,7 @@ export function NotFoundUI({
         {/* Error Icon and Message */}
         <div className="mb-6 flex justify-center">
           <div className="rounded-full bg-[color:var(--accent)] p-4">
-            <AlertCircle className="h-12 w-12 text-[color:var(--accent-red)]" />
+            <WarningCircle className="h-12 w-12 text-[color:var(--accent-red)]" />
           </div>
         </div>
 
@@ -79,7 +79,7 @@ export function NotFoundUI({
         <div className="mb-12">
           <Button asChild size="lg">
             <NextLink href={`/${locale}`}>
-              <Home className="mr-2 h-5 w-5" />
+              <House className="mr-2 h-5 w-5" />
               {t("goHome")}
             </NextLink>
           </Button>
@@ -110,12 +110,12 @@ export function NotFoundUI({
           </div>
         </div>
 
-        {/* Search Suggestion */}
+        {/* MagnifyingGlass Suggestion */}
         <div className="mt-8">
           <p className="text-muted-foreground mb-4 text-sm">{t("orSearch")}</p>
           <Button asChild variant="outline">
             <NextLink href={`/${locale}`}>
-              <Search className="mr-2 h-4 w-4" />
+              <MagnifyingGlass className="mr-2 h-4 w-4" />
               {c("search")}
             </NextLink>
           </Button>

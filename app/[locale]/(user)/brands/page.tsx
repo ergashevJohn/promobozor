@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
@@ -206,7 +206,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                 <Link
                   key={brand.id}
                   href={`/brand/${translation?.slug || brand.id}`}
-                  className="group relative overflow-hidden rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_22px_60px_-46px_rgba(17,24,39,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
+                  className="group relative overflow-hidden rounded-[1.5rem] border border-[color:var(--border)] bg-card p-6 transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1 hover:border-[color:var(--accent-red)]"
                 >
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div className="flex size-16 items-center justify-start">

@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize package imports for better tree shaking
     optimizePackageImports: [
-      "lucide-react",
+      "@phosphor-icons/react",
       "sonner",
     ],
     // Optimize CSS for smaller bundles

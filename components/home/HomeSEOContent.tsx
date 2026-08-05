@@ -1,15 +1,4 @@
-import {
-  CheckCircle2,
-  CreditCard,
-  MousePointer2,
-  ShieldCheck,
-  ShoppingBag,
-  Sparkles,
-  Star,
-  TrendingUp,
-  Users,
-  Zap,
-} from "lucide-react";
+import { CheckCircle, CreditCard, CursorClick, ShieldCheck, ShoppingBag, Sparkle, Star, TrendUp, Users, Lightning } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HomeSEOProps {
@@ -24,34 +13,33 @@ export async function HomeSEOIntro({ locale }: HomeSEOProps) {
   const benefits = (await t.raw("benefits")) as string[];
 
   return (
-    <section className="brand-panel mt-4 mb-8 p-5 md:mt-6 lg:p-8 2xl:p-12">
-      <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-        <div>
+    <section className="section-rhythm border-border border-b">
+      <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+        <div className="text-left">
           <div className="brand-kicker mb-4">
-            <Sparkles size={16} />
+            <Sparkle size={16} weight="light" aria-hidden="true" />
             <span>{t("premiumDeals")}</span>
           </div>
           <h2 className="brand-section-heading mb-6 text-left">{t("title")}</h2>
-          <p className="text-muted-foreground mb-8 text-lg leading-relaxed">{t("content")}</p>
-          <div className="rounded-[24px] border border-[color:var(--border)] bg-[color:var(--secondary)]/80 p-4 lg:p-6">
-            <p className="text-foreground/80 font-medium italic">&quot;{t("experience")}&quot;</p>
-          </div>
+          <p className="text-muted-foreground mb-8 max-w-[55ch] text-lg leading-relaxed">
+            {t("content")}
+          </p>
+          <p className="text-foreground/80 border-border border-l-2 border-[color:var(--accent-red)] pl-4 font-medium italic">
+            &quot;{t("experience")}&quot;
+          </p>
         </div>
 
         <div className="space-y-4">
-          <h3 className="mb-6 text-xl font-semibold">
+          <h3 className="mb-2 text-xl font-semibold">
             {t("benefitsTitle" as Parameters<typeof t>[0]) || "Nima uchun bizni tanlash kerak:"}
           </h3>
-          <div className="grid gap-4 sm:grid-cols-1">
+          <div className="divide-border divide-y">
             {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="group rounded-[24px] border border-[color:var(--border)] bg-card/95 p-4 shadow-[0_22px_56px_-46px_rgba(17,24,39,0.45)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/25"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)] transition-colors">
-                  <CheckCircle2 size={20} />
+              <div key={index} className="flex items-start gap-3 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
+                  <CheckCircle size={18} weight="light" aria-hidden="true" />
                 </div>
-                <span className="text-foreground/90 text-base leading-tight font-medium">
+                <span className="text-foreground/90 pt-1 text-base leading-snug font-medium">
                   {benefit}
                 </span>
               </div>
@@ -77,111 +65,86 @@ export async function HomeSEOExtended({ locale }: HomeSEOProps) {
 
   const stepIcons = [
     <ShoppingBag key="1" />,
-    <MousePointer2 key="2" />,
+    <CursorClick key="2" />,
     <CreditCard key="3" />,
-    <Zap key="4" />,
+    <Lightning key="4" />,
   ];
 
   return (
-    <div className="space-y-12 py-12">
-      {/* How It Works */}
+    <div className="section-rhythm space-y-20">
       <section>
-        <div className="mb-6 text-center md:mb-12">
-          <h2 className="brand-section-heading text-center text-2xl md:text-3xl">
+        <div className="mb-10 max-w-2xl text-left">
+          <h2 className="brand-section-heading text-left text-2xl md:text-3xl">
             {t("howItWorks.title")}
           </h2>
-          <div className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-[color:var(--accent)]">
-            <div className="h-full w-1/2 rounded-full bg-[color:var(--accent-red)]"></div>
-          </div>
+          <p className="text-muted-foreground mt-3 text-base leading-7">{t("howItWorks.footer")}</p>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <ol className="stagger-reveal grid gap-8 md:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr_0.9fr]">
           {steps.map((step, index) => (
-            <div
-              key={index}
-              className="metric-card relative flex flex-col items-center text-center transition-transform hover:-translate-y-1"
-            >
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-[20px] bg-[color:var(--accent)] text-[color:var(--accent-red)]">
+            <li key={index} className="metric-card text-left">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
                 {stepIcons[index % stepIcons.length]}
               </div>
-              <h3 className="mb-2 text-xl font-bold">{step.title}</h3>
-              <p className="text-muted-foreground">{step.description}</p>
-            </div>
+              <h3 className="mb-2 text-lg font-semibold">{step.title}</h3>
+              <p className="text-muted-foreground text-sm leading-6">{step.description}</p>
+            </li>
           ))}
-        </div>
-        <div className="mt-6 rounded-[24px] border border-dashed border-[color:var(--border)] bg-card/80 p-4 text-center text-sm text-[color:var(--muted-foreground)] md:mt-12">
-          <p>{t("howItWorks.footer")}</p>
-        </div>
+        </ol>
       </section>
 
-      {/* Popular Categories Descriptions */}
-      <section className="p-0 md:p-8 md:py-0 2xl:p-12 2xl:py-0">
-        <h2 className="brand-section-heading mb-6 text-center text-2xl md:mb-12 md:text-3xl">
+      <section>
+        <h2 className="brand-section-heading mb-8 text-left text-2xl md:text-3xl">
           {t("categories.title")}
         </h2>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-3">
+        <div className="stagger-reveal grid gap-8 lg:grid-cols-[1.2fr_0.95fr_1.05fr]">
           {categories.map((cat, index) => (
-            <div
-              key={index}
-              className="metric-card p-4 transition-transform hover:-translate-y-1 md:p-6"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
-                <Star size={24} />
+            <div key={index} className="metric-card">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
+                <Star size={20} weight="light" aria-hidden="true" />
               </div>
-              <h3 className="text-foreground mb-3 text-xl font-bold">{cat.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{cat.description}</p>
+              <h3 className="text-foreground mb-2 text-lg font-semibold">{cat.title}</h3>
+              <p className="text-muted-foreground text-sm leading-6">{cat.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Statistics */}
       <section>
-        <h2 className="brand-section-heading mb-6 text-center text-2xl md:mb-12 md:text-3xl">
+        <h2 className="brand-section-heading mb-8 text-left text-2xl md:text-3xl">
           {t("results.title")}
         </h2>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-8">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-[1.1fr_0.9fr_1.05fr_0.95fr_1fr]">
           {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="metric-card flex flex-col items-center justify-center p-4 text-center sm:p-6"
-            >
-              <div className="mb-2 text-xl font-black text-[color:var(--accent-red)] md:text-4xl">
+            <div key={index} className="metric-card">
+              <div className="font-mono text-2xl font-semibold tracking-tight tabular-nums text-[color:var(--accent-red)] md:text-3xl">
                 {stat.value}
               </div>
-              <div className="text-muted-foreground text-sm font-semibold tracking-tight uppercase">
-                {stat.label}
-              </div>
+              <div className="text-muted-foreground mt-1 text-sm">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Trust & Safety */}
-      <section className="brand-panel relative overflow-hidden p-5 md:p-8 2xl:p-12">
-        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[color:var(--accent-red)]/8 blur-3xl"></div>
-        <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[color:var(--primary)]/6 blur-3xl"></div>
-
-        <div className="relative mx-auto max-w-4xl text-center">
-          <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-[color:var(--accent)] text-[color:var(--accent-red)]">
-            <ShieldCheck size={48} />
+      <section className="ticket-stub p-6 md:p-10">
+        <div className="max-w-3xl text-left">
+          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
+            <ShieldCheck size={28} weight="light" aria-hidden="true" />
           </div>
-          <h2 className="brand-section-heading mb-4 text-center text-2xl md:mb-6 md:text-3xl lg:text-4xl">
+          <h2 className="brand-section-heading mb-4 text-left text-2xl md:text-3xl">
             {t("trust.title")}
           </h2>
-          <p className="text-muted-foreground text-lg leading-relaxed md:text-xl">
-            {t("trust.content")}
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-6 md:mt-10">
-            <div className="text-foreground flex items-center gap-2 text-sm font-semibold">
-              <CheckCircle2 className="text-green-600" size={20} />
+          <p className="text-muted-foreground text-lg leading-relaxed">{t("trust.content")}</p>
+          <div className="mt-6 flex flex-wrap gap-4">
+            <div className="text-foreground flex min-h-11 items-center gap-2 text-sm font-medium">
+              <CheckCircle className="text-[color:var(--accent-red)]" size={18} weight="light" />
               <span>{t("trust.successRate")}</span>
             </div>
-            <div className="text-foreground flex items-center gap-2 text-sm font-semibold">
-              <TrendingUp className="text-[color:var(--accent-red)]" size={20} />
+            <div className="text-foreground flex min-h-11 items-center gap-2 text-sm font-medium">
+              <TrendUp className="text-[color:var(--accent-red)]" size={18} weight="light" />
               <span>{t("trust.verifiedDaily")}</span>
             </div>
-            <div className="text-foreground flex items-center gap-2 text-sm font-semibold">
-              <Users className="text-[color:var(--primary)]" size={20} />
+            <div className="text-foreground flex min-h-11 items-center gap-2 text-sm font-medium">
+              <Users size={18} weight="light" />
               <span>{t("trust.monthlyUsers")}</span>
             </div>
           </div>

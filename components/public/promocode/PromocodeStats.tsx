@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Share2, ThumbsDown, ThumbsUp } from "lucide-react";
+import { ShareNetwork, ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
 import { usePromocode } from "../PromocodeContext";
 
 export function PromocodeStats() {
@@ -33,7 +33,7 @@ export function PromocodeStats() {
             onClick={handleShare}
             aria-label={t.share}
           >
-            <Share2 size={18} />
+            <ShareNetwork size={18} />
             <span className="hidden sm:inline">{t.share}</span>
           </Button>
           <Button

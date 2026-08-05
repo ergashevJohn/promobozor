@@ -11,7 +11,7 @@ import {
 } from "@/lib/db";
 import { getHomeTranslations } from "@/lib/translations";
 import { and, asc, eq, isNull, lte, ne, or } from "drizzle-orm";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
@@ -198,22 +198,24 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
   }
 
   return (
-    <section className="my-12">
-      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+    <section className="section-rhythm border-border border-b">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="brand-kicker mb-3">{t("overhaul.featured.eyebrow")}</div>
-          <h2 className="brand-section-heading">{t("featuredPromocodes")}</h2>
+          <h2 className="brand-section-heading text-left">{t("featuredPromocodes")}</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl text-base md:text-lg">
             {t("overhaul.featured.description")}
           </p>
         </div>
         <Link
           href="/promocodes?featured=true"
-          className="text-foreground inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
+          className="group text-foreground inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
           aria-label={`${t("featuredPromocodes")} - ${tCommon("viewAll")}`}
         >
           {tCommon("viewAll")}
-          <ArrowRight size={16} />
+          <span className="inline-flex size-8 items-center justify-center rounded-full bg-black/5 dark:bg-white/10">
+            <ArrowRight size={16} weight="light" />
+          </span>
         </Link>
       </div>
       <PromocodeListOptimized

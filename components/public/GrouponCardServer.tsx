@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { Eye, Star } from "lucide-react";
+import { Eye, Star } from "@phosphor-icons/react/dist/ssr";
 import { PromocodeCardVisual } from "./PromocodeCardVisual";
 import {
   getCardInactiveState,
@@ -37,7 +37,7 @@ export default function GrouponCardServer({
             data-code={promocode.code || ""}
             data-link={promocode.link || ""}
             data-disabled={isInactive ? "true" : "false"}
-            className={`flex h-12 min-h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
+            className={`flex h-12 min-h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-[color,background-color,opacity,transform] duration-200 ${
               promocode.type === "link"
                 ? "ink-surface hover:opacity-90"
                 : "bg-[color:var(--accent-red)] text-white hover:bg-[#b83a33]"

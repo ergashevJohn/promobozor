@@ -3,23 +3,23 @@ import { getBaseUrl } from "@/lib/metadata";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { Agentation } from "agentation";
 import type { Metadata, Viewport } from "next";
-import { Inter, Roboto_Mono } from "next/font/google";
+import { JetBrains_Mono, Manrope } from "next/font/google";
 import { headers } from "next/headers";
 import type React from "react";
 import "./globals.css";
 
-const geistSans = Inter({
+const brandSans = Manrope({
   subsets: ["latin", "cyrillic", "latin-ext"],
   display: "swap",
   adjustFontFallback: true,
   variable: "--font-brand-sans",
 });
 
-const geistMono = Roboto_Mono({
+const brandMono = JetBrains_Mono({
   subsets: ["latin", "cyrillic", "latin-ext"],
   display: "swap",
   adjustFontFallback: true,
-  variable: "--font-geist-mono",
+  variable: "--font-brand-mono",
 });
 
 export const metadata: Metadata = {
@@ -38,7 +38,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f5f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c1220" },
+  ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -56,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${brandSans.variable} ${brandMono.variable} antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider

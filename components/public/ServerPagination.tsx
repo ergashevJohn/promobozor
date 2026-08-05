@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 interface ServerPaginationProps {
   currentPage: number;
@@ -61,7 +61,7 @@ function getPageNumbers(current: number, total: number): (number | "ellipsis")[]
 }
 
 const navBtnClass =
-  "text-muted-foreground hover:text-foreground inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full border border-transparent bg-card/80 px-3 py-2 text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-card sm:px-4";
+  "text-muted-foreground hover:text-foreground inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full border border-transparent bg-card/80 px-3 py-2 text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-[color,background-color,border-color,box-shadow] hover:border-[color:var(--accent-red)]/30 hover:bg-card sm:px-4";
 const navBtnDisabledClass =
   "text-muted-foreground/40 inline-flex min-h-11 min-w-11 cursor-not-allowed items-center justify-center gap-1 rounded-full border border-transparent bg-card/50 px-3 py-2 text-sm font-medium sm:px-4";
 
@@ -87,12 +87,12 @@ export default function ServerPagination({
           className={navBtnClass}
           aria-label={translations.previous}
         >
-          <ChevronLeft size={16} />
+          <CaretLeft size={16} />
           <span className="hidden sm:inline">{translations.previous}</span>
         </Link>
       ) : (
         <span className={navBtnDisabledClass}>
-          <ChevronLeft size={16} />
+          <CaretLeft size={16} />
           <span className="hidden sm:inline">{translations.previous}</span>
         </span>
       )}
@@ -128,7 +128,7 @@ export default function ServerPagination({
             <Link
               key={page}
               href={buildPageUrl(baseUrl, page, searchParams)}
-              className="text-muted-foreground hover:text-foreground min-w-[42px] rounded-full border border-transparent bg-card/80 px-3 py-2 text-center text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-all hover:border-[color:var(--accent-red)]/30 hover:bg-card"
+              className="text-muted-foreground hover:text-foreground min-w-[42px] rounded-full border border-transparent bg-card/80 px-3 py-2 text-center text-sm font-medium shadow-[0_16px_40px_-34px_rgba(17,24,39,0.3)] transition-[color,background-color,border-color,box-shadow] hover:border-[color:var(--accent-red)]/30 hover:bg-card"
               aria-label={`${translations.page} ${page}`}
             >
               {page}
@@ -144,12 +144,12 @@ export default function ServerPagination({
           aria-label={translations.next}
         >
           <span className="hidden sm:inline">{translations.next}</span>
-          <ChevronRight size={16} />
+          <CaretRight size={16} />
         </Link>
       ) : (
         <span className={navBtnDisabledClass}>
           <span className="hidden sm:inline">{translations.next}</span>
-          <ChevronRight size={16} />
+          <CaretRight size={16} />
         </span>
       )}
     </nav>

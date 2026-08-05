@@ -4,15 +4,7 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Clock3,
-  RefreshCw,
-  Search,
-  ShieldCheck,
-  TriangleAlert,
-} from "lucide-react";
+import { ArrowRight, SealCheck, Clock, ArrowsClockwise, MagnifyingGlass, ShieldCheck, Warning } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -60,8 +52,8 @@ export default async function VerificationPage({
   const standards = (await t.raw("standards")) as Array<{ title: string; description: string }>;
   const exclusions = (await t.raw("exclusions")) as string[];
 
-  const stepIcons = [Search, ShieldCheck, Clock3, BadgeCheck, RefreshCw];
-  const standardIcons = [BadgeCheck, ShieldCheck, TriangleAlert];
+  const stepIcons = [MagnifyingGlass, ShieldCheck, Clock, SealCheck, ArrowsClockwise];
+  const standardIcons = [SealCheck, ShieldCheck, Warning];
 
   const breadcrumbItems = [{ name: t("title"), url: "/how-we-verify-promocodes" }];
 
@@ -95,7 +87,7 @@ export default async function VerificationPage({
 
           <div className="grid gap-4 lg:grid-cols-5">
             {steps.map((step, index) => {
-              const Icon = stepIcons[index] || BadgeCheck;
+              const Icon = stepIcons[index] || SealCheck;
 
               return (
                 <article key={step.title} className="metric-card p-5">
@@ -122,7 +114,7 @@ export default async function VerificationPage({
 
             <div className="mt-8 grid gap-4">
               {standards.map((item, index) => {
-                const Icon = standardIcons[index] || BadgeCheck;
+                const Icon = standardIcons[index] || SealCheck;
 
                 return (
                   <div
@@ -150,7 +142,7 @@ export default async function VerificationPage({
                   key={item}
                   className="flex items-start gap-3 rounded-[20px] border border-white/80 bg-white/92 px-4 py-3 shadow-[0_18px_48px_-42px_rgba(17,24,39,0.38)]"
                 >
-                  <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--accent-red)]" />
+                  <Warning className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--accent-red)]" />
                   <span className="text-foreground leading-7">{item}</span>
                 </li>
               ))}

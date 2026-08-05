@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { routing, type Locale } from "@/i18n/routing";
-import { AlertTriangle, Home, RefreshCw, Search, Store, Tag } from "lucide-react";
+import { Warning, House, ArrowsClockwise, MagnifyingGlass, Storefront, Tag } from "@phosphor-icons/react";
 import NextLink from "next/link";
 import { useEffect, useMemo } from "react";
 
@@ -36,13 +36,13 @@ export default function GlobalError({
     {
       href: `/${locale}`,
       label: c("home"),
-      icon: Home,
+      icon: House,
       description: c("goHome"),
     },
     {
       href: `/${locale}/stores`,
       label: c("stores"),
-      icon: Store,
+      icon: Storefront,
       description: c("viewAllStores"),
     },
     {
@@ -70,7 +70,7 @@ export default function GlobalError({
 
             <div className="mb-6 flex justify-center">
               <div className="bg-destructive/10 rounded-full p-4">
-                <AlertTriangle className="text-destructive h-12 w-12" />
+                <Warning className="text-destructive h-12 w-12" />
               </div>
             </div>
 
@@ -80,12 +80,12 @@ export default function GlobalError({
 
             <div className="mb-12 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Button onClick={reset} size="lg">
-                <RefreshCw className="mr-2 h-5 w-5" />
+                <ArrowsClockwise className="mr-2 h-5 w-5" />
                 {t("tryAgain")}
               </Button>
               <Button asChild variant="outline" size="lg">
                 <NextLink href={`/${locale}`}>
-                  <Home className="mr-2 h-5 w-5" />
+                  <House className="mr-2 h-5 w-5" />
                   {t("goHome")}
                 </NextLink>
               </Button>
@@ -119,7 +119,7 @@ export default function GlobalError({
               <p className="text-muted-foreground mb-4 text-sm">{c("orSearchPromocodes")}</p>
               <Button asChild variant="outline">
                 <NextLink href={`/${locale}`}>
-                  <Search className="mr-2 h-4 w-4" />
+                  <MagnifyingGlass className="mr-2 h-4 w-4" />
                   {c("search")}
                 </NextLink>
               </Button>

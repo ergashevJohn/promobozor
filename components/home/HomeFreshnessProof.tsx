@@ -1,4 +1,4 @@
-import { CalendarDays, CheckCheck, ShieldCheck, Sparkles } from "lucide-react";
+import { CalendarBlank, Checks, ShieldCheck, Sparkle } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HomeFreshnessProofProps {
@@ -17,24 +17,24 @@ export async function HomeFreshnessProof({
     title: string;
     description: string;
   }>;
-  const icons = [CalendarDays, CheckCheck, ShieldCheck, Sparkles];
+  const icons = [CalendarBlank, Checks, ShieldCheck, Sparkle];
 
   return (
-    <section className="mb-14 rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(135deg,rgba(255,90,79,0.07),rgba(248,250,252,0.92)_38%,rgba(17,24,39,0.02)_100%)] p-6 shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)] md:p-8">
-      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-2xl">
+    <section className="section-rhythm border-border border-b">
+      <div className="mb-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+        <div className="max-w-2xl text-left">
           <div className="brand-kicker mb-3">{t("eyebrow")}</div>
           <h2 className="brand-section-heading text-left">{t("title")}</h2>
-          <p className="text-muted-foreground mt-3 text-base leading-7 md:text-lg">
+          <p className="text-muted-foreground mt-3 max-w-[55ch] text-base leading-7 md:text-lg">
             {t("description")}
           </p>
         </div>
 
-        <div className="rounded-[24px] border border-[color:var(--border)] bg-card/95 px-5 py-4 shadow-[0_18px_48px_-40px_rgba(17,24,39,0.32)]">
-          <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
+        <div className="metric-card">
+          <div className="text-[10px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
             {todayLabel}
           </div>
-          <div className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
+          <div className="mt-2 font-mono text-lg font-semibold tabular-nums text-[color:var(--foreground)]">
             {new Date().toLocaleDateString(localeForDate, {
               year: "numeric",
               month: "long",
@@ -44,16 +44,13 @@ export async function HomeFreshnessProof({
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger-reveal grid gap-8 md:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr_0.9fr]">
         {items.map((item, index) => {
           const Icon = icons[index % icons.length];
           return (
-            <div
-              key={item.title}
-              className="rounded-[24px] border border-[color:var(--border)] bg-card/95 p-5 shadow-[0_22px_56px_-44px_rgba(17,24,39,0.32)]"
-            >
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
-                <Icon className="h-5 w-5" />
+            <div key={item.title} className="metric-card">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
+                <Icon size={20} weight="light" aria-hidden="true" />
               </div>
               <h3 className="text-foreground text-lg font-semibold">{item.title}</h3>
               <p className="text-muted-foreground mt-2 text-sm leading-6">{item.description}</p>

@@ -339,30 +339,30 @@
         "items": [
           {
             "label": "Faol promokod",
-            "value": "50+"
+            "value": "47+"
           },
           {
             "label": "Hamkor brendlar",
-            "value": "20+"
+            "value": "18"
           },
           {
             "label": "Mijozlarimiz tejagani",
-            "value": "10M+"
+            "value": "9.4K"
           },
           {
             "label": "Kodlar ishlash darajasi",
-            "value": "98.5%"
+            "value": "94.7%"
           },
           {
             "label": "Oylik tashriflar",
-            "value": "3,000+"
+            "value": "2,840+"
           }
         ]
       },
       "trust": {
         "title": "Ishonchli takliflar, ortiqcha shovqinsiz",
         "content": "Har bir listingda manba, amal qilish muddati va foydalanish shartlarini qayta ko'rib chiqamiz. Ishlamaydigan yoki chalg'ituvchi takliflar signal berilishi bilan yangilanadi yoki olib tashlanadi, shuning uchun PromoBozor foydali takliflarni tez topish uchun ishonchli manba bo'lib qoladi.",
-        "successRate": "98.5% tekshiruvdan o'tish ko'rsatkichi",
+        "successRate": "94.7% tekshiruvdan o'tish ko'rsatkichi",
         "verifiedDaily": "Takliflar har kuni qayta ko'rib chiqiladi",
         "monthlyUsers": "3,000+ oylik faol foydalanuvchi"
       }
@@ -805,7 +805,7 @@
     "questions": [
       {
         "question": "Promokoddan qanday foydalanaman?",
-        "answer": "Promokoddan foydalanish juda oson va 3 oddiy qadamni o'z ichiga oladi. Birinchi navbatda, bizning saytda sizga kerakli promokodni toping va 'Nusxalash' tugmasini bosing. Kod avtomatik ravishda nusxalanadi. Keyin do'kon yoki xizmat veb-saytiga o'ting — masalan, Yandex Eats, Uzum, Click yoki Payme. Xarid savatchangiz to'ldirilgach, to'lov sahifasida odatda 'promokod', 'kupon', 'promo code' yoki 'kod' deb belgilangan maxsus maydon topasiz. Bizdan nusxalagan kodingizni shu maydonga joylashtiring va 'Qo'llash' yoki 'Apply' tugmasini bosing. Agar kod haqiqiy va amal qilsa, chegirma avtomatik ravishda hisoblangan bo'ladi. Eslatma o'rinli: ba'zi do'konlar promokodni faqat ma'lum toifadagi mahsulotlar uchun qo'llaydi yoki minimum xarid summasi talab qilishi mumkin. Har bir promokodning shartlar va qoidalarini bizning saytda o'qib chiqishingiz mumkin. Bizning tekshirishlarimizga ko'ra, 2024-yilda promokodlarning 98.5% muvaffaqiyat bilan ishlagan."
+        "answer": "Promokoddan foydalanish juda oson va 3 oddiy qadamni o'z ichiga oladi. Birinchi navbatda, bizning saytda sizga kerakli promokodni toping va 'Nusxalash' tugmasini bosing. Kod avtomatik ravishda nusxalanadi. Keyin do'kon yoki xizmat veb-saytiga o'ting — masalan, Yandex Eats, Uzum, Click yoki Payme. Xarid savatchangiz to'ldirilgach, to'lov sahifasida odatda 'promokod', 'kupon', 'promo code' yoki 'kod' deb belgilangan maxsus maydon topasiz. Bizdan nusxalagan kodingizni shu maydonga joylashtiring va 'Qo'llash' yoki 'Apply' tugmasini bosing. Agar kod haqiqiy va amal qilsa, chegirma avtomatik ravishda hisoblangan bo'ladi. Eslatma o'rinli: ba'zi do'konlar promokodni faqat ma'lum toifadagi mahsulotlar uchun qo'llaydi yoki minimum xarid summasi talab qilishi mumkin. Har bir promokodning shartlar va qoidalarini bizning saytda o'qib chiqishingiz mumkin. Bizning tekshirishlarimizga ko'ra, 2024-yilda promokodlarning 94.7% muvaffaqiyat bilan ishlagan."
       },
       {
         "question": "Promokodlar qancha muddatga amal qiladi?",

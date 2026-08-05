@@ -24,16 +24,19 @@ vi.mock("@/i18n/navigation", () => ({
   ),
 }));
 
-vi.mock("lucide-react", () => ({
-  BadgeCheck: ({ className }: any) => <span data-testid="icon-badge-check" className={className} />,
+vi.mock("@phosphor-icons/react", () => ({
+  SealCheck: ({ className }: any) => <span data-testid="icon-badge-check" className={className} />,
   Clock: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
-  Clock3: ({ className }: any) => <span data-testid="icon-clock-3" className={className} />,
   Copy: ({ className }: any) => <span data-testid="icon-copy" className={className} />,
   Eye: ({ className }: any) => <span data-testid="icon-eye" className={className} />,
   Star: ({ className }: any) => <span data-testid="icon-star" className={className} />,
-  TicketPercent: ({ className }: any) => (
-    <span data-testid="icon-ticket-percent" className={className} />
-  ),
+  Ticket: ({ className }: any) => <span data-testid="icon-ticket-percent" className={className} />,
+}));
+
+vi.mock("@phosphor-icons/react/dist/ssr", () => ({
+  SealCheck: ({ className }: any) => <span data-testid="icon-badge-check" className={className} />,
+  Clock: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
+  Star: ({ className }: any) => <span data-testid="icon-star" className={className} />,
 }));
 
 vi.mock("./GrouponCardActions", () => ({

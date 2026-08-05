@@ -18,36 +18,37 @@ export async function Header() {
   ];
 
   return (
-    <header className="bg-background/90 border-border sticky top-0 z-50 w-full border-b backdrop-blur">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="flex h-14 items-center justify-between gap-3 py-2 sm:h-[4.5rem] sm:gap-4 sm:py-3">
-          <Link href="/" className="flex items-center">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-[max(0.75rem,env(safe-area-inset-top))]">
+      <div className="page-shell pointer-events-auto">
+        <div className="border-border bg-card/90 flex items-center justify-between gap-2 rounded-full border px-3 py-2 shadow-[0_18px_50px_-28px_rgba(17,24,39,0.4)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-2.5">
+          <Link href="/" className="flex min-w-0 items-center" translate="no">
             <Image
               src="/promobozor-logo.png"
-              alt="PromoBozor - Chegirmalar va promokodlar bozori"
-              width={260}
-              height={64}
-              sizes="(max-width: 768px) 180px, 260px"
-              priority={true}
+              alt="PromoBozor — chegirmalar va promokodlar"
+              width={200}
+              height={48}
+              sizes="(max-width: 768px) 140px, 200px"
+              className="h-8 w-auto sm:h-10"
+              priority
             />
           </Link>
 
-          <nav className="border-border bg-card/90 hidden items-center gap-1 rounded-full border p-1 shadow-[0_18px_40px_-28px_rgba(17,24,39,0.45)] md:flex">
+          <nav
+            className="hidden items-center gap-0.5 md:flex"
+            aria-label={t("promocodes")}
+          >
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-muted-foreground hover:text-foreground rounded-full px-4 py-2 text-sm font-medium transition-colors hover:bg-[color:var(--accent)]"
+                className="text-muted-foreground hover:text-foreground inline-flex min-h-11 items-center rounded-full px-3.5 py-2 text-sm font-medium transition-colors duration-200 hover:bg-[color:var(--accent)]"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-1 md:gap-4">
-            <div className="border-border bg-secondary text-muted-foreground hidden rounded-full border px-3 py-2 text-xs font-semibold tracking-[0.12em] uppercase xl:block">
-              PromoBozor
-            </div>
+          <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher />
             <ThemeToggle />
             <MobileMenuToggle>

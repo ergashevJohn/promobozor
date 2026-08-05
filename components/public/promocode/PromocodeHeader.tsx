@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { AlertCircle, Star } from "lucide-react";
+import { WarningCircle, Star } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import type { Promocode } from "../types";
 import type { PromocodeDisplayData } from "@/lib/promocode-utils";
@@ -76,7 +76,7 @@ export function PromocodeHeader({
               isExpired ? "bg-red-50 text-red-700" : "bg-slate-100 text-slate-600"
             }`}
           >
-            <AlertCircle size={14} />
+            <WarningCircle size={14} />
             <span>{isExpired ? tCard.expired : tCard.disabled}</span>
           </div>
         )}

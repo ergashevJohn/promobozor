@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, Search, Store as StoreIcon } from "lucide-react";
+import { ArrowRight, MagnifyingGlass, Storefront as StoreIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
@@ -97,7 +97,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
             <label htmlFor="store-search" className="sr-only">
               {t.findStore}
             </label>
-            <Search
+            <MagnifyingGlass
               className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
               aria-hidden="true"
             />

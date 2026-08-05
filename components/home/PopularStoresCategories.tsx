@@ -11,7 +11,7 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { and, desc, eq, sql } from "drizzle-orm";
-import { ArrowRight, Building2, CreditCard, Sparkles, Store, Tag } from "lucide-react";
+import { ArrowRight, Buildings, CreditCard, Sparkle, Storefront, Tag } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
@@ -143,7 +143,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
     <div className="mb-16 space-y-16">
       {featuredStore && (
         <section className="grid gap-5 lg:grid-cols-[0.96fr_1.04fr] lg:items-stretch">
-          <div className="rounded-[32px] bg-[#111827] p-6 text-white shadow-[0_30px_80px_-46px_rgba(17,24,39,0.72)] md:p-8">
+          <div className="ink-surface rounded-[1.75rem] p-6 md:p-8">
             <div className="brand-kicker border-white/10 bg-white/5 text-white">
               {browse.stores.eyebrow}
             </div>
@@ -161,7 +161,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-3">
                   <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-[0.16em] text-white/72 uppercase">
-                    <Sparkles className="h-3.5 w-3.5" />
+                    <Sparkle className="h-3.5 w-3.5" />
                     {browse.stores.featuredLabel}
                   </div>
                   <h3 className="text-2xl font-semibold">{featuredStore.name}</h3>
@@ -186,7 +186,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
                   </div>
                 ) : (
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10">
-                    <Store className="h-7 w-7 text-white/72" />
+                    <Storefront className="h-7 w-7 text-white/72" />
                   </div>
                 )}
               </div>
@@ -227,7 +227,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
                       </div>
                     ) : (
                       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--secondary)]">
-                        <Store className="h-5 w-5 text-[color:var(--muted-foreground)]" />
+                        <Storefront className="h-5 w-5 text-[color:var(--muted-foreground)]" />
                       </div>
                     )}
                     <div className="min-w-0">
@@ -265,7 +265,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
             </Link>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="stagger-reveal grid gap-6 md:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr_0.9fr]">
             {categoriesData.slice(0, 4).map((cat, index) => (
               <Link key={cat.id} href={`/category/${cat.slug}`}>
                 <Card className="group h-full border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.96))] py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
@@ -339,7 +339,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
             </Link>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="stagger-reveal grid gap-6 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.95fr_1.05fr_0.9fr]">
             {brandsData.map((brand) => (
               <Link key={brand.id} href={`/brand/${brand.slug}`}>
                 <div className="group rounded-[24px] border border-white/10 bg-white/6 p-5 transition-all duration-200 hover:-translate-y-1 hover:bg-white/9">
@@ -361,7 +361,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
                       </div>
                     ) : (
                       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10">
-                        <Building2 className="h-5 w-5 text-white/72" />
+                        <Buildings className="h-5 w-5 text-white/72" />
                       </div>
                     )}
                     <div className="min-w-0">

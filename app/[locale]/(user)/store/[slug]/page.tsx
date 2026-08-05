@@ -29,7 +29,7 @@ import {
   getBaseUrl,
 } from "@/lib/metadata";
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
-import { StoreIcon } from "lucide-react";
+import { Storefront } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
 import Image from "next/image";
@@ -484,7 +484,7 @@ export default async function StorePage({
                     </div>
                   ) : (
                     <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-4xl md:size-20">
-                      <StoreIcon className="text-foreground size-10 md:size-12" />
+                      <Storefront className="text-foreground size-10 md:size-12" />
                     </div>
                   )}
                   <div>

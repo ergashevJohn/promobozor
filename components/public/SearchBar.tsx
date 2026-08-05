@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { sanitizeSearchQuery } from "@/lib/search";
-import { Loader2, Search, X } from "lucide-react";
+import { CircleNotch, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 import { useCallback, useId, useMemo, useState } from "react";
 
@@ -112,7 +112,7 @@ export default function SearchBar({
         }`}
       >
         <div className="relative flex-1">
-          <Search
+          <MagnifyingGlass
             className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform"
             aria-hidden="true"
           />
@@ -129,7 +129,7 @@ export default function SearchBar({
           />
           <div className="absolute top-1/2 right-1 flex -translate-y-1/2 transform items-center gap-1">
             {navigationMode === "live" && isLoading && (
-              <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+              <CircleNotch className="text-muted-foreground h-4 w-4 animate-spin" />
             )}
             {searchValue && (
               <Button

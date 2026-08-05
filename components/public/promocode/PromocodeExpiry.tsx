@@ -30,7 +30,7 @@ export function PromocodeExpiry({
               <p
                 className={`text-2xl font-bold ${
                   daysUntilExpiry > 30
-                    ? "text-green-600"
+                    ? "text-[color:var(--accent-red)]"
                     : daysUntilExpiry > 7
                       ? "text-amber-500"
                       : "text-[color:var(--accent-red)]"

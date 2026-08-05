@@ -26,7 +26,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
   const tCommon = await getTranslations("common");
 
   return (
-    <div className="flex h-auto flex-col">
+    <div className="flex min-h-[100dvh] flex-col">
       <a
         href="#main-content"
         className="bg-primary text-primary-foreground sr-only z-[100] p-4 focus:not-sr-only focus:fixed focus:top-0 focus:left-0"
@@ -34,7 +34,7 @@ export default async function UserLayout({ children }: { children: React.ReactNo
         {tCommon("skipToContent")}
       </a>
       <Header />
-      <main id="main-content" className="bg-background flex-1">
+      <main id="main-content" className="bg-background flex-1 pt-[4.75rem]">
         {children}
       </main>
       <Footer />
