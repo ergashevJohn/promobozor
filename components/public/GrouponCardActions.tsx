@@ -93,7 +93,7 @@ export function GrouponCardActions({
         className={`h-12 min-h-11 w-full rounded-xl transition-[color,background-color,opacity,transform] duration-200 ${
           type === "link"
             ? "ink-surface hover:opacity-90"
-            : "bg-[color:var(--accent-red)] text-white hover:bg-[#b83a33]"
+            : "bg-[color:var(--accent-red)] text-[color:var(--accent-foreground-red)] hover:opacity-90"
         } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
         disabled={disabled || (copied && type === "code")}
         aria-label={

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 
 const EMPTY_PARAMS: Record<string, string> = {};
 
@@ -107,7 +108,7 @@ export default function FilterBar({
   );
 
   return (
-    <div className="filter-shell bg-card mb-6 rounded-[24px] border border-[color:var(--border)] p-4 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.35)] md:mb-8 md:rounded-[28px] md:p-6">
+    <div className="filter-shell mb-6 p-4 md:mb-8 md:p-6">
       <form action={pathname} method="get">
         <div className="mb-4 flex flex-col gap-3 md:mb-5 md:flex-row md:items-start md:justify-between md:gap-4">
           <div className="max-w-2xl">
@@ -136,11 +137,11 @@ export default function FilterBar({
             <label htmlFor="storeId" className="text-sm font-medium">
               {translations.store}
             </label>
-            <select
+            <Select
               id="storeId"
               name="storeId"
               defaultValue={storeId}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-12 w-full rounded-2xl border px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-background px-3"
             >
               <option value="">{translations.allStores}</option>
               {stores.map((store) => {
@@ -151,7 +152,7 @@ export default function FilterBar({
                   </option>
                 );
               })}
-            </select>
+            </Select>
           </div>
 
           {/* Category Filter */}
@@ -159,11 +160,11 @@ export default function FilterBar({
             <label htmlFor="categoryId" className="text-sm font-medium">
               {translations.category}
             </label>
-            <select
+            <Select
               id="categoryId"
               name="categoryId"
               defaultValue={categoryId}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-12 w-full rounded-2xl border px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-background px-3"
             >
               <option value="">{translations.allCategories}</option>
               {categories.map((category) => {
@@ -174,7 +175,7 @@ export default function FilterBar({
                   </option>
                 );
               })}
-            </select>
+            </Select>
           </div>
 
           {/* Brand Filter */}
@@ -182,11 +183,11 @@ export default function FilterBar({
             <label htmlFor="brandId" className="text-sm font-medium">
               {translations.brand}
             </label>
-            <select
+            <Select
               id="brandId"
               name="brandId"
               defaultValue={brandId}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-12 w-full rounded-2xl border px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-background px-3"
             >
               <option value="">{translations.allBrands}</option>
               {brands.map((brand) => {
@@ -197,7 +198,7 @@ export default function FilterBar({
                   </option>
                 );
               })}
-            </select>
+            </Select>
           </div>
 
           {/* Sort Filter */}
@@ -205,17 +206,12 @@ export default function FilterBar({
             <label htmlFor="sortBy" className="text-sm font-medium">
               {translations.sortBy}
             </label>
-            <select
-              id="sortBy"
-              name="sortBy"
-              defaultValue={sortBy}
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-12 w-full rounded-2xl border px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            <Select id="sortBy" name="sortBy" defaultValue={sortBy} className="bg-background px-3">
               <option value="newest">{sortOptions.newest}</option>
               <option value="popular">{sortOptions.popular}</option>
               <option value="ending">{sortOptions.ending}</option>
               <option value="discount">{sortOptions.discount}</option>
-            </select>
+            </Select>
           </div>
         </div>
 

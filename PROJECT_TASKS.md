@@ -27,6 +27,13 @@ Main findings:
 
 ## Backlog
 
+### PB-22 Remediate dependency vulnerabilities
+
+Priority: High
+Status: Backlog
+Issue: https://github.com/ergashevJohn/promobozor/issues/3
+Notes: `npm audit` 2026-08-06 kuni 24 ta dependency zaifligini ko‘rsatdi. Breaking change xavfini alohida ko‘rib chiqib, paketlarni yangilash va barcha quality gate’larni qayta ishlatish kerak.
+
 ### PB-21 Validate catalogue media assets
 
 Priority: High

@@ -206,7 +206,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                 <Link
                   key={brand.id}
                   href={`/brand/${translation?.slug || brand.id}`}
-                  className="surface-card group relative overflow-hidden p-5 transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/60 hover:shadow-[0_28px_72px_-50px_rgba(232,78,66,0.3)]"
+                  className="directory-card group"
                 >
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div className="flex size-16 items-center justify-start">

@@ -37,7 +37,7 @@ export default function GrouponCardServer({
             className={`flex h-12 min-h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-[color,background-color,opacity,transform] duration-200 ${
               promocode.type === "link"
                 ? "ink-surface hover:opacity-90"
-                : "bg-[color:var(--accent-red)] text-white hover:bg-[#b83a33]"
+                : "bg-[color:var(--accent-red)] text-[color:var(--accent-foreground-red)] hover:opacity-90"
             } ${isInactive ? "cursor-not-allowed opacity-50" : ""}`}
             disabled={isInactive}
             aria-label={promocode.type === "link" ? t.getDeal : t.copy}

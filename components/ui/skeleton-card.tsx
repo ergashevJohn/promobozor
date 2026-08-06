@@ -1,61 +1,65 @@
 function SkeletonCard() {
   return (
-    <div className="border-border bg-card relative flex h-full animate-pulse flex-col overflow-hidden rounded-xl border">
+    <div
+      className="deal-card relative flex h-full flex-col overflow-hidden"
+      aria-busy="true"
+      aria-label="Loading promotional offer"
+    >
       {/* Top Badge Placeholders (Absolute) */}
-      <div className="absolute top-3 left-3 z-10 h-6 w-20 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-      <div className="absolute top-3 right-3 z-10 h-6 w-24 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+      <div className="skeleton-fill absolute top-3 left-3 z-10 h-6 w-20 rounded-full" />
+      <div className="skeleton-fill absolute top-3 right-3 z-10 h-6 w-24 rounded-full" />
 
       {/* Card Content - Matching GrouponCard padding (pt-14 clears badges) */}
       <div className="flex flex-1 flex-col gap-4 p-5 pt-14">
         {/* Header: Logo + Text */}
         <div className="flex items-start gap-3">
           {/* Logo */}
-          <div className="h-16 w-16 shrink-0 rounded-xl bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-12 w-12 shrink-0 rounded-xl" />
 
           {/* Text Info */}
           <div className="flex flex-1 flex-col gap-2 pt-1">
             {/* Store Name */}
-            <div className="h-5 w-3/4 rounded bg-zinc-200 dark:bg-zinc-700" />
+            <div className="skeleton-fill h-5 w-3/4 rounded" />
             {/* Offer Title / Description */}
             <div className="space-y-1.5">
-              <div className="h-4 w-full rounded bg-zinc-200 dark:bg-zinc-700" />
-              <div className="h-4 w-2/3 rounded bg-zinc-200 dark:bg-zinc-700" />
+              <div className="skeleton-fill h-4 w-full rounded" />
+              <div className="skeleton-fill h-4 w-2/3 rounded" />
             </div>
           </div>
         </div>
 
         {/* Dashed Offer Box - The main "deal" area */}
-        <div className="relative my-2 flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-zinc-100 py-6 dark:border-zinc-700/50">
+        <div className="border-border relative my-2 flex flex-col items-center gap-3 rounded-xl border border-dashed py-6">
           {/* Discount Pill */}
-          <div className="h-10 w-40 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-10 w-40 rounded-full" />
 
           {/* Code / Link Text */}
-          <div className="h-8 w-48 rounded bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-8 w-48 rounded" />
 
           {/* Timer */}
-          <div className="h-4 w-24 rounded bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-4 w-24 rounded" />
         </div>
 
         {/* Buttons */}
         <div className="mt-auto flex gap-2">
-          <div className="h-10 flex-1 rounded-md bg-zinc-200 dark:bg-zinc-700" />
-          <div className="h-10 flex-1 rounded-md bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-11 flex-1 rounded-xl" />
+          <div className="skeleton-fill h-11 flex-1 rounded-xl" />
         </div>
       </div>
 
       {/* Footer Stats */}
-      <div className="border-t border-zinc-100 px-5 py-3 dark:border-zinc-700">
+      <div className="border-border border-t px-5 py-3">
         <div className="flex items-center justify-between">
           {/* Left Stats (Views, Copies) */}
           <div className="flex gap-3">
-            <div className="h-3 w-12 rounded bg-zinc-200 dark:bg-zinc-700" />
-            <div className="h-3 w-12 rounded bg-zinc-200 dark:bg-zinc-700" />
+            <div className="skeleton-fill h-3 w-12 rounded" />
+            <div className="skeleton-fill h-3 w-12 rounded" />
           </div>
 
           {/* Right Actions (Like/Dislike) */}
           <div className="flex gap-2">
-            <div className="h-6 w-12 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-            <div className="h-6 w-12 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+            <div className="skeleton-fill h-6 w-12 rounded-full" />
+            <div className="skeleton-fill h-6 w-12 rounded-full" />
           </div>
         </div>
       </div>
@@ -75,12 +79,12 @@ export function SkeletonCardGrid({ count = 8 }: { count?: number }) {
 
 function SkeletonStoreCard() {
   return (
-    <div className="animate-pulse rounded-lg border border-zinc-200 py-0 dark:border-zinc-700">
+    <div className="surface-card py-0" aria-busy="true">
       <div className="flex flex-col items-center gap-3 p-4">
-        <div className="h-14 w-14 rounded-xl bg-zinc-200 dark:bg-zinc-700" />
+        <div className="skeleton-fill h-14 w-14 rounded-xl" />
         <div className="w-full text-center">
-          <div className="mx-auto h-4 w-20 rounded bg-zinc-200 dark:bg-zinc-700" />
-          <div className="mx-auto mt-1.5 h-3 w-16 rounded bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill mx-auto h-4 w-20 rounded" />
+          <div className="skeleton-fill mx-auto mt-1.5 h-3 w-16 rounded" />
         </div>
       </div>
     </div>
@@ -89,10 +93,10 @@ function SkeletonStoreCard() {
 
 function SkeletonCategoryCard() {
   return (
-    <div className="animate-pulse rounded-lg border border-zinc-200 py-0 dark:border-zinc-700">
+    <div className="surface-card py-0" aria-busy="true">
       <div className="flex items-center gap-3 p-4">
-        <div className="h-12 w-12 flex-shrink-0 rounded-lg bg-zinc-200 dark:bg-zinc-700" />
-        <div className="h-4 w-24 rounded bg-zinc-200 dark:bg-zinc-700" />
+        <div className="skeleton-fill h-12 w-12 flex-shrink-0 rounded-xl" />
+        <div className="skeleton-fill h-4 w-24 rounded" />
       </div>
     </div>
   );
@@ -104,8 +108,8 @@ export function SkeletonPopularSection() {
       {/* Popular Stores Skeleton */}
       <section>
         <div className="mb-6 flex items-center justify-between">
-          <div className="h-7 w-48 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-          <div className="h-5 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-7 w-48 rounded" />
+          <div className="skeleton-fill h-5 w-24 rounded" />
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -117,8 +121,8 @@ export function SkeletonPopularSection() {
       {/* Popular Categories Skeleton */}
       <section>
         <div className="mb-6 flex items-center justify-between">
-          <div className="h-7 w-48 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-          <div className="h-5 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+          <div className="skeleton-fill h-7 w-48 rounded" />
+          <div className="skeleton-fill h-5 w-24 rounded" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (

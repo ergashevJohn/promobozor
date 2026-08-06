@@ -56,6 +56,22 @@
 */
 :root {
   --radius: 0.75rem;
+  --radius-control: 0.75rem;
+  --radius-surface: 1.25rem;
+  --radius-hero: 1.5rem;
+  --layout-max: 80rem;
+  --page-gutter: 1rem;
+  --section-space: 3.5rem;
+  --control-height-sm: 2.5rem;
+  --control-height: 2.75rem;
+  --control-height-lg: 3rem;
+  --transition-fast: 160ms;
+  --transition-base: 200ms;
+  --shadow-surface: 0 22px 60px -48px rgba(17, 24, 39, 0.42);
+  --shadow-surface-hover: 0 28px 72px -50px rgba(232, 78, 66, 0.32);
+  --shadow-control: 0 16px 40px -34px rgba(17, 24, 39, 0.45);
+  --z-header: 50;
+  --z-overlay: 60;
   --background: #f7f5f2;
   --foreground: #111827;
   --card: #fffcf9;
@@ -185,11 +201,15 @@
   }
 
   .brand-panel {
-    @apply border-border bg-card rounded-[1.25rem] border shadow-[0_22px_60px_-48px_rgba(17,24,39,0.42)];
+    @apply border-border bg-card border;
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-surface);
   }
 
   .surface-card {
-    @apply border-border bg-card rounded-[1.25rem] border shadow-[0_22px_60px_-48px_rgba(17,24,39,0.42)];
+    @apply border-border bg-card border;
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-surface);
   }
 
   .surface-stat {
@@ -201,7 +221,9 @@
   }
 
   .deal-card {
-    @apply border-border bg-card relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border shadow-[0_22px_60px_-48px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)];
+    @apply border-border bg-card relative flex h-full flex-col overflow-hidden border transition-[transform,border-color,box-shadow,opacity] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)];
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-surface);
   }
 
   .deal-card:hover {
@@ -238,11 +260,12 @@
   }
 
   .page-shell {
-    @apply container mx-auto px-4 md:px-6 lg:px-8;
+    @apply mx-auto w-full px-4 md:px-6 lg:px-8;
+    max-width: var(--layout-max);
   }
 
   .section-rhythm {
-    @apply py-14 md:py-20;
+    padding-block: var(--section-space);
   }
 
   .page-hero-surface {
@@ -271,7 +294,34 @@
   }
 
   .filter-shell {
-    @apply bg-card rounded-[1.25rem] border border-[color:var(--border)] p-5 md:p-6;
+    @apply bg-card border border-[color:var(--border)] p-5 md:p-6;
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-surface);
+  }
+
+  .directory-card {
+    @apply border-border bg-card relative overflow-hidden border p-5 transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/60;
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-surface);
+  }
+
+  .directory-card:hover {
+    box-shadow: var(--shadow-surface-hover);
+  }
+
+  .field-control {
+    @apply border-input bg-card text-foreground w-full border px-4 py-2 text-sm transition-[color,box-shadow,border-color,background-color] outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    min-height: var(--control-height);
+    border-radius: var(--radius-control);
+    box-shadow: var(--shadow-control);
+  }
+
+  .field-control:focus-visible {
+    @apply border-ring ring-ring/50 ring-[3px];
+  }
+
+  .skeleton-fill {
+    @apply bg-muted animate-pulse;
   }
 
   .ink-surface {
@@ -310,6 +360,13 @@
   }
   .stagger-reveal > *:nth-child(8) {
     animation-delay: 490ms;
+  }
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --page-gutter: 1.5rem;
+    --section-space: 5rem;
   }
 }
 

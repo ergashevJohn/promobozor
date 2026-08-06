@@ -3,19 +3,30 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
 import { db } from "@/lib/db";
 
+vi.mock("next/cache", () => ({
+  revalidateTag: vi.fn(),
+}));
+
 vi.mock("@/lib/validation", () => ({
   extractIpAddress: vi.fn(() => "127.0.0.1"),
 }));
 
 vi.mock("@/lib/db", async () => {
   const schema = await vi.importActual<typeof import("@/db/schema")>("@/db/schema");
+  const update = vi.fn();
+  const insert = vi.fn();
 
   return {
     promocodes: schema.promocodes,
     activityLogs: schema.activityLogs,
     db: {
-      update: vi.fn(),
-      insert: vi.fn(),
+      update,
+      insert,
+      transaction: vi.fn(
+        async (
+          callback: (tx: { update: typeof update; insert: typeof insert }) => Promise<unknown>
+        ) => callback({ update, insert })
+      ),
     },
   };
 });

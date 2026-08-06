@@ -130,10 +130,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               const storeName = translation?.name || t.storeTitle;
 
               return (
-                <Card
-                  key={store.id}
-                  className="group overflow-hidden border-[color:var(--border)] py-0 shadow-[0_22px_60px_-46px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent-red)]/60 hover:shadow-[0_28px_72px_-50px_rgba(232,78,66,0.3)]"
-                >
+                <Card key={store.id} className="directory-card group py-0">
                   <CardContent className="space-y-4 p-4 md:space-y-6 md:p-6">
                     <div className="flex items-center gap-4">
                       <div className="bg-muted flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.45)]">
