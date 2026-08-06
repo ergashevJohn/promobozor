@@ -59,9 +59,9 @@ Promotional content is updated daily. Expired or inactive offers should not be t
 
 ## Brand Presence
 - Website: ${baseUrl}
-- Telegram: https://t.me/promokoduz_app
-- Instagram: https://instagram.com/promokoduz_app
-- YouTube: https://www.youtube.com/@promokoduz_app
+- PromoBozor Telegram: https://t.me/promokoduz_app
+- PromoBozor Instagram: https://instagram.com/promokoduz_app
+- PromoBozor YouTube: https://www.youtube.com/@promokoduz_app
 
 ## Contact
 - Email: jahongirergawev2@gmail.com

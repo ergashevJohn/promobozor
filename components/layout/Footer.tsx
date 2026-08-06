@@ -9,9 +9,17 @@ export async function Footer() {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { name: "Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogo },
-    { name: "Instagram", href: "https://www.instagram.com/promokoduz_app", icon: InstagramLogo },
-    { name: "YouTube", href: "https://www.youtube.com/@promokoduz_app", icon: YoutubeLogo },
+    { name: "PromoBozor Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogo },
+    {
+      name: "PromoBozor Instagram",
+      href: "https://www.instagram.com/promokoduz_app",
+      icon: InstagramLogo,
+    },
+    {
+      name: "PromoBozor YouTube",
+      href: "https://www.youtube.com/@promokoduz_app",
+      icon: YoutubeLogo,
+    },
   ] as const;
 
   const mainLinks = [

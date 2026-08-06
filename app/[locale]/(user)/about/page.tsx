@@ -240,7 +240,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
                     <ArrowsClockwise className="h-4 w-4" />
-                    Telegram
+                    PromoBozor Telegram
                   </a>
                   <a
                     href="https://instagram.com/promokoduz_app"
@@ -248,7 +248,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     rel="noopener noreferrer"
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
-                    Instagram
+                    PromoBozor Instagram
                   </a>
                   <a
                     href="https://www.youtube.com/@promokoduz_app"
@@ -257,7 +257,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
                     <YoutubeLogo className="h-4 w-4" />
-                    YouTube
+                    PromoBozor YouTube
                   </a>
                 </div>
               </CardContent>
@@ -320,7 +320,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               rel="noopener noreferrer"
               className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-6 py-3 font-medium transition-colors"
             >
-              Telegram
+              PromoBozor Telegram
             </a>
             <a
               href="mailto:jahongirergawev2@gmail.com"

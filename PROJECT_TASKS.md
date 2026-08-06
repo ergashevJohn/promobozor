@@ -27,12 +27,19 @@ Main findings:
 
 ## Backlog
 
+### PB-23 Migrate Open Graph routes from Edge Runtime
+
+Priority: Medium
+Status: Backlog
+Issue: https://github.com/ergashevJohn/promobozor/issues/4
+Notes: Next.js 16.3 Edge Runtime deprecation ogohlantirishini `app/api/og/route.tsx` va `app/[locale]/opengraph-image.tsx` uchun chiqarmoqda. Node.js runtime mosligini tekshirib, image generatorlarni migratsiya qilish kerak.
+
 ### PB-22 Remediate dependency vulnerabilities
 
 Priority: High
-Status: Backlog
+Status: Done
 Issue: https://github.com/ergashevJohn/promobozor/issues/3
-Notes: `npm audit` 2026-08-06 kuni 24 ta dependency zaifligini ko‘rsatdi. Breaking change xavfini alohida ko‘rib chiqib, paketlarni yangilash va barcha quality gate’larni qayta ishlatish kerak.
+Notes: Next, Drizzle, PostCSS, sanitize-html, Vitest va transitive toolchain dependencylari yangilandi. `npm audit` 0 ta zaiflik qaytaryapti; test, type-check, lint va production build muvaffaqiyatli yakunlandi.
 
 ### PB-21 Validate catalogue media assets
 
@@ -44,9 +51,9 @@ Notes: browser auditda ayrim category/store media URL'lari yuklanmay, card va de
 ### PB-20 Replace inherited social handles
 
 Priority: High
-Status: Backlog
+Status: Done
 Issue: https://github.com/ergashevJohn/promobozor/issues/1
-Notes: `promokoduz_app` Telegram, Instagram and YouTube URLs still appear in public UI and structured data. Replace them together after PromoBozor’s official handles are confirmed.
+Notes: Owner qaroriga ko‘ra `promokoduz_app` URL’lari PromoBozor’ning amaldagi rasmiy kanallari sifatida saqlandi. Public label va crawler matnlarida ular PromoBozor kanallari sifatida aniq ko‘rsatildi.
 
 ### PB-08 Full Visual & IA Overhaul Plan
 
