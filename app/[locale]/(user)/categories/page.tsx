@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { categories, categoryTranslations, db, promocodes } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
+import { getApprovedImageUrl } from "@/lib/media";
 import { generateFullMetadata } from "@/lib/metadata";
 import { and, asc, eq, sql } from "drizzle-orm";
 import type { Metadata } from "next";
@@ -209,6 +210,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
               const category = row.category;
               const promocodesCount = row.promocodesCount || 0;
               const categoryName = translation?.name || t("title");
+              const categoryImageUrl = getApprovedImageUrl(category.imageUrl);
 
               return (
                 <Link
@@ -219,10 +221,10 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                   {/* Category Image/Icon */}
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div className="flex h-24 items-center justify-center">
-                      {category.imageUrl ? (
+                      {categoryImageUrl ? (
                         <div className="bg-muted relative h-full w-24 overflow-hidden rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.35)]">
                           <Image
-                            src={category.imageUrl}
+                            src={categoryImageUrl}
                             alt={
                               translation?.name
                                 ? `${translation.name} - ${tCommon("altCategoryImage")}`

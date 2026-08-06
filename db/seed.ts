@@ -72,7 +72,7 @@ async function seed() {
       const [newCategory] = await db
         .insert(categories)
         .values({
-          imageUrl: "https://cdn.example.com/categories/programming.png",
+          imageUrl: null,
           sortOrder: 7,
           isActive: true,
         })
@@ -84,7 +84,7 @@ async function seed() {
       await db
         .update(categories)
         .set({
-          imageUrl: "https://cdn.example.com/categories/programming.png",
+          imageUrl: null,
           sortOrder: 7,
           isActive: true,
           updatedAt: new Date(),

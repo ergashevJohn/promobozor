@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getBaseUrl } from "@/lib/metadata";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const size = {
   width: 1200,
   height: 630,
@@ -30,7 +30,7 @@ export default async function Image(props: Props) {
   const description = descriptions[locale] || descriptions.uz;
   const featureList = features[locale] || features.uz;
 
-  // Fetch logo and convert to base64 for edge runtime
+  // Inline the logo to keep the generated image self-contained.
   const logoUrl = `${getBaseUrl()}/promobozor-logo.png`;
   let logoDataUrl = logoUrl;
 

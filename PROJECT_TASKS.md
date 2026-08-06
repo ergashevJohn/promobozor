@@ -30,9 +30,9 @@ Main findings:
 ### PB-23 Migrate Open Graph routes from Edge Runtime
 
 Priority: Medium
-Status: Backlog
+Status: Done
 Issue: https://github.com/ergashevJohn/promobozor/issues/4
-Notes: Next.js 16.3 Edge Runtime deprecation ogohlantirishini `app/api/og/route.tsx` va `app/[locale]/opengraph-image.tsx` uchun chiqarmoqda. Node.js runtime mosligini tekshirib, image generatorlarni migratsiya qilish kerak.
+Notes: Har ikkala Open Graph image generator `nodejs` runtime'iga o'tkazildi. Production build muvaffaqiyatli yakunlandi va Edge Runtime deprecation ogohlantirishi qaytmadi.
 
 ### PB-22 Remediate dependency vulnerabilities
 
@@ -44,9 +44,9 @@ Notes: Next, Drizzle, PostCSS, sanitize-html, Vitest va transitive toolchain dep
 ### PB-21 Validate catalogue media assets
 
 Priority: High
-Status: Backlog
+Status: Done
 Issue: https://github.com/ergashevJohn/promobozor/issues/2
-Notes: browser auditda ayrim category/store media URL'lari yuklanmay, card va detail sahifasida buzilgan rasm holati ko'rindi. Tasdiqlangan assetlar bilan almashtirish yoki icon fallback'ni ishga tushirish kerak.
+Notes: Noto'g'ri `cdn.example.com` kategoriya rasmi seed va ma'lumotlar migratsiyasidan olib tashlandi. Public kataloglarda faqat local yoki ImageKit URL'lari render qilinadi; qolgan qiymatlar mavjud icon fallback'ini ko'rsatadi.
 
 ### PB-20 Replace inherited social handles
 

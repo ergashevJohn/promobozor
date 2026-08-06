@@ -21,6 +21,7 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
+import { getApprovedImageUrl } from "@/lib/media";
 import {
   generateFullMetadata,
   generateOgImageUrl,
@@ -28,10 +29,7 @@ import {
   generateStoreTitle,
   getBaseUrl,
 } from "@/lib/metadata";
-import {
-  getCachedStoreBySlug,
-  getStoreLanguageAlternates,
-} from "@/lib/queries/entities";
+import { getCachedStoreBySlug, getStoreLanguageAlternates } from "@/lib/queries/entities";
 import {
   mapPromocodeListRow,
   promocodeListSelectWithCategory,
@@ -305,6 +303,7 @@ export default async function StorePage({
   ];
 
   const baseUrl = getBaseUrl();
+  const storeLogoUrl = getApprovedImageUrl(store.logoUrl);
 
   return (
     <>
@@ -355,10 +354,10 @@ export default async function StorePage({
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
               <div>
                 <div className="mb-6 flex items-start gap-4">
-                  {store.logoUrl ? (
+                  {storeLogoUrl ? (
                     <div className="bg-card border-border relative mt-2 flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
                       <Image
-                        src={store.logoUrl}
+                        src={storeLogoUrl}
                         alt={
                           storeTranslation?.name
                             ? `${storeTranslation.name} - ${tCommon("altStoreLogo")}`

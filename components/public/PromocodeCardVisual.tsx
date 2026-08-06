@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { getApprovedImageUrl } from "@/lib/media";
 import { SealCheck, Clock } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import type { ReactNode } from "react";
@@ -33,6 +34,9 @@ export function PromocodeCardVisual({
   const displayTranslation = storeTranslation || brandTranslation;
   const timeRemaining = getTimeRemaining(promocode.expiresAt);
   const displayName = displayTranslation?.name || t.unknownStore || t.storeTitle;
+  const displayImageUrl = getApprovedImageUrl(
+    promocode.store?.logoUrl || promocode.brand?.imageUrl
+  );
   const promocodeTitle = translation?.title || t.promocodeTitle;
   const conditionsText = summarizeConditions(translation?.conditions);
   const { isInactive, isExpiredByDate } = getCardInactiveState(promocode);
@@ -46,10 +50,10 @@ export function PromocodeCardVisual({
     <article className={`deal-card group ${isInactive ? "opacity-60 grayscale" : ""}`}>
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <div className="flex items-start gap-3">
-          {promocode.store?.logoUrl || promocode.brand?.imageUrl ? (
+          {displayImageUrl ? (
             <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)] sm:h-12 sm:w-12">
               <Image
-                src={promocode.store?.logoUrl || promocode.brand?.imageUrl || ""}
+                src={displayImageUrl}
                 alt={displayName}
                 fill
                 className="object-cover"

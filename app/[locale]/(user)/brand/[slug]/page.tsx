@@ -22,6 +22,7 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
+import { getApprovedImageUrl } from "@/lib/media";
 import {
   generateBrandDescription,
   generateBrandTitle,
@@ -29,10 +30,7 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
-import {
-  getBrandLanguageAlternates,
-  getCachedBrandBySlug,
-} from "@/lib/queries/entities";
+import { getBrandLanguageAlternates, getCachedBrandBySlug } from "@/lib/queries/entities";
 import {
   mapPromocodeListRow,
   promocodeListSelectWithCategory,
@@ -345,6 +343,7 @@ export default async function BrandPage({
   ];
 
   const baseUrl = getBaseUrl();
+  const brandImageUrl = getApprovedImageUrl(brand.imageUrl);
 
   return (
     <>
@@ -395,10 +394,10 @@ export default async function BrandPage({
             <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)]">
               <div className="surface-card p-6">
                 <div className="mb-5 flex items-center gap-4">
-                  {brand.imageUrl ? (
+                  {brandImageUrl ? (
                     <div className="bg-card border-border relative flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
                       <Image
-                        src={brand.imageUrl}
+                        src={brandImageUrl}
                         width={80}
                         height={80}
                         alt={

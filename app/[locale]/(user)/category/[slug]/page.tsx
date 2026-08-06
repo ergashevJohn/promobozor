@@ -19,6 +19,7 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
+import { getApprovedImageUrl } from "@/lib/media";
 import {
   generateCategoryDescription,
   generateCategoryTitle,
@@ -26,10 +27,7 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
-import {
-  getCachedCategoryBySlug,
-  getCategoryLanguageAlternates,
-} from "@/lib/queries/entities";
+import { getCachedCategoryBySlug, getCategoryLanguageAlternates } from "@/lib/queries/entities";
 import {
   mapPromocodeListRow,
   promocodeListSelectWithCategory,
@@ -303,6 +301,7 @@ export default async function CategoryPage({
   ];
 
   const baseUrl = getBaseUrl();
+  const categoryImageUrl = getApprovedImageUrl(category.imageUrl);
 
   return (
     <>
@@ -345,10 +344,10 @@ export default async function CategoryPage({
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]">
               <div>
                 <div className="mb-6 flex items-center gap-4">
-                  {category.imageUrl ? (
+                  {categoryImageUrl ? (
                     <div className="bg-card border-border relative flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
                       <Image
-                        src={category.imageUrl}
+                        src={categoryImageUrl}
                         alt={
                           categoryTranslation?.name
                             ? `${categoryTranslation.name} - ${tCommon("altCategoryImage")}`

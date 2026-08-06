@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
+import { getApprovedImageUrl } from "@/lib/media";
 import {
   ArrowRight,
   MagnifyingGlass,
@@ -128,15 +129,16 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
               const store = row.store;
               const promocodesCount = row.promocodesCount || 0;
               const storeName = translation?.name || t.storeTitle;
+              const storeLogoUrl = getApprovedImageUrl(store.logoUrl);
 
               return (
                 <Card key={store.id} className="directory-card group py-0">
                   <CardContent className="space-y-4 p-4 md:space-y-6 md:p-6">
                     <div className="flex items-center gap-4">
                       <div className="bg-muted flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.45)]">
-                        {store.logoUrl ? (
+                        {storeLogoUrl ? (
                           <Image
-                            src={store.logoUrl}
+                            src={storeLogoUrl}
                             alt={
                               translation?.name
                                 ? `${translation.name} - ${tCommon("altStoreLogo")}`

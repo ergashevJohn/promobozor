@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
+import { getApprovedImageUrl } from "@/lib/media";
 import {
   brands,
   brandTranslations,
@@ -154,6 +155,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
   if (storesData.length === 0 && categoriesData.length === 0) return null;
 
   const [featuredStore, ...secondaryStores] = storesData;
+  const featuredStoreImageUrl = getApprovedImageUrl(featuredStore?.logoUrl);
 
   return (
     <div className="mb-16 space-y-16">
@@ -185,10 +187,10 @@ export default async function PopularStoresCategories({ locale }: Props) {
                     {featuredStore.count} {tCommon("promocodes")}
                   </p>
                 </div>
-                {featuredStore.logoUrl ? (
+                {featuredStoreImageUrl ? (
                   <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-white/10">
                     <Image
-                      src={featuredStore.logoUrl}
+                      src={featuredStoreImageUrl}
                       alt={
                         featuredStore.name
                           ? `${featuredStore.name} - ${tCommon("altStoreLogo")}`
@@ -222,42 +224,46 @@ export default async function PopularStoresCategories({ locale }: Props) {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {secondaryStores.slice(0, 6).map((store) => (
-              <Link key={store.id} href={`/store/${store.slug}`}>
-                <Card className="group bg-card h-full border-[color:var(--border)] py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
-                  <CardContent className="flex h-full items-center gap-4 p-5">
-                    {store.logoUrl ? (
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)]">
-                        <Image
-                          src={store.logoUrl}
-                          alt={
-                            store.name
-                              ? `${store.name} - ${tCommon("altStoreLogo")}`
-                              : tCommon("altStoreLogo")
-                          }
-                          width={56}
-                          height={56}
-                          className="h-full w-full object-cover"
-                          sizes="56px"
-                        />
+            {secondaryStores.slice(0, 6).map((store) => {
+              const storeLogoUrl = getApprovedImageUrl(store.logoUrl);
+
+              return (
+                <Link key={store.id} href={`/store/${store.slug}`}>
+                  <Card className="group bg-card h-full border-[color:var(--border)] py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
+                    <CardContent className="flex h-full items-center gap-4 p-5">
+                      {storeLogoUrl ? (
+                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)]">
+                          <Image
+                            src={storeLogoUrl}
+                            alt={
+                              store.name
+                                ? `${store.name} - ${tCommon("altStoreLogo")}`
+                                : tCommon("altStoreLogo")
+                            }
+                            width={56}
+                            height={56}
+                            className="h-full w-full object-cover"
+                            sizes="56px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--secondary)]">
+                          <Storefront className="h-5 w-5 text-[color:var(--muted-foreground)]" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <div className="text-foreground truncate text-base font-semibold transition-colors group-hover:text-[color:var(--accent-red)]">
+                          {store.name}
+                        </div>
+                        <div className="text-muted-foreground mt-1 text-sm">
+                          {store.count} {tCommon("promocodes")}
+                        </div>
                       </div>
-                    ) : (
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--secondary)]">
-                        <Storefront className="h-5 w-5 text-[color:var(--muted-foreground)]" />
-                      </div>
-                    )}
-                    <div className="min-w-0">
-                      <div className="text-foreground truncate text-base font-semibold transition-colors group-hover:text-[color:var(--accent-red)]">
-                        {store.name}
-                      </div>
-                      <div className="text-muted-foreground mt-1 text-sm">
-                        {store.count} {tCommon("promocodes")}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
@@ -282,52 +288,56 @@ export default async function PopularStoresCategories({ locale }: Props) {
           </div>
 
           <div className="stagger-reveal grid gap-6 md:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr_0.9fr]">
-            {categoriesData.slice(0, 4).map((cat, index) => (
-              <Link key={cat.id} href={`/category/${cat.slug}`}>
-                <Card className="group h-full border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,245,242,0.96))] py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
-                  <CardContent className="flex h-full flex-col gap-5 p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                          {browse.categories.labels[index] || browse.categories.labels[0]}
+            {categoriesData.slice(0, 4).map((cat, index) => {
+              const categoryImageUrl = getApprovedImageUrl(cat.imageUrl);
+
+              return (
+                <Link key={cat.id} href={`/category/${cat.slug}`}>
+                  <Card className="group h-full border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,245,242,0.96))] py-0 shadow-[0_24px_60px_-48px_rgba(17,24,39,0.42)] transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-1 hover:border-[color:var(--accent-red)]/40">
+                    <CardContent className="flex h-full flex-col gap-5 p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
+                            {browse.categories.labels[index] || browse.categories.labels[0]}
+                          </div>
+                          <h3 className="text-foreground mt-3 text-xl leading-tight font-semibold transition-colors group-hover:text-[color:var(--accent-red)]">
+                            {cat.name}
+                          </h3>
                         </div>
-                        <h3 className="text-foreground mt-3 text-xl leading-tight font-semibold transition-colors group-hover:text-[color:var(--accent-red)]">
-                          {cat.name}
-                        </h3>
+                        {categoryImageUrl ? (
+                          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)]">
+                            <Image
+                              src={categoryImageUrl}
+                              alt={
+                                cat.name
+                                  ? `${cat.name} - ${tCommon("altCategoryImage")}`
+                                  : tCommon("altCategoryImage")
+                              }
+                              width={48}
+                              height={48}
+                              className="h-full w-full object-cover"
+                              sizes="48px"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)]">
+                            <Tag className="h-5 w-5" />
+                          </div>
+                        )}
                       </div>
-                      {cat.imageUrl ? (
-                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)]">
-                          <Image
-                            src={cat.imageUrl}
-                            alt={
-                              cat.name
-                                ? `${cat.name} - ${tCommon("altCategoryImage")}`
-                                : tCommon("altCategoryImage")
-                            }
-                            width={48}
-                            height={48}
-                            className="h-full w-full object-cover"
-                            sizes="48px"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)]">
-                          <Tag className="h-5 w-5" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-muted-foreground text-sm leading-6">
-                      {browse.categories.cardDescriptions[index] ||
-                        browse.categories.cardDescriptions[0]}
-                    </p>
-                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
-                      <span>{browse.categories.cardCta}</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                      <p className="text-muted-foreground text-sm leading-6">
+                        {browse.categories.cardDescriptions[index] ||
+                          browse.categories.cardDescriptions[0]}
+                      </p>
+                      <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
+                        <span>{browse.categories.cardCta}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
@@ -356,43 +366,47 @@ export default async function PopularStoresCategories({ locale }: Props) {
           </div>
 
           <div className="stagger-reveal grid gap-6 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.95fr_1.05fr_0.9fr]">
-            {brandsData.map((brand) => (
-              <Link key={brand.id} href={`/brand/${brand.slug}`}>
-                <div className="group rounded-[20px] border border-white/10 bg-white/6 p-5 transition-[transform,background-color] duration-200 hover:-translate-y-1 hover:bg-white/9">
-                  <div className="flex items-center gap-4">
-                    {brand.imageUrl ? (
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-white/10">
-                        <Image
-                          src={brand.imageUrl}
-                          alt={
-                            brand.name
-                              ? `${brand.name} - ${tCommon("altBrandLogo")}`
-                              : tCommon("altBrandLogo")
-                          }
-                          width={56}
-                          height={56}
-                          className="h-full w-full object-cover"
-                          sizes="56px"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10">
-                        <Buildings className="h-5 w-5 text-white/72" />
-                      </div>
-                    )}
-                    <div className="min-w-0">
-                      <div className="truncate text-base font-semibold transition-colors group-hover:text-white">
-                        {brand.name}
-                      </div>
-                      <div className="mt-1 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.14em] text-white/48 uppercase">
-                        <CreditCard className="h-3.5 w-3.5" />
-                        <span>{browse.brands.cardLabel}</span>
+            {brandsData.map((brand) => {
+              const brandImageUrl = getApprovedImageUrl(brand.imageUrl);
+
+              return (
+                <Link key={brand.id} href={`/brand/${brand.slug}`}>
+                  <div className="group rounded-[20px] border border-white/10 bg-white/6 p-5 transition-[transform,background-color] duration-200 hover:-translate-y-1 hover:bg-white/9">
+                    <div className="flex items-center gap-4">
+                      {brandImageUrl ? (
+                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-white/10">
+                          <Image
+                            src={brandImageUrl}
+                            alt={
+                              brand.name
+                                ? `${brand.name} - ${tCommon("altBrandLogo")}`
+                                : tCommon("altBrandLogo")
+                            }
+                            width={56}
+                            height={56}
+                            className="h-full w-full object-cover"
+                            sizes="56px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10">
+                          <Buildings className="h-5 w-5 text-white/72" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <div className="truncate text-base font-semibold transition-colors group-hover:text-white">
+                          {brand.name}
+                        </div>
+                        <div className="mt-1 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.14em] text-white/48 uppercase">
+                          <CreditCard className="h-3.5 w-3.5" />
+                          <span>{browse.brands.cardLabel}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}

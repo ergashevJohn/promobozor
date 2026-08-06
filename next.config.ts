@@ -34,10 +34,7 @@ const nextConfig: NextConfig = {
         : []),
 
       ...(process.env.NODE_ENV === "development"
-        ? ([
-            { protocol: "https" as const, hostname: "cdn.example.com" },
-            { protocol: "https" as const, hostname: "ik.imagekit.io" },
-          ] as const)
+        ? ([{ protocol: "https" as const, hostname: "ik.imagekit.io" }] as const)
         : []),
     ],
     // Allow unoptimized images for external hosts during development

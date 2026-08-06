@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { brands, brandTranslations, db, promocodes } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
+import { getApprovedImageUrl } from "@/lib/media";
 import { generateFullMetadata } from "@/lib/metadata";
 import { and, desc, eq, sql } from "drizzle-orm";
 import type { Metadata } from "next";
@@ -201,6 +202,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
               const brand = row.brand;
               const promocodesCount = row.promocodesCount || 0;
               const brandName = translation?.name || t("title");
+              const brandImageUrl = getApprovedImageUrl(brand.imageUrl);
 
               return (
                 <Link
@@ -210,10 +212,10 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
                 >
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div className="flex size-16 items-center justify-start">
-                      {brand.imageUrl ? (
+                      {brandImageUrl ? (
                         <div className="relative h-full w-full flex-shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.35)]">
                           <Image
-                            src={brand.imageUrl}
+                            src={brandImageUrl}
                             alt={
                               translation?.name
                                 ? `${translation.name} - ${tCommon("altBrandLogo")}`
