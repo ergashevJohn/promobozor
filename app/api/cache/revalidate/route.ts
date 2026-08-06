@@ -1,5 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { secureCompare } from "@/lib/secure-compare";
 
 function isAuthorized(request: NextRequest): boolean {
   const secret = process.env.REVALIDATE_SECRET || process.env.CRON_SECRET;
@@ -12,7 +13,7 @@ function isAuthorized(request: NextRequest): boolean {
   const bearer = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
   const headerSecret = request.headers.get("x-revalidate-secret");
 
-  return bearer === secret || headerSecret === secret;
+  return secureCompare(bearer, secret) || secureCompare(headerSecret, secret);
 }
 
 export async function POST(request: NextRequest) {
@@ -22,7 +23,13 @@ export async function POST(request: NextRequest) {
     }
 
     const { searchParams } = request.nextUrl;
-    const tag = searchParams.get("tag");
+    const rawTag = searchParams.get("tag");
+    // Bound tag length to avoid abuse of cache tag namespace
+    const tag = rawTag && rawTag.length <= 64 ? rawTag : null;
+
+    if (rawTag && !tag) {
+      return NextResponse.json({ error: "Invalid tag" }, { status: 400 });
+    }
 
     if (tag) {
       revalidateTag(tag, {});

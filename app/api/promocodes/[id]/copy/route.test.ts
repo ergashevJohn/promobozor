@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
 import { db } from "@/lib/db";
 
+const PROMO_ID = "550e8400-e29b-41d4-a716-446655440000";
+const INACTIVE_ID = "550e8400-e29b-41d4-a716-446655440001";
+
 vi.mock("next/cache", () => ({
   revalidateTag: vi.fn(),
 }));
@@ -36,8 +39,19 @@ describe("POST /api/promocodes/[id]/copy", () => {
     vi.clearAllMocks();
   });
 
+  it("rejects invalid promocode ids", async () => {
+    const request = new NextRequest("http://localhost:3000/api/promocodes/not-a-uuid/copy", {
+      method: "POST",
+    });
+
+    const response = await POST(request, { params: Promise.resolve({ id: "not-a-uuid" }) });
+
+    expect(response.status).toBe(400);
+    expect(db.update).not.toHaveBeenCalled();
+  });
+
   it("increments copy count and logs activity for active promocodes", async () => {
-    const returning = vi.fn().mockResolvedValue([{ id: "promo-1" }]);
+    const returning = vi.fn().mockResolvedValue([{ id: PROMO_ID }]);
     const where = vi.fn().mockReturnValue({ returning });
     const set = vi.fn().mockReturnValue({ where });
     const values = vi.fn().mockResolvedValue(undefined);
@@ -45,14 +59,14 @@ describe("POST /api/promocodes/[id]/copy", () => {
     vi.mocked(db.update).mockReturnValue({ set } as never);
     vi.mocked(db.insert).mockReturnValue({ values } as never);
 
-    const request = new NextRequest("http://localhost:3000/api/promocodes/promo-1/copy", {
+    const request = new NextRequest(`http://localhost:3000/api/promocodes/${PROMO_ID}/copy`, {
       method: "POST",
       headers: {
         "user-agent": "vitest",
       },
     });
 
-    const response = await POST(request, { params: Promise.resolve({ id: "promo-1" }) });
+    const response = await POST(request, { params: Promise.resolve({ id: PROMO_ID }) });
 
     expect(response.status).toBe(200);
     expect(returning).toHaveBeenCalledTimes(1);
@@ -67,14 +81,14 @@ describe("POST /api/promocodes/[id]/copy", () => {
     vi.mocked(db.update).mockReturnValue({ set } as never);
     vi.mocked(db.insert).mockReturnValue({ values: vi.fn() } as never);
 
-    const request = new NextRequest("http://localhost:3000/api/promocodes/promo-2/copy", {
+    const request = new NextRequest(`http://localhost:3000/api/promocodes/${INACTIVE_ID}/copy`, {
       method: "POST",
       headers: {
         "user-agent": "vitest",
       },
     });
 
-    const response = await POST(request, { params: Promise.resolve({ id: "promo-2" }) });
+    const response = await POST(request, { params: Promise.resolve({ id: INACTIVE_ID }) });
     const body = await response.json();
 
     expect(response.status).toBe(409);

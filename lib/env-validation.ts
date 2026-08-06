@@ -35,6 +35,20 @@ export function validateProductionEnv(): void {
     warnings.push("NEXT_PUBLIC_BASE_URL should use https:// for production");
   }
 
+  // Cache revalidation secret — endpoint fails closed without it, but ops should set one
+  const revalidateSecret = process.env.REVALIDATE_SECRET || process.env.CRON_SECRET;
+  if (!revalidateSecret || revalidateSecret.length < 32) {
+    warnings.push(
+      "REVALIDATE_SECRET (or CRON_SECRET) should be set (≥32 chars) for POST /api/cache/revalidate"
+    );
+  }
+
+  if (process.env.RATE_LIMIT_DISABLED === "true") {
+    warnings.push(
+      "RATE_LIMIT_DISABLED=true is ignored in production; remove it from production env"
+    );
+  }
+
   if (warnings.length > 0) {
     console.warn("⚠️  Production environment warnings:");
     warnings.forEach((w) => console.warn("   -", w));

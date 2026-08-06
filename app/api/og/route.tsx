@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import { fetchApprovedImageAsDataUrl } from "@/lib/safe-url-fetch";
 
 export const runtime = "nodejs";
 
@@ -7,12 +8,14 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // Get parameters
-    const title = searchParams.get("title") || "PromoBozor";
-    const description = searchParams.get("description") || "Chegirmalar va promokodlar bozori";
-    const type = searchParams.get("type") || "default";
+    // Get parameters — truncate to bound rendering cost
+    const title = (searchParams.get("title") || "PromoBozor").slice(0, 120);
+    const description = (
+      searchParams.get("description") || "Chegirmalar va promokodlar bozori"
+    ).slice(0, 300);
+    const type = (searchParams.get("type") || "default").slice(0, 32);
     const logo = searchParams.get("logo");
-    const discount = searchParams.get("discount");
+    const discount = searchParams.get("discount")?.slice(0, 40) ?? null;
 
     // Try to extract promo code from description (e.g. "NDX5231 - some description...")
     let promoCode = "";
@@ -52,32 +55,15 @@ export async function GET(request: NextRequest) {
     };
 
     const accent = accents[type] || accents.default;
+    const requestOrigin = new URL(request.url).origin;
 
-    // Fetch store/brand logo as base64
-    let logoDataUrl: string | null = null;
-    if (logo) {
-      try {
-        const logoResponse = await fetch(logo);
-        const logoBuffer = await logoResponse.arrayBuffer();
-        const logoBase64 = Buffer.from(logoBuffer).toString("base64");
-        const contentType = logoResponse.headers.get("content-type") || "image/png";
-        logoDataUrl = `data:${contentType};base64,${logoBase64}`;
-      } catch {
-        // Fallback — will show emoji
-      }
-    }
+    // SSRF-safe logo fetch (ImageKit / same-origin only)
+    const logoDataUrl = await fetchApprovedImageAsDataUrl(logo, requestOrigin);
 
-    // Fetch PromoBozor brand logo as base64
-    const brandLogoUrl = new URL("/promobozor-logo.png", request.url).toString();
-    let brandLogoDataUrl = brandLogoUrl;
-    try {
-      const brandLogoResponse = await fetch(brandLogoUrl);
-      const brandLogoBuffer = await brandLogoResponse.arrayBuffer();
-      const brandLogoBase64 = Buffer.from(brandLogoBuffer).toString("base64");
-      brandLogoDataUrl = `data:image/png;base64,${brandLogoBase64}`;
-    } catch {
-      // Fallback to URL
-    }
+    // Fetch PromoBozor brand logo as base64 (same-origin relative path)
+    const brandLogoDataUrl =
+      (await fetchApprovedImageAsDataUrl("/promobozor-logo.png", requestOrigin)) ||
+      new URL("/promobozor-logo.png", request.url).toString();
 
     return new ImageResponse(
       <div
