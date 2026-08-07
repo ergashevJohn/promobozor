@@ -134,6 +134,13 @@
       "when": 1785993177406,
       "tag": "0018_remove_invalid_catalogue_media",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1786070000000,
+      "tag": "0019_rate_limits",
+      "breakpoints": true
     }
   ]
 }
