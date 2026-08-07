@@ -29,22 +29,23 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const searchQuery = searchParams.get("search");
 
-    // Apply rate limiting for search (stricter than general API)
-    if (searchQuery) {
-      const rateLimitResult = await checkRateLimit(request, RateLimits.search);
-      if (!rateLimitResult.success) {
-        return NextResponse.json(
-          { error: "Too many search requests. Please try again later." },
-          {
-            status: 429,
-            headers: {
-              "X-RateLimit-Limit": String(rateLimitResult.limit),
-              "X-RateLimit-Remaining": String(rateLimitResult.remaining),
-              "X-RateLimit-Reset": String(rateLimitResult.resetTime),
-            },
-          }
-        );
-      }
+    // Apply rate limiting — stricter for search, baseline for list
+    const rateLimitResult = await checkRateLimit(
+      request,
+      searchQuery ? RateLimits.search : RateLimits.api
+    );
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many search requests. Please try again later." },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(rateLimitResult.limit),
+            "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+            "X-RateLimit-Reset": String(rateLimitResult.resetTime),
+          },
+        }
+      );
     }
 
     const lang = searchParams.get("lang") || "uz";

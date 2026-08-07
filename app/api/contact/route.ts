@@ -4,43 +4,30 @@ import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { csrfProtection } from "@/lib/csrf";
 import { verifyRecaptcha } from "@/lib/recaptcha";
 
-// Force dynamic rendering for API routes
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+const MAX_NAME_LENGTH = 100;
+const MAX_MESSAGE_LENGTH = 2000;
+const MAX_PHONE_LENGTH = 30;
+
 // O'zbekiston telefon raqam validatsiyasi
 function validateUzbekPhone(phone: string): boolean {
-  // Faqat raqamlarni olib tashlash
   const cleaned = phone.replace(/\D/g, "");
 
-  // O'zbekiston telefon raqam formatlari:
-  // +998XXXXXXXXX (13 ta raqam)
-  // 998XXXXXXXXX (12 ta raqam)
-  // 90XXXXXXX (9 ta raqam - mobil)
-  // 33XXXXXXX (9 ta raqam - mobil)
-  // 88XXXXXXX (9 ta raqam - mobil)
-  // 93XXXXXXX (9 ta raqam - mobil)
-  // 94XXXXXXX (9 ta raqam - mobil)
-  // 95XXXXXXX (9 ta raqam - mobil)
-  // 97XXXXXXX (9 ta raqam - mobil)
-  // 99XXXXXXX (9 ta raqam - mobil)
-
   if (cleaned.length === 13 && cleaned.startsWith("998")) {
-    // +998XXXXXXXXX format
     const mobileCode = cleaned.substring(3, 5);
     const validMobileCodes = ["90", "91", "93", "94", "95", "97", "99", "88", "33"];
     return validMobileCodes.includes(mobileCode);
   }
 
   if (cleaned.length === 12 && cleaned.startsWith("998")) {
-    // 998XXXXXXXXX format
     const mobileCode = cleaned.substring(3, 5);
     const validMobileCodes = ["90", "91", "93", "94", "95", "97", "99", "88", "33"];
     return validMobileCodes.includes(mobileCode);
   }
 
   if (cleaned.length === 9) {
-    // 90XXXXXXX format (faqat raqamlar)
     const mobileCode = cleaned.substring(0, 2);
     const validMobileCodes = ["90", "91", "93", "94", "95", "97", "99", "88", "33"];
     return validMobileCodes.includes(mobileCode);
@@ -49,26 +36,21 @@ function validateUzbekPhone(phone: string): boolean {
   return false;
 }
 
-// Telefon raqamni tozalash va standartlashtirish
 function normalizePhone(phone: string): string {
   const cleaned = phone.replace(/\D/g, "");
 
   if (cleaned.length === 9) {
-    // 90XXXXXXX -> +99890XXXXXXX
     return `+998${cleaned}`;
   }
 
   if (cleaned.length === 12 && cleaned.startsWith("998")) {
-    // 998XXXXXXXXX -> +998XXXXXXXXX
     return `+${cleaned}`;
   }
 
   if (cleaned.length === 13 && cleaned.startsWith("998")) {
-    // 998XXXXXXXXX (agar + bo'lmasa)
     return `+${cleaned}`;
   }
 
-  // Agar allaqachon +998 bilan boshlansa
   if (phone.startsWith("+998")) {
     return phone;
   }
@@ -76,9 +58,50 @@ function normalizePhone(phone: string): string {
   return `+998${cleaned}`;
 }
 
+function parseContactBody(body: unknown): {
+  name: string;
+  phone: string;
+  message: string;
+  recaptchaToken: unknown;
+  startedAt: unknown;
+} | null {
+  if (!body || typeof body !== "object") {
+    return null;
+  }
+
+  const record = body as Record<string, unknown>;
+  const { name, phone, message, recaptchaToken, startedAt } = record;
+
+  if (typeof name !== "string" || typeof phone !== "string" || typeof message !== "string") {
+    return null;
+  }
+
+  const trimmedName = name.trim();
+  const trimmedPhone = phone.trim();
+  const trimmedMessage = message.trim();
+
+  if (
+    !trimmedName ||
+    !trimmedPhone ||
+    !trimmedMessage ||
+    trimmedName.length > MAX_NAME_LENGTH ||
+    trimmedPhone.length > MAX_PHONE_LENGTH ||
+    trimmedMessage.length > MAX_MESSAGE_LENGTH
+  ) {
+    return null;
+  }
+
+  return {
+    name: trimmedName,
+    phone: trimmedPhone,
+    message: trimmedMessage,
+    recaptchaToken,
+    startedAt,
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
-    // CSRF protection
     const csrfResult = await csrfProtection(request);
     if (!csrfResult.success) {
       return NextResponse.json(
@@ -92,7 +115,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Rate limiting: 3 requests per hour
     const rateLimitResult = await checkRateLimit(request, RateLimits.contact);
 
     if (!rateLimitResult.success) {
@@ -113,25 +135,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
-    const { name, phone, message, recaptchaToken, startedAt } = body;
-
-    // Validatsiya
-    if (!name || !phone || !message) {
-      return NextResponse.json({ error: "Name, phone, and message are required" }, { status: 400 });
+    let rawBody: unknown;
+    try {
+      rawBody = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
+
+    const parsed = parseContactBody(rawBody);
+    if (!parsed) {
+      return NextResponse.json(
+        {
+          error:
+            "Name, phone, and message are required and must be within length limits (name ≤ 100, message ≤ 2000).",
+        },
+        { status: 400 }
+      );
+    }
+
+    const { name, phone, message, recaptchaToken, startedAt } = parsed;
 
     // Reject obvious bot submissions that complete unrealistically fast.
     if (typeof startedAt === "number" && Date.now() - startedAt < 2500) {
       return NextResponse.json({ error: "Submission failed bot protection." }, { status: 400 });
     }
 
-    const isValidRecaptcha = await verifyRecaptcha(recaptchaToken);
+    const isValidRecaptcha = await verifyRecaptcha(
+      typeof recaptchaToken === "string" ? recaptchaToken : null
+    );
     if (!isValidRecaptcha) {
       return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
     }
 
-    // Telefon raqam validatsiyasi
     if (!validateUzbekPhone(phone)) {
       return NextResponse.json(
         { error: "Invalid phone number format. Please use Uzbek phone number format." },
@@ -139,40 +174,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Telefon raqamni normalizatsiya qilish
     const normalizedPhone = normalizePhone(phone);
 
-    // IP va User Agent olish
     const ipAddress =
       request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
-    const userAgent = request.headers.get("user-agent") || "unknown";
+    const userAgent = (request.headers.get("user-agent") || "unknown").slice(0, 500);
 
-    // Database'ga saqlash
-    const [contact] = await db
-      .insert(contacts)
-      .values({
-        name: name.trim(),
-        phone: normalizedPhone,
-        message: message.trim(),
-        ipAddress,
-        userAgent,
-      })
-      .returning();
+    await db.insert(contacts).values({
+      name,
+      phone: normalizedPhone,
+      message,
+      ipAddress: ipAddress.slice(0, 50),
+      userAgent,
+    });
 
     return NextResponse.json(
       {
         success: true,
         message: "Contact form submitted successfully",
-        id: contact.id,
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("Error submitting contact form:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json(
-      { error: "Failed to submit contact form", details: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to submit contact form" }, { status: 500 });
   }
 }

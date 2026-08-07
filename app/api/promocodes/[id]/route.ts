@@ -11,16 +11,36 @@ import {
   brandTranslations,
 } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
-import { eq, and } from "drizzle-orm";
+import { activePromocodeConditions } from "@/lib/promocode-active";
+import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
+import { validateId } from "@/lib/validators";
+import { and, eq } from "drizzle-orm";
 
-// Force dynamic rendering for API routes (Next.js 15+)
-// API routes are always dynamic and cannot be statically rendered
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs"; // Explicitly set runtime
+export const runtime = "nodejs";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const rateLimitResult = await checkRateLimit(request, RateLimits.api);
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(rateLimitResult.limit),
+            "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+            "X-RateLimit-Reset": String(rateLimitResult.resetTime),
+          },
+        }
+      );
+    }
+
     const { id } = await params;
+    if (!validateId(id)) {
+      return NextResponse.json({ error: "Invalid promocode id" }, { status: 400 });
+    }
+
     const { searchParams } = request.nextUrl;
     const lang = searchParams.get("lang") || "uz";
 
@@ -29,6 +49,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const langValue = lang as "uz" | "ru" | "en";
+    const now = new Date();
 
     const result = await db
       .select({
@@ -67,7 +88,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         brandTranslations,
         and(eq(brandTranslations.brandId, brands.id), eq(brandTranslations.language, langValue))
       )
-      .where(eq(promocodes.id, id));
+      .where(and(eq(promocodes.id, id), activePromocodeConditions(now)));
 
     if (result.length === 0) {
       return NextResponse.json({ error: "Promocode not found" }, { status: 404 });

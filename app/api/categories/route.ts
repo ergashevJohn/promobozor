@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db, categories, categoryTranslations } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { CacheTTL, isCacheEnabled, categoriesCacheKey, withCache } from "@/lib/cache";
+import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { eq, and } from "drizzle-orm";
 
 // Force dynamic rendering for API routes (Next.js 15+)
@@ -11,6 +12,21 @@ export const runtime = "nodejs"; // Explicitly set runtime
 
 export async function GET(request: NextRequest) {
   try {
+    const rateLimitResult = await checkRateLimit(request, RateLimits.api);
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(rateLimitResult.limit),
+            "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+            "X-RateLimit-Reset": String(rateLimitResult.resetTime),
+          },
+        }
+      );
+    }
+
     const { searchParams } = request.nextUrl;
     const lang = searchParams.get("lang") || "uz";
 

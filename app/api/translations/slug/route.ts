@@ -9,13 +9,31 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
+import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 type EntityType = "promocode" | "store" | "brand" | "category";
 type Language = "uz" | "ru" | "en";
 
+const MAX_SLUG_LENGTH = 200;
+
 export async function GET(request: NextRequest) {
+  const rateLimitResult = await checkRateLimit(request, RateLimits.api);
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": String(rateLimitResult.limit),
+          "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+          "X-RateLimit-Reset": String(rateLimitResult.resetTime),
+        },
+      }
+    );
+  }
+
   const { searchParams } = request.nextUrl;
   const entityType = searchParams.get("entityType") as EntityType | null;
   const currentSlug = searchParams.get("currentSlug");
@@ -25,6 +43,10 @@ export async function GET(request: NextRequest) {
   // Validate required parameters
   if (!entityType || !currentSlug || !currentLanguage || !targetLanguage) {
     return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+  }
+
+  if (currentSlug.length > MAX_SLUG_LENGTH) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
   // Validate entity type
@@ -121,6 +143,14 @@ export async function GET(request: NextRequest) {
         entityId = categoryTranslation?.categoryId ?? null;
         break;
       }
+
+      default: {
+        const _exhaustive: never = entityType;
+        return NextResponse.json(
+          { error: `Unsupported entity type: ${_exhaustive}` },
+          { status: 400 }
+        );
+      }
     }
 
     // Entity not found in current language
@@ -190,6 +220,14 @@ export async function GET(request: NextRequest) {
           .limit(1);
         targetSlug = translation?.slug ?? null;
         break;
+      }
+
+      default: {
+        const _exhaustive: never = entityType;
+        return NextResponse.json(
+          { error: `Unsupported entity type: ${_exhaustive}` },
+          { status: 400 }
+        );
       }
     }
 

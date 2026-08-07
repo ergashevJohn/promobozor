@@ -56,8 +56,9 @@ async function rateLimit(
 ): Promise<{ success: boolean; limit: number; remaining: number; resetTime: number }> {
   const now = Date.now();
 
-  // Skip rate limiting if disabled (testing only)
-  const isRateLimitDisabled = process.env.RATE_LIMIT_DISABLED === "true";
+  // Skip rate limiting only outside production (testing / local). Never honor in production.
+  const isRateLimitDisabled =
+    process.env.RATE_LIMIT_DISABLED === "true" && process.env.NODE_ENV !== "production";
   if (isRateLimitDisabled) {
     return {
       success: true,
@@ -141,11 +142,20 @@ export const RateLimits = {
   // View dedup window per IP + promocode (skip increment if exceeded)
   viewDedup: { limit: 1, window: 10 * 60 * 1000 },
 
+  // Like/dislike dedup: one counted action per IP + promocode per hour
+  actionDedup: { limit: 1, window: 60 * 60 * 1000 },
+
   // Contact form: 3 per hour
   contact: { limit: 3, window: 60 * 60 * 1000 },
 
   // Search: 20 per minute (stricter for expensive operations)
   search: { limit: 20, window: 60 * 1000 },
+
+  // CSRF token issuance
+  csrf: { limit: 30, window: 60 * 1000 },
+
+  // Analytics ingest
+  analytics: { limit: 60, window: 60 * 1000 },
 
   // Admin API: 60 requests per minute
   admin: { limit: 60, window: 60 * 1000 },

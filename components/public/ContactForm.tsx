@@ -212,6 +212,7 @@ export function ContactForm() {
             type="text"
             required
             autoComplete="name"
+            maxLength={100}
             value={formData.name}
             onChange={handleChange}
             className="bg-card mt-1 h-11 rounded-xl"
@@ -251,6 +252,7 @@ export function ContactForm() {
             name="message"
             required
             autoComplete="off"
+            maxLength={2000}
             rows={5}
             value={formData.message}
             onChange={handleChange}
