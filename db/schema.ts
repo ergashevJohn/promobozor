@@ -433,6 +433,22 @@ export const contacts = pgTable(
   })
 );
 
+/**
+ * Distributed rate-limit counters for sensitive API routes.
+ * Shared across serverless instances via Postgres.
+ */
+export const rateLimits = pgTable(
+  "rate_limits",
+  {
+    key: text("key").primaryKey(),
+    count: integer("count").notNull().default(0),
+    resetAt: timestamp("reset_at", { withTimezone: true }).notNull(),
+  },
+  (table) => ({
+    resetAtIdx: index("rate_limits_reset_at_idx").on(table.resetAt),
+  })
+);
+
 // SEO Redirects - handle legacy URLs and slug changes
 export const redirects = pgTable(
   "redirects",
@@ -480,5 +496,7 @@ export type ActivityLog = typeof activityLogs.$inferSelect;
 export type NewActivityLog = typeof activityLogs.$inferInsert;
 export type Contact = typeof contacts.$inferSelect;
 export type NewContact = typeof contacts.$inferInsert;
+export type RateLimit = typeof rateLimits.$inferSelect;
+export type NewRateLimit = typeof rateLimits.$inferInsert;
 export type Redirect = typeof redirects.$inferSelect;
 export type NewRedirect = typeof redirects.$inferInsert;

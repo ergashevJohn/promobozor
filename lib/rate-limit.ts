@@ -1,13 +1,16 @@
 /**
- * In-memory rate limiter for API routes.
+ * Rate limiter for API routes.
  *
- * Note: On multi-instance serverless deployments each instance has its own
- * counter, so limits are per-instance rather than globally shared. This is
- * intentional until a distributed store is reintroduced.
+ * - Default: in-memory (per serverless instance) — fine for cheap GET lists
+ * - `persistent: true`: Postgres-backed counters shared across instances
+ *   (contact, like/dislike/copy/view, csrf, analytics, dedup keys)
  *
  * Environment variables:
- * - RATE_LIMIT_DISABLED: Set to "true" to disable rate limiting (testing only)
+ * - RATE_LIMIT_DISABLED: Set to "true" to disable rate limiting (testing only;
+ *   ignored in production)
  */
+import { db } from "@/db";
+import { sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 interface RateLimitEntry {
@@ -15,11 +18,27 @@ interface RateLimitEntry {
   resetTime: number;
 }
 
+export interface RateLimitConfig {
+  /** Number of requests allowed */
+  limit: number;
+  /** Time window in milliseconds */
+  window: number;
+  /**
+   * When true, counters are stored in Postgres so all instances share the same limit.
+   * Use only for abuse-sensitive / mutating endpoints.
+   */
+  persistent?: boolean;
+}
+
+export interface RateLimitResult {
+  success: boolean;
+  limit: number;
+  remaining: number;
+  resetTime: number;
+}
+
 const inMemoryStore = new Map<string, RateLimitEntry>();
 
-/**
- * Clean up expired in-memory entries
- */
 function cleanupRateLimitStore() {
   const now = Date.now();
   for (const [key, entry] of inMemoryStore.entries()) {
@@ -29,49 +48,19 @@ function cleanupRateLimitStore() {
   }
 }
 
-// Cleanup every 5 minutes
 if (typeof setInterval !== "undefined") {
   setInterval(cleanupRateLimitStore, 5 * 60 * 1000);
 }
 
-/**
- * Rate limit configuration
- */
-interface RateLimitConfig {
-  /** Number of requests allowed */
-  limit: number;
-  /** Time window in milliseconds */
-  window: number;
+function isRateLimitDisabled(): boolean {
+  return process.env.RATE_LIMIT_DISABLED === "true" && process.env.NODE_ENV !== "production";
 }
 
-/**
- * Check if request is rate limited
- * @param identifier Unique identifier (IP address, user ID, etc.)
- * @param config Rate limit configuration
- * @returns Object with success status and info
- */
-async function rateLimit(
-  identifier: string,
-  config: RateLimitConfig
-): Promise<{ success: boolean; limit: number; remaining: number; resetTime: number }> {
+function memoryRateLimit(identifier: string, config: RateLimitConfig): RateLimitResult {
   const now = Date.now();
-
-  // Skip rate limiting only outside production (testing / local). Never honor in production.
-  const isRateLimitDisabled =
-    process.env.RATE_LIMIT_DISABLED === "true" && process.env.NODE_ENV !== "production";
-  if (isRateLimitDisabled) {
-    return {
-      success: true,
-      limit: config.limit,
-      remaining: config.limit,
-      resetTime: now + config.window,
-    };
-  }
-
   const key = `ratelimit:${identifier}`;
   let entry = inMemoryStore.get(key);
 
-  // Reset if window expired
   if (!entry || now > entry.resetTime) {
     entry = {
       count: 0,
@@ -80,41 +69,118 @@ async function rateLimit(
     inMemoryStore.set(key, entry);
   }
 
-  // Increment counter
   entry.count++;
 
-  // Check if limit exceeded
-  const success = entry.count <= config.limit;
-  const remaining = Math.max(0, config.limit - entry.count);
-
   return {
-    success,
+    success: entry.count <= config.limit,
     limit: config.limit,
-    remaining,
+    remaining: Math.max(0, config.limit - entry.count),
     resetTime: entry.resetTime,
   };
 }
 
+function parseResetAt(value: unknown): number {
+  if (value instanceof Date) {
+    return value.getTime();
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value).getTime();
+    if (!Number.isNaN(parsed)) {
+      return parsed;
+    }
+  }
+  return Date.now();
+}
+
 /**
- * Rate limit middleware for API routes
- * Usage in route handlers:
- *
- * export async function POST(request: NextRequest) {
- *   const result = await checkRateLimit(request);
- *   if (!result.success) {
- *     return NextResponse.json(
- *       { error: "Too many requests" },
- *       { status: 429, headers: { "X-RateLimit-Limit": String(result.limit) } }
- *     );
- *   }
- *   // ... rest of handler
- * }
+ * Atomic fixed-window counter in Postgres.
+ * Falls back to in-memory if the DB is unavailable (availability over strictness).
+ */
+async function persistentRateLimit(
+  identifier: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  const key = `ratelimit:${identifier}`;
+  const windowMs = config.window;
+
+  try {
+    const result = await db.execute(sql`
+      INSERT INTO rate_limits AS rl ("key", "count", "reset_at")
+      VALUES (
+        ${key},
+        1,
+        NOW() + (${windowMs}::double precision * INTERVAL '1 millisecond')
+      )
+      ON CONFLICT ("key") DO UPDATE
+      SET
+        "count" = CASE
+          WHEN rl."reset_at" <= NOW() THEN 1
+          ELSE rl."count" + 1
+        END,
+        "reset_at" = CASE
+          WHEN rl."reset_at" <= NOW()
+            THEN NOW() + (${windowMs}::double precision * INTERVAL '1 millisecond')
+          ELSE rl."reset_at"
+        END
+      RETURNING "count", "reset_at"
+    `);
+
+    const rows = result as unknown as Array<{ count: number; reset_at: unknown }>;
+    const row = rows[0];
+
+    if (!row || typeof row.count !== "number") {
+      throw new Error("Unexpected rate_limits RETURNING shape");
+    }
+
+    // Opportunistic cleanup of stale rows (best-effort)
+    if (Math.random() < 0.01) {
+      void db
+        .execute(sql`DELETE FROM rate_limits WHERE "reset_at" < NOW() - INTERVAL '1 day'`)
+        .catch(() => {
+          /* ignore cleanup errors */
+        });
+    }
+
+    const resetTime = parseResetAt(row.reset_at);
+
+    return {
+      success: row.count <= config.limit,
+      limit: config.limit,
+      remaining: Math.max(0, config.limit - row.count),
+      resetTime,
+    };
+  } catch (error) {
+    console.error("Persistent rate limit failed; falling back to in-memory:", error);
+    return memoryRateLimit(identifier, config);
+  }
+}
+
+async function rateLimit(identifier: string, config: RateLimitConfig): Promise<RateLimitResult> {
+  const now = Date.now();
+
+  if (isRateLimitDisabled()) {
+    return {
+      success: true,
+      limit: config.limit,
+      remaining: config.limit,
+      resetTime: now + config.window,
+    };
+  }
+
+  if (config.persistent) {
+    return persistentRateLimit(identifier, config);
+  }
+
+  return memoryRateLimit(identifier, config);
+}
+
+/**
+ * Rate limit by client IP from the request.
  */
 export async function checkRateLimit(
   request: Request,
-  config: RateLimitConfig = { limit: 10, window: 60000 } // 10 requests per minute by default
-): Promise<{ success: boolean; limit: number; remaining: number; resetTime: number }> {
-  // Use IP address as identifier
+  config: RateLimitConfig = { limit: 10, window: 60000 }
+): Promise<RateLimitResult> {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
@@ -127,39 +193,39 @@ export async function checkRateLimit(
  * Predefined rate limit configurations
  */
 export const RateLimits = {
-  // Login: 5 attempts per 15 minutes
+  // Login: 5 attempts per 15 minutes (memory — no login UI currently)
   login: { limit: 5, window: 15 * 60 * 1000 },
 
-  // API endpoints: 60 requests per minute
+  // Cheap public GETs: per-instance is acceptable
   api: { limit: 60, window: 60 * 1000 },
 
-  // Public actions (like, copy, dislike): 10 per minute
-  publicAction: { limit: 10, window: 60 * 1000 },
+  // Public actions (like, copy, dislike) — shared across instances
+  publicAction: { limit: 10, window: 60 * 1000, persistent: true },
 
-  // Views: slightly higher, still capped per IP
-  publicView: { limit: 30, window: 60 * 1000 },
+  // Views — shared
+  publicView: { limit: 30, window: 60 * 1000, persistent: true },
 
-  // View dedup window per IP + promocode (skip increment if exceeded)
-  viewDedup: { limit: 1, window: 10 * 60 * 1000 },
+  // View dedup window per IP + promocode
+  viewDedup: { limit: 1, window: 10 * 60 * 1000, persistent: true },
 
-  // Like/dislike dedup: one counted action per IP + promocode per hour
-  actionDedup: { limit: 1, window: 60 * 60 * 1000 },
+  // Like/dislike dedup per IP + promocode
+  actionDedup: { limit: 1, window: 60 * 60 * 1000, persistent: true },
 
-  // Contact form: 3 per hour
-  contact: { limit: 3, window: 60 * 60 * 1000 },
+  // Contact form
+  contact: { limit: 3, window: 60 * 60 * 1000, persistent: true },
 
-  // Search: 20 per minute (stricter for expensive operations)
+  // Search — memory (read-only, already sanitized)
   search: { limit: 20, window: 60 * 1000 },
 
   // CSRF token issuance
-  csrf: { limit: 30, window: 60 * 1000 },
+  csrf: { limit: 30, window: 60 * 1000, persistent: true },
 
   // Analytics ingest
-  analytics: { limit: 60, window: 60 * 1000 },
+  analytics: { limit: 60, window: 60 * 1000, persistent: true },
 
-  // Admin API: 60 requests per minute
+  // Admin API (unused currently)
   admin: { limit: 60, window: 60 * 1000 },
-} as const;
+} as const satisfies Record<string, RateLimitConfig>;
 
 /**
  * Rate limit by arbitrary key (IP + resource id, etc.)
@@ -167,7 +233,7 @@ export const RateLimits = {
 export async function checkRateLimitKey(
   key: string,
   config: RateLimitConfig
-): Promise<{ success: boolean; limit: number; remaining: number; resetTime: number }> {
+): Promise<RateLimitResult> {
   return rateLimit(key, config);
 }
 
