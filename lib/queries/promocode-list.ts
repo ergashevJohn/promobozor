@@ -196,9 +196,7 @@ export function mapPromocodeListRow(
     copyCount: row.promocode.copyCount,
     likesCount: row.promocode.likesCount,
     dislikesCount: row.promocode.dislikesCount,
-    ...(includeStartsAt
-      ? { startsAt: row.promocode.startsAt?.toISOString() || null }
-      : {}),
+    ...(includeStartsAt ? { startsAt: row.promocode.startsAt?.toISOString() || null } : {}),
     expiresAt: row.promocode.expiresAt?.toISOString() || null,
     translations: row.promocodeTranslation
       ? [
@@ -206,9 +204,7 @@ export function mapPromocodeListRow(
             language: row.promocodeTranslation.language,
             title: row.promocodeTranslation.title,
             slug: row.promocodeTranslation.slug,
-            ...(includeConditions
-              ? { conditions: row.promocodeTranslation.conditions }
-              : {}),
+            ...(includeConditions ? { conditions: row.promocodeTranslation.conditions } : {}),
           },
         ]
       : [],

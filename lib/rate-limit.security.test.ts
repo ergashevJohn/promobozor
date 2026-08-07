@@ -38,6 +38,7 @@ describe("persistent rate limit (Postgres)", () => {
 
   it("falls back to in-memory when Postgres fails", async () => {
     execute.mockRejectedValue(new Error("db down"));
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const { checkRateLimitKey } = await import("./rate-limit");
     const key = `fallback-${Date.now()}`;
@@ -48,6 +49,8 @@ describe("persistent rate limit (Postgres)", () => {
 
     expect(first.success).toBe(true);
     expect(second.success).toBe(false);
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 
   it("scopes counters by config name so routes do not share a budget", async () => {
