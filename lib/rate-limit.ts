@@ -223,6 +223,9 @@ export const RateLimits = {
   // Analytics ingest
   analytics: { limit: 60, window: 60 * 1000, persistent: true },
 
+  // Dynamic OG image generation (CPU-heavy) — shared + CDN cache on success
+  og: { limit: 60, window: 60 * 1000, persistent: true },
+
   // Admin API (unused currently)
   admin: { limit: 60, window: 60 * 1000 },
 } as const satisfies Record<string, RateLimitConfig>;
