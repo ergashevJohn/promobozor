@@ -1,11 +1,29 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { fetchApprovedImageAsDataUrl } from "@/lib/safe-url-fetch";
 
 export const runtime = "nodejs";
 
+const OG_CACHE_CONTROL = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
+
 export async function GET(request: NextRequest) {
   try {
+    const rateLimitResult = await checkRateLimit(request, RateLimits.og);
+    if (!rateLimitResult.success) {
+      return new Response("Too many requests. Please try again later.", {
+        status: 429,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-store",
+          "X-RateLimit-Limit": String(rateLimitResult.limit),
+          "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+          "X-RateLimit-Reset": String(rateLimitResult.resetTime),
+          "Retry-After": String(Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)),
+        },
+      });
+    }
+
     const { searchParams } = new URL(request.url);
 
     // Get parameters — truncate to bound rendering cost
@@ -242,6 +260,11 @@ export async function GET(request: NextRequest) {
       {
         width: 1200,
         height: 630,
+        headers: {
+          "Cache-Control": OG_CACHE_CONTROL,
+          "X-RateLimit-Limit": String(rateLimitResult.limit),
+          "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+        },
       }
     );
   } catch (error) {
