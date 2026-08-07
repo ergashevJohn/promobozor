@@ -3,7 +3,8 @@
  *
  * - Default: in-memory (per serverless instance) — fine for cheap GET lists
  * - `persistent: true`: Postgres-backed counters shared across instances
- *   (contact, like/dislike/copy/view, csrf, analytics, dedup keys)
+ *   (contact, like/dislike/copy/view, csrf, analytics, og, dedup keys)
+ * - Each config `name` is part of the storage key so routes keep separate budgets
  *
  * Environment variables:
  * - RATE_LIMIT_DISABLED: Set to "true" to disable rate limiting (testing only;
@@ -19,6 +20,11 @@ interface RateLimitEntry {
 }
 
 export interface RateLimitConfig {
+  /**
+   * Bucket name included in the storage key so unrelated routes do not share
+   * one counter (e.g. `ratelimit:og:1.2.3.4` vs `ratelimit:analytics:1.2.3.4`).
+   */
+  name: string;
   /** Number of requests allowed */
   limit: number;
   /** Time window in milliseconds */
@@ -56,9 +62,13 @@ function isRateLimitDisabled(): boolean {
   return process.env.RATE_LIMIT_DISABLED === "true" && process.env.NODE_ENV !== "production";
 }
 
+function storeKey(identifier: string, config: RateLimitConfig): string {
+  return `ratelimit:${config.name}:${identifier}`;
+}
+
 function memoryRateLimit(identifier: string, config: RateLimitConfig): RateLimitResult {
   const now = Date.now();
-  const key = `ratelimit:${identifier}`;
+  const key = storeKey(identifier, config);
   let entry = inMemoryStore.get(key);
 
   if (!entry || now > entry.resetTime) {
@@ -100,7 +110,7 @@ async function persistentRateLimit(
   identifier: string,
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
-  const key = `ratelimit:${identifier}`;
+  const key = storeKey(identifier, config);
   const windowMs = config.window;
 
   try {
@@ -179,7 +189,7 @@ async function rateLimit(identifier: string, config: RateLimitConfig): Promise<R
  */
 export async function checkRateLimit(
   request: Request,
-  config: RateLimitConfig = { limit: 10, window: 60000 }
+  config: RateLimitConfig = { name: "default", limit: 10, window: 60000 }
 ): Promise<RateLimitResult> {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -190,44 +200,45 @@ export async function checkRateLimit(
 }
 
 /**
- * Predefined rate limit configurations
+ * Predefined rate limit configurations.
+ * Each entry has a distinct `name` so counters are not shared across routes.
  */
 export const RateLimits = {
   // Login: 5 attempts per 15 minutes (memory — no login UI currently)
-  login: { limit: 5, window: 15 * 60 * 1000 },
+  login: { name: "login", limit: 5, window: 15 * 60 * 1000 },
 
   // Cheap public GETs: per-instance is acceptable
-  api: { limit: 60, window: 60 * 1000 },
+  api: { name: "api", limit: 60, window: 60 * 1000 },
 
   // Public actions (like, copy, dislike) — shared across instances
-  publicAction: { limit: 10, window: 60 * 1000, persistent: true },
+  publicAction: { name: "publicAction", limit: 10, window: 60 * 1000, persistent: true },
 
   // Views — shared
-  publicView: { limit: 30, window: 60 * 1000, persistent: true },
+  publicView: { name: "publicView", limit: 30, window: 60 * 1000, persistent: true },
 
   // View dedup window per IP + promocode
-  viewDedup: { limit: 1, window: 10 * 60 * 1000, persistent: true },
+  viewDedup: { name: "viewDedup", limit: 1, window: 10 * 60 * 1000, persistent: true },
 
   // Like/dislike dedup per IP + promocode
-  actionDedup: { limit: 1, window: 60 * 60 * 1000, persistent: true },
+  actionDedup: { name: "actionDedup", limit: 1, window: 60 * 60 * 1000, persistent: true },
 
   // Contact form
-  contact: { limit: 3, window: 60 * 60 * 1000, persistent: true },
+  contact: { name: "contact", limit: 3, window: 60 * 60 * 1000, persistent: true },
 
   // Search — memory (read-only, already sanitized)
-  search: { limit: 20, window: 60 * 1000 },
+  search: { name: "search", limit: 20, window: 60 * 1000 },
 
   // CSRF token issuance
-  csrf: { limit: 30, window: 60 * 1000, persistent: true },
+  csrf: { name: "csrf", limit: 30, window: 60 * 1000, persistent: true },
 
   // Analytics ingest
-  analytics: { limit: 60, window: 60 * 1000, persistent: true },
+  analytics: { name: "analytics", limit: 60, window: 60 * 1000, persistent: true },
 
   // Dynamic OG image generation (CPU-heavy) — shared + CDN cache on success
-  og: { limit: 60, window: 60 * 1000, persistent: true },
+  og: { name: "og", limit: 60, window: 60 * 1000, persistent: true },
 
   // Admin API (unused currently)
-  admin: { limit: 60, window: 60 * 1000 },
+  admin: { name: "admin", limit: 60, window: 60 * 1000 },
 } as const satisfies Record<string, RateLimitConfig>;
 
 /**
