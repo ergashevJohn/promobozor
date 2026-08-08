@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRecaptcha } from "@/lib/hooks/use-recaptcha";
 import { PaperPlaneTilt } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 type PhoneValidationErrorKey =
@@ -73,6 +73,7 @@ function validateUzbekPhone(phone: string): {
 export function ContactForm() {
   const t = useTranslations("contact");
   const { executeRecaptcha } = useRecaptcha();
+  const phoneInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -89,6 +90,13 @@ export function ContactForm() {
     if (errorKey === "invalidOperatorCode") return t("form.invalidOperatorCode");
     if (errorKey === "invalidPhoneFormat") return t("form.invalidPhoneFormat");
     return t("form.invalidPhoneNumber");
+  };
+
+  const focusPhoneError = () => {
+    const input = phoneInputRef.current;
+    if (!input) return;
+    input.focus();
+    input.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,6 +127,7 @@ export function ContactForm() {
       const errorMessage = getPhoneErrorMessage(phoneValidation.errorKey);
       setPhoneError(errorMessage);
       toast.error(errorMessage);
+      focusPhoneError();
       return;
     }
 
@@ -222,6 +231,7 @@ export function ContactForm() {
         <div>
           <Label htmlFor="phone">{t("form.phone")}</Label>
           <Input
+            ref={phoneInputRef}
             id="phone"
             name="phone"
             type="tel"
@@ -267,7 +277,7 @@ export function ContactForm() {
             </>
           ) : (
             <>
-              <PaperPlaneTilt className="mr-2 h-4 w-4" />
+              <PaperPlaneTilt className="mr-2 h-4 w-4" aria-hidden="true" />
               {t("form.send")}
             </>
           )}

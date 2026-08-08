@@ -225,8 +225,8 @@ describe("GrouponCard", () => {
     expect(screen.queryByText("View Details")).not.toBeInTheDocument();
 
     const cardContainer = screen.getByRole("article");
-    expect(cardContainer).toHaveClass("opacity-60");
     expect(cardContainer).toHaveClass("grayscale");
+    expect(cardContainer).not.toHaveClass("opacity-60");
   });
 
   it("renders disabled status correctly", () => {
@@ -242,7 +242,7 @@ describe("GrouponCard", () => {
     expect(screen.queryByText("View Details")).not.toBeInTheDocument();
 
     const cardContainer = screen.getByRole("article");
-    expect(cardContainer).toHaveClass("opacity-60");
     expect(cardContainer).toHaveClass("grayscale");
+    expect(cardContainer).not.toHaveClass("opacity-60");
   });
 });

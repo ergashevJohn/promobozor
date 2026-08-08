@@ -493,6 +493,7 @@ async function FiltersSection({
         category: t("category"),
         brand: t("brand"),
         sortBy: t("sortBy"),
+        filters: t("filters"),
         kicker: t("kicker"),
         title: t("title"),
         description: t("description"),
@@ -659,7 +660,6 @@ export default async function PromocodesPage({
 
   const t = await getTranslations({ locale, namespace: "promocodesPage" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
-  const tListing = await getTranslations({ locale, namespace: "listing" });
 
   // Check if filters are applied (excluding page parameter)
   const hasFilters = Object.keys(resolvedSearchParams).some((k) => k !== "page");
@@ -685,66 +685,45 @@ export default async function PromocodesPage({
           />
         </>
       )}
-      <div className="page-shell py-8 md:py-10">
-        <div className="page-hero-surface mb-6 md:mb-8">
-          <div className="brand-kicker mb-3 md:mb-4">{tListing("heroKicker")}</div>
-          <div className="grid gap-4 md:gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <h1 className="text-foreground mb-2 text-3xl font-semibold tracking-tight md:mb-3 md:text-5xl">
-                {t("title")}
-              </h1>
-              <p className="text-muted-foreground line-clamp-3 max-w-3xl text-base leading-7 md:line-clamp-none md:text-lg">
-                {t("description")}
-              </p>
-            </div>
-            <div className="hidden gap-3 sm:grid sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              <div className="surface-stat px-4 py-3 text-sm">
-                <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  {tListing("liveOffers")}
-                </div>
-                <div className="mt-1 font-semibold text-[color:var(--foreground)]">
-                  {tListing("verifiedRoutes")}
-                </div>
-              </div>
-              <div className="surface-stat px-4 py-3 text-sm">
-                <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  {tListing("sorting")}
-                </div>
-                <div className="mt-1 font-semibold text-[color:var(--foreground)]">
-                  {tListing("sortingValue")}
-                </div>
-              </div>
-              <div className="surface-stat px-4 py-3 text-sm">
-                <div className="text-[11px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  {tListing("saveTime")}
-                </div>
-                <div className="mt-1 font-semibold text-[color:var(--foreground)]">
-                  {tListing("saveTimeValue")}
-                </div>
-              </div>
-            </div>
+      <section className="brand-hero relative -mt-[4.75rem] overflow-hidden pt-[4.75rem]">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute top-[-20%] left-1/2 h-[28rem] w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(232,78,66,0.14),transparent_68%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(232,78,66,0.18),transparent_68%)]" />
+          <div className="absolute bottom-[-30%] left-1/2 h-[22rem] w-[36rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(15,20,25,0.06),transparent_70%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(248,250,252,0.05),transparent_70%)]" />
+        </div>
+
+        <div className="page-shell relative pt-8 pb-6 md:pt-12 md:pb-10">
+          <header className="mb-4 text-center md:mb-8">
+            <h1 className="text-foreground mx-auto text-2xl font-semibold tracking-tight text-balance md:max-w-[20ch] md:text-4xl md:leading-[1.1]">
+              {t("title")}
+            </h1>
+            <p className="text-muted-foreground mx-auto mt-2 line-clamp-2 max-w-[40ch] text-sm leading-6 md:mt-3 md:line-clamp-none md:max-w-[48ch] md:text-base md:leading-7">
+              {t("description")}
+            </p>
+          </header>
+
+          <div className="mb-3 md:mb-5">
+            <SearchBar
+              currentParams={resolvedSearchParams as Record<string, string>}
+              navigationMode="submit"
+              targetPath="/promocodes"
+            />
           </div>
+
+          <Suspense
+            fallback={
+              <div className="bg-card border-border mb-0 min-h-24 animate-pulse rounded-2xl border" />
+            }
+          >
+            <FiltersSection
+              locale={locale}
+              searchParams={resolvedSearchParams as Record<string, string>}
+              pathname={`/${locale}/promocodes`}
+            />
+          </Suspense>
         </div>
+      </section>
 
-        {/* Search + filters closer on mobile */}
-        <div className="mb-4 flex justify-center md:mb-6">
-          <SearchBar currentParams={resolvedSearchParams as Record<string, string>} />
-        </div>
-
-        {/* Filters Section */}
-        <Suspense
-          fallback={
-            <div className="bg-card border-border mb-6 min-h-[6rem] animate-pulse rounded-lg border md:mb-8 md:min-h-[10rem]" />
-          }
-        >
-          <FiltersSection
-            locale={locale}
-            searchParams={resolvedSearchParams as Record<string, string>}
-            pathname={`/${locale}/promocodes`}
-          />
-        </Suspense>
-
-        {/* Promocodes Section */}
+      <div className="page-shell py-5 md:py-8">
         <Suspense fallback={<SkeletonCardGrid count={ITEMS_PER_PAGE} />}>
           <PromocodesSection locale={locale} searchParams={resolvedSearchParams} />
         </Suspense>

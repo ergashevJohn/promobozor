@@ -102,7 +102,7 @@ export default function SearchBar({
   const placeholderText = placeholder || t("searchPlaceholder");
 
   return (
-    <form className="relative w-full max-w-2xl" onSubmit={handleSubmit}>
+    <form className="relative mx-auto w-full max-w-2xl" onSubmit={handleSubmit}>
       <Label htmlFor={searchInputId} className="sr-only">
         {placeholderText}
       </Label>
@@ -125,13 +125,22 @@ export default function SearchBar({
             placeholder={`${placeholderText}…`}
             autoComplete="off"
             aria-label={placeholderText}
-            className={`bg-card/95 h-12 rounded-2xl border-[color:var(--border)] pl-10 text-base shadow-[0_24px_60px_-36px_rgba(17,24,39,0.55)] sm:h-14 ${
+            aria-busy={navigationMode === "live" && isLoading ? true : undefined}
+            className={`bg-card/95 h-12 rounded-2xl border-[color:var(--border)] pl-10 text-base shadow-[0_24px_60px_-36px_rgba(15,20,25,0.28)] sm:h-14 ${
               navigationMode === "submit" ? "pr-12" : "pr-14"
             }`}
           />
           <div className="absolute top-1/2 right-1 flex -translate-y-1/2 transform items-center gap-1">
             {navigationMode === "live" && isLoading && (
-              <CircleNotch className="text-muted-foreground h-4 w-4 animate-spin" />
+              <span className="sr-only" role="status" aria-live="polite">
+                {t("loading")}
+              </span>
+            )}
+            {navigationMode === "live" && isLoading && (
+              <CircleNotch
+                className="text-muted-foreground h-4 w-4 animate-spin"
+                aria-hidden="true"
+              />
             )}
             {searchValue && (
               <Button
@@ -142,7 +151,7 @@ export default function SearchBar({
                 aria-label={t("clear")}
                 className="h-11 min-h-11 w-11 min-w-11 p-0"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </Button>
             )}
           </div>

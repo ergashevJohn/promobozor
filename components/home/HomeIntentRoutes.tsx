@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
 import {
   ArrowRight,
   Buildings,
-  CreditCard,
   MagnifyingGlass,
+  SquaresFour,
   Storefront,
 } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
@@ -23,53 +22,76 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
     href: string;
   }>;
 
-  const icons = [MagnifyingGlass, Storefront, CreditCard, Buildings];
+  const icons = [MagnifyingGlass, Storefront, SquaresFour, Buildings];
 
   return (
-    <section className="section-rhythm border-border border-b">
-      <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <section className="section-rhythm">
+      <div className="mb-8 flex flex-col gap-4 md:mb-10 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl text-left">
           <h2 className="brand-section-heading text-left">{t("title")}</h2>
           <p className="text-muted-foreground mt-3 max-w-[55ch] text-base leading-7 md:text-lg">
             {t("description")}
           </p>
         </div>
-        <Button asChild variant="outline" className="group shrink-0">
-          <Link href="/promocodes">
-            {t("cta")}
-            <CtaIcon>
-              <ArrowRight size={16} weight="light" />
-            </CtaIcon>
-          </Link>
-        </Button>
+        <Link
+          href="/promocodes"
+          className="group text-foreground inline-flex min-h-11 shrink-0 items-center gap-2 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
+        >
+          {t("cta")}
+          <CtaIcon>
+            <ArrowRight size={16} weight="light" />
+          </CtaIcon>
+        </Link>
       </div>
 
-      <div className="stagger-reveal grid gap-6 md:grid-cols-2 xl:grid-cols-[1.2fr_0.9fr_1.05fr_0.95fr]">
-        {items.map((item, index) => {
-          const Icon = icons[index % icons.length];
-          return (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="group metric-card transition-colors hover:border-[color:var(--accent-red)]/30"
-            >
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="text-muted-foreground text-sm font-medium">{item.kicker}</div>
-                <div className="text-muted-foreground flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--secondary)]">
-                  <Icon size={20} weight="light" aria-hidden="true" />
-                </div>
-              </div>
-              <div className="text-foreground text-xl leading-tight font-semibold">
-                {item.title}
-              </div>
-              <p className="text-muted-foreground mt-3 text-sm leading-6">{item.description}</p>
-              <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
-                <span>{t("cardCta")}</span>
-                <ArrowRight size={14} weight="light" aria-hidden="true" />
-              </div>
-            </Link>
-          );
-        })}
+      <div className="bg-card overflow-hidden rounded-[28px] border border-[color:var(--border)] shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)]">
+        <ul className="grid md:grid-cols-2">
+          {items.map((item, index) => {
+            const Icon = icons[index % icons.length];
+            const step = String(index + 1).padStart(2, "0");
+
+            return (
+              <li
+                key={item.href}
+                className="border-border border-b last:border-b-0 md:[&:nth-child(n+3)]:border-b-0 md:[&:nth-child(odd)]:border-r"
+              >
+                <Link
+                  href={item.href}
+                  className="group focus-visible:bg-accent flex h-full flex-col gap-5 p-6 transition-colors hover:bg-[color:var(--accent)]/50 focus-visible:outline-none md:p-7"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="text-xs font-semibold tracking-[0.16em] text-[color:var(--accent-red)]">
+                      {step}
+                    </span>
+                    <span className="text-muted-foreground flex size-10 items-center justify-center rounded-xl bg-[color:var(--secondary)] transition-colors group-hover:bg-[color:var(--accent-red)] group-hover:text-white">
+                      <Icon size={20} weight="light" aria-hidden="true" />
+                    </span>
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="text-muted-foreground text-sm font-medium">{item.kicker}</p>
+                    <h3 className="text-foreground mt-2 text-lg leading-snug font-semibold text-balance transition-colors group-hover:text-[color:var(--accent-red)] md:text-xl">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground mt-3 text-sm leading-6">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
+                    <span>{t("cardCta")}</span>
+                    <ArrowRight
+                      size={14}
+                      weight="light"
+                      className="transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );

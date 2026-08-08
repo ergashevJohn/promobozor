@@ -72,7 +72,11 @@
     "altCategoryImageWithSlug": "Изображение категории - страница {slug}",
     "listKicker": "Список PromoBozor",
     "searchLabel": "Поиск:",
-    "email": "Email"
+    "email": "Email",
+    "mainNav": "Основная навигация",
+    "mobileNav": "Мобильная навигация",
+    "promoCodeAria": "Промокод: {code}",
+    "loadingOffer": "Загрузка предложения"
   },
   "LocaleLayout": {
     "title": "PromoBozor - рынок скидок и промокодов",

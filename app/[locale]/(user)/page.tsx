@@ -2,7 +2,6 @@ import FeaturedPromocodes from "@/components/home/FeaturedPromocodes";
 import { HomeFAQSection } from "@/components/home/HomeFAQSection";
 import { HomeEditorialGuide } from "@/components/home/HomeEditorialGuide";
 import { HomeIntentRoutes } from "@/components/home/HomeIntentRoutes";
-import { HomeTrustStrip } from "@/components/home/HomeTrustStrip";
 import PopularStoresCategories from "@/components/home/PopularStoresCategories";
 import HeroSection from "@/components/public/HeroSection";
 import { OrganizationSchema } from "@/components/public/OrganizationSchema";
@@ -113,8 +112,6 @@ export default async function HomePage({
           searchBarNavigationMode="submit"
           searchBarTargetPath="/promocodes"
         />
-
-        <HomeTrustStrip locale={locale} />
 
         <div className="page-shell space-y-0">
           <HomeIntentRoutes locale={locale} />

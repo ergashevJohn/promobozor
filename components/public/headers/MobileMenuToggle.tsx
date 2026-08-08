@@ -1,19 +1,28 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { usePathname } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   children: React.ReactNode;
 };
 
+const emptySubscribe = () => () => {};
+
 export function MobileMenuToggle({ children }: Props) {
   const tCommon = useTranslations("common");
   const [open, setOpen] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const pathname = usePathname();
   const menuId = useId();
+  const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -67,6 +76,63 @@ export function MobileMenuToggle({ children }: Props) {
     };
   }, [open]);
 
+  const closeMenu = () => {
+    setOpen(false);
+    toggleRef.current?.focus();
+  };
+
+  const menu =
+    open && mounted
+      ? createPortal(
+          <>
+            <button
+              type="button"
+              className="fixed inset-x-0 top-[4.75rem] bottom-0 z-[60] bg-black/40 backdrop-blur-[2px]"
+              onClick={closeMenu}
+              aria-label={tCommon("closeMenu")}
+            />
+
+            <div
+              id={menuId}
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
+              className="border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-[70] flex max-h-[min(30rem,calc(100dvh-5.75rem))] flex-col overflow-hidden rounded-[28px] border shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)]"
+              style={{
+                bottom: "max(0.75rem, env(safe-area-inset-bottom))",
+              }}
+            >
+              {/* <div className="border-border flex items-center justify-between gap-3 border-b px-5 py-4">
+                <p id={titleId} className="text-foreground text-sm font-semibold tracking-tight">
+                  {tCommon("mobileNav")}
+                </p>
+                <button
+                  type="button"
+                  onClick={closeMenu}
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-xl px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                >
+                  {tCommon("closeMenu")}
+                </button>
+              </div> */}
+
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
+                {children}
+              </div>
+
+              <div className="border-border border-t p-4">
+                <Button asChild size="lg" className="w-full">
+                  <Link href="/promocodes" onClick={closeMenu}>
+                    {tCommon("promocodes")}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </>,
+          document.body
+        )
+      : null;
+
   return (
     <div className="relative md:hidden">
       <Button
@@ -77,7 +143,8 @@ export function MobileMenuToggle({ children }: Props) {
         aria-label={open ? tCommon("closeMenu") : tCommon("openMenu")}
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        className="relative !size-11 min-h-11 min-w-11"
+        aria-haspopup="dialog"
+        className="relative z-[80] !size-11 min-h-11 min-w-11"
       >
         <span className="relative flex size-5 items-center justify-center" aria-hidden="true">
           <span
@@ -98,33 +165,7 @@ export function MobileMenuToggle({ children }: Props) {
         </span>
       </Button>
 
-      {open && (
-        <>
-          <div
-            id={menuId}
-            ref={panelRef}
-            className="bg-background/95 fixed inset-x-0 top-[4.5rem] bottom-0 z-40 overscroll-contain backdrop-blur-xl sm:top-[5rem]"
-            role="navigation"
-            aria-label="Main"
-          >
-            <div className="page-shell py-8">
-              <div className="stagger-reveal flex flex-col gap-2">{children}</div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="fixed inset-x-0 top-[4.5rem] bottom-0 z-30 bg-black/25 sm:top-[5rem]"
-            onClick={() => {
-              setOpen(false);
-              toggleRef.current?.focus();
-            }}
-            aria-label={tCommon("closeMenu")}
-            aria-hidden="true"
-            tabIndex={-1}
-          />
-        </>
-      )}
+      {menu}
     </div>
   );
 }

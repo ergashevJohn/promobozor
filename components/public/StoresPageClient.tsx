@@ -55,13 +55,23 @@ interface StoresPageClientProps {
     searchHint: string;
     storeTitle: string;
     noStoresDescription: string;
+    directoryKicker: string;
+    directoryBadge: string;
+    curatedRoutesCount: string;
+    viewStorePromocodesAria: string;
   };
+}
+
+function formatNamedMessage(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (result, [key, value]) => result.replaceAll(`{${key}}`, String(value)),
+    template
+  );
 }
 
 export default function StoresPageClient({ storesData, translations: t }: StoresPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const tCommon = useTranslations("common");
-  const tStore = useTranslations("store");
 
   const filteredStores = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -82,16 +92,14 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
         <div className="page-hero-surface">
           <div className="mb-8 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <div className="brand-kicker mb-4">{tStore("directoryKicker")}</div>
+              <div className="brand-kicker mb-4">{t.directoryKicker}</div>
               <h1 className="page-hero-heading mb-3">{t.allStores}</h1>
               <p className="page-hero-copy">{t.allStoresDescription}</p>
             </div>
             <div className="surface-stat px-5 py-4">
-              <div className="text-muted-foreground text-sm font-medium">
-                {tStore("directoryBadge")}
-              </div>
+              <div className="text-muted-foreground text-sm font-medium">{t.directoryBadge}</div>
               <div className="mt-2 text-lg font-semibold text-[color:var(--foreground)]">
-                {tStore("curatedRoutesCount", { count: storesData.length })}
+                {t.curatedRoutesCount}
               </div>
             </div>
           </div>
@@ -134,7 +142,7 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
                   key={store.id}
                   href={href}
                   className="directory-card group"
-                  aria-label={tStore("viewStorePromocodesAria", { name: storeName })}
+                  aria-label={formatNamedMessage(t.viewStorePromocodesAria, { name: storeName })}
                 >
                   <div className="mb-4 flex items-center gap-4">
                     <div className="bg-muted flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl">

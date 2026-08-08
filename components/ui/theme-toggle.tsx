@@ -32,7 +32,7 @@ export function ThemeToggle() {
         aria-label={tCommon("toggleTheme")}
         className="!size-11 min-h-11 min-w-11"
       >
-        <Sun className="h-5 w-5" weight="light" />
+        <Sun className="h-5 w-5" weight="light" aria-hidden="true" />
       </Button>
     );
   }
@@ -48,9 +48,9 @@ export function ThemeToggle() {
       className="!size-11 min-h-11 min-w-11"
     >
       {isDark ? (
-        <Moon className="h-5 w-5" weight="light" />
+        <Moon className="h-5 w-5" weight="light" aria-hidden="true" />
       ) : (
-        <Sun className="h-5 w-5" weight="light" />
+        <Sun className="h-5 w-5" weight="light" aria-hidden="true" />
       )}
     </Button>
   );

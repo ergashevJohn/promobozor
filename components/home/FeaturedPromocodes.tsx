@@ -1,4 +1,5 @@
 import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
+import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
 import {
   brands,
@@ -123,19 +124,13 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
           <p className="text-muted-foreground mx-auto max-w-xl text-sm leading-6">
             {tEmpty("noPromocodesDescription")}
           </p>
-          <Link
-            href="/promocodes"
-            className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-          >
-            {tCommon("promocodes")}
-          </Link>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="section-rhythm border-border border-b">
+    <section className="section-rhythm">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="brand-section-heading text-left">{t("featuredPromocodes")}</h2>
@@ -149,9 +144,9 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
           aria-label={`${t("featuredPromocodes")} - ${tCommon("viewAll")}`}
         >
           {tCommon("viewAll")}
-          <span className="inline-flex size-8 items-center justify-center rounded-full bg-black/5 dark:bg-white/10">
+          <CtaIcon>
             <ArrowRight size={16} weight="light" />
-          </span>
+          </CtaIcon>
         </Link>
       </div>
       <PromocodeListOptimized

@@ -72,7 +72,11 @@
     "altCategoryImageWithSlug": "Category image - {slug} page",
     "listKicker": "PromoBozor list",
     "searchLabel": "Search:",
-    "email": "Email"
+    "email": "Email",
+    "mainNav": "Main navigation",
+    "mobileNav": "Mobile navigation",
+    "promoCodeAria": "Promo code: {code}",
+    "loadingOffer": "Loading promotional offer"
   },
   "LocaleLayout": {
     "title": "PromoBozor - Deals and promo code marketplace",

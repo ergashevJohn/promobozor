@@ -72,7 +72,11 @@
     "altCategoryImageWithSlug": "Kategoriya rasmi - {slug} sahifasi",
     "listKicker": "PromoBozor ro'yxati",
     "searchLabel": "Qidiruv:",
-    "email": "Email"
+    "email": "Email",
+    "mainNav": "Asosiy navigatsiya",
+    "mobileNav": "Mobil navigatsiya",
+    "promoCodeAria": "Promokod: {code}",
+    "loadingOffer": "Taklif yuklanmoqda"
   },
   "LocaleLayout": {
     "title": "PromoBozor - Chegirmalar va promokodlar bozori",

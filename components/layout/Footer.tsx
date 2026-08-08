@@ -40,11 +40,11 @@ export async function Footer() {
   ];
 
   const linkClass =
-    "text-muted-foreground hover:text-[color:var(--accent-red)] inline-flex min-h-11 items-center text-sm transition-colors";
+    "text-muted-foreground hover:text-[color:var(--accent-red)] inline-flex min-h-9 items-center text-sm transition-colors";
 
   return (
     <footer className="border-border bg-card/80 mt-auto border-t">
-      <div className="page-shell py-12 md:py-16">
+      <div className="page-shell py-8 md:py-12">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.9fr_0.9fr]">
           <div>
             <Link href="/" className="inline-flex items-center" translate="no">
@@ -109,7 +109,7 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="border-border text-muted-foreground mt-10 border-t pt-6 text-sm">
+        <div className="border-border text-muted-foreground mt-8 flex flex-wrap justify-between gap-2 border-t pt-6 text-sm">
           <p>
             © {currentYear} <span translate="no">PromoBozor</span>. {t("allRights")}.
           </p>

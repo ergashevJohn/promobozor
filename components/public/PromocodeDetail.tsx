@@ -114,7 +114,7 @@ export default function PromocodeDetail({
             <Link
               key={`${item.type}-${item.href}`}
               href={item.href}
-              className="rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
+              className="focus-visible:ring-ring/50 inline-flex min-h-11 items-center rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--foreground)] focus-visible:ring-[3px] focus-visible:outline-none"
             >
               {item.label}
             </Link>

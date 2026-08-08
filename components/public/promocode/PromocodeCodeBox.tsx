@@ -27,11 +27,11 @@ export function PromocodeCodeBox({
         }`}
       >
         <code
-          aria-label={`Promo code: ${promocode.code}`}
+          aria-label={`${t.promoCodeLabel || t.promoCode || "Promocode"}: ${promocode.code}`}
           className={`text-center font-mono text-xl font-bold break-all sm:text-2xl md:text-3xl ${
             isInactive
               ? "text-[color:var(--muted-foreground)] blur-[1px]"
-              : "text-[color:var(--primary)]"
+              : "text-[color:var(--foreground)]"
           }`}
         >
           {promocode.code}

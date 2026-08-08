@@ -27,7 +27,6 @@ type Props = {
   type: "code" | "link" | null;
   code: string | null;
   link: string | null;
-  detailsHref: string;
   translations: Translations;
   stats?: {
     views: number;
@@ -103,17 +102,17 @@ export function GrouponCardActions({
     >
       {type === "link" ? (
         <>
-          <Star size={16} className="mr-1.5" />
+          <Star size={16} className="mr-1.5" aria-hidden="true" />
           {translations.getDeal}
         </>
       ) : copied ? (
         <>
-          <Copy size={16} className="mr-1.5" />
+          <Copy size={16} className="mr-1.5" aria-hidden="true" />
           {translations.copied}
         </>
       ) : (
         <>
-          <Copy size={16} className="mr-1.5" />
+          <Copy size={16} className="mr-1.5" aria-hidden="true" />
           {translations.copy}
         </>
       )}
