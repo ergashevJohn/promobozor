@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     // Try to extract promo code from description (e.g. "NDX5231 - some description...")
     let promoCode = "";
     let cleanDescription = description;
-    const codeMatch = description.match(/^([A-Z0-9]{3,15})\s*[---]\s*(.+)/i);
+    const codeMatch = description.match(/^([A-Z0-9]{3,15})\s*[-–—]\s*(.+)/i);
     if (codeMatch) {
       promoCode = codeMatch[1].toUpperCase();
       cleanDescription = codeMatch[2].trim();

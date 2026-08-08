@@ -22,7 +22,6 @@ export function MobileMenuToggle({ children }: Props) {
   );
   const pathname = usePathname();
   const menuId = useId();
-  const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -97,25 +96,12 @@ export function MobileMenuToggle({ children }: Props) {
               ref={panelRef}
               role="dialog"
               aria-modal="true"
-              aria-labelledby={titleId}
+              aria-label={tCommon("mobileNav")}
               className="border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-[70] flex max-h-[min(30rem,calc(100dvh-5.75rem))] flex-col overflow-hidden rounded-[28px] border shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)]"
               style={{
                 bottom: "max(0.75rem, env(safe-area-inset-bottom))",
               }}
             >
-              {/* <div className="border-border flex items-center justify-between gap-3 border-b px-5 py-4">
-                <p id={titleId} className="text-foreground text-sm font-semibold tracking-tight">
-                  {tCommon("mobileNav")}
-                </p>
-                <button
-                  type="button"
-                  onClick={closeMenu}
-                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-xl px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                >
-                  {tCommon("closeMenu")}
-                </button>
-              </div> */}
-
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
                 {children}
               </div>
