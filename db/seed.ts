@@ -40,7 +40,7 @@ async function seed() {
         .insert(users)
         .values({
           email: defaultAdminEmail,
-          // Placeholder — admin auth UI removed; kept for promocodes.createdById FK
+          // Placeholder - admin auth UI removed; kept for promocodes.createdById FK
           password: "unused-no-login",
           role: "admin",
         })

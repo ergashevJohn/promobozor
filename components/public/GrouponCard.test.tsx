@@ -184,10 +184,12 @@ describe("GrouponCard", () => {
     expect(screen.getByText("Activate the link")).toBeInTheDocument();
   });
 
-  it("renders separate details CTA", () => {
+  it("links title to details page", () => {
     render(<GrouponCard promocode={mockPromocode} translations={mockTranslations} />);
 
-    expect(screen.getByText("View Details")).toBeInTheDocument();
+    const detailLink = screen.getByRole("link", { name: /Test Promo/i });
+    expect(detailLink).toHaveAttribute("href", "/promocode/test-promo");
+    expect(screen.queryByText("View Details")).not.toBeInTheDocument();
   });
 
   it("handles copy action", async () => {
@@ -220,11 +222,11 @@ describe("GrouponCard", () => {
 
     // Title should not be an active detail link when inactive
     expect(screen.queryByLabelText(/^Details -/)).not.toBeInTheDocument();
-    expect(screen.getByText("View Details")).toBeInTheDocument();
+    expect(screen.queryByText("View Details")).not.toBeInTheDocument();
 
     const cardContainer = screen.getByRole("article");
-    expect(cardContainer).toHaveClass("opacity-60");
     expect(cardContainer).toHaveClass("grayscale");
+    expect(cardContainer).not.toHaveClass("opacity-60");
   });
 
   it("renders disabled status correctly", () => {
@@ -237,10 +239,10 @@ describe("GrouponCard", () => {
 
     expect(screen.getByText("Disabled")).toBeInTheDocument();
     expect(screen.queryByLabelText(/^Details -/)).not.toBeInTheDocument();
-    expect(screen.getByText("View Details")).toBeInTheDocument();
+    expect(screen.queryByText("View Details")).not.toBeInTheDocument();
 
     const cardContainer = screen.getByRole("article");
-    expect(cardContainer).toHaveClass("opacity-60");
     expect(cardContainer).toHaveClass("grayscale");
+    expect(cardContainer).not.toHaveClass("opacity-60");
   });
 });

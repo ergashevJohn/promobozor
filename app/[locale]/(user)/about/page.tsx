@@ -160,7 +160,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         {/* Stats */}
         <section className="mb-16">
           <div className="mb-8 text-center">
-            <div className="brand-kicker mb-4">{t("statsKicker")}</div>
             <h2 className="text-foreground text-2xl font-semibold">{t("statsTitle")}</h2>
           </div>
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
@@ -180,7 +179,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         {/* Why Us */}
         <section className="mb-16">
           <div className="mb-8 text-center">
-            <div className="brand-kicker mb-4">{t("whyUsKicker")}</div>
             <h2 className="text-foreground text-2xl font-semibold">{t("whyUsTitle")}</h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
@@ -310,7 +308,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
         {/* Contact */}
         <section className="page-hero-surface text-center">
-          <div className="brand-kicker mb-4">{t("contactKicker")}</div>
           <h2 className="text-foreground mb-4 text-2xl font-semibold">{t("contactTitle")}</h2>
           <p className="text-muted-foreground mb-6">{t("contactDescription")}</p>
           <div className="flex justify-center gap-4">

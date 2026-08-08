@@ -29,17 +29,17 @@ export function PromocodeStats() {
         <div className="flex gap-3">
           <Button
             variant="outline"
-            className="bg-card/95 h-11 flex-1 gap-2 rounded-full"
+            className="bg-card/95 h-11 flex-1 gap-2 rounded-xl"
             onClick={handleShare}
             aria-label={t.share}
           >
-            <ShareNetwork size={18} />
+            <ShareNetwork size={18} aria-hidden="true" />
             <span className="hidden sm:inline">{t.share}</span>
           </Button>
           <Button
             variant="outline"
             onClick={handleLike}
-            className={`bg-card/95 h-11 flex-1 gap-2 rounded-full ${
+            className={`bg-card/95 h-11 flex-1 gap-2 rounded-xl ${
               liked
                 ? "border-accent-red/50 bg-accent-red/10 text-accent-red hover:bg-accent-red/20"
                 : ""
@@ -47,20 +47,20 @@ export function PromocodeStats() {
             aria-label={`${tCard.like} (${promocode.likesCount})`}
             title={tCard.like}
           >
-            <ThumbsUp size={18} fill={liked ? "currentColor" : "none"} />
+            <ThumbsUp size={18} fill={liked ? "currentColor" : "none"} aria-hidden="true" />
             <span className="hidden sm:inline">{promocode.likesCount}</span>
             <span className="sm:hidden">{promocode.likesCount}</span>
           </Button>
           <Button
             variant="outline"
             onClick={handleDislike}
-            className={`bg-card/95 h-11 flex-1 gap-2 rounded-full ${
+            className={`bg-card/95 h-11 flex-1 gap-2 rounded-xl ${
               disliked ? "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20" : ""
             }`}
             aria-label={`${tCard.dislike} (${promocode.dislikesCount})`}
             title={tCard.dislike}
           >
-            <ThumbsDown size={18} fill={disliked ? "currentColor" : "none"} />
+            <ThumbsDown size={18} fill={disliked ? "currentColor" : "none"} aria-hidden="true" />
             <span className="hidden sm:inline">{promocode.dislikesCount}</span>
             <span className="sm:hidden">{promocode.dislikesCount}</span>
           </Button>

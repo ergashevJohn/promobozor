@@ -64,7 +64,7 @@ describe("persistent rate limit (Postgres)", () => {
 
     expect((await checkRateLimit(request, analytics)).success).toBe(true);
     expect((await checkRateLimit(request, analytics)).success).toBe(false);
-    // Same IP, different bucket — still has its own budget
+    // Same IP, different bucket - still has its own budget
     expect((await checkRateLimit(request, og)).success).toBe(true);
     expect((await checkRateLimit(request, og)).success).toBe(false);
   });

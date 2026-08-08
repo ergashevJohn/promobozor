@@ -30,7 +30,6 @@ export default function GrouponCard({
           type={promocode.type || "code"}
           code={promocode.code}
           link={promocode.link ?? null}
-          detailsHref={detailHref}
           translations={t}
           disabled={isInactive}
         />

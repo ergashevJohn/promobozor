@@ -35,7 +35,7 @@ export function validateProductionEnv(): void {
     warnings.push("NEXT_PUBLIC_BASE_URL should use https:// for production");
   }
 
-  // Cache revalidation secret — endpoint fails closed without it, but ops should set one
+  // Cache revalidation secret - endpoint fails closed without it, but ops should set one
   const revalidateSecret = process.env.REVALIDATE_SECRET || process.env.CRON_SECRET;
   if (!revalidateSecret || revalidateSecret.length < 32) {
     warnings.push(

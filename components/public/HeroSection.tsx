@@ -1,5 +1,5 @@
 import SearchBar from "@/components/public/SearchBar";
-import { Link } from "@/i18n/navigation";
+import { ArrowsClockwise, CheckCircle, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HeroSectionProps {
@@ -9,6 +9,8 @@ interface HeroSectionProps {
   searchBarTargetPath?: string;
 }
 
+const TRUST_ICONS = [CheckCircle, ArrowsClockwise, MagnifyingGlass] as const;
+
 export default async function HeroSection({
   locale,
   searchParams,
@@ -17,99 +19,73 @@ export default async function HeroSection({
 }: HeroSectionProps) {
   const t = await getTranslations({ locale, namespace: "home" });
   const trustPills = (await t.raw("trustPills")) as string[];
-  const insightTags = (await t.raw("heroInsight.tags")) as string[];
-  const quickLinks = (await t.raw("overhaul.heroQuickLinks")) as Array<{
-    label: string;
-    href: string;
-  }>;
 
   return (
-    <section className="brand-hero relative overflow-hidden">
-      <div className="page-shell py-10 md:py-16 lg:py-20">
-        <div className="brand-hero-panel mx-auto max-w-6xl">
-          <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="relative p-6 text-left sm:p-8 md:p-12">
-              <div className="mb-5 flex flex-wrap items-center gap-3">
-                <div className="brand-kicker" translate="no">
-                  PromoBozor
-                </div>
-                <span className="text-xs font-semibold tracking-[0.12em] text-[color:var(--accent-red)] uppercase">
-                  {t("heroInsight.label")}
-                </span>
-              </div>
+    <section
+      className="brand-hero relative -mt-[4.75rem] overflow-hidden pt-[4.75rem]"
+      aria-labelledby="home-hero-heading"
+    >
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute top-[-20%] left-1/2 h-[28rem] w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(232,78,66,0.14),transparent_68%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(232,78,66,0.18),transparent_68%)]" />
+        <div className="absolute bottom-[-30%] left-1/2 h-[22rem] w-[36rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(15,20,25,0.06),transparent_70%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(248,250,252,0.05),transparent_70%)]" />
+      </div>
 
-              <h1 className="mb-4 max-w-[18ch] text-4xl font-semibold tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-[4rem] lg:leading-[1.05]">
-                {t("title")}
-              </h1>
-              <p className="text-muted-foreground mb-8 max-w-[42ch] text-base leading-7 text-pretty sm:text-lg md:text-xl md:leading-8">
-                {t("subtitle")}
-              </p>
+      <div className="page-shell relative pt-14 pb-12 md:pt-20 md:pb-16 lg:pt-24 lg:pb-20">
+        <div className="hero-copy mx-auto flex max-w-3xl flex-col items-center text-center">
+          <p
+            className="text-[clamp(2.75rem,8vw,5.25rem)] leading-[0.92] font-semibold tracking-[-0.05em]"
+            translate="no"
+          >
+            Promo
+            <span className="text-[color:var(--accent-red)]">Bozor</span>
+          </p>
 
-              <div className="max-w-xl">
-                <SearchBar
-                  currentParams={searchParams}
-                  navigationMode={searchBarNavigationMode}
-                  targetPath={searchBarTargetPath}
-                />
-              </div>
+          <span
+            className="mt-5 h-1 w-12 rounded-full bg-[color:var(--accent-red)]"
+            aria-hidden="true"
+          />
 
-              <div className="mt-6 flex flex-wrap gap-2">
-                {quickLinks.slice(0, 4).map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="border-border text-muted-foreground hover:text-foreground bg-card/80 inline-flex min-h-11 items-center rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:border-[color:var(--accent-red)]/40"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+          <h1
+            id="home-hero-heading"
+            className="text-foreground mt-6 max-w-[22ch] text-2xl leading-[1.18] font-semibold tracking-tight text-balance sm:text-3xl md:text-[2.35rem] md:leading-[1.15]"
+          >
+            {t("title")}
+          </h1>
 
-            <aside className="brand-hero-aside relative flex flex-col justify-between gap-6 p-6 sm:p-8 lg:p-10">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] sm:p-6">
-                <div className="mb-2 text-xs font-semibold tracking-[0.16em] text-white/55 uppercase">
-                  {t("heroInsight.label")}
-                </div>
-                <div className="text-xl font-semibold text-balance sm:text-2xl">
-                  {t("heroInsight.title")}
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {insightTags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-white/10 px-2.5 py-1 text-xs text-white/75"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
+          <p className="text-muted-foreground mt-4 max-w-[46ch] text-base leading-7 text-pretty sm:text-lg">
+            {t("subtitle")}
+          </p>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                <div className="border-t border-white/15 pt-5">
-                  <div className="text-sm text-white/60">{t("heroCards.focus.label")}</div>
-                  <div className="mt-1 text-lg font-semibold">{t("heroCards.focus.title")}</div>
-                </div>
-                <div className="border-t border-white/15 pt-5">
-                  <div className="text-sm text-white/60">{t("heroCards.cta.label")}</div>
-                  <div className="mt-1 text-lg font-semibold">{t("heroCards.cta.title")}</div>
-                </div>
-              </div>
-            </aside>
+          <div className="mt-8 w-full max-w-xl md:mt-10">
+            <SearchBar
+              currentParams={searchParams}
+              navigationMode={searchBarNavigationMode}
+              targetPath={searchBarTargetPath}
+            />
           </div>
-        </div>
 
-        <div className="mx-auto mt-8 flex max-w-6xl flex-wrap items-center gap-2 lg:mt-10">
-          {trustPills.map((pill) => (
-            <div key={pill} className="brand-chip">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent-red)]"
-                aria-hidden="true"
-              />
-              {pill}
-            </div>
-          ))}
+          <ul className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-0 sm:gap-y-2">
+            {trustPills.map((pill, index) => {
+              const Icon = TRUST_ICONS[index % TRUST_ICONS.length];
+              return (
+                <li key={pill} className="inline-flex items-center">
+                  {index > 0 && (
+                    <span className="text-border mx-3 hidden sm:inline" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
+                  <span className="text-muted-foreground inline-flex items-center gap-2 text-sm">
+                    <Icon
+                      className="size-4 shrink-0 text-[color:var(--accent-red)]"
+                      weight="bold"
+                      aria-hidden="true"
+                    />
+                    {pill}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </section>

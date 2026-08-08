@@ -128,7 +128,7 @@ export default function StructuredData({
       offers: {
         "@type": "Offer",
         "@id": `${pageUrl}#offer`,
-        name: `${translation?.title || "Promocode"} — ${discountText}`,
+        name: `${translation?.title || "Promocode"} - ${discountText}`,
         description:
           translation?.conditions ||
           `Promocode for ${storeTranslation?.name || "Store"}: ${discountText}`,

@@ -115,7 +115,7 @@ export default async function sitemap({
     },
   });
 
-  // Dynamic pages — fetch all entity translations in parallel
+  // Dynamic pages - fetch all entity translations in parallel
   try {
     const [
       allStoreTranslations,

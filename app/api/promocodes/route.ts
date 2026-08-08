@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const searchQuery = searchParams.get("search");
 
-    // Apply rate limiting — stricter for search, baseline for list
+    // Apply rate limiting - stricter for search, baseline for list
     const rateLimitResult = await checkRateLimit(
       request,
       searchQuery ? RateLimits.search : RateLimits.api

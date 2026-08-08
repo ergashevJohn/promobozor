@@ -5,12 +5,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-[3px] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none focus-visible:ring-[3px] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          "bg-[color:var(--accent-red)] text-[color:var(--accent-foreground-red)] shadow-[0_14px_34px_-18px_rgba(232,78,66,0.75)] hover:bg-[color:var(--accent-red)]/90",
+          "bg-[color:var(--accent-red)] text-[color:var(--accent-foreground-red)] shadow-[0_12px_28px_-16px_rgba(232,78,66,0.55)] hover:bg-[color:var(--accent-red)]/90",
         destructive:
           "bg-destructive hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 text-white",
         outline:
@@ -20,12 +20,12 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-11 min-h-11 px-5 py-2 has-[>svg]:px-4",
-        sm: "h-10 min-h-10 gap-1.5 px-3.5 has-[>svg]:px-3",
-        lg: "h-12 min-h-12 px-7 has-[>svg]:px-5",
+        default: "h-11 min-h-11 px-4 py-2 has-[>svg]:px-3.5",
+        sm: "h-10 min-h-10 gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-11 min-h-11 gap-1.5 px-5 has-[>svg]:px-4",
         icon: "size-11 min-h-11 min-w-11",
         "icon-sm": "size-10 min-h-10 min-w-10",
-        "icon-lg": "size-12 min-h-12 min-w-12",
+        "icon-lg": "size-11 min-h-11 min-w-11",
       },
     },
     defaultVariants: {

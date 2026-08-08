@@ -245,12 +245,6 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                         </div>
                       )}
                     </div>
-
-                    {index < 3 && (
-                      <div className="inline-flex rounded-full bg-[color:var(--accent)] px-3 py-1 text-xs font-semibold text-[color:var(--accent-red)]">
-                        {t("featuredLabel")}
-                      </div>
-                    )}
                   </div>
 
                   <h2 className="text-foreground text-2xl font-semibold">{categoryName}</h2>
@@ -273,7 +267,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
                     <div className="text-foreground text-2xl font-semibold">{promocodesCount}</div>
                   </div>
 
-                  <div className="bg-background text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-full border border-[color:var(--border)] px-5 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
+                  <div className="text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
                     <span>
                       {t("viewOffers")} {categoryName}
                     </span>

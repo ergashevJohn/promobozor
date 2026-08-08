@@ -165,6 +165,12 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
           noStoresDescription: t("noStoresDescription"),
           searchHint: t("searchHint"),
           storeTitle: t("title"),
+          directoryKicker: t("directoryKicker"),
+          directoryBadge: t("directoryBadge"),
+          curatedRoutesCount: t("curatedRoutesCount", {
+            count: storesData.filter((row) => row.translation?.slug).length,
+          }),
+          viewStorePromocodesAria: t.raw("viewStorePromocodesAria") as string,
         }}
       />
     </>

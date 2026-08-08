@@ -22,11 +22,11 @@ export async function Header() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <div className="page-shell pointer-events-auto">
         <div className="border-border bg-card/90 flex items-center justify-between gap-2 rounded-full border px-3 py-2 shadow-[0_18px_50px_-28px_rgba(17,24,39,0.4)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-2.5">
-          <Link href="/" className="flex min-w-0 items-center" translate="no">
+          <Link href="/" className="flex min-h-11 min-w-0 items-center py-1" translate="no">
             <span className="relative h-8 w-28 overflow-hidden sm:h-10 sm:w-36">
               <Image
                 src="/promobozor-logo.png"
-                alt="PromoBozor — chegirmalar va promokodlar"
+                alt="PromoBozor - chegirmalar va promokodlar"
                 fill
                 sizes="(max-width: 768px) 112px, 144px"
                 className="object-cover"
@@ -35,13 +35,13 @@ export async function Header() {
             </span>
           </Link>
 
-          <DesktopNavLinks links={navLinks} label={t("promocodes")} />
+          <DesktopNavLinks links={navLinks} label={t("mainNav")} />
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-2">
             <LanguageSwitcher />
             <ThemeToggle />
             <MobileMenuToggle>
-              <MobileNavLinks links={navLinks} />
+              <MobileNavLinks links={navLinks} label={t("mobileNav")} />
             </MobileMenuToggle>
           </div>
         </div>

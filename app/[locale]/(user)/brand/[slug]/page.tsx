@@ -151,9 +151,6 @@ export default async function BrandPage({
   // Fetch brand by slug
   let allPromocodes: Promocode[] = [];
   let totalPromocodesCount = 0;
-  let featuredPromocodesCount = 0;
-  let totalViews = 0;
-  let totalCopies = 0;
   let brand: {
     id: string;
     imageUrl: string | null;
@@ -194,11 +191,6 @@ export default async function BrandPage({
     const statsQuery = db
       .select({
         total: sql<number>`COUNT(*)::int`.as("total"),
-        featured: sql<number>`COUNT(*) FILTER (WHERE ${promocodes.isFeatured} = true)::int`.as(
-          "featured"
-        ),
-        totalViews: sql<number>`COALESCE(SUM(${promocodes.viewsCount}), 0)::int`.as("total_views"),
-        totalCopies: sql<number>`COALESCE(SUM(${promocodes.copyCount}), 0)::int`.as("total_copies"),
       })
       .from(promocodes)
       .leftJoin(stores, eq(promocodes.storeId, stores.id))
@@ -246,9 +238,6 @@ export default async function BrandPage({
 
     const stats = statsResult[0];
     totalPromocodesCount = stats?.total || 0;
-    featuredPromocodesCount = stats?.featured || 0;
-    totalViews = stats?.totalViews || 0;
-    totalCopies = stats?.totalCopies || 0;
 
     const brandFallback = {
       id: brand.id,
@@ -301,9 +290,6 @@ export default async function BrandPage({
   const schemaPromocodes = allPromocodes.slice(0, 20);
   const uniqueStoreCount = new Set(allPromocodes.map((item) => item.store?.id).filter(Boolean))
     .size;
-  const uniqueCategoryCount = new Set(
-    allPromocodes.map((item) => item.category?.id).filter(Boolean)
-  ).size;
   const relatedStores = Array.from(
     new Map(
       allPromocodes
@@ -388,117 +374,62 @@ export default async function BrandPage({
         <div className="page-shell py-6">
           <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
-        {/* Hero Section */}
+        {/* Hero Section - logo-forward */}
         <div className="page-shell pb-10">
           <div className="page-hero-surface">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,1.05fr)]">
-              <div className="surface-card p-6">
-                <div className="mb-5 flex items-center gap-4">
-                  {brandImageUrl ? (
-                    <div className="bg-card border-border relative flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
-                      <Image
-                        src={brandImageUrl}
-                        width={80}
-                        height={80}
-                        alt={
-                          brandTranslation?.name
-                            ? `${brandTranslation.name} - ${tCommon("altBrandLogo")}`
-                            : tCommon("altBrandLogoWithSlug", { slug })
-                        }
-                        className="h-full w-full object-cover"
-                        sizes="80px"
-                        priority
-                      />
-                    </div>
-                  ) : (
-                    <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-[color:var(--accent-red)] md:size-20">
-                      <Buildings className="h-8 w-8 md:h-9 md:w-9" aria-hidden="true" />
-                    </div>
-                  )}
-                  <div className="brand-kicker !mb-0">{t("heroKicker")}</div>
+            <div className="flex flex-col items-start gap-8 md:flex-row md:items-center">
+              {brandImageUrl ? (
+                <div className="bg-card border-border relative size-28 shrink-0 overflow-hidden rounded-2xl border md:size-36">
+                  <Image
+                    src={brandImageUrl}
+                    alt={
+                      brandTranslation?.name
+                        ? `${brandTranslation.name} - ${tCommon("altBrandLogo")}`
+                        : tCommon("altBrandLogoWithSlug", { slug })
+                    }
+                    fill
+                    className="object-contain p-3"
+                    sizes="144px"
+                    priority
+                  />
                 </div>
-                <h1 className="text-foreground mb-3 text-3xl font-semibold md:text-5xl">
+              ) : (
+                <div className="bg-muted border-border flex size-28 shrink-0 items-center justify-center rounded-2xl border text-[color:var(--accent-red)] md:size-36">
+                  <Buildings className="h-12 w-12" aria-hidden="true" />
+                </div>
+              )}
+
+              <div className="min-w-0 flex-1">
+                <div className="brand-kicker mb-4">{t("heroKicker")}</div>
+                <h1 className="text-foreground mb-3 text-3xl font-semibold tracking-tight md:text-5xl">
                   {t("h1Title", { name: brandTranslation?.name || brandTitle })}
                 </h1>
                 {brandTranslation?.description && (
                   <BrandDescription description={brandTranslation.description} />
                 )}
-                {brand.websiteUrl && (
-                  <a
-                    href={brand.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow sponsored"
-                    className="bg-card mt-6 inline-flex min-h-11 items-center gap-2 rounded-full border border-[color:var(--border)] px-5 py-3 text-sm font-semibold text-[color:var(--foreground)] transition-transform hover:-translate-y-0.5"
-                  >
-                    {t("officialWebsite")}
-                  </a>
-                )}
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="surface-card border-[color:var(--accent-red)]/20 bg-[color:var(--accent)]/35 p-5 sm:col-span-2">
-                  <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                    {t("coverageLabel")}
-                  </div>
-                  <div className="mt-3 grid gap-4 sm:grid-cols-3">
-                    <div>
-                      <div className="text-3xl font-semibold text-[color:var(--foreground)]">
-                        {totalPromocodesCount}
-                      </div>
-                      <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                        {t("activePromocodes")}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-3xl font-semibold text-[color:var(--foreground)]">
-                        {uniqueStoreCount}
-                      </div>
-                      <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                        {t("storePlacementsLabel")}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-3xl font-semibold text-[color:var(--foreground)]">
-                        {uniqueCategoryCount}
-                      </div>
-                      <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                        {t("categoryContextsLabel")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="surface-stat">
-                  <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                    {tCommon("featured")}
-                  </div>
-                  <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                    {featuredPromocodesCount}
-                  </div>
-                </div>
-                <div className="surface-stat">
-                  <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                    {t("views")}
-                  </div>
-                  <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                    {totalViews}
-                  </div>
-                </div>
-                <div className="surface-stat">
-                  <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                    {t("uses")}
-                  </div>
-                  <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                    {totalCopies}
-                  </div>
-                </div>
-                <div className="surface-stat sm:col-span-2">
-                  <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                    {t("editorialLensTitle")}
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                    {t("editorialLensDescription")}
-                  </p>
+                <div className="mt-6 flex flex-wrap items-center gap-4">
+                  <span className="text-muted-foreground text-sm">
+                    <strong className="text-foreground text-lg font-semibold">
+                      {totalPromocodesCount}
+                    </strong>{" "}
+                    {t("activePromocodes")}
+                  </span>
+                  <span className="text-muted-foreground text-sm">
+                    <strong className="text-foreground text-lg font-semibold">
+                      {uniqueStoreCount}
+                    </strong>{" "}
+                    {t("storePlacementsLabel")}
+                  </span>
+                  {brand.websiteUrl && (
+                    <a
+                      href={brand.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow sponsored"
+                      className="bg-card inline-flex min-h-11 items-center gap-2 rounded-xl border border-[color:var(--border)] px-5 py-3 text-sm font-semibold text-[color:var(--foreground)]"
+                    >
+                      {t("officialWebsite")}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -508,7 +439,6 @@ export default async function BrandPage({
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
             <div className="surface-card p-5">
-              <div className="brand-kicker mb-3">{t("relatedStoresKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedStoresDescription")}
               </p>
@@ -531,7 +461,6 @@ export default async function BrandPage({
               </div>
             </div>
             <div className="surface-card p-5">
-              <div className="brand-kicker mb-3">{t("relatedCategoriesKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedCategoriesDescription")}
               </p>
@@ -558,7 +487,6 @@ export default async function BrandPage({
           {/* All Promocodes */}
           <section>
             <div className="mb-8">
-              <div className="brand-kicker mb-3">{t("offersKicker")}</div>
               <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
               <p className="text-muted-foreground mt-2">
                 {t("allPromocodesDescription", {

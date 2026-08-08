@@ -1,5 +1,3 @@
-import { Link } from "@/i18n/navigation";
-import { Eye, Star } from "@phosphor-icons/react/dist/ssr";
 import { PromocodeCardVisual } from "./PromocodeCardVisual";
 import { getCardInactiveState, type PromocodeCardTranslations } from "./promocode-card-helpers";
 import type { Promocode } from "./types";
@@ -26,7 +24,7 @@ export default function GrouponCardServer({
       translations={t}
       detailHref={promocodeLink}
       actions={
-        <div data-card-actions className="flex flex-col gap-2">
+        <div data-card-actions>
           <button
             type="button"
             data-action={promocode.type === "link" ? "open-link" : "copy-code"}
@@ -43,37 +41,11 @@ export default function GrouponCardServer({
             aria-label={promocode.type === "link" ? t.getDeal : t.copy}
           >
             {promocode.type === "link" ? (
-              <>
-                <Star size={16} aria-hidden="true" />
-                {t.getDeal}
-              </>
+              <span data-button-text>{t.getDeal}</span>
             ) : (
-              <>
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-                <span data-button-text>{t.copy}</span>
-              </>
+              <span data-button-text>{t.copy}</span>
             )}
           </button>
-          <Link
-            href={promocodeLink}
-            className="bg-card/95 inline-flex h-10 min-h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-[color:var(--border)] px-4 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
-          >
-            <Eye size={16} aria-hidden="true" />
-            {t.viewDetails}
-          </Link>
         </div>
       }
     />
