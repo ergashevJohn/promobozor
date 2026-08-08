@@ -29,7 +29,6 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
     <section className="section-rhythm border-border border-b">
       <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl text-left">
-          <div className="brand-kicker mb-3">{t("eyebrow")}</div>
           <h2 className="brand-section-heading text-left">{t("title")}</h2>
           <p className="text-muted-foreground mt-3 max-w-[55ch] text-base leading-7 md:text-lg">
             {t("description")}
@@ -55,10 +54,8 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
               className="group metric-card transition-colors hover:border-[color:var(--accent-red)]/30"
             >
               <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="text-[10px] font-semibold tracking-[0.16em] text-[color:var(--accent-red)] uppercase">
-                  {item.kicker}
-                </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[color:var(--accent-red)]">
+                <div className="text-muted-foreground text-sm font-medium">{item.kicker}</div>
+                <div className="text-muted-foreground flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--secondary)]">
                   <Icon size={20} weight="light" aria-hidden="true" />
                 </div>
               </div>

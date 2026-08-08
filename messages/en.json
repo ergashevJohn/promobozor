@@ -75,7 +75,7 @@
     "email": "Email"
   },
   "LocaleLayout": {
-    "title": "PromoBozor — Deals and promo code marketplace",
+    "title": "PromoBozor - Deals and promo code marketplace",
     "description": "PromoBozor helps you find useful discounts, promo codes, and coupons in one place. Explore trusted offers for online stores and services and save more."
   },
   "header": {
@@ -367,22 +367,22 @@
           },
           {
             "label": "Saved by our clients",
-            "value": "9.4K"
+            "value": "Fresh"
           },
           {
             "label": "Code success rate",
-            "value": "94.7%"
+            "value": "Verified"
           },
           {
             "label": "Monthly visits",
-            "value": "2,840+"
+            "value": "Daily"
           }
         ]
       },
       "trust": {
         "title": "Trust and Safety",
         "content": "All promo codes are manually checked and verified. We only publish verified and actually working codes. If you find that a code doesn't work, let us know and we will update or remove it within 24 hours. Your savings are our top priority.",
-        "successRate": "94.7% Success Rate",
+        "successRate": "High verification pass rate",
         "verifiedDaily": "Verified Daily",
         "monthlyUsers": "3,000+ Monthly Users"
       }
@@ -765,7 +765,7 @@
     "selectOption": "Select an option"
   },
   "meta": {
-    "defaultTitle": "PromoBozor — Deals and promo code marketplace",
+    "defaultTitle": "PromoBozor - Deals and promo code marketplace",
     "defaultDescription": "PromoBozor helps you find useful discounts, promo codes, and coupons in one place. Explore trusted offers for online stores and services and save more.",
     "keywords": "promocode, discount, offers, coupons, uzbekistan, yandex, uzum"
   },
@@ -792,7 +792,7 @@
     "questions": [
       {
         "question": "How do I use a promocode?",
-        "answer": "Using a promocode is simple and involves 3 easy steps. First, find the promocode you need on our site and click the 'Copy' button. The code will be automatically copied to your clipboard. Then, navigate to the store or service website — for example, Yandex Eats, Uzum, Click, or Payme. Once you've filled your shopping cart and proceed to checkout, you'll find a designated field labeled 'promocode', 'coupon', 'promo code', 'kupon', or 'code' on the payment page. Paste the code you copied from us into this field and click the 'Apply' button. If the code is valid and active, the discount will be automatically calculated and reflected in your total. Note: some stores may apply promocodes only to specific product categories or require a minimum purchase amount. You can find the terms and conditions for each promocode on our site. According to our verification, 94.7% of promocodes worked successfully in 2024."
+        "answer": "Using a promocode is simple and involves 3 easy steps. First, find the promocode you need on our site and click the 'Copy' button. The code will be automatically copied to your clipboard. Then, navigate to the store or service website - for example, Yandex Eats, Uzum, Click, or Payme. Once you've filled your shopping cart and proceed to checkout, you'll find a designated field labeled 'promocode', 'coupon', 'promo code', 'kupon', or 'code' on the payment page. Paste the code you copied from us into this field and click the 'Apply' button. If the code is valid and active, the discount will be automatically calculated and reflected in your total. Note: some stores may apply promocodes only to specific product categories or require a minimum purchase amount. You can find the terms and conditions for each promocode on our site. According to our verification, most verified promocodes worked successfully in 2024."
       },
       {
         "question": "How long are promocodes valid?",
@@ -804,11 +804,11 @@
       },
       {
         "question": "What should I do if a promocode doesn't work?",
-        "answer": "If a promocode doesn't work, first check its expiration date. Expired codes won't work. If the date hasn't passed, ensure you've entered the code correctly — some are case-sensitive. Also, read the promocode terms — there may be restrictions like minimum purchase amount, specific categories, or new customers only. If everything seems correct but the code still doesn't work, we recommend contacting the store's customer service. Also, please notify us — we'll verify and update or remove the promocode if needed. We rely on our users to help maintain promocode quality and resolve issues within 24 hours. You can reach us through our Telegram channel or the 'Report' button on the page."
+        "answer": "If a promocode doesn't work, first check its expiration date. Expired codes won't work. If the date hasn't passed, ensure you've entered the code correctly - some are case-sensitive. Also, read the promocode terms - there may be restrictions like minimum purchase amount, specific categories, or new customers only. If everything seems correct but the code still doesn't work, we recommend contacting the store's customer service. Also, please notify us - we'll verify and update or remove the promocode if needed. We rely on our users to help maintain promocode quality and resolve issues within 24 hours. You can reach us through our Telegram channel or the 'Report' button on the page."
       },
       {
         "question": "How often are new promocodes added?",
-        "answer": "We add new promocodes every day and regularly update existing ones. Our team monitors daily the latest offers from the most popular stores and services in Uzbekistan. Yandex Eats, Uzum, Click, Payme, and other platforms announce new discounts and promotions daily, and we add them to our site immediately. Before special events and holidays — such as Navruz, Independence Day, or New Year — the number of promocodes increases significantly. To stay informed about the latest offers, check our site regularly or subscribe to our Telegram channel. We also create dedicated pages for popular stores where all current promocodes are collected."
+        "answer": "We add new promocodes every day and regularly update existing ones. Our team monitors daily the latest offers from the most popular stores and services in Uzbekistan. Yandex Eats, Uzum, Click, Payme, and other platforms announce new discounts and promotions daily, and we add them to our site immediately. Before special events and holidays - such as Navruz, Independence Day, or New Year - the number of promocodes increases significantly. To stay informed about the latest offers, check our site regularly or subscribe to our Telegram channel. We also create dedicated pages for popular stores where all current promocodes are collected."
       }
     ],
     "heroKicker": "FAQ"

@@ -2,7 +2,7 @@ import { FAQSchema } from "@/components/public/FAQSchema";
 import { Button } from "@/components/ui/button";
 import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, Question } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HomeFAQSectionProps {
@@ -19,10 +19,6 @@ export async function HomeFAQSection({ locale }: HomeFAQSectionProps) {
 
       <section className="section-rhythm">
         <div className="mb-10 max-w-2xl text-left">
-          <div className="brand-kicker mb-4">
-            <Question size={14} weight="light" aria-hidden="true" />
-            <span>{t("eyebrow")}</span>
-          </div>
           <h2 className="brand-section-heading text-left">{t("title")}</h2>
           <p className="text-muted-foreground mt-4 max-w-[55ch] text-base leading-7 md:text-lg">
             {t("description")}

@@ -19,7 +19,6 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
-import { getApprovedImageUrl } from "@/lib/media";
 import {
   generateCategoryDescription,
   generateCategoryTitle,
@@ -36,11 +35,10 @@ import {
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
-import { MagnifyingGlass, Package } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 export async function generateStaticParams() {
   // Skip static generation for categories - render dynamically
@@ -149,9 +147,6 @@ export default async function CategoryPage({
   // Fetch category by slug
   let allPromocodes: Promocode[] = [];
   let totalPromocodesCount = 0;
-  let featuredPromocodesCount = 0;
-  let totalViews = 0;
-  let totalCopies = 0;
   let category;
   let categoryTranslation;
 
@@ -178,11 +173,6 @@ export default async function CategoryPage({
     const statsQuery = db
       .select({
         total: sql<number>`COUNT(*)::int`.as("total"),
-        featured: sql<number>`COUNT(*) FILTER (WHERE ${promocodes.isFeatured} = true)::int`.as(
-          "featured"
-        ),
-        totalViews: sql<number>`COALESCE(SUM(${promocodes.viewsCount}), 0)::int`.as("total_views"),
-        totalCopies: sql<number>`COALESCE(SUM(${promocodes.copyCount}), 0)::int`.as("total_copies"),
       })
       .from(promocodes)
       .leftJoin(stores, eq(promocodes.storeId, stores.id))
@@ -230,9 +220,6 @@ export default async function CategoryPage({
 
     const stats = statsResult[0];
     totalPromocodesCount = stats?.total || 0;
-    featuredPromocodesCount = stats?.featured || 0;
-    totalViews = stats?.totalViews || 0;
-    totalCopies = stats?.totalCopies || 0;
 
     allPromocodes = (allData as PromocodeListRow[]).map((row) =>
       mapPromocodeListRow(row, {
@@ -301,8 +288,6 @@ export default async function CategoryPage({
   ];
 
   const baseUrl = getBaseUrl();
-  const categoryImageUrl = getApprovedImageUrl(category.imageUrl);
-
   return (
     <>
       <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
@@ -341,104 +326,30 @@ export default async function CategoryPage({
         {/* Hero Section */}
         <div className="page-shell pb-10">
           <div className="page-hero-surface">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]">
-              <div>
-                <div className="mb-6 flex items-center gap-4">
-                  {categoryImageUrl ? (
-                    <div className="bg-card border-border relative flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
-                      <Image
-                        src={categoryImageUrl}
-                        alt={
-                          categoryTranslation?.name
-                            ? `${categoryTranslation.name} - ${tCommon("altCategoryImage")}`
-                            : tCommon("altCategoryImageWithSlug", { slug })
-                        }
-                        fill
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="bg-card flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] md:size-20">
-                      <Package
-                        className="text-muted-foreground h-8 w-8 md:h-9 md:w-9"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  )}
-                  <div className="brand-kicker !mb-0">{t("heroKicker")}</div>
+            <div className="max-w-3xl">
+              <div className="brand-kicker mb-4">{t("heroKicker")}</div>
+              <h1 className="text-foreground mb-3 text-4xl font-semibold tracking-tight md:text-5xl">
+                {t("h1Title", { name: categoryTranslation?.name || categoryTitle })}
+              </h1>
+              {categoryTranslation?.metaDescription && (
+                <p className="text-muted-foreground max-w-[65ch] text-lg leading-8">
+                  {categoryTranslation.metaDescription}
+                </p>
+              )}
+              <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-[color:var(--border)] pt-6">
+                <div>
+                  <dt className="text-muted-foreground text-sm">{t("activePromocodes")}</dt>
+                  <dd className="mt-1 text-2xl font-semibold">{totalPromocodesCount}</dd>
                 </div>
-                <h1 className="text-foreground mb-2 text-4xl font-semibold md:text-5xl">
-                  {t("h1Title", { name: categoryTranslation?.name || categoryTitle })}
-                </h1>
-                {categoryTranslation?.metaDescription && (
-                  <p className="text-muted-foreground max-w-3xl text-lg">
-                    {categoryTranslation.metaDescription}
-                  </p>
-                )}
-                <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  <div className="surface-stat">
-                    <div className="text-3xl font-semibold text-[color:var(--foreground)]">
-                      {totalPromocodesCount}
-                    </div>
-                    <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {t("activePromocodes")}
-                    </div>
-                  </div>
-                  <div className="surface-stat">
-                    <div className="text-3xl font-semibold text-[color:var(--foreground)]">
-                      {uniqueStoreCount}
-                    </div>
-                    <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {t("storeRoutesLabel")}
-                    </div>
-                  </div>
-                  <div className="surface-stat">
-                    <div className="text-3xl font-semibold text-[color:var(--foreground)]">
-                      {uniqueBrandCount}
-                    </div>
-                    <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {t("brandContextsLabel")}
-                    </div>
-                  </div>
+                <div>
+                  <dt className="text-muted-foreground text-sm">{t("storeRoutesLabel")}</dt>
+                  <dd className="mt-1 text-2xl font-semibold">{uniqueStoreCount}</dd>
                 </div>
-              </div>
-
-              <div className="grid gap-4">
-                <div className="surface-card border-[color:var(--accent-red)]/25 bg-[color:var(--accent)]/45 p-5">
-                  <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                    {t("snapshotTitle")}
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">
-                    {t("snapshotDescription")}
-                  </p>
+                <div>
+                  <dt className="text-muted-foreground text-sm">{t("brandContextsLabel")}</dt>
+                  <dd className="mt-1 text-2xl font-semibold">{uniqueBrandCount}</dd>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="surface-stat">
-                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {tCommon("featured")}
-                    </div>
-                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                      {featuredPromocodesCount}
-                    </div>
-                  </div>
-                  <div className="surface-stat">
-                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {t("views")}
-                    </div>
-                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                      {totalViews}
-                    </div>
-                  </div>
-                  <div className="surface-stat sm:col-span-2">
-                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {t("uses")}
-                    </div>
-                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                      {totalCopies}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </dl>
             </div>
           </div>
         </div>
@@ -446,7 +357,6 @@ export default async function CategoryPage({
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
             <div className="surface-card p-5">
-              <div className="brand-kicker mb-3">{t("relatedStoresKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedStoresDescription")}
               </p>
@@ -469,7 +379,6 @@ export default async function CategoryPage({
               </div>
             </div>
             <div className="surface-card p-5">
-              <div className="brand-kicker mb-3">{t("relatedBrandsKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedBrandsDescription")}
               </p>
@@ -496,7 +405,6 @@ export default async function CategoryPage({
           {/* All Promocodes */}
           <section>
             <div className="mb-8">
-              <div className="brand-kicker mb-3">{t("offersKicker")}</div>
               <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
               <p className="text-muted-foreground mt-2">
                 {t("allPromocodesDescription", {

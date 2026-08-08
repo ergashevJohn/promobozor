@@ -1,7 +1,7 @@
 /**
  * Rate limiter for API routes.
  *
- * - Default: in-memory (per serverless instance) — fine for cheap GET lists
+ * - Default: in-memory (per serverless instance) - fine for cheap GET lists
  * - `persistent: true`: Postgres-backed counters shared across instances
  *   (contact, like/dislike/copy/view, csrf, analytics, og, dedup keys)
  * - Each config `name` is part of the storage key so routes keep separate budgets
@@ -204,16 +204,16 @@ export async function checkRateLimit(
  * Each entry has a distinct `name` so counters are not shared across routes.
  */
 export const RateLimits = {
-  // Login: 5 attempts per 15 minutes (memory — no login UI currently)
+  // Login: 5 attempts per 15 minutes (memory - no login UI currently)
   login: { name: "login", limit: 5, window: 15 * 60 * 1000 },
 
   // Cheap public GETs: per-instance is acceptable
   api: { name: "api", limit: 60, window: 60 * 1000 },
 
-  // Public actions (like, copy, dislike) — shared across instances
+  // Public actions (like, copy, dislike) - shared across instances
   publicAction: { name: "publicAction", limit: 10, window: 60 * 1000, persistent: true },
 
-  // Views — shared
+  // Views - shared
   publicView: { name: "publicView", limit: 30, window: 60 * 1000, persistent: true },
 
   // View dedup window per IP + promocode
@@ -225,7 +225,7 @@ export const RateLimits = {
   // Contact form
   contact: { name: "contact", limit: 3, window: 60 * 60 * 1000, persistent: true },
 
-  // Search — memory (read-only, already sanitized)
+  // Search - memory (read-only, already sanitized)
   search: { name: "search", limit: 20, window: 60 * 1000 },
 
   // CSRF token issuance
@@ -234,7 +234,7 @@ export const RateLimits = {
   // Analytics ingest
   analytics: { name: "analytics", limit: 60, window: 60 * 1000, persistent: true },
 
-  // Dynamic OG image generation (CPU-heavy) — shared + CDN cache on success
+  // Dynamic OG image generation (CPU-heavy) - shared + CDN cache on success
   og: { name: "og", limit: 60, window: 60 * 1000, persistent: true },
 
   // Admin API (unused currently)

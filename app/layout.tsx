@@ -57,7 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = localeMatch ? localeMatch[1] : "uz"; // Default to Uzbek
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body
         className={`${brandSans.variable} ${brandMono.variable} antialiased`}
         suppressHydrationWarning

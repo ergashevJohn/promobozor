@@ -484,7 +484,6 @@ export default async function StorePage({
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
             <div className="surface-card p-5">
-              <div className="brand-kicker mb-3">{t("relatedBrandsKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedBrandsDescription")}
               </p>
@@ -507,7 +506,6 @@ export default async function StorePage({
               </div>
             </div>
             <div className="surface-card p-5">
-              <div className="brand-kicker mb-3">{t("relatedCategoriesKicker")}</div>
               <p className="text-muted-foreground mb-4 text-sm leading-6">
                 {t("relatedCategoriesDescription")}
               </p>
@@ -534,7 +532,6 @@ export default async function StorePage({
           {/* All Promocodes */}
           <section>
             <div className="mb-8">
-              <div className="brand-kicker mb-3">{t("offersKicker")}</div>
               <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
               <p className="text-muted-foreground mt-2">
                 {t("allPromocodesDescription", {

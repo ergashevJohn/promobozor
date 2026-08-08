@@ -17,7 +17,7 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
     <section className="my-14">
       <div className="bg-card overflow-hidden rounded-[32px] border border-[color:var(--border)] shadow-[0_28px_72px_-52px_rgba(17,24,39,0.4)]">
         <div className="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-          {/* Intro — one dark plane, not a competing card wall */}
+          {/* Intro - one dark plane, not a competing card wall */}
           <div className="ink-surface relative overflow-hidden px-6 py-8 md:px-8 md:py-10 lg:px-10">
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(232,78,66,0.22),transparent_42%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.06),transparent_40%)]"
@@ -60,7 +60,7 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
             </div>
           </div>
 
-          {/* Steps — vertical list reads better than 3 cramped cards */}
+          {/* Steps - vertical list reads better than 3 cramped cards */}
           <ol className="divide-border bg-card flex flex-col divide-y">
             {items.map((item, index) => {
               const Icon = icons[index % icons.length];

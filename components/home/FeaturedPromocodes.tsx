@@ -105,7 +105,6 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
       <section className="my-12">
         <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="brand-kicker mb-3">{t("overhaul.featured.eyebrow")}</div>
             <h2 className="brand-section-heading">{t("featuredPromocodes")}</h2>
             <p className="text-muted-foreground mt-2 max-w-2xl text-base md:text-lg">
               {t("overhaul.featured.description")}
@@ -126,7 +125,7 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
           </p>
           <Link
             href="/promocodes"
-            className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
           >
             {tCommon("promocodes")}
           </Link>
@@ -139,7 +138,6 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
     <section className="section-rhythm border-border border-b">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="brand-kicker mb-3">{t("overhaul.featured.eyebrow")}</div>
           <h2 className="brand-section-heading text-left">{t("featuredPromocodes")}</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl text-base md:text-lg">
             {t("overhaul.featured.description")}

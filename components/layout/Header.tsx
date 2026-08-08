@@ -26,7 +26,7 @@ export async function Header() {
             <span className="relative h-8 w-28 overflow-hidden sm:h-10 sm:w-36">
               <Image
                 src="/promobozor-logo.png"
-                alt="PromoBozor — chegirmalar va promokodlar"
+                alt="PromoBozor - chegirmalar va promokodlar"
                 fill
                 sizes="(max-width: 768px) 112px, 144px"
                 className="object-cover"

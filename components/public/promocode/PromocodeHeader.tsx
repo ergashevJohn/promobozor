@@ -29,7 +29,7 @@ export function PromocodeHeader({
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="flex items-center gap-4">
-        <div className="bg-card flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[20px] border border-[color:var(--border)] shadow-[0_18px_48px_-40px_rgba(17,24,39,0.45)]">
+        <div className="bg-card flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[color:var(--border)]">
           {displayImage ? (
             <Image
               src={displayImage}
@@ -37,8 +37,8 @@ export function PromocodeHeader({
               width={64}
               height={64}
               priority
-              sizes="(max-width: 640px) 64px, 64px"
-              className="h-16 w-16 rounded-[18px] object-cover"
+              sizes="64px"
+              className="h-16 w-16 rounded-xl object-contain"
             />
           ) : (
             <span className="text-muted-foreground text-2xl font-bold">
@@ -47,32 +47,31 @@ export function PromocodeHeader({
           )}
         </div>
         <div>
-          <div className="brand-kicker mb-3">
-            <span>{displayName}</span>
-          </div>
           <h1 className="text-foreground text-xl font-bold sm:text-2xl md:text-3xl">
             {translation?.title || promocodeTitle}
           </h1>
-          {displaySlug && (
+          {displaySlug ? (
             <Link
               href={`/${displayType}/${displaySlug}`}
-              className="text-muted-foreground hover:text-primary text-sm transition-colors"
+              className="text-muted-foreground hover:text-primary mt-1 inline-block text-sm transition-colors"
             >
               {displayName}
             </Link>
+          ) : (
+            <p className="text-muted-foreground mt-1 text-sm">{displayName}</p>
           )}
         </div>
       </div>
       <div className="flex items-center gap-2">
         {promocode.isFeatured && !isInactive && (
-          <div className="flex items-center gap-1.5 rounded-full bg-[color:var(--accent)] px-3 py-1.5">
+          <div className="flex items-center gap-1.5 rounded-xl bg-[color:var(--accent)] px-3 py-1.5">
             <Star size={14} className="fill-accent-red text-accent-red" />
             <span className="text-accent-red text-xs font-semibold">{tCommon.featured}</span>
           </div>
         )}
         {isInactive && (
           <div
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold ${
               isExpired
                 ? "bg-[color:var(--accent)] text-[color:var(--accent-red)]"
                 : "bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"

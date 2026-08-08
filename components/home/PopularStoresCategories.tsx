@@ -161,11 +161,8 @@ export default async function PopularStoresCategories({ locale }: Props) {
     <div className="mb-16 space-y-16">
       {featuredStore && (
         <section className="grid gap-5 lg:grid-cols-[0.96fr_1.04fr] lg:items-stretch">
-          <div className="ink-surface rounded-[1.75rem] p-6 md:p-8">
-            <div className="brand-kicker border-white/10 bg-white/5 text-white">
-              {browse.stores.eyebrow}
-            </div>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+          <div className="ink-surface rounded-[1.25rem] p-6 md:p-8">
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               {t("popularStores")}
             </h2>
             <p className="mt-4 max-w-xl text-base leading-7 text-white/72 md:text-lg">
@@ -272,7 +269,6 @@ export default async function PopularStoresCategories({ locale }: Props) {
         <section>
           <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
-              <div className="brand-kicker mb-3">{browse.categories.eyebrow}</div>
               <h2 className="brand-section-heading text-left">{t("popularCategories")}</h2>
               <p className="text-muted-foreground mt-3 text-base leading-7 md:text-lg">
                 {browse.categories.description}
@@ -346,10 +342,7 @@ export default async function PopularStoresCategories({ locale }: Props) {
         <section className="rounded-[32px] border border-[color:var(--border)] bg-[linear-gradient(180deg,rgba(17,24,39,0.98),rgba(17,24,39,0.92))] p-6 text-white shadow-[0_30px_80px_-46px_rgba(17,24,39,0.72)] md:p-8">
           <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
-              <div className="brand-kicker border-white/10 bg-white/5 text-white">
-                {browse.brands.eyebrow}
-              </div>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
                 {t("popularBrands")}
               </h2>
               <p className="mt-3 text-base leading-7 text-white/72 md:text-lg">

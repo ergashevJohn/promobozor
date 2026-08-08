@@ -67,7 +67,7 @@ export default function GlobalError({
   ];
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="bg-background text-foreground antialiased">
         <div className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
           <div className="mx-auto max-w-2xl text-center">

@@ -29,7 +29,7 @@ export function PromocodeStats() {
         <div className="flex gap-3">
           <Button
             variant="outline"
-            className="bg-card/95 h-11 flex-1 gap-2 rounded-full"
+            className="bg-card/95 h-11 flex-1 gap-2 rounded-xl"
             onClick={handleShare}
             aria-label={t.share}
           >
@@ -39,7 +39,7 @@ export function PromocodeStats() {
           <Button
             variant="outline"
             onClick={handleLike}
-            className={`bg-card/95 h-11 flex-1 gap-2 rounded-full ${
+            className={`bg-card/95 h-11 flex-1 gap-2 rounded-xl ${
               liked
                 ? "border-accent-red/50 bg-accent-red/10 text-accent-red hover:bg-accent-red/20"
                 : ""
@@ -54,7 +54,7 @@ export function PromocodeStats() {
           <Button
             variant="outline"
             onClick={handleDislike}
-            className={`bg-card/95 h-11 flex-1 gap-2 rounded-full ${
+            className={`bg-card/95 h-11 flex-1 gap-2 rounded-xl ${
               disliked ? "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20" : ""
             }`}
             aria-label={`${tCard.dislike} (${promocode.dislikesCount})`}

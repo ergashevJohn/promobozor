@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
-import { Copy, Eye, Star } from "@phosphor-icons/react";
+import { Copy, Star } from "@phosphor-icons/react";
 import { useReducer } from "react";
 import { toast } from "sonner";
 
@@ -48,6 +47,10 @@ function reducer(state: State, action: Action): State {
       return { copied: true };
     case "RESET_COPIED":
       return { copied: false };
+    default: {
+      action satisfies never;
+      return state;
+    }
   }
 }
 
@@ -56,7 +59,6 @@ export function GrouponCardActions({
   type,
   code,
   link,
-  detailsHref,
   translations,
   disabled = false,
 }: Props) {
@@ -87,47 +89,34 @@ export function GrouponCardActions({
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Button
-        onClick={handleCopy}
-        className={`h-12 min-h-11 w-full rounded-xl transition-[color,background-color,opacity,transform] duration-200 ${
-          type === "link"
-            ? "ink-surface hover:opacity-90"
-            : "bg-[color:var(--accent-red)] text-[color:var(--accent-foreground-red)] hover:opacity-90"
-        } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
-        disabled={disabled || (copied && type === "code")}
-        aria-label={
-          type === "link" ? translations.getDeal : copied ? translations.copied : translations.copy
-        }
-      >
-        {type === "link" ? (
-          <>
-            <Star size={16} className="mr-1.5" />
-            {translations.getDeal}
-          </>
-        ) : copied ? (
-          <>
-            <Copy size={16} className="mr-1.5" />
-            {translations.copied}
-          </>
-        ) : (
-          <>
-            <Copy size={16} className="mr-1.5" />
-            {translations.copy}
-          </>
-        )}
-      </Button>
-
-      <Button
-        asChild
-        variant="outline"
-        className="bg-card/95 h-10 min-h-10 w-full rounded-xl text-sm"
-      >
-        <Link href={detailsHref} aria-label={translations.viewDetails}>
-          <Eye size={16} className="mr-1.5" />
-          {translations.viewDetails}
-        </Link>
-      </Button>
-    </div>
+    <Button
+      onClick={handleCopy}
+      className={`h-12 min-h-11 w-full rounded-xl transition-[color,background-color,opacity,transform] duration-200 ${
+        type === "link"
+          ? "ink-surface hover:opacity-90"
+          : "bg-[color:var(--accent-red)] text-[color:var(--accent-foreground-red)] hover:opacity-90"
+      } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      disabled={disabled || (copied && type === "code")}
+      aria-label={
+        type === "link" ? translations.getDeal : copied ? translations.copied : translations.copy
+      }
+    >
+      {type === "link" ? (
+        <>
+          <Star size={16} className="mr-1.5" />
+          {translations.getDeal}
+        </>
+      ) : copied ? (
+        <>
+          <Copy size={16} className="mr-1.5" />
+          {translations.copied}
+        </>
+      ) : (
+        <>
+          <Copy size={16} className="mr-1.5" />
+          {translations.copy}
+        </>
+      )}
+    </Button>
   );
 }

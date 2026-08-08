@@ -1,4 +1,5 @@
 import type { Promocode } from "@/components/public/types";
+import { getApprovedImageUrl } from "@/lib/media";
 
 export interface PromocodeDisplayData {
   translation: Record<string, string | null> | undefined;
@@ -30,8 +31,9 @@ export function getPromocodeDisplayData(
 
   const displayName =
     storeTranslation?.name || brandTranslation?.name || tCard.unknownStore || tCard.storeTitle;
-  const displayImage =
-    promocode.store?.logoUrl || promocode.brand?.imageUrl || promocode.category?.imageUrl || null;
+  const displayImage = getApprovedImageUrl(
+    promocode.store?.logoUrl || promocode.brand?.imageUrl || promocode.category?.imageUrl || null
+  );
   const displayUrl = promocode.store?.websiteUrl || promocode.brand?.websiteUrl || null;
   const displaySlug =
     storeTranslation?.slug || brandTranslation?.slug || categoryTranslation?.slug || null;

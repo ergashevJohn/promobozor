@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    // Get parameters — truncate to bound rendering cost
+    // Get parameters - truncate to bound rendering cost
     const title = (searchParams.get("title") || "PromoBozor").slice(0, 120);
     const description = (
       searchParams.get("description") || "Chegirmalar va promokodlar bozori"
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     // Try to extract promo code from description (e.g. "NDX5231 - some description...")
     let promoCode = "";
     let cleanDescription = description;
-    const codeMatch = description.match(/^([A-Z0-9]{3,15})\s*[-–—]\s*(.+)/i);
+    const codeMatch = description.match(/^([A-Z0-9]{3,15})\s*[---]\s*(.+)/i);
     if (codeMatch) {
       promoCode = codeMatch[1].toUpperCase();
       cleanDescription = codeMatch[2].trim();
