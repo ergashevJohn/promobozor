@@ -8,15 +8,15 @@ import {
   SquaresFour,
   Storefront,
   Ticket,
+  type Icon,
 } from "@phosphor-icons/react";
-import type { ComponentType } from "react";
 
 type NavLink = {
   href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/contact";
   label: string;
 };
 
-const NAV_ICONS: Record<NavLink["href"], ComponentType<{ className?: string; size?: number }>> = {
+const NAV_ICONS: Record<NavLink["href"], Icon> = {
   "/promocodes": Ticket,
   "/stores": Storefront,
   "/categories": SquaresFour,
