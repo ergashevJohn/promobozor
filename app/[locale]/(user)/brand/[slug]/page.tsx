@@ -1,7 +1,7 @@
 import BrandDescription from "@/components/public/BrandDescription";
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
+import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 import type { Promocode } from "@/components/public/types";
 import { Locale } from "@/i18n/routing";
 import { getCachedBrandPromocodeCounts } from "@/lib/cache/promocode-counts";
+import { getHubEditorial } from "@/lib/hub-editorial";
 import {
   brands,
   brandTranslations,
@@ -81,6 +82,11 @@ export async function generateMetadata({
     }
 
     const translation = brandData.translation;
+    const hubEditorial = getHubEditorial(slug, locale, "brand");
+    const hubDescription =
+      translation?.description && translation.description.trim().length >= 80
+        ? translation.description
+        : hubEditorial?.description || translation?.description || null;
 
     // Get promocode counts from cache (5-min cache for performance)
     const counts = await getCachedBrandPromocodeCounts(brandData.brand.id);
@@ -94,7 +100,7 @@ export async function generateMetadata({
       translation?.metaDescription ||
       generateBrandDescription(
         translation?.name || brandTitle,
-        translation?.description || null,
+        hubDescription,
         totalPromocodes,
         locale
       );
@@ -116,7 +122,7 @@ export async function generateMetadata({
       languageAlternates[t.language] = `/${t.language}/brand/${t.slug}`;
     });
 
-    return generateFullMetadata(
+    const metadata = generateFullMetadata(
       title,
       description,
       url,
@@ -126,6 +132,15 @@ export async function generateMetadata({
       "",
       languageAlternates
     );
+
+    if (totalPromocodes === 0) {
+      return {
+        ...metadata,
+        robots: { index: false, follow: true },
+      };
+    }
+
+    return metadata;
   } catch {
     return {};
   }
@@ -167,6 +182,7 @@ export default async function BrandPage({
     metaTitle: string | null;
     metaDescription: string | null;
   };
+  let resolvedBrandDescription: string | undefined;
 
   try {
     const brandData = await getCachedBrandBySlug(locale, slug);
@@ -177,6 +193,12 @@ export default async function BrandPage({
 
     brand = brandData.brand;
     brandTranslation = brandData.translation;
+
+    const hubEditorial = getHubEditorial(slug, locale, "brand");
+    resolvedBrandDescription =
+      brandTranslation?.description && brandTranslation.description.trim().length >= 80
+        ? brandTranslation.description
+        : hubEditorial?.description || brandTranslation?.description || undefined;
 
     // Fetch promocodes for this brand (exclude draft only)
     const now = new Date();
@@ -340,17 +362,12 @@ export default async function BrandPage({
         lang={locale}
         baseUrl={baseUrl}
         promocodeCount={totalPromocodesCount}
-        entityDescription={brandTranslation?.description || undefined}
-      />
-      <EntityFAQSchema
-        entityName={brandTranslation?.name || brandTitle}
-        entityType="brand"
-        locale={locale}
+        entityDescription={resolvedBrandDescription}
       />
       <LocalBusinessSchema
         name={brandTranslation?.name || brandTitle}
         url={`/brand/${slug}`}
-        description={brandTranslation?.description || undefined}
+        description={resolvedBrandDescription}
         logo={brand.imageUrl || undefined}
         priceRange="$$"
         // sameAs={brand.website ? [brand.website] : undefined}
@@ -404,8 +421,8 @@ export default async function BrandPage({
                 <h1 className="text-foreground mb-3 text-3xl font-semibold tracking-tight md:text-5xl">
                   {t("h1Title", { name: brandTranslation?.name || brandTitle })}
                 </h1>
-                {brandTranslation?.description && (
-                  <BrandDescription description={brandTranslation.description} />
+                {resolvedBrandDescription && (
+                  <BrandDescription description={resolvedBrandDescription} />
                 )}
                 <div className="mt-6 flex flex-wrap items-center gap-4">
                   <span className="text-muted-foreground text-sm">
@@ -547,6 +564,14 @@ export default async function BrandPage({
               </div>
             ) : null}
           </section>
+
+          <EntityFAQSection
+            entityName={brandTranslation?.name || brandTitle}
+            entityType="brand"
+            locale={locale}
+            title={t("faqTitle", { name: brandTranslation?.name || brandTitle })}
+            description={t("faqDescription", { name: brandTranslation?.name || brandTitle })}
+          />
         </div>
       </div>
     </>

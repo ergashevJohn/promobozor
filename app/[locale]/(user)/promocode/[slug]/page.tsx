@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { HowToSchema } from "@/components/public/HowToSchema";
+import { HowToSection } from "@/components/public/HowToSection";
 import PromocodeDetail from "@/components/public/PromocodeDetail";
 import StructuredData from "@/components/public/StructuredData";
 import type { PromocodeStatus } from "@/components/public/types";
@@ -101,6 +101,38 @@ export async function generateMetadata({
       .limit(1);
 
     if (!promocodeData) {
+      // Historical / expired / disabled pages: keep crawlable for users but noindex
+      const [inactive] = await db
+        .select({
+          promocode: promocodes,
+          promocodeTranslation: promocodeTranslations,
+        })
+        .from(promocodes)
+        .innerJoin(
+          promocodeTranslations,
+          and(
+            eq(promocodeTranslations.promocodeId, promocodes.id),
+            eq(promocodeTranslations.language, locale as "uz" | "ru" | "en"),
+            eq(promocodeTranslations.slug, slug)
+          )
+        )
+        .where(
+          and(
+            eq(promocodeTranslations.slug, slug),
+            eq(promocodeTranslations.language, locale as "uz" | "ru" | "en")
+          )
+        )
+        .limit(1);
+
+      if (inactive) {
+        const inactiveTitle = inactive.promocodeTranslation?.title || promocodeTitle;
+        return {
+          title: inactiveTitle,
+          description: inactive.promocodeTranslation?.metaDescription || inactiveTitle,
+          robots: { index: false, follow: true },
+        };
+      }
+
       return {};
     }
 
@@ -686,13 +718,6 @@ export default async function PromocodeDetailPage({
             new Date().toISOString()
           }
         />
-        <HowToSchema
-          promocodeTitle={updatedPromocodeData.promocodeTranslation?.title || tPromocode("title")}
-          storeName={updatedPromocodeData.storeTranslation?.name || tStore("title")}
-          locale={locale}
-          imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
-          baseUrl={getBaseUrl()}
-        />
         <div className="container mx-auto px-6 pt-6 lg:px-8">
           <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
@@ -766,6 +791,34 @@ export default async function PromocodeDetailPage({
             },
           }}
         />
+        {(() => {
+          const nowMs = Date.now();
+          const expiresAt = updatedPromocodeData.promocode.expiresAt;
+          const startsAt = updatedPromocodeData.promocode.startsAt;
+          const isActiveOffer =
+            updatedPromocodeData.promocode.status === "active" &&
+            (!expiresAt || expiresAt.getTime() > nowMs) &&
+            (!startsAt || startsAt.getTime() <= nowMs);
+
+          if (!isActiveOffer) {
+            return null;
+          }
+
+          return (
+            <div className="page-shell pb-12">
+              <HowToSection
+                promocodeTitle={
+                  updatedPromocodeData.promocodeTranslation?.title || tPromocode("title")
+                }
+                storeName={updatedPromocodeData.storeTranslation?.name || tStore("title")}
+                locale={locale}
+                imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
+                baseUrl={getBaseUrl()}
+                title={tPromocode("howToTitle")}
+              />
+            </div>
+          );
+        })()}
       </>
     );
   } catch (error) {

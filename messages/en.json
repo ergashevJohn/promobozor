@@ -76,7 +76,8 @@
     "mainNav": "Main navigation",
     "mobileNav": "Mobile navigation",
     "promoCodeAria": "Promo code: {code}",
-    "loadingOffer": "Loading promotional offer"
+    "loadingOffer": "Loading promotional offer",
+    "blog": "Blog"
   },
   "LocaleLayout": {
     "title": "PromoBozor - Deals and promo code marketplace",
@@ -104,7 +105,8 @@
     "newsletterPlaceholder": "Your email",
     "subscribe": "Subscribe",
     "copyright": "© 2026 PromoBozor. All rights reserved.",
-    "createdBy": "Created by"
+    "createdBy": "Created by",
+    "blog": "Blog & guides"
   },
   "card": {
     "featured": "Featured",
@@ -324,7 +326,7 @@
         "steps": [
           {
             "title": "Find the store you need",
-            "description": "Choose from 50+ brands"
+            "description": "Pick a store or brand from the current curated list"
           },
           {
             "title": "Copy the promo code",
@@ -473,7 +475,9 @@
     "directoryBadge": "Store-first savings",
     "curatedRoutesCount": "{count} curated routes",
     "highActivityBadge": "High-activity route",
-    "viewStorePromocodesAria": "View {name} promocodes"
+    "viewStorePromocodesAria": "View {name} promocodes",
+    "faqTitle": "Questions about {name} promocodes",
+    "faqDescription": "How to find, copy, and apply {name} codes at checkout."
   },
   "category": {
     "title": "Category",
@@ -515,7 +519,9 @@
     "noLinkedStores": "No linked stores yet.",
     "noLinkedBrands": "No linked brands yet.",
     "offersKicker": "Best offers in this category",
-    "allPromocodesDescription": "Explore live savings inside {name}, with active offers across stores and related brands."
+    "allPromocodesDescription": "Explore live savings inside {name}, with active offers across stores and related brands.",
+    "faqTitle": "Questions about the {name} category",
+    "faqDescription": "How to find and use promocodes in the {name} category."
   },
   "brand": {
     "title": "Brand",
@@ -558,7 +564,9 @@
     "noLinkedStores": "No linked stores yet.",
     "noLinkedCategories": "No linked categories yet.",
     "offersKicker": "Curated brand offers",
-    "allPromocodesDescription": "A tighter look at savings tied to {name}, across multiple stores and active placements."
+    "allPromocodesDescription": "A tighter look at savings tied to {name}, across multiple stores and active placements.",
+    "faqTitle": "{name} promocode FAQ",
+    "faqDescription": "Short answers on using {name} discounts and how often they refresh."
   },
   "promocode": {
     "title": "Promocode Details",
@@ -613,7 +621,8 @@
     "discountLabel": "Discount",
     "exploreKicker": "Keep exploring",
     "exploreDescription": "Move sideways into the store, brand, or category context around this offer to compare more active savings routes.",
-    "relatedDealsKicker": "Related deals"
+    "relatedDealsKicker": "Related deals",
+    "howToTitle": "How to use this promocode"
   },
   "filter": {
     "filters": "Filters",
@@ -961,7 +970,7 @@
         "Manual review of local brand campaigns and checkout rules",
         "Cleaning up expired, duplicated and low-confidence offers",
         "Building a multilingual savings resource for shoppers in Uzbekistan",
-        "Daily monitoring of new offers from 50+ stores"
+        "Regular monitoring of new offers from active stores"
       ],
       "experienceTitle": "Editorial standards behind the platform",
       "experience": [
@@ -983,7 +992,8 @@
     "heroKicker": "About PromoBozor",
     "statsKicker": "Stats",
     "whyUsKicker": "Why us",
-    "contactKicker": "Contact"
+    "contactKicker": "Contact",
+    "statsBrands": "Brands"
   },
   "verification": {
     "title": "How We Verify Promocodes Before Publishing",
@@ -1051,5 +1061,14 @@
     "sortingValue": "Newest, popular, ending",
     "saveTime": "Save time",
     "saveTimeValue": "Filter before browsing"
+  },
+  "blog": {
+    "title": "Promocode guides and tips",
+    "description": "Guides on applying Uzbekistan store promocodes, reading conditions, and finding verified offers.",
+    "readMore": "Read more",
+    "updated": "Updated",
+    "relatedStore": "Open store hub",
+    "relatedBrand": "Open brand hub",
+    "allOffers": "All offers"
   }
 }

@@ -46,7 +46,7 @@ export default async function sitemap({
   });
 
   // List pages
-  const listPages = ["stores", "categories", "brands", "promocodes"];
+  const listPages = ["stores", "categories", "brands", "promocodes", "blog"];
   for (const page of listPages) {
     sitemapEntries.push({
       url: `${baseUrl}/${locale}/${page}`,
@@ -115,6 +115,30 @@ export default async function sitemap({
     },
   });
 
+  // Blog guides (static editorial content)
+  try {
+    const { getBlogPosts } = await import("@/lib/blog");
+    const posts = getBlogPosts();
+    for (const post of posts) {
+      sitemapEntries.push({
+        url: `${baseUrl}/${locale}/blog/${post.slug}`,
+        lastModified: new Date(post.updatedAt),
+        changeFrequency: "weekly",
+        priority: 0.65,
+        alternates: {
+          languages: {
+            "x-default": `${baseUrl}/uz/blog/${post.slug}`,
+            uz: `${baseUrl}/uz/blog/${post.slug}`,
+            ru: `${baseUrl}/ru/blog/${post.slug}`,
+            en: `${baseUrl}/en/blog/${post.slug}`,
+          },
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error adding blog posts to sitemap:", error);
+  }
+
   // Dynamic pages - fetch all entity translations in parallel
   try {
     const [
@@ -122,6 +146,9 @@ export default async function sitemap({
       allCategoryTranslations,
       allBrandTranslations,
       allPromocodeTranslations,
+      storesWithActivePromos,
+      brandsWithActivePromos,
+      categoriesWithActivePromos,
     ] = await Promise.all([
       db
         .select({
@@ -169,7 +196,49 @@ export default async function sitemap({
             or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
           )
         ),
+      db
+        .selectDistinct({ storeId: promocodes.storeId })
+        .from(promocodes)
+        .where(
+          and(
+            eq(promocodes.status, "active"),
+            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
+            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
+          )
+        ),
+      db
+        .selectDistinct({ brandId: promocodes.brandId })
+        .from(promocodes)
+        .where(
+          and(
+            eq(promocodes.status, "active"),
+            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
+            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
+          )
+        ),
+      db
+        .selectDistinct({ categoryId: promocodes.categoryId })
+        .from(promocodes)
+        .where(
+          and(
+            eq(promocodes.status, "active"),
+            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
+            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
+          )
+        ),
     ]);
+
+    const indexableStoreIds = new Set(
+      storesWithActivePromos.map((row) => row.storeId).filter((id): id is string => Boolean(id))
+    );
+    const indexableBrandIds = new Set(
+      brandsWithActivePromos.map((row) => row.brandId).filter((id): id is string => Boolean(id))
+    );
+    const indexableCategoryIds = new Set(
+      categoriesWithActivePromos
+        .map((row) => row.categoryId)
+        .filter((id): id is string => Boolean(id))
+    );
 
     // Store pages
     const storeMap = new Map<string, { language: string; slug: string }[]>();
@@ -179,6 +248,8 @@ export default async function sitemap({
     });
 
     for (const [storeId, translations] of storeMap.entries()) {
+      if (!indexableStoreIds.has(storeId)) continue;
+
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 
@@ -209,6 +280,8 @@ export default async function sitemap({
     });
 
     for (const [categoryId, translations] of categoryMap.entries()) {
+      if (!indexableCategoryIds.has(categoryId)) continue;
+
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 
@@ -240,6 +313,8 @@ export default async function sitemap({
     });
 
     for (const [brandId, translations] of brandMap.entries()) {
+      if (!indexableBrandIds.has(brandId)) continue;
+
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 

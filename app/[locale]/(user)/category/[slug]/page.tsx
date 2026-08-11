@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
+import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
 import StructuredData from "@/components/public/StructuredData";
@@ -112,7 +112,7 @@ export async function generateMetadata({
       languageAlternates[t.language] = `/${t.language}/category/${t.slug}`;
     });
 
-    return generateFullMetadata(
+    const metadata = generateFullMetadata(
       title,
       description,
       url,
@@ -122,6 +122,15 @@ export async function generateMetadata({
       "",
       languageAlternates
     );
+
+    if (totalPromocodes === 0) {
+      return {
+        ...metadata,
+        robots: { index: false, follow: true },
+      };
+    }
+
+    return metadata;
   } catch {
     return {};
   }
@@ -299,11 +308,6 @@ export default async function CategoryPage({
         promocodeCount={totalPromocodesCount}
         entityDescription={categoryTranslation?.description || undefined}
       />
-      <EntityFAQSchema
-        entityName={categoryTranslation?.name || categoryTitle}
-        entityType="category"
-        locale={locale}
-      />
       {schemaPromocodes.length > 0 && (
         <ItemListSchema
           items={schemaPromocodes.map((promocode) => {
@@ -465,6 +469,14 @@ export default async function CategoryPage({
               </div>
             ) : null}
           </section>
+
+          <EntityFAQSection
+            entityName={categoryTranslation?.name || categoryTitle}
+            entityType="category"
+            locale={locale}
+            title={t("faqTitle", { name: categoryTranslation?.name || categoryTitle })}
+            description={t("faqDescription", { name: categoryTranslation?.name || categoryTitle })}
+          />
         </div>
       </div>
     </>
