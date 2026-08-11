@@ -3,6 +3,7 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import {
   ArrowRight,
+  Article,
   Buildings,
   EnvelopeSimple,
   SquaresFour,
@@ -12,7 +13,7 @@ import {
 } from "@phosphor-icons/react";
 
 type NavLink = {
-  href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/contact";
+  href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/blog" | "/contact";
   label: string;
 };
 
@@ -21,6 +22,7 @@ const NAV_ICONS: Record<NavLink["href"], Icon> = {
   "/stores": Storefront,
   "/categories": SquaresFour,
   "/brands": Buildings,
+  "/blog": Article,
   "/contact": EnvelopeSimple,
 };
 

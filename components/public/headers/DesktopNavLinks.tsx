@@ -3,7 +3,7 @@
 import { Link, usePathname } from "@/i18n/navigation";
 
 type NavLink = {
-  href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/contact";
+  href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/blog" | "/contact";
   label: string;
 };
 
