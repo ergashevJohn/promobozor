@@ -2,9 +2,11 @@ import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
-import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
+import CategoryHero from "@/components/public/category/CategoryHero";
+import CategoryRelatedStores from "@/components/public/category/CategoryRelatedStores";
+import CategoryRelatedBrands from "@/components/public/category/CategoryRelatedBrands";
+import CategoryPromocodes from "@/components/public/category/CategoryPromocodes";
 import StructuredData from "@/components/public/StructuredData";
-import { Link } from "@/i18n/navigation";
 import type { Promocode } from "@/components/public/types";
 import { getCachedCategoryPromocodeCounts } from "@/lib/cache/promocode-counts";
 import {
@@ -27,6 +29,7 @@ import {
   getBaseUrl,
 } from "@/lib/metadata";
 import { getCachedCategoryBySlug, getCategoryLanguageAlternates } from "@/lib/queries/entities";
+import { countUnique } from "@/lib/array-utils";
 import {
   mapPromocodeListRow,
   promocodeListSelectWithCategory,
@@ -35,10 +38,9 @@ import {
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 export async function generateStaticParams() {
   // Skip static generation for categories - render dynamically
@@ -150,13 +152,13 @@ export default async function CategoryPage({
   let category;
   let categoryTranslation;
 
+  const categoryData = await getCachedCategoryBySlug(locale, slug);
+
+  if (!categoryData) {
+    notFound();
+  }
+
   try {
-    const categoryData = await getCachedCategoryBySlug(locale, slug);
-
-    if (!categoryData) {
-      notFound();
-    }
-
     category = categoryData.category;
     categoryTranslation = categoryData.translation;
 
@@ -230,53 +232,53 @@ export default async function CategoryPage({
       })
     );
   } catch (error) {
+    unstable_rethrow(error);
     const errorObj = error instanceof Error ? error : new Error(String(error));
     console.error(`Error fetching category (slug: ${slug}, locale: ${locale}):`, errorObj);
     notFound();
   }
 
-  const t = await getTranslations({ locale, namespace: "category" });
-  const tCommon = await getTranslations({ locale, namespace: "common" });
-  const tEmpty = await getTranslations({ locale, namespace: "empty" });
-  const tCard = await getTranslations({ locale, namespace: "card" });
-  const tPromocode = await getTranslations({ locale, namespace: "promocode" });
-  const tStore = await getTranslations({ locale, namespace: "store" });
+  const [t, tCommon, tEmpty, tCard, tPromocode, tStore] = await Promise.all([
+    getTranslations({ locale, namespace: "category" }),
+    getTranslations({ locale, namespace: "common" }),
+    getTranslations({ locale, namespace: "empty" }),
+    getTranslations({ locale, namespace: "card" }),
+    getTranslations({ locale, namespace: "promocode" }),
+    getTranslations({ locale, namespace: "store" }),
+  ]);
+
   const categoryTitle = t("title");
   const promocodeTitle = tPromocode("title");
   const storeTitle = tStore("title");
   const schemaPromocodes = allPromocodes.slice(0, 20);
-  const uniqueStoreCount = new Set(allPromocodes.map((item) => item.store?.id).filter(Boolean))
-    .size;
-  const uniqueBrandCount = new Set(allPromocodes.map((item) => item.brand?.id).filter(Boolean))
-    .size;
-  const relatedStores = Array.from(
-    new Map(
-      allPromocodes
-        .filter((item) => item.store?.translations?.[0]?.slug)
-        .map((item) => [
-          item.store?.id,
-          {
-            id: item.store?.id || "",
-            name: item.store?.translations?.[0]?.name || "",
-            slug: item.store?.translations?.[0]?.slug || "",
-          },
-        ])
-    ).values()
-  ).slice(0, 4);
-  const relatedBrands = Array.from(
-    new Map(
-      allPromocodes
-        .filter((item) => item.brand?.translations?.[0]?.slug)
-        .map((item) => [
-          item.brand?.id,
-          {
-            id: item.brand?.id || "",
-            name: item.brand?.translations?.[0]?.name || "",
-            slug: item.brand?.translations?.[0]?.slug || "",
-          },
-        ])
-    ).values()
-  ).slice(0, 4);
+  const uniqueStoreCount = countUnique(allPromocodes, (item) => item.store?.id);
+  const uniqueBrandCount = countUnique(allPromocodes, (item) => item.brand?.id);
+
+  // Single-pass extraction for related stores
+  const relatedStoresMap = new Map();
+  for (const item of allPromocodes) {
+    if (item.store?.translations?.[0]?.slug) {
+      relatedStoresMap.set(item.store?.id, {
+        id: item.store?.id || "",
+        name: item.store?.translations?.[0]?.name || "",
+        slug: item.store?.translations?.[0]?.slug || "",
+      });
+    }
+  }
+  const relatedStores = Array.from(relatedStoresMap.values()).slice(0, 4);
+
+  // Single-pass extraction for related brands
+  const relatedBrandsMap = new Map();
+  for (const item of allPromocodes) {
+    if (item.brand?.translations?.[0]?.slug) {
+      relatedBrandsMap.set(item.brand?.id, {
+        id: item.brand?.id || "",
+        name: item.brand?.translations?.[0]?.name || "",
+        slug: item.brand?.translations?.[0]?.slug || "",
+      });
+    }
+  }
+  const relatedBrands = Array.from(relatedBrandsMap.values()).slice(0, 4);
 
   // Build breadcrumbs with full hierarchy
   const breadcrumbItems = [
@@ -324,147 +326,62 @@ export default async function CategoryPage({
           <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
         {/* Hero Section */}
-        <div className="page-shell pb-10">
-          <div className="page-hero-surface">
-            <div className="max-w-3xl">
-              <div className="brand-kicker mb-4">{t("heroKicker")}</div>
-              <h1 className="text-foreground mb-3 text-4xl font-semibold tracking-tight md:text-5xl">
-                {t("h1Title", { name: categoryTranslation?.name || categoryTitle })}
-              </h1>
-              {categoryTranslation?.metaDescription && (
-                <p className="text-muted-foreground max-w-[65ch] text-lg leading-8">
-                  {categoryTranslation.metaDescription}
-                </p>
-              )}
-              <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-[color:var(--border)] pt-6">
-                <div>
-                  <dt className="text-muted-foreground text-sm">{t("activePromocodes")}</dt>
-                  <dd className="mt-1 text-2xl font-semibold">{totalPromocodesCount}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground text-sm">{t("storeRoutesLabel")}</dt>
-                  <dd className="mt-1 text-2xl font-semibold">{uniqueStoreCount}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground text-sm">{t("brandContextsLabel")}</dt>
-                  <dd className="mt-1 text-2xl font-semibold">{uniqueBrandCount}</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
-        </div>
+        <CategoryHero
+          categoryName={categoryTranslation?.name || categoryTitle}
+          categoryDescription={categoryTranslation?.metaDescription}
+          totalPromocodes={totalPromocodesCount}
+          uniqueStoreCount={uniqueStoreCount}
+          uniqueBrandCount={uniqueBrandCount}
+          t={t}
+        />
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <div className="surface-card p-5">
-              <p className="text-muted-foreground mb-4 text-sm leading-6">
-                {t("relatedStoresDescription")}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {relatedStores.length > 0 ? (
-                  relatedStores.map((store) => (
-                    <Link
-                      key={store.id}
-                      href={`/store/${store.slug}`}
-                      className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
-                    >
-                      {store.name}
-                    </Link>
-                  ))
-                ) : (
-                  <span className="text-sm text-[color:var(--muted-foreground)]">
-                    {t("noLinkedStores")}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="surface-card p-5">
-              <p className="text-muted-foreground mb-4 text-sm leading-6">
-                {t("relatedBrandsDescription")}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {relatedBrands.length > 0 ? (
-                  relatedBrands.map((brand) => (
-                    <Link
-                      key={brand.id}
-                      href={`/brand/${brand.slug}`}
-                      className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
-                    >
-                      {brand.name}
-                    </Link>
-                  ))
-                ) : (
-                  <span className="text-sm text-[color:var(--muted-foreground)]">
-                    {t("noLinkedBrands")}
-                  </span>
-                )}
-              </div>
-            </div>
+            <CategoryRelatedStores relatedStores={relatedStores} t={t} />
+            <CategoryRelatedBrands relatedBrands={relatedBrands} t={t} />
           </section>
 
           {/* All Promocodes */}
-          <section>
-            <div className="mb-8">
-              <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
-              <p className="text-muted-foreground mt-2">
-                {t("allPromocodesDescription", {
-                  name: categoryTranslation?.name || categoryTitle,
-                })}
-              </p>
-            </div>
-            {totalPromocodesCount > 0 ? (
-              <PromocodeListWithPagination
-                initialPromocodes={allPromocodes}
-                totalCount={totalPromocodesCount}
-                limit={20}
-                filters={{
-                  categoryId: category.id,
-                }}
-                translations={{
-                  noPromocodes: tEmpty("noPromocodes"),
-                  noPromocodesDescription: tEmpty("noPromocodesDescription"),
-                  card: {
-                    featured: tCard("featured"),
-                    verified: tCard("verified"),
-                    fresh: tCard("fresh"),
-                    popular: tCard("popular"),
-                    endingSoon: tPromocode("expiresSoon"),
-                    unlimited: tCard("unlimited"),
-                    unknownStore: tCard("unknownStore"),
-                    storeTitle,
-                    promocodeTitle,
-                    activateLink: tCard("activateLink"),
-                    details: tCard("details"),
-                    viewDetails: tCard("viewDetails"),
-                    storeOffer: tCard("storeOffer"),
-                    brandOffer: tCard("brandOffer"),
-                    directDeal: tCard("directDeal"),
-                    codeReady: tCard("codeReady"),
-                    dealRoute: tCard("dealRoute"),
-                    promoCodeLabel: tCard("promoCodeLabel"),
-                    copy: tCard("copy"),
-                    copied: tCard("copied"),
-                    getDeal: tCard("getDeal"),
-                    like: tCard("like"),
-                    dislike: tCard("dislike"),
-                    expired: tCard("expired"),
-                    disabled: tCard("disabled"),
-                    codeCopied: tPromocode("codeCopied"),
-                    copyError: tPromocode("copyError"),
-                  },
-                }}
-              />
-            ) : totalPromocodesCount === 0 ? (
-              <div className="empty-state-card">
-                <MagnifyingGlass
-                  className="text-muted-foreground mx-auto mb-4 h-12 w-12"
-                  aria-hidden="true"
-                />
-                <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
-                <p className="text-muted-foreground">{t("checkBackLater")}</p>
-              </div>
-            ) : null}
-          </section>
+          <CategoryPromocodes
+            allPromocodes={allPromocodes}
+            totalPromocodesCount={totalPromocodesCount}
+            categoryId={category.id}
+            categoryName={categoryTranslation?.name || categoryTitle}
+            translations={{
+              noPromocodes: tEmpty("noPromocodes"),
+              noPromocodesDescription: tEmpty("noPromocodesDescription"),
+              card: {
+                featured: tCard("featured"),
+                verified: tCard("verified"),
+                fresh: tCard("fresh"),
+                popular: tCard("popular"),
+                endingSoon: tPromocode("expiresSoon"),
+                unlimited: tCard("unlimited"),
+                unknownStore: tCard("unknownStore"),
+                storeTitle,
+                promocodeTitle,
+                activateLink: tCard("activateLink"),
+                details: tCard("details"),
+                viewDetails: tCard("viewDetails"),
+                storeOffer: tCard("storeOffer"),
+                brandOffer: tCard("brandOffer"),
+                directDeal: tCard("directDeal"),
+                codeReady: tCard("codeReady"),
+                dealRoute: tCard("dealRoute"),
+                promoCodeLabel: tCard("promoCodeLabel"),
+                copy: tCard("copy"),
+                copied: tCard("copied"),
+                getDeal: tCard("getDeal"),
+                like: tCard("like"),
+                dislike: tCard("dislike"),
+                expired: tCard("expired"),
+                disabled: tCard("disabled"),
+                codeCopied: tPromocode("codeCopied"),
+                copyError: tPromocode("copyError"),
+              },
+            }}
+            t={t}
+          />
         </div>
       </div>
     </>

@@ -1,3 +1,4 @@
+import serialize from "serialize-javascript";
 import { getBaseUrl } from "@/lib/metadata";
 
 interface AggregateRating {
@@ -87,9 +88,6 @@ export function LocalBusinessSchema({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

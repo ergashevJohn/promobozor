@@ -1,3 +1,4 @@
+import serialize from "serialize-javascript";
 import { getBaseUrl } from "@/lib/metadata";
 
 const EMPTY_SAME_AS: string[] = [];
@@ -50,9 +51,6 @@ export function PersonSchema({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

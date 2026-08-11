@@ -1,0 +1,5 @@
+{
+  "ignore": {
+    "files": [".venv/**", "node_modules/**", ".next/**", "out/**", "build/**", "dist/**"]
+  }
+}

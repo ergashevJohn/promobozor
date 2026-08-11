@@ -9,6 +9,8 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
+const icons = [MagnifyingGlass, Storefront, SquaresFour, Buildings];
+
 interface HomeIntentRoutesProps {
   locale: string;
 }
@@ -21,8 +23,6 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
     kicker: string;
     href: string;
   }>;
-
-  const icons = [MagnifyingGlass, Storefront, SquaresFour, Buildings];
 
   return (
     <section className="section-rhythm">

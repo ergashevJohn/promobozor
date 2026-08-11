@@ -1,3 +1,5 @@
+import serialize from "serialize-javascript";
+
 /**
  * CollectionPageSchema - Schema.org CollectionPage markup for list pages
  *
@@ -58,9 +60,6 @@ export function CollectionPageSchema({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

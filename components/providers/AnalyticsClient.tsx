@@ -14,6 +14,8 @@ export default function AnalyticsClient({ nonce }: Props) {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
+    const timerIds: number[] = [];
+
     const applyConsent = () => {
       try {
         const raw = localStorage.getItem("cookie-consent");
@@ -22,9 +24,11 @@ export default function AnalyticsClient({ nonce }: Props) {
         if (parsed?.preferences?.analytics || parsed?.preferences?.marketing) {
           const runner = () => setShouldLoad(true);
           if (typeof window.requestIdleCallback === "function") {
-            requestIdleCallback(runner, { timeout: 1500 });
+            const id = requestIdleCallback(runner, { timeout: 1500 });
+            timerIds.push(id);
           } else {
-            setTimeout(runner, 500);
+            const id = window.setTimeout(runner, 500);
+            timerIds.push(id);
           }
         }
       } catch {
@@ -34,7 +38,19 @@ export default function AnalyticsClient({ nonce }: Props) {
 
     applyConsent();
     window.addEventListener("consent-updated", applyConsent);
-    return () => window.removeEventListener("consent-updated", applyConsent);
+
+    return () => {
+      // Clean up event listener
+      window.removeEventListener("consent-updated", applyConsent);
+      // Clean up all pending timers
+      timerIds.forEach((id) => {
+        if (typeof window.cancelIdleCallback === "function") {
+          window.cancelIdleCallback(id);
+        } else {
+          window.clearTimeout(id);
+        }
+      });
+    };
   }, []);
 
   if (!shouldLoad) return null;

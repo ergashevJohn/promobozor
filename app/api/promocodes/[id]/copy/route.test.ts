@@ -13,7 +13,7 @@ vi.mock("next/cache", () => ({
 vi.mock("@/lib/rate-limit", () => ({
   enforceRateLimit: vi.fn().mockResolvedValue(null),
   RateLimits: {
-    publicAction: { name: "publicAction", limit: 10, window: 60_000, persistent: true },
+    publicAction: { name: "publicAction", limit: 10, timeWindow: 60_000, persistent: true },
   },
 }));
 

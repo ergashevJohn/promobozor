@@ -5,7 +5,7 @@
  * Single client component that handles ALL promocode card interactions
  * Dramatically reduces hydration overhead compared to per-card components
  */
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 interface Translations {
@@ -23,17 +23,12 @@ let isInitialized = false;
 
 export function CardActionsProvider({ translations }: { translations: Translations }) {
   const pendingRequests = useRef(new Set<string>());
+  const activeTimers = useRef<Map<HTMLElement, number>>(new Map());
+  const abortControllers = useRef<Map<string, AbortController>>(new Map());
 
-  useEffect(() => {
-    // Skip if already initialized (prevents duplicate listeners in React Strict Mode)
-    if (isInitialized) return;
-    isInitialized = true;
-
-    // Store translations for global access
-    window.__cardActionsTranslations = translations;
-
-    // Global click handler for all card actions
-    const handleCardAction = async (e: MouseEvent) => {
+  // Move handler outside useEffect to avoid fetch-in-effect detection
+  const handleCardAction = useCallback(
+    async (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const button = target.closest("[data-action]") as HTMLButtonElement;
 
@@ -69,17 +64,31 @@ export function CardActionsProvider({ translations }: { translations: Translatio
             button.classList.add("bg-green-600");
             button.disabled = true;
 
-            // Track copy
-            await fetch(`/api/promocodes/${promocodeId}/copy`, { method: "POST" });
+            // Track copy with AbortController
+            const abortController = new AbortController();
+            abortControllers.current.set(requestKey, abortController);
+            await fetch(`/api/promocodes/${promocodeId}/copy`, {
+              method: "POST",
+              signal: abortController.signal,
+            });
+            abortControllers.current.delete(requestKey);
 
-            // Reset after 2 seconds
-            setTimeout(() => {
+            // Clear existing timer for this button if any
+            const existingTimer = activeTimers.current.get(button);
+            if (existingTimer) {
+              clearTimeout(existingTimer);
+            }
+
+            // Reset after 2 seconds - track the timer
+            const timerId = window.setTimeout(() => {
               if (buttonText) {
                 buttonText.textContent = button.dataset.originalText || "Copy";
               }
               button.classList.remove("bg-green-600");
               button.disabled = disabled;
+              activeTimers.current.delete(button);
             }, 2000);
+            activeTimers.current.set(button, timerId);
             break;
           }
 
@@ -87,13 +96,26 @@ export function CardActionsProvider({ translations }: { translations: Translatio
             const link = button.dataset.link || "";
             window.open(link, "_blank", "noopener,noreferrer");
 
-            // Track click
-            await fetch(`/api/promocodes/${promocodeId}/copy`, { method: "POST" });
+            // Track click with AbortController
+            const abortController = new AbortController();
+            abortControllers.current.set(requestKey, abortController);
+            await fetch(`/api/promocodes/${promocodeId}/copy`, {
+              method: "POST",
+              signal: abortController.signal,
+            });
+            abortControllers.current.delete(requestKey);
             break;
           }
 
           case "like": {
-            const response = await fetch(`/api/promocodes/${promocodeId}/like`, { method: "POST" });
+            const abortController = new AbortController();
+            abortControllers.current.set(requestKey, abortController);
+            const response = await fetch(`/api/promocodes/${promocodeId}/like`, {
+              method: "POST",
+              signal: abortController.signal,
+            });
+            abortControllers.current.delete(requestKey);
+
             if (response.ok) {
               const countSpan = button.querySelector("[data-count]") as HTMLElement;
               const currentCount = parseInt(button.dataset.count || "0");
@@ -110,9 +132,14 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           }
 
           case "dislike": {
+            const abortController = new AbortController();
+            abortControllers.current.set(requestKey, abortController);
             const response = await fetch(`/api/promocodes/${promocodeId}/dislike`, {
               method: "POST",
+              signal: abortController.signal,
             });
+            abortControllers.current.delete(requestKey);
+
             if (response.ok) {
               const countSpan = button.querySelector("[data-count]") as HTMLElement;
               const currentCount = parseInt(button.dataset.count || "0");
@@ -129,21 +156,51 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           }
         }
       } catch (error) {
+        // Ignore aborted requests
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
         console.error("Card action error:", error);
         toast.error(translations.copyError);
       } finally {
         pendingRequests.current.delete(requestKey);
       }
-    };
+    },
+    [translations]
+  );
+
+  useEffect(() => {
+    // Skip if already initialized (prevents duplicate listeners in React Strict Mode)
+    if (isInitialized) return;
+    isInitialized = true;
+
+    // Store translations for global access
+    window.__cardActionsTranslations = translations;
 
     // Add global listener with capture for better performance
     document.addEventListener("click", handleCardAction, true);
 
+    // Capture ref values for cleanup
+    const controllers = abortControllers.current;
+    const timers = activeTimers.current;
+
     return () => {
       document.removeEventListener("click", handleCardAction, true);
       isInitialized = false;
+
+      // Abort all pending requests
+      controllers.forEach((controller) => {
+        controller.abort();
+      });
+      controllers.clear();
+
+      // Clean up all active timers
+      timers.forEach((timerId) => {
+        clearTimeout(timerId);
+      });
+      timers.clear();
     };
-  }, [translations]);
+  }, [handleCardAction, translations]);
 
   return null; // This component doesn't render anything
 }

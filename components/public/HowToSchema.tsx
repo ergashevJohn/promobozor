@@ -1,3 +1,5 @@
+import serialize from "serialize-javascript";
+
 interface HowToSchemaProps {
   promocodeTitle: string;
   storeName: string;
@@ -98,9 +100,6 @@ export function HowToSchema({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

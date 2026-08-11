@@ -1,6 +1,18 @@
 import { ImageResponse } from "next/og";
 import { getBaseUrl } from "@/lib/metadata";
 
+const descriptions: Record<string, string> = {
+  uz: "Tekshirilgan chegirmalar, promokodlar va foydali takliflarni bir joyda toping",
+  ru: "Находите проверенные скидки, промокоды и полезные предложения в одном месте",
+  en: "Find verified discounts, promo codes, and useful offers in one place",
+};
+
+const features: Record<string, string[]> = {
+  uz: ["50+ promokodlar", "Har kuni tekshiriladi", "Bepul"],
+  ru: ["50+ промокодов", "Проверяется ежедневно", "Бесплатно"],
+  en: ["50+ promocodes", "Checked daily", "Free"],
+};
+
 export const runtime = "nodejs";
 export const size = {
   width: 1200,
@@ -15,18 +27,6 @@ interface Props {
 export default async function Image(props: Props) {
   const { locale } = await props.params;
 
-  const descriptions: Record<string, string> = {
-    uz: "Tekshirilgan chegirmalar, promokodlar va foydali takliflarni bir joyda toping",
-    ru: "Находите проверенные скидки, промокоды и полезные предложения в одном месте",
-    en: "Find verified discounts, promo codes, and useful offers in one place",
-  };
-
-  const features: Record<string, string[]> = {
-    uz: ["50+ promokodlar", "Har kuni tekshiriladi", "Bepul"],
-    ru: ["50+ промокодов", "Проверяется ежедневно", "Бесплатно"],
-    en: ["50+ promocodes", "Checked daily", "Free"],
-  };
-
   const description = descriptions[locale] || descriptions.uz;
   const featureList = features[locale] || features.uz;
 
@@ -36,6 +36,9 @@ export default async function Image(props: Props) {
 
   try {
     const logoResponse = await fetch(logoUrl);
+    if (!logoResponse.ok) {
+      throw new Error(`Failed to fetch logo: ${logoResponse.status} ${logoResponse.statusText}`);
+    }
     const logoBuffer = await logoResponse.arrayBuffer();
     const logoBase64 = Buffer.from(logoBuffer).toString("base64");
     logoDataUrl = `data:image/png;base64,${logoBase64}`;

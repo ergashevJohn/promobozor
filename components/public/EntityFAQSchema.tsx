@@ -1,3 +1,5 @@
+import serialize from "serialize-javascript";
+
 interface EntityFAQSchemaProps {
   entityName: string;
   entityType: "store" | "category" | "brand";
@@ -71,9 +73,6 @@ export function EntityFAQSchema({ entityName, locale }: EntityFAQSchemaProps) {
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

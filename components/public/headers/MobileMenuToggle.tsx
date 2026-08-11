@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -22,102 +21,91 @@ export function MobileMenuToggle({ children }: Props) {
   );
   const pathname = usePathname();
   const menuId = useId();
-  const panelRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const id = setTimeout(() => setOpen(false), 0);
-    return () => clearTimeout(id);
-  }, [pathname]);
+  // Stable close handler with focus restoration
+  const closeMenu = useCallback(() => {
+    if (dialogRef.current?.open) {
+      dialogRef.current.close();
+    }
+    toggleRef.current?.focus();
+  }, []);
 
+  // Close dialog when pathname changes
+  useEffect(() => {
+    if (!open) return;
+
+    const id = setTimeout(() => {
+      closeMenu();
+      setOpen(false);
+    }, 0);
+    return () => clearTimeout(id);
+  }, [pathname, open, closeMenu]);
+
+  // Handle dialog open/close and event listeners
   useEffect(() => {
     if (!open) {
-      document.body.style.overflow = "";
+      // Close dialog if it's still open
+      if (dialogRef.current?.open) {
+        dialogRef.current.close();
+      }
       return;
     }
 
-    document.body.style.overflow = "hidden";
+    // Open the dialog using showModal()
+    if (!dialogRef.current?.open) {
+      dialogRef.current?.showModal();
+    }
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        toggleRef.current?.focus();
-        return;
-      }
+    // Capture refs for cleanup to ensure we always use the correct elements
+    const dialog = dialogRef.current;
+    const toggle = toggleRef.current;
 
-      if (e.key !== "Tab" || !panelRef.current) return;
-
-      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-
-      if (e.shiftKey && active === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && active === last) {
-        e.preventDefault();
-        first.focus();
-      }
+    // Listen for dialog close events (Escape key, backdrop click)
+    const handleDialogClose = () => {
+      setOpen(false);
+      toggle?.focus();
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    const firstLink = panelRef.current?.querySelector<HTMLElement>("a[href], button");
-    firstLink?.focus();
+    dialog?.addEventListener("close", handleDialogClose);
+    dialog?.addEventListener("cancel", handleDialogClose);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      dialog?.removeEventListener("close", handleDialogClose);
+      dialog?.removeEventListener("cancel", handleDialogClose);
+      // Clean up by closing dialog
+      if (dialog?.open) {
+        dialog.close();
+      }
     };
   }, [open]);
 
-  const closeMenu = () => {
-    setOpen(false);
-    toggleRef.current?.focus();
-  };
+  const menu = mounted ? (
+    <>
+      <dialog
+        id={menuId}
+        ref={dialogRef}
+        aria-label={tCommon("mobileNav")}
+        className="border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-[70] flex max-h-[min(30rem,calc(100dvh-5.75rem))] flex-col overflow-hidden rounded-[28px] border p-0 shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)] backdrop:bg-black/40 backdrop:backdrop-blur-[2px] open:flex"
+        style={{
+          bottom: "max(0.75rem, env(safe-area-inset-bottom))",
+        }}
+      >
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
+          {children}
+        </div>
 
-  const menu =
-    open && mounted
-      ? createPortal(
-          <>
-            <button
-              type="button"
-              className="fixed inset-x-0 top-[4.75rem] bottom-0 z-[60] bg-black/40 backdrop-blur-[2px]"
-              onClick={closeMenu}
-              aria-label={tCommon("closeMenu")}
-            />
-
-            <div
-              id={menuId}
-              ref={panelRef}
-              role="dialog"
-              aria-modal="true"
-              aria-label={tCommon("mobileNav")}
-              className="border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-[70] flex max-h-[min(30rem,calc(100dvh-5.75rem))] flex-col overflow-hidden rounded-[28px] border shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)]"
-              style={{
-                bottom: "max(0.75rem, env(safe-area-inset-bottom))",
-              }}
-            >
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
-                {children}
-              </div>
-
-              <div className="border-border border-t p-4">
-                <Button asChild size="lg" className="w-full">
-                  <Link href="/promocodes" onClick={closeMenu}>
-                    {tCommon("promocodes")}
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </>,
-          document.body
-        )
-      : null;
+        <div className="border-border border-t p-4">
+          <Button asChild size="lg" className="w-full">
+            <Link href="/promocodes" onClick={closeMenu}>
+              {tCommon("promocodes")}
+            </Link>
+          </Button>
+        </div>
+      </dialog>
+    </>
+  ) : null;
 
   return (
     <div className="relative md:hidden">

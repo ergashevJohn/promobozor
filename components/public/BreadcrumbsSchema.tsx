@@ -1,3 +1,4 @@
+import serialize from "serialize-javascript";
 import { getBaseUrl } from "@/lib/metadata";
 
 interface BreadcrumbItem {
@@ -37,9 +38,6 @@ export function BreadcrumbsSchema({ items, locale }: BreadcrumbsSchemaProps) {
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

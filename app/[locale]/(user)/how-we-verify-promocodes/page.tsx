@@ -17,6 +17,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
+const stepIcons = [MagnifyingGlass, ShieldCheck, Clock, SealCheck, ArrowsClockwise];
+const standardIcons = [SealCheck, ShieldCheck, Warning];
+
 export async function generateMetadata({
   params,
 }: {
@@ -59,9 +62,6 @@ export default async function VerificationPage({
   const steps = (await t.raw("steps")) as Array<{ title: string; description: string }>;
   const standards = (await t.raw("standards")) as Array<{ title: string; description: string }>;
   const exclusions = (await t.raw("exclusions")) as string[];
-
-  const stepIcons = [MagnifyingGlass, ShieldCheck, Clock, SealCheck, ArrowsClockwise];
-  const standardIcons = [SealCheck, ShieldCheck, Warning];
 
   const breadcrumbItems = [{ name: t("title"), url: "/how-we-verify-promocodes" }];
 

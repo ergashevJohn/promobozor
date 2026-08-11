@@ -42,7 +42,7 @@ describe("persistent rate limit (Postgres)", () => {
 
     const { checkRateLimitKey } = await import("./rate-limit");
     const key = `fallback-${Date.now()}`;
-    const config = { name: "fallback", limit: 1, window: 60_000, persistent: true };
+    const config = { name: "fallback", limit: 1, timeWindow: 60_000, persistent: true };
 
     const first = await checkRateLimitKey(key, config);
     const second = await checkRateLimitKey(key, config);
@@ -59,8 +59,8 @@ describe("persistent rate limit (Postgres)", () => {
       headers: { "x-forwarded-for": "203.0.113.10" },
     });
 
-    const analytics = { name: "analytics-scope-test", limit: 1, window: 60_000 };
-    const og = { name: "og-scope-test", limit: 1, window: 60_000 };
+    const analytics = { name: "analytics-scope-test", limit: 1, timeWindow: 60_000 };
+    const og = { name: "og-scope-test", limit: 1, timeWindow: 60_000 };
 
     expect((await checkRateLimit(request, analytics)).success).toBe(true);
     expect((await checkRateLimit(request, analytics)).success).toBe(false);
@@ -83,7 +83,7 @@ describe("rateLimit production guard", () => {
     // Non-persistent config avoids DB in this guard test
     const { checkRateLimitKey } = await import("./rate-limit");
     const uniqueKey = `prod-guard-${Date.now()}-${Math.random()}`;
-    const config = { name: "prod-guard", limit: 1, window: 60_000 };
+    const config = { name: "prod-guard", limit: 1, timeWindow: 60_000 };
 
     const first = await checkRateLimitKey(uniqueKey, config);
     const second = await checkRateLimitKey(uniqueKey, config);
