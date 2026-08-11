@@ -22,9 +22,9 @@ export default async function Image(props: Props) {
   };
 
   const features: Record<string, string[]> = {
-    uz: ["50+ promokodlar", "Har kuni tekshiriladi", "Bepul"],
-    ru: ["50+ промокодов", "Проверяется ежедневно", "Бесплатно"],
-    en: ["50+ promocodes", "Checked daily", "Free"],
+    uz: ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Bepul"],
+    ru: ["Проверенные предложения", "Обновляется ежедневно", "Бесплатно"],
+    en: ["Verified deals", "Updated daily", "Free"],
   };
 
   const description = descriptions[locale] || descriptions.uz;

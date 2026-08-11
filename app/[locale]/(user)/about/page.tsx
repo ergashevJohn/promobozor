@@ -3,8 +3,17 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { PersonSchema } from "@/components/public/PersonSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
+import {
+  brands,
+  categories,
+  db,
+  promocodes,
+  stores,
+} from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
+import { activePromocodeStatusConditions } from "@/lib/promocode-active";
+import { count, eq } from "drizzle-orm";
 import {
   ArrowRight,
   CheckCircle,
@@ -65,11 +74,35 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     { icon: Globe, title: t("reason4Title"), description: t("reason4Description") },
   ];
 
+  let storeCount = 0;
+  let categoryCount = 0;
+  let brandCount = 0;
+  let promocodeCount = 0;
+
+  try {
+    const now = new Date();
+    const [storesRow, categoriesRow, brandsRow, promocodesRow] = await Promise.all([
+      db.select({ value: count() }).from(stores).where(eq(stores.isActive, true)),
+      db.select({ value: count() }).from(categories).where(eq(categories.isActive, true)),
+      db.select({ value: count() }).from(brands).where(eq(brands.isActive, true)),
+      db
+        .select({ value: count() })
+        .from(promocodes)
+        .where(activePromocodeStatusConditions(now)),
+    ]);
+    storeCount = Number(storesRow[0]?.value) || 0;
+    categoryCount = Number(categoriesRow[0]?.value) || 0;
+    brandCount = Number(brandsRow[0]?.value) || 0;
+    promocodeCount = Number(promocodesRow[0]?.value) || 0;
+  } catch (error) {
+    console.error("Failed to load about-page inventory stats:", error);
+  }
+
   const stats = [
-    { label: t("statsStores"), value: "50+" },
-    { label: t("statsCategories"), value: "20+" },
-    { label: t("statsPromocodes"), value: "500+" },
-    { label: t("statsUsers"), value: "10K+" },
+    { label: t("statsStores"), value: String(storeCount) },
+    { label: t("statsCategories"), value: String(categoryCount) },
+    { label: t("statsBrands"), value: String(brandCount) },
+    { label: t("statsPromocodes"), value: String(promocodeCount) },
   ];
 
   return (

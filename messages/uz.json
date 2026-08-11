@@ -76,7 +76,8 @@
     "mainNav": "Asosiy navigatsiya",
     "mobileNav": "Mobil navigatsiya",
     "promoCodeAria": "Promokod: {code}",
-    "loadingOffer": "Taklif yuklanmoqda"
+    "loadingOffer": "Taklif yuklanmoqda",
+    "blog": "Blog"
   },
   "LocaleLayout": {
     "title": "PromoBozor - Chegirmalar va promokodlar bozori",
@@ -104,7 +105,8 @@
     "newsletterPlaceholder": "Email manzilingiz",
     "subscribe": "Obuna bo'lish",
     "copyright": "© 2026 PromoBozor. Barcha huquqlar himoyalangan.",
-    "createdBy": "Muallif"
+    "createdBy": "Muallif",
+    "blog": "Blog va qo‘llanmalar"
   },
   "home": {
     "title": "Chegirmalar va promokodlarni bir joyda toping",
@@ -117,11 +119,19 @@
     "popularStores": "Mashhur do'konlar",
     "popularCategories": "Mashhur kategoriyalar",
     "popularBrands": "Mashhur brendlar",
-    "trustPills": ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Tez va qulay qidiruv"],
+    "trustPills": [
+      "Tekshirilgan takliflar",
+      "Har kuni yangilanadi",
+      "Tez va qulay qidiruv"
+    ],
     "heroInsight": {
       "label": "PromoBozor tavsiyasi",
       "title": "Marketpleyslar, yetkazib berish, bank va servislar uchun foydali takliflar",
-      "tags": ["Promo", "Kupon", "Tejash"]
+      "tags": [
+        "Promo",
+        "Kupon",
+        "Tejash"
+      ]
     },
     "heroCards": {
       "focus": {
@@ -296,7 +306,7 @@
         "steps": [
           {
             "title": "Kerakli do'konni toping",
-            "description": "50+ brenddan o'zingizga ma'qulini tanlang"
+            "description": "Mashhur do‘kon va brendlardan o‘zingizga ma’qulini tanlang"
           },
           {
             "title": "Promokodni nusxalang",
@@ -445,7 +455,9 @@
     "directoryBadge": "Do'kon bo'yicha tejash",
     "curatedRoutesCount": "{count} ta yo'nalish",
     "highActivityBadge": "Faol yo'nalish",
-    "viewStorePromocodesAria": "{name} promokodlarini ko'rish"
+    "viewStorePromocodesAria": "{name} promokodlarini ko'rish",
+    "faqTitle": "{name} promokodlari haqida savollar",
+    "faqDescription": "{name} uchun kodlarni qanday topish, nusxalash va to‘lovda qo‘llash."
   },
   "category": {
     "title": "Kategoriya",
@@ -487,7 +499,9 @@
     "noLinkedStores": "Hali bog'langan do'konlar yo'q.",
     "noLinkedBrands": "Hali bog'langan brendlar yo'q.",
     "offersKicker": "Shu kategoriyadagi eng yaxshi takliflar",
-    "allPromocodesDescription": "{name} ichidagi jonli tejashlar - do'konlar va bog'liq brendlar bo'yicha faol takliflar."
+    "allPromocodesDescription": "{name} ichidagi jonli tejashlar - do'konlar va bog'liq brendlar bo'yicha faol takliflar.",
+    "faqTitle": "{name} kategoriyasi bo‘yicha savollar",
+    "faqDescription": "{name} yo‘nalishidagi promokodlarni qanday topish va ishlatish."
   },
   "brand": {
     "title": "Brend",
@@ -530,7 +544,9 @@
     "noLinkedStores": "Hali bog'langan do'konlar yo'q.",
     "noLinkedCategories": "Hali bog'langan kategoriyalar yo'q.",
     "offersKicker": "Saralangan brend takliflari",
-    "allPromocodesDescription": "{name} bilan bog'liq tejashlar - bir nechta do'kon va faol joylashuvlar bo'yicha."
+    "allPromocodesDescription": "{name} bilan bog'liq tejashlar - bir nechta do'kon va faol joylashuvlar bo'yicha.",
+    "faqTitle": "{name} promokodlari bo‘yicha FAQ",
+    "faqDescription": "{name} chegirmalarini qanday ishlatish va qachon yangilanishi haqida qisqa javoblar."
   },
   "promocode": {
     "title": "Promokod tafsilotlari",
@@ -585,7 +601,8 @@
     "discountLabel": "Chegirma",
     "exploreKicker": "Davom etib ko'ring",
     "exploreDescription": "Shu taklif atrofidagi do'kon, brend yoki kategoriya kontekstiga o'tib, boshqa faol tejash yo'llarini solishtiring.",
-    "relatedDealsKicker": "O'xshash takliflar"
+    "relatedDealsKicker": "O'xshash takliflar",
+    "howToTitle": "Promokodni qanday ishlatish"
   },
   "filter": {
     "filters": "Filtrlar",
@@ -966,7 +983,7 @@
         "Mahalliy brend kampaniyalari va checkout qoidalarini qo'lda tahlil qilish",
         "Muddati o'tgan, takrorlangan va ishonchi past takliflarni tozalash",
         "O'zbekiston xaridorlari uchun ko'p tilli tejash platformasini qurish",
-        "Har kuni 50+ do'konlarning yangi takliflarini kuzatib borish"
+        "Faol do‘konlarning yangi takliflarini muntazam kuzatib borish"
       ],
       "experienceTitle": "Platforma ortidagi editorial standartlar",
       "experience": [
@@ -988,7 +1005,8 @@
     "heroKicker": "PromoBozor haqida",
     "statsKicker": "Statistika",
     "whyUsKicker": "Nega biz",
-    "contactKicker": "Aloqa"
+    "contactKicker": "Aloqa",
+    "statsBrands": "Brendlar"
   },
   "verification": {
     "title": "Promokodlarni nashrdan oldin qanday tekshiramiz",
@@ -1056,5 +1074,14 @@
     "sortingValue": "Yangi, mashhur, tugayotgan",
     "saveTime": "Vaqt tejang",
     "saveTimeValue": "Ko'rishdan oldin filtrlang"
+  },
+  "blog": {
+    "title": "Promokod qo‘llanmalari va maslahatlar",
+    "description": "O‘zbekiston do‘konlari uchun promokodlardan to‘g‘ri foydalanish, shartlarni tushunish va tekshirilgan takliflarni topish bo‘yicha qo‘llanmalar.",
+    "readMore": "Davomini o‘qish",
+    "updated": "Yangilangan",
+    "relatedStore": "Do‘kon hubiga o‘tish",
+    "relatedBrand": "Brend hubiga o‘tish",
+    "allOffers": "Barcha takliflar"
   }
 }

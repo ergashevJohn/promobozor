@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
+import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
@@ -9,6 +9,7 @@ import StructuredData from "@/components/public/StructuredData";
 import { Link } from "@/i18n/navigation";
 import type { Promocode } from "@/components/public/types";
 import { getCachedStorePromocodeCounts } from "@/lib/cache/promocode-counts";
+import { getHubEditorial } from "@/lib/hub-editorial";
 import {
   brands,
   brandTranslations,
@@ -79,6 +80,11 @@ export async function generateMetadata({
     }
 
     const translation = storeData.translation;
+    const hubEditorial = getHubEditorial(slug, locale, "store");
+    const hubDescription =
+      translation?.description && translation.description.trim().length >= 80
+        ? translation.description
+        : hubEditorial?.description || translation?.description || null;
 
     // Get promocode counts from cache (5-min cache for performance)
     const promocodeCounts = await getCachedStorePromocodeCounts(storeData.store.id);
@@ -93,7 +99,7 @@ export async function generateMetadata({
       translation?.metaDescription ||
       generateStoreDescription(
         translation?.name || storeTitle,
-        translation?.description || null,
+        hubDescription,
         totalPromocodes,
         featuredPromocodes,
         locale
@@ -115,7 +121,7 @@ export async function generateMetadata({
       languageAlternates[t.language] = `/${t.language}/store/${t.slug}`;
     });
 
-    return generateFullMetadata(
+    const metadata = generateFullMetadata(
       title,
       description,
       url,
@@ -125,6 +131,16 @@ export async function generateMetadata({
       "",
       languageAlternates
     );
+
+    // Empty hubs should not compete in SERP until they have active offers
+    if (totalPromocodes === 0) {
+      return {
+        ...metadata,
+        robots: { index: false, follow: true },
+      };
+    }
+
+    return metadata;
   } catch {
     return {};
   }
@@ -155,6 +171,7 @@ export default async function StorePage({
   let totalCopies = 0;
   let store;
   let storeTranslation;
+  let resolvedStoreDescription: string | undefined;
 
   try {
     const storeData = await getCachedStoreBySlug(locale, slug);
@@ -165,6 +182,12 @@ export default async function StorePage({
 
     store = storeData.store;
     storeTranslation = storeData.translation;
+
+    const hubEditorial = getHubEditorial(slug, locale, "store");
+    resolvedStoreDescription =
+      storeTranslation?.description && storeTranslation.description.trim().length >= 80
+        ? storeTranslation.description
+        : hubEditorial?.description || storeTranslation?.description || undefined;
 
     // Fetch promocodes for this store (exclude draft only)
     const now = new Date();
@@ -314,17 +337,12 @@ export default async function StorePage({
         lang={locale}
         baseUrl={baseUrl}
         promocodeCount={totalPromocodesCount}
-        entityDescription={storeTranslation?.description || undefined}
-      />
-      <EntityFAQSchema
-        entityName={storeTranslation?.name || storeTitle}
-        entityType="store"
-        locale={locale}
+        entityDescription={resolvedStoreDescription}
       />
       <LocalBusinessSchema
         name={storeTranslation?.name || storeTitle}
         url={`/store/${slug}`}
-        description={storeTranslation?.description || undefined}
+        description={resolvedStoreDescription}
         logo={store.logoUrl || undefined}
         priceRange="$$"
         sameAs={store.websiteUrl ? [store.websiteUrl] : undefined}
@@ -379,8 +397,8 @@ export default async function StorePage({
                     <h1 className="text-foreground mb-2 text-3xl font-semibold md:text-5xl">
                       {t("h1Title", { name: storeTranslation?.name || storeTitle })}
                     </h1>
-                    {storeTranslation?.description && (
-                      <StoreDescription description={storeTranslation.description} />
+                    {resolvedStoreDescription && (
+                      <StoreDescription description={resolvedStoreDescription} />
                     )}
                   </div>
                 </div>
@@ -599,6 +617,14 @@ export default async function StorePage({
               </div>
             ) : null}
           </section>
+
+          <EntityFAQSection
+            entityName={storeTranslation?.name || storeTitle}
+            entityType="store"
+            locale={locale}
+            title={t("faqTitle", { name: storeTranslation?.name || storeTitle })}
+            description={t("faqDescription", { name: storeTranslation?.name || storeTitle })}
+          />
         </div>
       </div>
     </>

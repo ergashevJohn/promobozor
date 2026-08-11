@@ -28,6 +28,7 @@ export async function Footer() {
     { href: "/stores" as const, label: tCommon("stores") },
     { href: "/categories" as const, label: tCommon("categories") },
     { href: "/brands" as const, label: tCommon("brands") },
+    { href: "/blog" as const, label: t("blog") },
   ];
 
   const secondaryLinks = [
