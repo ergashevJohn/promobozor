@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getEntityFaqItems, getHowToSteps } from "./entity-faq";
 import { getHubEditorial, listHubEditorialTargets } from "./hub-editorial";
-import {
-  normalizePromokodAliasSlug,
-  resolvePromokodAliasTarget,
-} from "./promokod-alias";
+import { normalizePromokodAliasSlug, resolvePromokodAliasTarget } from "./promokod-alias";
 import {
   getTopInventoryTargets,
   summarizeInventoryGap,

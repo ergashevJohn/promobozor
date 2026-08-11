@@ -10,9 +10,8 @@ async function main() {
     process.exit(1);
   }
 
-  const { db, promocodes, stores, storeTranslations, brands, brandTranslations } = await import(
-    "../../lib/db"
-  );
+  const { db, promocodes, stores, storeTranslations, brands, brandTranslations } =
+    await import("../../lib/db");
 
   const now = new Date();
   const [{ value: activeCount }] = await db

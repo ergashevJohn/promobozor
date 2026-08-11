@@ -1,9 +1,6 @@
 import { db, brands, brandTranslations, stores, storeTranslations } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
-import {
-  normalizePromokodAliasSlug,
-  resolvePromokodAliasTarget,
-} from "@/lib/promokod-alias";
+import { normalizePromokodAliasSlug, resolvePromokodAliasTarget } from "@/lib/promokod-alias";
 import { and, eq } from "drizzle-orm";
 import { permanentRedirect, notFound } from "next/navigation";
 

@@ -4,10 +4,7 @@ export type EntityFaqItem = { question: string; answer: string };
  * Shared FAQ copy for store/category/brand pages.
  * Used by both visible UI and JSON-LD so they stay in sync.
  */
-export function getEntityFaqItems(
-  entityName: string,
-  locale: string
-): EntityFaqItem[] {
+export function getEntityFaqItems(entityName: string, locale: string): EntityFaqItem[] {
   const faqData: Record<string, EntityFaqItem[]> = {
     uz: [
       {
@@ -119,7 +116,7 @@ export function getHowToSteps(
       },
       {
         name: "Copy the code",
-        text: 'Click Copy so the code is saved to your clipboard.',
+        text: "Click Copy so the code is saved to your clipboard.",
       },
       {
         name: "Go to the store",

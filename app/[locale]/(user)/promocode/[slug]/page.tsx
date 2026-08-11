@@ -125,8 +125,7 @@ export async function generateMetadata({
         .limit(1);
 
       if (inactive) {
-        const inactiveTitle =
-          inactive.promocodeTranslation?.title || promocodeTitle;
+        const inactiveTitle = inactive.promocodeTranslation?.title || promocodeTitle;
         return {
           title: inactiveTitle,
           description: inactive.promocodeTranslation?.metaDescription || inactiveTitle,

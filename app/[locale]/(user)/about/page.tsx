@@ -3,13 +3,7 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { PersonSchema } from "@/components/public/PersonSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import {
-  brands,
-  categories,
-  db,
-  promocodes,
-  stores,
-} from "@/lib/db";
+import { brands, categories, db, promocodes, stores } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
 import { activePromocodeStatusConditions } from "@/lib/promocode-active";
@@ -85,10 +79,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       db.select({ value: count() }).from(stores).where(eq(stores.isActive, true)),
       db.select({ value: count() }).from(categories).where(eq(categories.isActive, true)),
       db.select({ value: count() }).from(brands).where(eq(brands.isActive, true)),
-      db
-        .select({ value: count() })
-        .from(promocodes)
-        .where(activePromocodeStatusConditions(now)),
+      db.select({ value: count() }).from(promocodes).where(activePromocodeStatusConditions(now)),
     ]);
     storeCount = Number(storesRow[0]?.value) || 0;
     categoryCount = Number(categoriesRow[0]?.value) || 0;

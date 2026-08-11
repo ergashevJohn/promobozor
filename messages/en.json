@@ -152,19 +152,11 @@
     "popularStores": "Popular Stores",
     "popularCategories": "Popular Categories",
     "popularBrands": "Popular Brands",
-    "trustPills": [
-      "Verified offers",
-      "Updated daily",
-      "Fast, simple search"
-    ],
+    "trustPills": ["Verified offers", "Updated daily", "Fast, simple search"],
     "heroInsight": {
       "label": "PromoBozor insight",
       "title": "Useful offers across marketplaces, food delivery, banking, and services",
-      "tags": [
-        "Promo",
-        "Coupon",
-        "Savings"
-      ]
+      "tags": ["Promo", "Coupon", "Savings"]
     },
     "heroCards": {
       "focus": {
@@ -286,12 +278,7 @@
         "categories": {
           "eyebrow": "Shop by need",
           "description": "Categories should guide users by intent, not just list taxonomy labels.",
-          "labels": [
-            "Fast-moving",
-            "High-use",
-            "Daily savings",
-            "Curated path"
-          ],
+          "labels": ["Fast-moving", "High-use", "Daily savings", "Curated path"],
           "cardDescriptions": [
             "Useful when you want the strongest currently active offers in this area.",
             "Great for comparing multiple saving options before choosing a store.",

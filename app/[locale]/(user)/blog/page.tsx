@@ -16,14 +16,17 @@ export async function generateMetadata({
   const { locale } = await params;
   if (!isValidLanguage(locale)) return {};
   const t = await getTranslations({ locale, namespace: "blog" });
-  return generateFullMetadata(t("title"), t("description"), `/${locale}/blog`, undefined, "website", locale);
+  return generateFullMetadata(
+    t("title"),
+    t("description"),
+    `/${locale}/blog`,
+    undefined,
+    "website",
+    locale
+  );
 }
 
-export default async function BlogIndexPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function BlogIndexPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isValidLanguage(locale)) notFound();
 
@@ -73,7 +76,9 @@ export default async function BlogIndexPage({
                   {post.title[lang]}
                 </Link>
               </h2>
-              <p className="text-muted-foreground mt-3 text-sm leading-7">{post.description[lang]}</p>
+              <p className="text-muted-foreground mt-3 text-sm leading-7">
+                {post.description[lang]}
+              </p>
               <Link
                 href={`/blog/${post.slug}`}
                 className="mt-4 inline-flex text-sm font-semibold text-[color:var(--accent-red)]"

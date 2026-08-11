@@ -119,19 +119,11 @@
     "popularStores": "Mashhur do'konlar",
     "popularCategories": "Mashhur kategoriyalar",
     "popularBrands": "Mashhur brendlar",
-    "trustPills": [
-      "Tekshirilgan takliflar",
-      "Har kuni yangilanadi",
-      "Tez va qulay qidiruv"
-    ],
+    "trustPills": ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Tez va qulay qidiruv"],
     "heroInsight": {
       "label": "PromoBozor tavsiyasi",
       "title": "Marketpleyslar, yetkazib berish, bank va servislar uchun foydali takliflar",
-      "tags": [
-        "Promo",
-        "Kupon",
-        "Tejash"
-      ]
+      "tags": ["Promo", "Kupon", "Tejash"]
     },
     "heroCards": {
       "focus": {

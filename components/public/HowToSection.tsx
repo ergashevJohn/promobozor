@@ -44,7 +44,7 @@ export function HowToSection({
             className="bg-card border-border flex gap-4 rounded-2xl border p-5 md:p-6"
           >
             <span
-              className="bg-[color:var(--accent-red)] flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[color:var(--accent-red)] text-sm font-bold text-white"
               aria-hidden="true"
             >
               {index + 1}
