@@ -1,12 +1,30 @@
 import { HtmlLangSync } from "@/components/providers/HtmlLangSync";
+import LazyAnalytics from "@/components/providers/LazyAnalytics";
 import LazyToaster from "@/components/providers/LazyToaster";
 import LazyConsentBanner from "@/components/public/LazyConsentBanner";
 import { locales } from "@/i18n/routing";
 import { getBaseUrl } from "@/lib/metadata";
+import { ThemeProvider } from "@/lib/theme-provider";
+import { Agentation } from "agentation";
 import type { Metadata } from "next";
 import { Locale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { JetBrains_Mono, Manrope } from "next/font/google";
 import { notFound } from "next/navigation";
+
+const brandSans = Manrope({
+  subsets: ["latin", "cyrillic", "latin-ext"],
+  display: "swap",
+  adjustFontFallback: true,
+  variable: "--font-brand-sans",
+});
+
+const brandMono = JetBrains_Mono({
+  subsets: ["latin", "cyrillic", "latin-ext"],
+  display: "swap",
+  adjustFontFallback: true,
+  variable: "--font-brand-mono",
+});
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -73,14 +91,12 @@ export async function generateMetadata(props: Omit<LayoutProps, "children">): Pr
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
 
-  // Validate locale
   if (!locales.includes(locale as (typeof locales)[number])) {
     notFound();
   }
 
   setRequestLocale(locale);
 
-  // Get messages for the locale
   const messages = await getMessages();
   const messageRecord = messages as Record<string, unknown>;
   const clientMessages = {
@@ -92,11 +108,27 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
   };
 
   return (
-    <NextIntlClientProvider messages={clientMessages}>
-      <HtmlLangSync />
-      {children}
-      <LazyConsentBanner />
-      <LazyToaster />
-    </NextIntlClientProvider>
+    <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body
+        className={`${brandSans.variable} ${brandMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={clientMessages}>
+            <HtmlLangSync />
+            {children}
+            <LazyConsentBanner />
+            <LazyToaster />
+          </NextIntlClientProvider>
+          {process.env.NODE_ENV === "development" && <Agentation />}
+          <LazyAnalytics />
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

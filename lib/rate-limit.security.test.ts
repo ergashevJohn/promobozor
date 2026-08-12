@@ -16,6 +16,8 @@ describe("persistent rate limit (Postgres)", () => {
   });
 
   it("uses Postgres RETURNING count for persistent configs", async () => {
+    // CI/Vercel may inherit RATE_LIMIT_DISABLED=true from project env; force limiting on.
+    vi.stubEnv("RATE_LIMIT_DISABLED", "false");
     execute.mockResolvedValueOnce([{ count: 1, reset_at: new Date(Date.now() + 60_000) }]);
 
     const { checkRateLimitKey, RateLimits } = await import("./rate-limit");
@@ -27,6 +29,7 @@ describe("persistent rate limit (Postgres)", () => {
   });
 
   it("returns unsuccessful when Postgres count exceeds limit", async () => {
+    vi.stubEnv("RATE_LIMIT_DISABLED", "false");
     execute.mockResolvedValueOnce([{ count: 2, reset_at: new Date(Date.now() + 60_000) }]);
 
     const { checkRateLimitKey, RateLimits } = await import("./rate-limit");
@@ -37,6 +40,7 @@ describe("persistent rate limit (Postgres)", () => {
   });
 
   it("falls back to in-memory when Postgres fails", async () => {
+    vi.stubEnv("RATE_LIMIT_DISABLED", "false");
     execute.mockRejectedValue(new Error("db down"));
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -54,6 +58,7 @@ describe("persistent rate limit (Postgres)", () => {
   });
 
   it("scopes counters by config name so routes do not share a budget", async () => {
+    vi.stubEnv("RATE_LIMIT_DISABLED", "false");
     const { checkRateLimit } = await import("./rate-limit");
     const request = new Request("http://localhost/api/test", {
       headers: { "x-forwarded-for": "203.0.113.10" },

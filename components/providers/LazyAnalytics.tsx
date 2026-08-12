@@ -1,5 +1,6 @@
 "use client";
 
+import { readCspNonce } from "@/lib/csp-nonce";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -19,6 +20,7 @@ const SpeedInsights = dynamic(
 
 export default function LazyAnalytics({ nonce }: { nonce?: string }) {
   const [enabled, setEnabled] = useState(false);
+  const [clientNonce, setClientNonce] = useState(nonce);
 
   useEffect(() => {
     const win = window as Window &
@@ -30,7 +32,10 @@ export default function LazyAnalytics({ nonce }: { nonce?: string }) {
         cancelIdleCallback?: (handle: number) => void;
       };
 
-    const start = () => setEnabled(true);
+    const start = () => {
+      setClientNonce(nonce ?? readCspNonce(document));
+      setEnabled(true);
+    };
 
     if (typeof win.requestIdleCallback === "function") {
       const id = win.requestIdleCallback(start, { timeout: 1500 });
@@ -43,7 +48,7 @@ export default function LazyAnalytics({ nonce }: { nonce?: string }) {
 
     const timeoutId = window.setTimeout(start, 600);
     return () => window.clearTimeout(timeoutId);
-  }, []);
+  }, [nonce]);
 
   if (!enabled) {
     return null;
@@ -51,7 +56,7 @@ export default function LazyAnalytics({ nonce }: { nonce?: string }) {
 
   return (
     <>
-      <AnalyticsClient nonce={nonce} />
+      <AnalyticsClient nonce={clientNonce} />
       <Analytics />
       <SpeedInsights />
     </>

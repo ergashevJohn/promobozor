@@ -1,8 +1,8 @@
 "use client";
 
+import { NotFoundUI } from "@/components/public/NotFoundUI";
 import { routing, type Locale } from "@/i18n/routing";
 import { useMemo } from "react";
-import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export default function NotFound() {
   const locale = useMemo(() => {
@@ -18,5 +18,11 @@ export default function NotFound() {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const messages = require(`@/messages/${locale}.json`);
 
-  return <NotFoundUI locale={locale} messages={messages} />;
+  return (
+    <html lang={locale}>
+      <body>
+        <NotFoundUI locale={locale} messages={messages} />
+      </body>
+    </html>
+  );
 }
