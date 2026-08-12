@@ -1,6 +1,6 @@
 import FeaturedPromocodes from "@/components/home/FeaturedPromocodes";
-import { HomeFAQSection } from "@/components/home/HomeFAQSection";
 import { HomeEditorialGuide } from "@/components/home/HomeEditorialGuide";
+import { HomeFAQSection } from "@/components/home/HomeFAQSection";
 import { HomeIntentRoutes } from "@/components/home/HomeIntentRoutes";
 import PopularStoresCategories from "@/components/home/PopularStoresCategories";
 import HeroSection from "@/components/public/HeroSection";
