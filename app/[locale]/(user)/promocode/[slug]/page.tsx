@@ -1,7 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { HowToSection } from "@/components/public/HowToSection";
 import PromocodeDetail from "@/components/public/PromocodeDetail";
-import { db, promocodeTranslations, promocodes, stores, storeTranslations } from "@/lib/db";
 import { isValidLanguage, type Language } from "@/lib/i18n";
 import {
   generateFullMetadata,
@@ -10,13 +9,19 @@ import {
   generatePromocodeTitle,
   getBaseUrl,
 } from "@/lib/metadata";
-import { getMessages, getTranslations } from "next-intl/server";
-import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
+import { getPromocodeStaticParams } from "@/lib/queries/entities";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { notFound, redirect, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
-import { fetchPromocodeData, fetchRelatedPromocodes, findRedirectUrl } from "./helpers";
+import {
+  getCachedPromocodeData,
+  getCachedPromocodeLanguageAlternates,
+  getCachedPromocodeMetadataData,
+  getCachedRedirectUrl,
+  getCachedRelatedPromocodes,
+} from "./helpers";
 import { PromocodeMetadata } from "./PromocodeMetadata";
 import {
   calculateRating,
@@ -27,11 +32,17 @@ import {
 } from "./transformers";
 
 export async function generateStaticParams() {
-  // Skip static generation for promocodes - render dynamically
-  return [];
+  return getPromocodeStaticParams();
 }
 
 export const revalidate = 1800;
+export const dynamicParams = true;
+
+function toIsoOrUndefined(value: Date | string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  if (typeof value === "string") return value;
+  return value.toISOString();
+}
 
 export async function generateMetadata({
   params,
@@ -59,42 +70,7 @@ export async function generateMetadata({
   }
 
   try {
-    const now = new Date();
-    const [promocodeData] = await db
-      .select({
-        promocode: promocodes,
-        store: stores,
-        storeTranslation: storeTranslations,
-        promocodeTranslation: promocodeTranslations,
-      })
-      .from(promocodes)
-      .leftJoin(stores, eq(promocodes.storeId, stores.id))
-      .leftJoin(
-        promocodeTranslations,
-        and(
-          eq(promocodeTranslations.promocodeId, promocodes.id),
-          eq(promocodeTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(promocodeTranslations.slug, slug)
-        )
-      )
-      .leftJoin(
-        storeTranslations,
-        and(
-          eq(storeTranslations.storeId, stores.id),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .where(
-        and(
-          eq(promocodeTranslations.slug, slug),
-          eq(promocodeTranslations.language, locale as "uz" | "ru" | "en"),
-          eq(promocodes.status, "active"),
-          or(isNull(promocodes.storeId), eq(stores.isActive, true)),
-          or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, now)),
-          or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now))
-        )
-      )
-      .limit(1);
+    const promocodeData = await getCachedPromocodeMetadataData(slug, locale as "uz" | "ru" | "en");
 
     if (!promocodeData) {
       return {};
@@ -147,13 +123,7 @@ export async function generateMetadata({
     });
 
     // Get all language slugs for this promocode
-    const allTranslations = await db
-      .select({
-        language: promocodeTranslations.language,
-        slug: promocodeTranslations.slug,
-      })
-      .from(promocodeTranslations)
-      .where(eq(promocodeTranslations.promocodeId, promocode.id));
+    const allTranslations = await getCachedPromocodeLanguageAlternates(promocode.id);
 
     const languageAlternates: Record<string, string> = {};
     allTranslations.forEach((t) => {
@@ -181,6 +151,7 @@ export default async function PromocodeDetailPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
 
   if (!isValidLanguage(locale)) {
     notFound();
@@ -197,14 +168,17 @@ export default async function PromocodeDetailPage({
   let shouldRedirect = false;
   let redirectUrl: string | null = null;
   let promocode: TransformedPromocode | null = null;
+  let isActiveOffer = false;
 
   try {
     // Fetch promocode data
-    promocodeData = await fetchPromocodeData(slug, locale as "uz" | "ru" | "en");
+    const cachedPage = await getCachedPromocodeData(slug, locale as "uz" | "ru" | "en");
+    promocodeData = cachedPage?.data ?? null;
+    isActiveOffer = cachedPage?.isActiveOffer ?? false;
 
     if (!promocodeData) {
       // Check if slug exists in another language and redirect
-      redirectUrl = await findRedirectUrl(slug, locale as "uz" | "ru" | "en");
+      redirectUrl = await getCachedRedirectUrl(slug, locale as "uz" | "ru" | "en");
       if (redirectUrl) {
         shouldRedirect = true;
       }
@@ -213,7 +187,7 @@ export default async function PromocodeDetailPage({
       promocode = transformPromocodeData(promocodeData);
 
       // Fetch related promocodes
-      const relatedPromocodesData = await fetchRelatedPromocodes(
+      const relatedPromocodesData = await getCachedRelatedPromocodes(
         promocodeData.promocode.id,
         promocodeData.promocode.storeId,
         promocodeData.promocode.categoryId,
@@ -289,10 +263,10 @@ export default async function PromocodeDetailPage({
             locale={locale}
             baseUrl={getBaseUrl()}
             rating={rating}
-            createdAt={promocodeData.promocode.createdAt?.toISOString()}
+            createdAt={toIsoOrUndefined(promocodeData.promocode.createdAt)}
             updatedAt={
-              promocodeData.promocode.updatedAt?.toISOString() ??
-              promocodeData.promocode.createdAt?.toISOString()
+              toIsoOrUndefined(promocodeData.promocode.updatedAt) ??
+              toIsoOrUndefined(promocodeData.promocode.createdAt)
             }
             tPromocode={{ title: tPromocode("title") }}
             tStore={{ title: tStore("title") }}
@@ -370,32 +344,18 @@ export default async function PromocodeDetailPage({
               },
             }}
           />
-          {(() => {
-            const nowMs = Date.now();
-            const expiresAt = promocodeData.promocode.expiresAt;
-            const startsAt = promocodeData.promocode.startsAt;
-            const isActiveOffer =
-              promocodeData.promocode.status === "active" &&
-              (!expiresAt || expiresAt.getTime() > nowMs) &&
-              (!startsAt || startsAt.getTime() <= nowMs);
-
-            if (!isActiveOffer) {
-              return null;
-            }
-
-            return (
-              <div className="page-shell pb-12">
-                <HowToSection
-                  promocodeTitle={promocodeData.promocodeTranslation?.title || tPromocode("title")}
-                  storeName={promocodeData.storeTranslation?.name || tStore("title")}
-                  locale={locale}
-                  imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
-                  baseUrl={getBaseUrl()}
-                  title={tPromocode("howToTitle")}
-                />
-              </div>
-            );
-          })()}
+          {isActiveOffer ? (
+            <div className="page-shell pb-12">
+              <HowToSection
+                promocodeTitle={promocodeData.promocodeTranslation?.title || tPromocode("title")}
+                storeName={promocodeData.storeTranslation?.name || tStore("title")}
+                locale={locale}
+                imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
+                baseUrl={getBaseUrl()}
+                title={tPromocode("howToTitle")}
+              />
+            </div>
+          ) : null}
         </>
       );
     }

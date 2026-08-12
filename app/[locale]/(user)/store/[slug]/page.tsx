@@ -20,22 +20,26 @@ import {
   generateStoreTitle,
   getBaseUrl,
 } from "@/lib/metadata";
-import { getCachedStoreBySlug, getStoreLanguageAlternates } from "@/lib/queries/entities";
-import { fetchStorePageData } from "@/lib/queries/store-page";
+import {
+  getCachedStoreBySlug,
+  getStoreLanguageAlternates,
+  getStoreStaticParams,
+} from "@/lib/queries/entities";
+import { getCachedStorePageData } from "@/lib/queries/store-page";
 import { countUnique } from "@/lib/array-utils";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
-  // Skip static generation for stores - render dynamically
-  return [];
+  return getStoreStaticParams();
 }
 
 export const revalidate = 1800;
+export const dynamicParams = true;
 export async function generateMetadata({
   params,
 }: {
@@ -127,6 +131,7 @@ export default async function StorePage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
 
   if (!isValidLanguage(locale)) {
     notFound();
@@ -176,7 +181,7 @@ export default async function StorePage({
         : hubEditorial?.description || storeTranslation?.description || undefined;
 
     // Fetch promocodes and stats for this store
-    const pageData = await fetchStorePageData(store.id, locale as "uz" | "ru" | "en");
+    const pageData = await getCachedStorePageData(store.id, locale as "uz" | "ru" | "en");
 
     totalPromocodesCount = pageData.stats?.total || 0;
     featuredPromocodesCount = pageData.stats?.featured || 0;

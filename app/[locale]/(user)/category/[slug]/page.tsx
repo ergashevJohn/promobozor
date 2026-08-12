@@ -9,17 +9,6 @@ import CategoryPromocodes from "@/components/public/category/CategoryPromocodes"
 import StructuredData from "@/components/public/StructuredData";
 import type { Promocode } from "@/components/public/types";
 import { getCachedCategoryPromocodeCounts } from "@/lib/cache/promocode-counts";
-import {
-  brands,
-  brandTranslations,
-  categories,
-  categoryTranslations,
-  db,
-  promocodes,
-  promocodeTranslations,
-  stores,
-  storeTranslations,
-} from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import {
   generateCategoryDescription,
@@ -28,26 +17,25 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
-import { getCachedCategoryBySlug, getCategoryLanguageAlternates } from "@/lib/queries/entities";
-import { countUnique } from "@/lib/array-utils";
 import {
-  mapPromocodeListRow,
-  promocodeListSelectWithCategory,
-  type PromocodeListRow,
-} from "@/lib/queries/promocode-list";
-import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
+  getCachedCategoryBySlug,
+  getCategoryLanguageAlternates,
+  getCategoryStaticParams,
+} from "@/lib/queries/entities";
+import { getCachedCategoryPageData } from "@/lib/queries/category-page";
+import { countUnique } from "@/lib/array-utils";
 import type { Metadata } from "next";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
-  // Skip static generation for categories - render dynamically
-  return [];
+  return getCategoryStaticParams();
 }
 
 export const revalidate = 1800;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -135,6 +123,7 @@ export default async function CategoryPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
 
   if (!isValidLanguage(locale)) {
     notFound();
@@ -162,75 +151,10 @@ export default async function CategoryPage({
     category = categoryData.category;
     categoryTranslation = categoryData.translation;
 
-    // Fetch promocodes for this category (exclude draft only)
-    const now = new Date();
-    const baseConditions = [
-      eq(promocodes.categoryId, category.id),
-      ne(promocodes.status, "draft"), // Exclude draft, show all others
-      or(isNull(promocodes.storeId), eq(stores.isActive, true)),
-      // Note: Allow expired promocodes to show
-      or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now)),
-    ];
+    const pageData = await getCachedCategoryPageData(category.id, locale as "uz" | "ru" | "en");
 
-    const statsQuery = db
-      .select({
-        total: sql<number>`COUNT(*)::int`.as("total"),
-      })
-      .from(promocodes)
-      .leftJoin(stores, eq(promocodes.storeId, stores.id))
-      .where(and(...baseConditions));
-
-    const allQuery = db
-      .select(promocodeListSelectWithCategory)
-      .from(promocodes)
-      .leftJoin(stores, eq(promocodes.storeId, stores.id))
-      .innerJoin(categories, eq(promocodes.categoryId, categories.id))
-      .leftJoin(brands, eq(promocodes.brandId, brands.id))
-      .leftJoin(
-        promocodeTranslations,
-        and(
-          eq(promocodeTranslations.promocodeId, promocodes.id),
-          eq(promocodeTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .leftJoin(
-        storeTranslations,
-        and(
-          eq(storeTranslations.storeId, stores.id),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .leftJoin(
-        brandTranslations,
-        and(
-          eq(brandTranslations.brandId, brands.id),
-          eq(brandTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .where(and(...baseConditions))
-      .orderBy(desc(promocodes.isFeatured), asc(promocodes.order))
-      .limit(20);
-
-    const [statsResult, allData] = await Promise.all([statsQuery, allQuery]);
-
-    const stats = statsResult[0];
-    totalPromocodesCount = stats?.total || 0;
-
-    allPromocodes = (allData as PromocodeListRow[]).map((row) =>
-      mapPromocodeListRow(row, {
-        includeStartsAt: false,
-        includeConditions: true,
-        includeMedia: true,
-        includeCategory: true,
-      })
-    );
+    totalPromocodesCount = pageData.stats?.total || 0;
+    allPromocodes = pageData.promocodes;
   } catch (error) {
     unstable_rethrow(error);
     const errorObj = error instanceof Error ? error : new Error(String(error));

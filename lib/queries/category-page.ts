@@ -1,5 +1,5 @@
 /**
- * Brand page data fetching helpers
+ * Category page data fetching helpers
  */
 
 import {
@@ -21,8 +21,8 @@ import { unstable_cache } from "next/cache";
 
 type Locale = "uz" | "ru" | "en";
 
-export async function fetchBrandPageData(
-  brandId: string,
+export async function fetchCategoryPageData(
+  categoryId: string,
   locale: Locale
 ): Promise<{
   stats: { total: number } | null;
@@ -30,7 +30,7 @@ export async function fetchBrandPageData(
 }> {
   const now = new Date();
   const baseConditions = [
-    eq(promocodes.brandId, brandId),
+    eq(promocodes.categoryId, categoryId),
     ne(promocodes.status, "draft"),
     or(isNull(promocodes.storeId), eq(stores.isActive, true)),
     or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now)),
@@ -48,7 +48,7 @@ export async function fetchBrandPageData(
     .select(promocodeListSelectWithCategory)
     .from(promocodes)
     .leftJoin(stores, eq(promocodes.storeId, stores.id))
-    .leftJoin(categories, eq(promocodes.categoryId, categories.id))
+    .innerJoin(categories, eq(promocodes.categoryId, categories.id))
     .leftJoin(brands, eq(promocodes.brandId, brands.id))
     .leftJoin(
       promocodeTranslations,
@@ -78,34 +78,31 @@ export async function fetchBrandPageData(
 
   const [statsResult, allData] = await Promise.all([statsQuery, allQuery]);
 
-  const brandFallback = {
-    id: brandId,
-    imageUrl: null,
-    websiteUrl: null,
-    translations: [{ language: locale, name: "", slug: "" }],
-  };
-
   const allPromocodes = (allData as PromocodeListRow[]).map((row) =>
     mapPromocodeListRow(row, {
       includeStartsAt: false,
       includeConditions: true,
       includeMedia: true,
       includeCategory: true,
-      brandFallback,
     })
   );
 
   return { stats: statsResult[0] || null, promocodes: allPromocodes };
 }
 
-/** Cached brand hub promocodes + stats for ISR (revalidate 30m). */
-export function getCachedBrandPageData(brandId: string, locale: Locale) {
+/** Cached category hub promocodes + stats for ISR (revalidate 30m). */
+export function getCachedCategoryPageData(categoryId: string, locale: Locale) {
   return unstable_cache(
-    () => fetchBrandPageData(brandId, locale),
-    ["brand-page-data", brandId, locale],
+    () => fetchCategoryPageData(categoryId, locale),
+    ["category-page-data", categoryId, locale],
     {
       revalidate: 1800,
-      tags: ["promocodes", "brands", `brand-page-${brandId}`, `brand-page-${brandId}-${locale}`],
+      tags: [
+        "promocodes",
+        "categories",
+        `category-page-${categoryId}`,
+        `category-page-${categoryId}-${locale}`,
+      ],
     }
   )();
 }

@@ -21,22 +21,25 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
-import { getBrandLanguageAlternates, getCachedBrandBySlug } from "@/lib/queries/entities";
-import { fetchBrandPageData } from "@/lib/queries/brand-page";
+import {
+  getBrandLanguageAlternates,
+  getBrandStaticParams,
+  getCachedBrandBySlug,
+} from "@/lib/queries/entities";
+import { getCachedBrandPageData } from "@/lib/queries/brand-page";
 import { countUnique } from "@/lib/array-utils";
 import type { Metadata } from "next";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
-  // Skip static generation for brands - render dynamically
-  // This prevents build errors when brands table doesn't exist
-  return [];
+  return getBrandStaticParams();
 }
 
 export const revalidate = 1800;
+export const dynamicParams = true;
 export async function generateMetadata({
   params,
 }: {
@@ -127,6 +130,7 @@ export default async function BrandPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  setRequestLocale(locale);
 
   if (!isValidLanguage(locale)) {
     notFound();
@@ -176,7 +180,7 @@ export default async function BrandPage({
         : hubEditorial?.description || brandTranslation?.description || undefined;
 
     // Fetch promocodes and stats for this brand
-    const pageData = await fetchBrandPageData(brand.id, locale as Locale);
+    const pageData = await getCachedBrandPageData(brand.id, locale as Locale);
 
     totalPromocodesCount = pageData.stats?.total || 0;
     allPromocodes = pageData.promocodes;

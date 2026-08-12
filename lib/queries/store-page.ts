@@ -17,10 +17,13 @@ import type { PromocodeListRow } from "@/lib/queries/promocode-list";
 import { mapPromocodeListRow, promocodeListSelectWithCategory } from "@/lib/queries/promocode-list";
 import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
 import type { Promocode } from "@/components/public/types";
+import { unstable_cache } from "next/cache";
+
+type Locale = "uz" | "ru" | "en";
 
 export async function fetchStorePageData(
   storeId: string,
-  locale: "uz" | "ru" | "en"
+  locale: Locale
 ): Promise<{
   stats: { total: number; featured: number; totalViews: number; totalCopies: number } | null;
   promocodes: Promocode[];
@@ -90,4 +93,16 @@ export async function fetchStorePageData(
   );
 
   return { stats: statsResult[0] || null, promocodes: allPromocodes };
+}
+
+/** Cached store hub promocodes + stats for ISR (revalidate 30m). */
+export function getCachedStorePageData(storeId: string, locale: Locale) {
+  return unstable_cache(
+    () => fetchStorePageData(storeId, locale),
+    ["store-page-data", storeId, locale],
+    {
+      revalidate: 1800,
+      tags: ["promocodes", "stores", `store-page-${storeId}`, `store-page-${storeId}-${locale}`],
+    }
+  )();
 }

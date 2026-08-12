@@ -1,5 +1,11 @@
 import type { PromocodeStatus } from "@/components/public/types";
 
+function toIsoString(value: Date | string | null | undefined): string | null {
+  if (!value) return null;
+  if (typeof value === "string") return value;
+  return value.toISOString();
+}
+
 export type PromocodeDataRow = {
   promocode: {
     id: string;
@@ -18,10 +24,11 @@ export type PromocodeDataRow = {
     copyCount: number;
     likesCount: number;
     dislikesCount: number;
-    startsAt: Date | null;
-    expiresAt: Date | null;
-    createdAt: Date | null;
-    updatedAt: Date | null;
+    /** Date from DB or ISO string after cache serialization */
+    startsAt: Date | string | null;
+    expiresAt: Date | string | null;
+    createdAt: Date | string | null;
+    updatedAt: Date | string | null;
   };
   store: {
     id: string;
@@ -137,8 +144,8 @@ export function transformPromocodeData(data: PromocodeDataRow): TransformedPromo
     copyCount: data.promocode.copyCount,
     likesCount: data.promocode.likesCount,
     dislikesCount: data.promocode.dislikesCount,
-    startsAt: data.promocode.startsAt?.toISOString() || null,
-    expiresAt: data.promocode.expiresAt?.toISOString() || null,
+    startsAt: toIsoString(data.promocode.startsAt),
+    expiresAt: toIsoString(data.promocode.expiresAt),
     translations: data.promocodeTranslation
       ? [
           {
@@ -222,8 +229,8 @@ export function transformRelatedPromocodes(data: PromocodeDataRow[]): Transforme
       copyCount: row.promocode.copyCount,
       likesCount: row.promocode.likesCount,
       dislikesCount: row.promocode.dislikesCount,
-      startsAt: row.promocode.startsAt?.toISOString() || null,
-      expiresAt: row.promocode.expiresAt?.toISOString() || null,
+      startsAt: toIsoString(row.promocode.startsAt),
+      expiresAt: toIsoString(row.promocode.expiresAt),
       translations: row.promocodeTranslation
         ? [
             {

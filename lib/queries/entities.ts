@@ -4,10 +4,12 @@ import {
   categories,
   categoryTranslations,
   db,
+  promocodes,
+  promocodeTranslations,
   stores,
   storeTranslations,
 } from "@/lib/db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 type Locale = "uz" | "ru" | "en";
@@ -268,4 +270,91 @@ export async function getBrandLanguageAlternates(brandId: string) {
     ["brand-lang-alts", brandId],
     { revalidate: 1800, tags: ["brands", `brand-id-${brandId}`] }
   )();
+}
+
+type StaticParam = { locale: string; slug: string };
+
+/**
+ * Build-time paths for store ISR. Falls back to [] if DB is unavailable during build.
+ * Unknown slugs still render on-demand via dynamicParams (default true).
+ */
+export async function getStoreStaticParams(): Promise<StaticParam[]> {
+  try {
+    const rows = await db
+      .select({
+        locale: storeTranslations.language,
+        slug: storeTranslations.slug,
+      })
+      .from(storeTranslations)
+      .innerJoin(stores, and(eq(storeTranslations.storeId, stores.id), eq(stores.isActive, true)));
+
+    return rows.map((row) => ({ locale: row.locale, slug: row.slug }));
+  } catch (error) {
+    console.warn("getStoreStaticParams skipped:", error);
+    return [];
+  }
+}
+
+export async function getCategoryStaticParams(): Promise<StaticParam[]> {
+  try {
+    const rows = await db
+      .select({
+        locale: categoryTranslations.language,
+        slug: categoryTranslations.slug,
+      })
+      .from(categoryTranslations)
+      .innerJoin(
+        categories,
+        and(eq(categoryTranslations.categoryId, categories.id), eq(categories.isActive, true))
+      );
+
+    return rows.map((row) => ({ locale: row.locale, slug: row.slug }));
+  } catch (error) {
+    console.warn("getCategoryStaticParams skipped:", error);
+    return [];
+  }
+}
+
+export async function getBrandStaticParams(): Promise<StaticParam[]> {
+  try {
+    const rows = await db
+      .select({
+        locale: brandTranslations.language,
+        slug: brandTranslations.slug,
+      })
+      .from(brandTranslations)
+      .innerJoin(brands, and(eq(brandTranslations.brandId, brands.id), eq(brands.isActive, true)));
+
+    return rows.map((row) => ({ locale: row.locale, slug: row.slug }));
+  } catch (error) {
+    console.warn("getBrandStaticParams skipped:", error);
+    return [];
+  }
+}
+
+export async function getPromocodeStaticParams(): Promise<StaticParam[]> {
+  try {
+    const now = new Date();
+    const rows = await db
+      .select({
+        locale: promocodeTranslations.language,
+        slug: promocodeTranslations.slug,
+      })
+      .from(promocodeTranslations)
+      .innerJoin(promocodes, eq(promocodeTranslations.promocodeId, promocodes.id))
+      .leftJoin(stores, eq(promocodes.storeId, stores.id))
+      .where(
+        and(
+          eq(promocodes.status, "active"),
+          or(isNull(promocodes.storeId), eq(stores.isActive, true)),
+          or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, now)),
+          or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now))
+        )
+      );
+
+    return rows.map((row) => ({ locale: row.locale, slug: row.slug }));
+  } catch (error) {
+    console.warn("getPromocodeStaticParams skipped:", error);
+    return [];
+  }
 }
