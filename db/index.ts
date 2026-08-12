@@ -7,9 +7,9 @@ import * as schema from "./schema";
  *
  * Environment variables:
  * - DATABASE_URL: PostgreSQL connection string (required)
- * - DB_POOL_MAX: Maximum connections (default: 5 for production and development; 1 during build)
+ * - DB_POOL_MAX: Maximum connections (default: 1 production serverless / 5 development; 1 during build)
  * - DB_POOL_IDLE_TIMEOUT: Idle timeout in seconds (default: 20)
- * - DB_POOL_CONNECT_TIMEOUT: Connection timeout in seconds (default: 10)
+ * - DB_POOL_CONNECT_TIMEOUT: Connection timeout in seconds (default: 20)
  * - DB_POOL_MAX_LIFETIME: Max connection lifetime in seconds (default: 1800 = 30 min)
  */
 
@@ -21,8 +21,8 @@ const isBuild =
 
 function getDefaultPoolMax(): string {
   if (isBuild) return "1"; // Limit to 1 connection per worker during build to avoid Supabase limits
-  // Serverless + Supabase pooler: keep low to avoid connection exhaustion across instances
-  if (isProduction) return "5";
+  // Serverless + Supabase pooler: keep at 1 to avoid connection exhaustion across instances
+  if (isProduction) return "1";
   return "5";
 }
 
@@ -38,7 +38,7 @@ function shouldUseSsl(dbUrl: string): boolean | "require" {
 const poolConfig = {
   max: parseInt(process.env.DB_POOL_MAX || getDefaultPoolMax(), 10),
   idle_timeout: parseInt(process.env.DB_POOL_IDLE_TIMEOUT || (isBuild ? "2" : "20"), 10),
-  connect_timeout: parseInt(process.env.DB_POOL_CONNECT_TIMEOUT || "15", 10),
+  connect_timeout: parseInt(process.env.DB_POOL_CONNECT_TIMEOUT || "20", 10),
   max_lifetime: parseInt(process.env.DB_POOL_MAX_LIFETIME || (isBuild ? "60" : "1800"), 10),
 };
 

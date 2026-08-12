@@ -1,11 +1,11 @@
-import { db, brands, brandTranslations, stores, storeTranslations } from "@/lib/db";
+import { brands, brandTranslations, db, stores, storeTranslations } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { normalizePromokodAliasSlug, resolvePromokodAliasTarget } from "@/lib/promokod-alias";
 import { getBrandStaticParams, getStoreStaticParams } from "@/lib/queries/entities";
 import { and, eq } from "drizzle-orm";
-import { unstable_cache } from "next/cache";
 import { setRequestLocale } from "next-intl/server";
-import { permanentRedirect, notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
+import { notFound, permanentRedirect } from "next/navigation";
 
 export const revalidate = 3600;
 export const dynamicParams = true;

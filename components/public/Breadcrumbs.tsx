@@ -9,11 +9,12 @@ interface BreadcrumbItem {
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
+  locale: string;
   homeName?: string;
 }
 
-export async function Breadcrumbs({ items, homeName }: BreadcrumbsProps) {
-  const tCommon = await getTranslations("common");
+export async function Breadcrumbs({ items, locale, homeName }: BreadcrumbsProps) {
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const allItems = [{ name: homeName || tCommon("home"), url: "/" }, ...items];
 
   return (

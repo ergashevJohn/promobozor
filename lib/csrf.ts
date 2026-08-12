@@ -1,9 +1,6 @@
 /**
- * CSRF Protection using HMAC-signed tokens
- * Prevents Cross-Site Request Forgery attacks
- *
- * Secret: CSRF_SECRET (preferred). NEXTAUTH_SECRET is accepted as a temporary
- * fallback for environments that have not migrated yet.
+ * Secret: CSRF_SECRET only in production. NEXTAUTH_SECRET is accepted as a
+ * temporary fallback in non-production environments only.
  */
 import crypto from "crypto";
 
@@ -12,9 +9,8 @@ const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds
 const DEFAULT_SECRET = "default-secret-change-in-production";
 
 function getSecret(): string {
-  const secret = process.env.CSRF_SECRET || process.env.NEXTAUTH_SECRET;
-
   if (process.env.NODE_ENV === "production") {
+    const secret = process.env.CSRF_SECRET;
     if (!secret || secret === DEFAULT_SECRET || secret.length < 32) {
       throw new Error(
         "CSRF_SECRET must be set and at least 32 characters in production for CSRF protection"
@@ -23,7 +19,7 @@ function getSecret(): string {
     return secret;
   }
 
-  return secret || DEFAULT_SECRET;
+  return process.env.CSRF_SECRET || process.env.NEXTAUTH_SECRET || DEFAULT_SECRET;
 }
 
 /**

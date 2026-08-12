@@ -7,8 +7,8 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
-export async function Header() {
-  const t = await getTranslations("common");
+export async function Header({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "common" });
 
   const navLinks = [
     { href: "/promocodes" as const, label: t("promocodes") },

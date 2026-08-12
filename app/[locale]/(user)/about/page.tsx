@@ -8,14 +8,14 @@ import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
 import {
   ArrowRight,
-  CheckCircle,
-  Globe,
-  Envelope,
   ArrowsClockwise,
-  Shield,
-  YoutubeLogo,
-  Users,
+  CheckCircle,
+  Envelope,
+  Globe,
   Lightning,
+  Shield,
+  Users,
+  YoutubeLogo,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -113,7 +113,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       />
 
       <div className="page-shell py-4">
-        <Breadcrumbs items={[{ name: t("title"), url: "/about" }]} homeName={tCommon("home")} />
+        <Breadcrumbs
+          locale={locale}
+          items={[{ name: t("title"), url: "/about" }]}
+          homeName={tCommon("home")}
+        />
       </div>
       <BreadcrumbsSchema
         items={[
@@ -241,13 +245,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                   {t("founder.quote")}
                 </blockquote>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <a
-                    href="mailto:jahongirergawev2@gmail.com"
+                  <Link
+                    href="/contact"
                     className="border-border hover:bg-secondary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors"
                   >
                     <Envelope className="h-4 w-4" />
-                    Email
-                  </a>
+                    Email: jahongirergawev2@gmail.com
+                  </Link>
                   <a
                     href="https://t.me/promokoduz_app"
                     target="_blank"
@@ -336,12 +340,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             >
               PromoBozor Telegram
             </a>
-            <a
-              href="mailto:jahongirergawev2@gmail.com"
+            <Link
+              href="/contact"
               className="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex items-center gap-2 rounded-lg px-6 py-3 font-medium transition-colors"
             >
-              Email
-            </a>
+              <Envelope className="h-4 w-4" />
+              Email: jahongirergawev2@gmail.com
+            </Link>
           </div>
         </section>
       </div>

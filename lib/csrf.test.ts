@@ -55,8 +55,9 @@ describe("csrf", () => {
     await expect(csrfProtection(request)).resolves.toEqual({ success: true });
   });
 
-  it("falls back to legacy NEXTAUTH_SECRET when CSRF_SECRET is missing", async () => {
+  it("falls back to legacy NEXTAUTH_SECRET in non-production when CSRF_SECRET is missing", async () => {
     delete process.env.CSRF_SECRET;
+    vi.stubEnv("NODE_ENV", "test");
     process.env.NEXTAUTH_SECRET = "legacy-nextauth-secret-at-least-32-chars";
 
     const { generateCsrfToken, csrfProtection } = await import("./csrf");
@@ -70,5 +71,14 @@ describe("csrf", () => {
     });
 
     await expect(csrfProtection(request)).resolves.toEqual({ success: true });
+  });
+
+  it("requires CSRF_SECRET in production and ignores NEXTAUTH_SECRET fallback", async () => {
+    delete process.env.CSRF_SECRET;
+    vi.stubEnv("NODE_ENV", "production");
+    process.env.NEXTAUTH_SECRET = "legacy-nextauth-secret-at-least-32-chars";
+
+    const { generateCsrfToken } = await import("./csrf");
+    expect(() => generateCsrfToken()).toThrow(/CSRF_SECRET must be set/);
   });
 });

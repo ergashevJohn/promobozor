@@ -238,12 +238,14 @@
       "browse": {
         "stores": {
           "eyebrow": "Do'kondan boshlang",
+          "title": "Do'kondan boshlang",
           "description": "Qayerdan xarid qilishingizni bilsangiz, do'kon sahifalari sizni eng faol va foydali takliflarga tezroq olib boradi.",
           "featuredLabel": "Bu haftadagi top yo'nalish",
           "featuredCta": "Do'kon takliflarini ko'rish"
         },
         "categories": {
           "eyebrow": "Niyat bo'yicha tejash",
+          "title": "Niyat bo'yicha tejash",
           "description": "Kategoriyalar shunchaki taxonomy emas, foydalanuvchini maqsadiga qarab to'g'ri tejash yo'liga boshlashi kerak.",
           "labels": [
             "Tez aylanadigan",
@@ -261,6 +263,7 @@
         },
         "brands": {
           "eyebrow": "Saralangan brendlar",
+          "title": "Saralangan brendlar",
           "description": "Mashhur brendlar oddiy logo devori emas, foydali takliflarni topish yo'li sifatida ko'rinishi kerak.",
           "cardLabel": "Brend yo'li"
         }

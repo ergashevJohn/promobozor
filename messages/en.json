@@ -271,12 +271,14 @@
       "browse": {
         "stores": {
           "eyebrow": "Store-first savings",
+          "title": "Start with the store",
           "description": "When you already know where you want to buy, jump into store-specific pages and reach the most active live offers faster.",
           "featuredLabel": "Top route this week",
           "featuredCta": "See store deals"
         },
         "categories": {
           "eyebrow": "Shop by need",
+          "title": "Shop by need",
           "description": "Categories should guide users by intent, not just list taxonomy labels.",
           "labels": ["Fast-moving", "High-use", "Daily savings", "Curated path"],
           "cardDescriptions": [
@@ -289,6 +291,7 @@
         },
         "brands": {
           "eyebrow": "Curated brands",
+          "title": "Curated brands",
           "description": "Popular brands should feel like useful routes into savings, not just logo walls.",
           "cardLabel": "Brand path"
         }

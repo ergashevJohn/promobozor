@@ -17,9 +17,9 @@ const socialLinks = [
   },
 ] as const;
 
-export async function Footer() {
-  const t = await getTranslations("footer");
-  const tCommon = await getTranslations("common");
+export async function Footer({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "footer" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
   const currentYear = new Date().getFullYear();
 
   const mainLinks = [

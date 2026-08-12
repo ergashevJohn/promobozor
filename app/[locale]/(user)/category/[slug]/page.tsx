@@ -131,7 +131,7 @@ export default async function CategoryPage({
 
   // 410 Gone check
   if (isGone("category", slug)) {
-    const messages = await getMessages();
+    const messages = await getMessages({ locale });
     return <NotFoundUI locale={locale} messages={messages} statusCode="410" />;
   }
 
@@ -242,7 +242,7 @@ export default async function CategoryPage({
       )}
       <div>
         <div className="page-shell py-6">
-          <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+          <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
         {/* Hero Section */}
         <CategoryHero

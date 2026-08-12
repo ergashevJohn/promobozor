@@ -3,14 +3,15 @@ import { getTranslations } from "next-intl/server";
 
 interface BrandDescriptionProps {
   description: string | null | undefined;
+  locale: string;
 }
 
 /**
  * Brand description component with HTML rendering
  * Server component - HTML sanitization happens server-side
  */
-export default async function BrandDescription({ description }: BrandDescriptionProps) {
-  const tEmpty = await getTranslations("empty");
+export default async function BrandDescription({ description, locale }: BrandDescriptionProps) {
+  const tEmpty = await getTranslations({ locale, namespace: "empty" });
 
   return (
     <SafeHtmlContent

@@ -58,4 +58,5 @@ screenshots/*
 audit-venv/*
 playwright-report/*
 test-results/*
+audit-artifacts/*
 .venv/*

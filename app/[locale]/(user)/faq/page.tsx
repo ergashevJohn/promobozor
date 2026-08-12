@@ -57,7 +57,7 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
   return (
     <>
       <div className="page-shell py-4">
-        <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+        <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
       </div>
       <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
       <FAQSchema questions={questions} />

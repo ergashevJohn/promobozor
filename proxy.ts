@@ -35,6 +35,26 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
+  // Home filter query → promocodes listing (keeps /{locale} ISR without searchParams)
+  const homeLocaleMatch = pathname.match(/^\/(uz|ru|en)\/?$/);
+  if (homeLocaleMatch && request.method === "GET") {
+    const filterKeys = ["storeId", "categoryId", "brandId", "search", "sortBy", "featured", "page"];
+    const hasHomeFilters = filterKeys.some((key) => {
+      const value = request.nextUrl.searchParams.get(key);
+      return value !== null && value !== "";
+    });
+    if (hasHomeFilters) {
+      const locale = homeLocaleMatch[1];
+      const target = new URL(`/${locale}/promocodes`, request.url);
+      request.nextUrl.searchParams.forEach((value, key) => {
+        if (filterKeys.includes(key) && value !== "") {
+          target.searchParams.set(key, value);
+        }
+      });
+      return NextResponse.redirect(target, 301);
+    }
+  }
+
   // Database Redirect Check (for old slugs after slug unification)
   const redirectPath = await getRedirectPath(pathname);
   if (redirectPath) {
@@ -51,7 +71,7 @@ export default async function middleware(request: NextRequest) {
   const enforceTrustedTypes = process.env.TRUSTED_TYPES_ENFORCE === "true";
   const trustedTypesDirectives = isProd
     ? [
-        "trusted-types dompurify",
+        "trusted-types dompurify goog#html",
         ...(enforceTrustedTypes ? ["require-trusted-types-for 'script'"] : []),
       ]
     : [];
@@ -127,8 +147,21 @@ export default async function middleware(request: NextRequest) {
   response.headers.set("x-nonce", nonce);
   response.headers.set("Content-Security-Policy", csp);
 
+  // Filtered promocodes listing: keep page ISR, but tell crawlers not to index query variants
+  const promocodesLocaleMatch = pathname.match(/^\/(uz|ru|en)\/promocodes\/?$/);
+  if (promocodesLocaleMatch && request.method === "GET") {
+    const noindexKeys = ["storeId", "categoryId", "brandId", "search", "sortBy", "featured"];
+    const hasFilterQuery = noindexKeys.some((key) => {
+      const value = request.nextUrl.searchParams.get(key);
+      return value !== null && value !== "";
+    });
+    if (hasFilterQuery) {
+      response.headers.set("X-Robots-Tag", "noindex, follow");
+    }
+  }
+
   // Add Server-Timing header for TTFB monitoring (Chrome DevTools → Network → Timing)
-  const middlewareDuration = Date.now() - requestStart;
+  const middlewareDuration = Math.max(0, Date.now() - requestStart);
   response.headers.set(
     "Server-Timing",
     `middleware; dur=${middlewareDuration.toFixed(2)}, desc="Middleware processing time"`

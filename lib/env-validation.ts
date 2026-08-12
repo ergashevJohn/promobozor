@@ -12,15 +12,10 @@ export function validateProductionEnv(): void {
   const warnings: string[] = [];
 
   // CSRF_SECRET - required for CSRF token signing (CRITICAL)
-  // NEXTAUTH_SECRET is accepted temporarily for migration compatibility
-  const csrfSecret = process.env.CSRF_SECRET || process.env.NEXTAUTH_SECRET;
+  const csrfSecret = process.env.CSRF_SECRET;
   if (!csrfSecret || csrfSecret.length < 32) {
     errors.push(
       "CSRF_SECRET must be set and at least 32 characters (required for CSRF protection)"
-    );
-  } else if (!process.env.CSRF_SECRET && process.env.NEXTAUTH_SECRET) {
-    warnings.push(
-      "Using legacy NEXTAUTH_SECRET for CSRF. Rename it to CSRF_SECRET when convenient."
     );
   }
 

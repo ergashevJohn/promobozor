@@ -55,7 +55,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
   return (
     <>
       <div className="page-shell py-4">
-        <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+        <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
       </div>
       <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
 

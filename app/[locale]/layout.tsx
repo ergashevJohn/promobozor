@@ -97,7 +97,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
 
   setRequestLocale(locale);
 
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
   const messageRecord = messages as Record<string, unknown>;
   const clientMessages = {
     common: messageRecord.common ?? {},
@@ -119,7 +119,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider messages={clientMessages}>
+          <NextIntlClientProvider locale={locale} messages={clientMessages}>
             <HtmlLangSync />
             {children}
             <LazyConsentBanner />

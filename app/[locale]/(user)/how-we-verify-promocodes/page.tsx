@@ -68,7 +68,7 @@ export default async function VerificationPage({
   return (
     <>
       <div className="container mx-auto px-6 py-4 lg:px-8">
-        <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+        <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
       </div>
       <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
 

@@ -139,7 +139,7 @@ export default async function StorePage({
 
   // 410 Gone check
   if (isGone("store", slug)) {
-    const messages = await getMessages();
+    const messages = await getMessages({ locale });
     return <NotFoundUI locale={locale} messages={messages} statusCode="410" />;
   }
 
@@ -284,7 +284,7 @@ export default async function StorePage({
       )}
       <div>
         <div className="page-shell py-6">
-          <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+          <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
         <StoreHero
           name={storeTranslation?.name || storeTitle}
@@ -316,6 +316,7 @@ export default async function StorePage({
             featured: tCommon("featured"),
           }}
           slug={slug}
+          locale={locale}
         />
 
         <div className="page-shell py-12">

@@ -68,9 +68,19 @@ export default async function BlogPostPage({
     mainEntityOfPage: `${baseUrl}/${locale}/blog/${post.slug}`,
     author: {
       "@type": "Organization",
-      name: "Promokoduz",
+      name: "PromoBozor",
       url: baseUrl,
     },
+    publisher: {
+      "@type": "Organization",
+      name: "PromoBozor",
+      url: baseUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${baseUrl}/promobozor-logo.png`,
+      },
+    },
+    image: `${baseUrl}/promobozor-logo.png`,
   };
 
   return (
@@ -82,7 +92,7 @@ export default async function BlogPostPage({
       />
       <article className="page-shell py-8 md:py-12">
         <div className="mb-6">
-          <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
+          <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
         <header className="mx-auto max-w-3xl">
           <p className="text-muted-foreground text-xs tracking-wide uppercase">
@@ -111,7 +121,7 @@ export default async function BlogPostPage({
           ) : null}
           {post.relatedBrandSlug ? (
             <Link
-              href={`/brand/${post.relatedBrandSlug}`}
+              href={`/brand/${locale === "ru" && post.relatedBrandSlug === "yandex-eats" ? "yandex-eda" : post.relatedBrandSlug}`}
               className="inline-flex min-h-11 items-center rounded-full border px-4 text-sm font-semibold"
             >
               {t("relatedBrand")}

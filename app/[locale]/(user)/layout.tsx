@@ -2,7 +2,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { generateFullMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 
 export async function generateMetadata({
   params,
@@ -10,7 +10,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const messages = await getMessages();
+  setRequestLocale(locale);
+  const messages = await getMessages({ locale });
 
   const title =
     (messages.header?.title as string) || (messages.LocaleLayout?.title as string) || "PromoBozor";
@@ -22,8 +23,16 @@ export async function generateMetadata({
   return generateFullMetadata(title, description, `/${locale}`, undefined, "website", locale, "/");
 }
 
-export default async function UserLayout({ children }: { children: React.ReactNode }) {
-  const tCommon = await getTranslations("common");
+export default async function UserLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const tCommon = await getTranslations({ locale, namespace: "common" });
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
@@ -33,11 +42,11 @@ export default async function UserLayout({ children }: { children: React.ReactNo
       >
         {tCommon("skipToContent")}
       </a>
-      <Header />
+      <Header locale={locale} />
       <main id="main-content" className="bg-background flex-1 pt-[4.75rem]">
         {children}
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </div>
   );
 }

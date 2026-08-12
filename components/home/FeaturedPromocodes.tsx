@@ -39,10 +39,8 @@ const getFeatured = (locale: string) =>
         or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now)),
       ];
 
-      let promocodesData: PromocodeListRow[] = [];
-
-      try {
-        promocodesData = (await db
+      const runQuery = async () =>
+        (await db
           .select(promocodeListSelect)
           .from(promocodes)
           .leftJoin(stores, eq(promocodes.storeId, stores.id))
@@ -71,9 +69,20 @@ const getFeatured = (locale: string) =>
           .where(and(...whereConditions))
           .orderBy(asc(promocodes.order))
           .limit(6)) as PromocodeListRow[];
+
+      let promocodesData: PromocodeListRow[] = [];
+
+      try {
+        promocodesData = await runQuery();
       } catch (error) {
-        console.error("Error fetching featured promocodes:", error);
-        promocodesData = [];
+        console.error("Error fetching featured promocodes (attempt 1):", error);
+        try {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          promocodesData = await runQuery();
+        } catch (retryError) {
+          console.error("Error fetching featured promocodes (attempt 2):", retryError);
+          promocodesData = [];
+        }
       }
 
       const featuredPromocodes = promocodesData.map((row) =>

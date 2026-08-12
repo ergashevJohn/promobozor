@@ -33,6 +33,7 @@ interface StoreHeroProps {
     featured: string;
   };
   slug: string;
+  locale: string;
 }
 
 export default function StoreHero({
@@ -48,6 +49,7 @@ export default function StoreHero({
   totalCopies,
   translations,
   slug,
+  locale,
 }: StoreHeroProps) {
   const storeLogoUrl = getApprovedImageUrl(logoUrl);
 
@@ -82,7 +84,7 @@ export default function StoreHero({
                 <h1 className="text-foreground mb-2 text-3xl font-semibold md:text-5xl">
                   {translations.h1Title}
                 </h1>
-                {description && <StoreDescription description={description} />}
+                {description && <StoreDescription description={description} locale={locale} />}
               </div>
             </div>
 

@@ -146,9 +146,6 @@ export default async function sitemap({
       allCategoryTranslations,
       allBrandTranslations,
       allPromocodeTranslations,
-      storesWithActivePromos,
-      brandsWithActivePromos,
-      categoriesWithActivePromos,
     ] = await Promise.all([
       db
         .select({
@@ -196,49 +193,7 @@ export default async function sitemap({
             or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
           )
         ),
-      db
-        .selectDistinct({ storeId: promocodes.storeId })
-        .from(promocodes)
-        .where(
-          and(
-            eq(promocodes.status, "active"),
-            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
-            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
-          )
-        ),
-      db
-        .selectDistinct({ brandId: promocodes.brandId })
-        .from(promocodes)
-        .where(
-          and(
-            eq(promocodes.status, "active"),
-            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
-            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
-          )
-        ),
-      db
-        .selectDistinct({ categoryId: promocodes.categoryId })
-        .from(promocodes)
-        .where(
-          and(
-            eq(promocodes.status, "active"),
-            or(isNull(promocodes.expiresAt), gt(promocodes.expiresAt, new Date())),
-            or(isNull(promocodes.startsAt), lte(promocodes.startsAt, new Date()))
-          )
-        ),
     ]);
-
-    const indexableStoreIds = new Set(
-      storesWithActivePromos.map((row) => row.storeId).filter((id): id is string => Boolean(id))
-    );
-    const indexableBrandIds = new Set(
-      brandsWithActivePromos.map((row) => row.brandId).filter((id): id is string => Boolean(id))
-    );
-    const indexableCategoryIds = new Set(
-      categoriesWithActivePromos
-        .map((row) => row.categoryId)
-        .filter((id): id is string => Boolean(id))
-    );
 
     // Store pages
     const storeMap = new Map<string, { language: string; slug: string; updatedAt: Date }[]>();
@@ -250,9 +205,7 @@ export default async function sitemap({
       }
     });
 
-    for (const [storeId, translations] of storeMap.entries()) {
-      if (!indexableStoreIds.has(storeId)) continue;
-
+    for (const [, translations] of storeMap.entries()) {
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 
@@ -285,9 +238,7 @@ export default async function sitemap({
       }
     });
 
-    for (const [categoryId, translations] of categoryMap.entries()) {
-      if (!indexableCategoryIds.has(categoryId)) continue;
-
+    for (const [, translations] of categoryMap.entries()) {
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 
@@ -320,9 +271,7 @@ export default async function sitemap({
       }
     });
 
-    for (const [brandId, translations] of brandMap.entries()) {
-      if (!indexableBrandIds.has(brandId)) continue;
-
+    for (const [, translations] of brandMap.entries()) {
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 

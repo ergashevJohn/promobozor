@@ -6,8 +6,33 @@ import { db, redirects } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 
 const MAX_REDIRECT_HOPS = 5;
+const REDIRECT_CACHE_TTL_MS = 60_000;
 
 type RedirectLookup = (fromPath: string) => Promise<string | null>;
+
+type RedirectCacheEntry = {
+  value: string | null;
+  expiresAt: number;
+};
+
+const redirectPathCache = new Map<string, RedirectCacheEntry>();
+
+function getCachedRedirect(fullPath: string): string | null | undefined {
+  const hit = redirectPathCache.get(fullPath);
+  if (!hit) return undefined;
+  if (Date.now() > hit.expiresAt) {
+    redirectPathCache.delete(fullPath);
+    return undefined;
+  }
+  return hit.value;
+}
+
+function setCachedRedirect(fullPath: string, value: string | null) {
+  redirectPathCache.set(fullPath, {
+    value,
+    expiresAt: Date.now() + REDIRECT_CACHE_TTL_MS,
+  });
+}
 
 /**
  * Resolve redirect chains to a single final target.
@@ -62,8 +87,13 @@ export async function resolveRedirectChain(
  * @returns The path to redirect to, or null if no redirect found
  */
 export async function getRedirectPath(fullPath: string): Promise<string | null> {
+  const cached = getCachedRedirect(fullPath);
+  if (cached !== undefined) {
+    return cached;
+  }
+
   try {
-    return await resolveRedirectChain(fullPath, async (fromPath) => {
+    const resolved = await resolveRedirectChain(fullPath, async (fromPath) => {
       const [redirect] = await db
         .select({ toPath: redirects.toPath })
         .from(redirects)
@@ -72,7 +102,10 @@ export async function getRedirectPath(fullPath: string): Promise<string | null> 
 
       return redirect?.toPath || null;
     });
+    setCachedRedirect(fullPath, resolved);
+    return resolved;
   } catch {
+    setCachedRedirect(fullPath, null);
     return null;
   }
 }
