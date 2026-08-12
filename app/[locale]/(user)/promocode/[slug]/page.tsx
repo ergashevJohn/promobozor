@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { HowToSection } from "@/components/public/HowToSection";
+import { NotFoundUI } from "@/components/public/NotFoundUI";
 import PromocodeDetail from "@/components/public/PromocodeDetail";
 import { isValidLanguage, type Language } from "@/lib/i18n";
 import {
@@ -10,11 +11,10 @@ import {
   getBaseUrl,
 } from "@/lib/metadata";
 import { getPromocodeStaticParams } from "@/lib/queries/entities";
-import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import type { Metadata } from "next";
-import { notFound, redirect, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
-import { NotFoundUI } from "@/components/public/NotFoundUI";
+import type { Metadata } from "next";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound, redirect, unstable_rethrow } from "next/navigation";
 import {
   getCachedPromocodeData,
   getCachedPromocodeLanguageAlternates,
@@ -27,8 +27,8 @@ import {
   calculateRating,
   transformPromocodeData,
   transformRelatedPromocodes,
-  type TransformedPromocode,
   type PromocodeDataRow,
+  type TransformedPromocode,
 } from "./transformers";
 
 export async function generateStaticParams() {

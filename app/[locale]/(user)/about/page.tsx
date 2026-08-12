@@ -3,11 +3,9 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { PersonSchema } from "@/components/public/PersonSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { brands, categories, db, promocodes, stores } from "@/lib/db";
+import { getCachedInventoryStats } from "@/lib/cache/inventory-stats";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
-import { activePromocodeStatusConditions } from "@/lib/promocode-active";
-import { count, eq } from "drizzle-orm";
 import {
   ArrowRight,
   CheckCircle,
@@ -20,7 +18,7 @@ import {
   Lightning,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({
@@ -47,6 +45,7 @@ export const revalidate = 3600;
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   if (!isValidLanguage(locale)) {
     notFound();
@@ -74,17 +73,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   let promocodeCount = 0;
 
   try {
-    const now = new Date();
-    const [storesRow, categoriesRow, brandsRow, promocodesRow] = await Promise.all([
-      db.select({ value: count() }).from(stores).where(eq(stores.isActive, true)),
-      db.select({ value: count() }).from(categories).where(eq(categories.isActive, true)),
-      db.select({ value: count() }).from(brands).where(eq(brands.isActive, true)),
-      db.select({ value: count() }).from(promocodes).where(activePromocodeStatusConditions(now)),
-    ]);
-    storeCount = Number(storesRow[0]?.value) || 0;
-    categoryCount = Number(categoriesRow[0]?.value) || 0;
-    brandCount = Number(brandsRow[0]?.value) || 0;
-    promocodeCount = Number(promocodesRow[0]?.value) || 0;
+    const statsData = await getCachedInventoryStats();
+    storeCount = statsData.storeCount;
+    categoryCount = statsData.categoryCount;
+    brandCount = statsData.brandCount;
+    promocodeCount = statsData.promocodeCount;
   } catch (error) {
     console.error("Failed to load about-page inventory stats:", error);
   }
