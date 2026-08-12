@@ -5,7 +5,6 @@ import PromocodesPageClient, {
   type PromocodesPageTranslations,
 } from "@/components/public/PromocodesPageClient";
 import type { Promocode } from "@/components/public/types";
-import { SkeletonCardGrid } from "@/components/ui/skeleton-card";
 import {
   brands,
   brandTranslations,
@@ -28,7 +27,6 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 const ITEMS_PER_PAGE = 24;
 
@@ -252,16 +250,14 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
         lang={locale}
         baseUrl={getBaseUrl()}
       />
-      <Suspense fallback={<SkeletonCardGrid count={ITEMS_PER_PAGE} />}>
-        <PromocodesPageClient
-          locale={locale}
-          initialSectionData={initialSectionData}
-          stores={filtersData.storesList}
-          categories={filtersData.categoriesList}
-          brands={filtersData.brandsList}
-          translations={translations}
-        />
-      </Suspense>
+      <PromocodesPageClient
+        locale={locale}
+        initialSectionData={initialSectionData}
+        stores={filtersData.storesList}
+        categories={filtersData.categoriesList}
+        brands={filtersData.brandsList}
+        translations={translations}
+      />
     </>
   );
 }

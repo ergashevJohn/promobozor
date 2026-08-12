@@ -6,7 +6,7 @@ import SearchBar from "@/components/public/SearchBar";
 import ServerPagination from "@/components/public/ServerPagination";
 import type { Promocode } from "@/components/public/types";
 import { SkeletonCardGrid } from "@/components/ui/skeleton-card";
-import { useSearchParams } from "next/navigation";
+import { useBrowserSearchParams } from "@/lib/hooks/use-browser-search-params";
 import { useEffect, useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 24;
@@ -161,13 +161,13 @@ export default function PromocodesPageClient({
   brands,
   translations,
 }: PromocodesPageClientProps) {
-  const searchParams = useSearchParams();
+  const searchParams = useBrowserSearchParams();
   const currentParams = useMemo(() => searchParamsToRecord(searchParams), [searchParams]);
   const shouldFetch = useMemo(() => needsClientFetch(searchParams), [searchParams]);
   const paramsKey = searchParams.toString();
 
   const [sectionData, setSectionData] = useState<PromocodesInitialSectionData>(initialSectionData);
-  const [isLoading, setIsLoading] = useState(shouldFetch);
+  const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
@@ -178,6 +178,7 @@ export default function PromocodesPageClient({
       return;
     }
 
+    const activeParams = new URLSearchParams(paramsKey);
     const controller = new AbortController();
     let cancelled = false;
 
@@ -185,7 +186,7 @@ export default function PromocodesPageClient({
       setIsLoading(true);
       setFetchError(false);
 
-      const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1);
+      const currentPage = Math.max(1, parseInt(activeParams.get("page") || "1", 10) || 1);
       const offset = (currentPage - 1) * ITEMS_PER_PAGE;
       const query = new URLSearchParams({
         lang: locale,
@@ -194,7 +195,7 @@ export default function PromocodesPageClient({
       });
 
       for (const key of FILTER_QUERY_KEYS) {
-        const value = searchParams.get(key);
+        const value = activeParams.get(key);
         if (value) {
           query.set(key, value);
         }
@@ -240,7 +241,7 @@ export default function PromocodesPageClient({
         if (!cancelled) {
           setFetchError(true);
           setSectionData({
-            currentPage: Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1),
+            currentPage: Math.max(1, parseInt(activeParams.get("page") || "1", 10) || 1),
             totalPages: 1,
             totalPromocodesCount: 0,
             promocodesList: [],
@@ -259,7 +260,7 @@ export default function PromocodesPageClient({
       cancelled = true;
       controller.abort();
     };
-  }, [shouldFetch, paramsKey, locale, initialSectionData, searchParams]);
+  }, [shouldFetch, paramsKey, locale, initialSectionData]);
 
   const storeIdFilter = currentParams.storeId;
   const categoryIdFilter = currentParams.categoryId;
