@@ -4,25 +4,15 @@ import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
-import StoreDescription from "@/components/public/StoreDescription";
+import StoreHero from "@/components/public/store/StoreHero";
+import StoreRelatedBrands from "@/components/public/store/StoreRelatedBrands";
+import StoreRelatedCategories from "@/components/public/store/StoreRelatedCategories";
 import StructuredData from "@/components/public/StructuredData";
 import { Link } from "@/i18n/navigation";
 import type { Promocode } from "@/components/public/types";
 import { getCachedStorePromocodeCounts } from "@/lib/cache/promocode-counts";
 import { getHubEditorial } from "@/lib/hub-editorial";
-import {
-  brands,
-  brandTranslations,
-  categories,
-  categoryTranslations,
-  db,
-  promocodes,
-  promocodeTranslations,
-  stores,
-  storeTranslations,
-} from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
-import { getApprovedImageUrl } from "@/lib/media";
 import {
   generateFullMetadata,
   generateOgImageUrl,
@@ -31,17 +21,12 @@ import {
   getBaseUrl,
 } from "@/lib/metadata";
 import { getCachedStoreBySlug, getStoreLanguageAlternates } from "@/lib/queries/entities";
-import {
-  mapPromocodeListRow,
-  promocodeListSelectWithCategory,
-  type PromocodeListRow,
-} from "@/lib/queries/promocode-list";
-import { and, asc, desc, eq, isNull, lte, ne, or, sql } from "drizzle-orm";
-import { MagnifyingGlass, Storefront } from "@phosphor-icons/react/dist/ssr";
+import { fetchStorePageData } from "@/lib/queries/store-page";
+import { countUnique } from "@/lib/array-utils";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getMessages, getTranslations } from "next-intl/server";
-import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 
@@ -121,7 +106,7 @@ export async function generateMetadata({
       languageAlternates[t.language] = `/${t.language}/store/${t.slug}`;
     });
 
-    const metadata = generateFullMetadata(
+    return generateFullMetadata(
       title,
       description,
       url,
@@ -131,16 +116,6 @@ export async function generateMetadata({
       "",
       languageAlternates
     );
-
-    // Empty hubs should not compete in SERP until they have active offers
-    if (totalPromocodes === 0) {
-      return {
-        ...metadata,
-        robots: { index: false, follow: true },
-      };
-    }
-
-    return metadata;
   } catch {
     return {};
   }
@@ -173,13 +148,24 @@ export default async function StorePage({
   let storeTranslation;
   let resolvedStoreDescription: string | undefined;
 
+  let storeData;
   try {
-    const storeData = await getCachedStoreBySlug(locale, slug);
+    storeData = await getCachedStoreBySlug(locale, slug);
+  } catch (error) {
+    unstable_rethrow(error);
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+    console.error("Error fetching store:", errorObj);
+    console.error("Error details:", errorObj.message);
+    console.error("Store slug:", slug);
+    console.error("Language:", locale);
+    notFound();
+  }
 
-    if (!storeData) {
-      notFound();
-    }
+  if (!storeData) {
+    notFound();
+  }
 
+  try {
     store = storeData.store;
     storeTranslation = storeData.translation;
 
@@ -189,132 +175,62 @@ export default async function StorePage({
         ? storeTranslation.description
         : hubEditorial?.description || storeTranslation?.description || undefined;
 
-    // Fetch promocodes for this store (exclude draft only)
-    const now = new Date();
-    const baseConditions = [
-      eq(promocodes.storeId, store.id),
-      ne(promocodes.status, "draft"), // Exclude draft, show all others
-      eq(stores.isActive, true),
-      // Note: Allow expired promocodes to show
-      or(isNull(promocodes.startsAt), lte(promocodes.startsAt, now)),
-    ];
+    // Fetch promocodes and stats for this store
+    const pageData = await fetchStorePageData(store.id, locale as "uz" | "ru" | "en");
 
-    const statsQuery = db
-      .select({
-        total: sql<number>`COUNT(*)::int`.as("total"),
-        featured: sql<number>`COUNT(*) FILTER (WHERE ${promocodes.isFeatured} = true)::int`.as(
-          "featured"
-        ),
-        totalViews: sql<number>`COALESCE(SUM(${promocodes.viewsCount}), 0)::int`.as("total_views"),
-        totalCopies: sql<number>`COALESCE(SUM(${promocodes.copyCount}), 0)::int`.as("total_copies"),
-      })
-      .from(promocodes)
-      .leftJoin(stores, eq(promocodes.storeId, stores.id))
-      .where(and(...baseConditions));
-
-    const allQuery = db
-      .select(promocodeListSelectWithCategory)
-      .from(promocodes)
-      .leftJoin(stores, eq(promocodes.storeId, stores.id))
-      .leftJoin(categories, eq(promocodes.categoryId, categories.id))
-      .leftJoin(brands, eq(promocodes.brandId, brands.id))
-      .leftJoin(
-        promocodeTranslations,
-        and(
-          eq(promocodeTranslations.promocodeId, promocodes.id),
-          eq(promocodeTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .leftJoin(
-        storeTranslations,
-        and(
-          eq(storeTranslations.storeId, stores.id),
-          eq(storeTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .leftJoin(
-        brandTranslations,
-        and(
-          eq(brandTranslations.brandId, brands.id),
-          eq(brandTranslations.language, locale as "uz" | "ru" | "en")
-        )
-      )
-      .where(and(...baseConditions))
-      .orderBy(desc(promocodes.isFeatured), asc(promocodes.order))
-      .limit(20);
-
-    const [statsResult, allData] = await Promise.all([statsQuery, allQuery]);
-
-    const stats = statsResult[0];
-    totalPromocodesCount = stats?.total || 0;
-    featuredPromocodesCount = stats?.featured || 0;
-    totalViews = stats?.totalViews || 0;
-    totalCopies = stats?.totalCopies || 0;
-
-    allPromocodes = (allData as PromocodeListRow[]).map((row) =>
-      mapPromocodeListRow(row, {
-        includeStartsAt: false,
-        includeConditions: true,
-        includeMedia: true,
-        includeCategory: true,
-      })
-    );
+    totalPromocodesCount = pageData.stats?.total || 0;
+    featuredPromocodesCount = pageData.stats?.featured || 0;
+    totalViews = pageData.stats?.totalViews || 0;
+    totalCopies = pageData.stats?.totalCopies || 0;
+    allPromocodes = pageData.promocodes;
   } catch (error) {
+    unstable_rethrow(error);
     const errorObj = error instanceof Error ? error : new Error(String(error));
-    console.error("Error fetching store:", errorObj);
+    console.error("Error fetching store page data:", errorObj);
     console.error("Error details:", errorObj.message);
     console.error("Store slug:", slug);
     console.error("Language:", locale);
     notFound();
   }
-  const t = await getTranslations({ locale, namespace: "store" });
-  const tCommon = await getTranslations({ locale, namespace: "common" });
-  const tEmpty = await getTranslations({ locale, namespace: "empty" });
-  const tCard = await getTranslations({ locale, namespace: "card" });
-  const tPromocode = await getTranslations({ locale, namespace: "promocode" });
+  const [t, tCommon, tEmpty, tCard, tPromocode] = await Promise.all([
+    getTranslations({ locale, namespace: "store" }),
+    getTranslations({ locale, namespace: "common" }),
+    getTranslations({ locale, namespace: "empty" }),
+    getTranslations({ locale, namespace: "card" }),
+    getTranslations({ locale, namespace: "promocode" }),
+  ]);
+
   const storeTitle = t("title");
   const promocodeTitle = tPromocode("title");
   const schemaPromocodes = allPromocodes.slice(0, 20);
-  const uniqueBrandCount = new Set(allPromocodes.map((item) => item.brand?.id).filter(Boolean))
-    .size;
-  const uniqueCategoryCount = new Set(
-    allPromocodes.map((item) => item.category?.id).filter(Boolean)
-  ).size;
-  const relatedBrands = Array.from(
-    new Map(
-      allPromocodes
-        .filter((item) => item.brand?.translations?.[0]?.slug)
-        .map((item) => [
-          item.brand?.id,
-          {
-            id: item.brand?.id || "",
-            name: item.brand?.translations?.[0]?.name || "",
-            slug: item.brand?.translations?.[0]?.slug || "",
-          },
-        ])
-    ).values()
-  ).slice(0, 4);
-  const relatedCategories = Array.from(
-    new Map(
-      allPromocodes
-        .filter((item) => item.category?.translations?.[0]?.slug)
-        .map((item) => [
-          item.category?.id,
-          {
-            id: item.category?.id || "",
-            name: item.category?.translations?.[0]?.name || "",
-            slug: item.category?.translations?.[0]?.slug || "",
-          },
-        ])
-    ).values()
-  ).slice(0, 4);
+  const uniqueBrandCount = countUnique(allPromocodes, (item) => item.brand?.id);
+  const uniqueCategoryCount = countUnique(allPromocodes, (item) => item.category?.id);
+
+  // Single-pass extraction for related brands
+  const relatedBrandsMap = new Map();
+  for (const item of allPromocodes) {
+    if (item.brand?.translations?.[0]?.slug) {
+      relatedBrandsMap.set(item.brand?.id, {
+        id: item.brand?.id || "",
+        name: item.brand?.translations?.[0]?.name || "",
+        slug: item.brand?.translations?.[0]?.slug || "",
+      });
+    }
+  }
+  const relatedBrands = Array.from(relatedBrandsMap.values()).slice(0, 4);
+
+  // Single-pass extraction for related categories
+  const relatedCategoriesMap = new Map();
+  for (const item of allPromocodes) {
+    if (item.category?.translations?.[0]?.slug) {
+      relatedCategoriesMap.set(item.category?.id, {
+        id: item.category?.id || "",
+        name: item.category?.translations?.[0]?.name || "",
+        slug: item.category?.translations?.[0]?.slug || "",
+      });
+    }
+  }
+  const relatedCategories = Array.from(relatedCategoriesMap.values()).slice(0, 4);
 
   // Build breadcrumbs with full hierarchy
   const breadcrumbItems = [
@@ -326,7 +242,6 @@ export default async function StorePage({
   ];
 
   const baseUrl = getBaseUrl();
-  const storeLogoUrl = getApprovedImageUrl(store.logoUrl);
 
   return (
     <>
@@ -366,185 +281,54 @@ export default async function StorePage({
         <div className="page-shell py-6">
           <Breadcrumbs items={breadcrumbItems} homeName={tCommon("home")} />
         </div>
-        {/* Hero Section */}
-        <div className="page-shell pb-10">
-          <div className="page-hero-surface">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
-              <div>
-                <div className="mb-6 flex items-start gap-4">
-                  {storeLogoUrl ? (
-                    <div className="bg-card border-border relative mt-2 flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
-                      <Image
-                        src={storeLogoUrl}
-                        alt={
-                          storeTranslation?.name
-                            ? `${storeTranslation.name} - ${tCommon("altStoreLogo")}`
-                            : tCommon("altStoreLogoWithSlug", { slug })
-                        }
-                        fill
-                        className="h-full w-full object-contain"
-                        sizes="80px"
-                        priority
-                      />
-                    </div>
-                  ) : (
-                    <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-4xl md:size-20">
-                      <Storefront className="text-foreground size-10 md:size-12" />
-                    </div>
-                  )}
-                  <div>
-                    <div className="brand-kicker mb-4">{t("heroKicker")}</div>
-                    <h1 className="text-foreground mb-2 text-3xl font-semibold md:text-5xl">
-                      {t("h1Title", { name: storeTranslation?.name || storeTitle })}
-                    </h1>
-                    {resolvedStoreDescription && (
-                      <StoreDescription description={resolvedStoreDescription} />
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="surface-stat">
-                    <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                      {t("activeRouteLabel")}
-                    </div>
-                    <div className="mt-3 text-3xl font-semibold text-[color:var(--foreground)]">
-                      {totalPromocodesCount}
-                    </div>
-                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {t("activePromocodes")}
-                    </p>
-                  </div>
-                  <div className="surface-stat">
-                    <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                      {t("brandMixLabel")}
-                    </div>
-                    <div className="mt-3 text-3xl font-semibold text-[color:var(--foreground)]">
-                      {uniqueBrandCount}
-                    </div>
-                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {t("connectedBrandsLabel")}
-                    </p>
-                  </div>
-                  <div className="surface-stat">
-                    <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                      {t("categorySpreadLabel")}
-                    </div>
-                    <div className="mt-3 text-3xl font-semibold text-[color:var(--foreground)]">
-                      {uniqueCategoryCount}
-                    </div>
-                    <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                      {t("activeCategoryPathsLabel")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="surface-dark p-5">
-                  <div className="text-xs font-semibold tracking-[0.16em] text-white/70 uppercase">
-                    {t("storeTrustTitle")}
-                  </div>
-                  <div className="mt-3 text-2xl font-semibold">
-                    {featuredPromocodesCount} {tCommon("featured").toLowerCase()}
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-white/74">
-                    {t("storeTrustDescription")}
-                  </p>
-                  {store.websiteUrl && (
-                    <a
-                      href={store.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow sponsored"
-                      className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-[color:var(--ink-foreground)] px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition-transform hover:-translate-y-0.5"
-                    >
-                      {t("visitWebsite")}
-                      <svg
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
-                    </a>
-                  )}
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="surface-stat">
-                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {t("views")}
-                    </div>
-                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                      {totalViews}
-                    </div>
-                  </div>
-                  <div className="surface-stat">
-                    <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {t("uses")}
-                    </div>
-                    <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                      {totalCopies}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <StoreHero
+          name={storeTranslation?.name || storeTitle}
+          description={resolvedStoreDescription}
+          logoUrl={store.logoUrl}
+          websiteUrl={store.websiteUrl}
+          totalPromocodesCount={totalPromocodesCount}
+          uniqueBrandCount={uniqueBrandCount}
+          uniqueCategoryCount={uniqueCategoryCount}
+          featuredPromocodesCount={featuredPromocodesCount}
+          totalViews={totalViews}
+          totalCopies={totalCopies}
+          translations={{
+            heroKicker: t("heroKicker"),
+            h1Title: t("h1Title", { name: storeTranslation?.name || storeTitle }),
+            activeRouteLabel: t("activeRouteLabel"),
+            activePromocodes: t("activePromocodes"),
+            brandMixLabel: t("brandMixLabel"),
+            connectedBrandsLabel: t("connectedBrandsLabel"),
+            categorySpreadLabel: t("categorySpreadLabel"),
+            activeCategoryPathsLabel: t("activeCategoryPathsLabel"),
+            storeTrustTitle: t("storeTrustTitle"),
+            storeTrustDescription: t("storeTrustDescription"),
+            visitWebsite: t("visitWebsite"),
+            views: t("views"),
+            uses: t("uses"),
+            altStoreLogo: tCommon("altStoreLogo"),
+            altStoreLogoWithSlug: (slug: string) => tCommon("altStoreLogoWithSlug", { slug }),
+            featured: tCommon("featured"),
+          }}
+          slug={slug}
+        />
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <div className="surface-card p-5">
-              <p className="text-muted-foreground mb-4 text-sm leading-6">
-                {t("relatedBrandsDescription")}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {relatedBrands.length > 0 ? (
-                  relatedBrands.map((brand) => (
-                    <Link
-                      key={brand.id}
-                      href={`/brand/${brand.slug}`}
-                      className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
-                    >
-                      {brand.name}
-                    </Link>
-                  ))
-                ) : (
-                  <span className="text-sm text-[color:var(--muted-foreground)]">
-                    {t("noLinkedBrands")}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="surface-card p-5">
-              <p className="text-muted-foreground mb-4 text-sm leading-6">
-                {t("relatedCategoriesDescription")}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {relatedCategories.length > 0 ? (
-                  relatedCategories.map((category) => (
-                    <Link
-                      key={category.id}
-                      href={`/category/${category.slug}`}
-                      className="rounded-full border border-[color:var(--border)] bg-[color:var(--secondary)] px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)]"
-                    >
-                      {category.name}
-                    </Link>
-                  ))
-                ) : (
-                  <span className="text-sm text-[color:var(--muted-foreground)]">
-                    {t("noLinkedCategories")}
-                  </span>
-                )}
-              </div>
-            </div>
+            <StoreRelatedBrands
+              relatedBrands={relatedBrands}
+              translations={{
+                relatedBrandsDescription: t("relatedBrandsDescription"),
+                noLinkedBrands: t("noLinkedBrands"),
+              }}
+            />
+            <StoreRelatedCategories
+              relatedCategories={relatedCategories}
+              translations={{
+                relatedCategoriesDescription: t("relatedCategoriesDescription"),
+                noLinkedCategories: t("noLinkedCategories"),
+              }}
+            />
           </section>
 
           {/* All Promocodes */}

@@ -1,3 +1,4 @@
+import serialize from "serialize-javascript";
 import { getBaseUrl } from "@/lib/metadata";
 
 interface ItemListItem {
@@ -43,9 +44,6 @@ export function ItemListSchema({ items, listName, listDescription }: ItemListSch
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

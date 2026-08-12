@@ -7,6 +7,29 @@ export const runtime = "nodejs";
 
 const OG_CACHE_CONTROL = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
 
+const accents: Record<string, { glow: string; badge: string }> = {
+  default: {
+    glow: "rgba(255, 90, 79, 0.16)",
+    badge: "linear-gradient(135deg, #ff5a4f, #ff7a70)",
+  },
+  store: {
+    glow: "rgba(17, 24, 39, 0.12)",
+    badge: "linear-gradient(135deg, #111827, #1f2937)",
+  },
+  category: {
+    glow: "rgba(245, 158, 11, 0.14)",
+    badge: "linear-gradient(135deg, #f59e0b, #fbbf24)",
+  },
+  brand: {
+    glow: "rgba(22, 163, 74, 0.14)",
+    badge: "linear-gradient(135deg, #16a34a, #22c55e)",
+  },
+  promocode: {
+    glow: "rgba(255, 90, 79, 0.2)",
+    badge: "linear-gradient(135deg, #ff5a4f, #fb7185)",
+  },
+};
+
 export async function GET(request: NextRequest) {
   try {
     const rateLimitResult = await checkRateLimit(request, RateLimits.og);
@@ -47,30 +70,6 @@ export async function GET(request: NextRequest) {
     // Truncate description
     const truncatedDesc =
       cleanDescription.length > 80 ? cleanDescription.substring(0, 77) + "..." : cleanDescription;
-
-    // Accent colors per type
-    const accents: Record<string, { glow: string; badge: string }> = {
-      default: {
-        glow: "rgba(255, 90, 79, 0.16)",
-        badge: "linear-gradient(135deg, #ff5a4f, #ff7a70)",
-      },
-      store: {
-        glow: "rgba(17, 24, 39, 0.12)",
-        badge: "linear-gradient(135deg, #111827, #1f2937)",
-      },
-      category: {
-        glow: "rgba(245, 158, 11, 0.14)",
-        badge: "linear-gradient(135deg, #f59e0b, #fbbf24)",
-      },
-      brand: {
-        glow: "rgba(22, 163, 74, 0.14)",
-        badge: "linear-gradient(135deg, #16a34a, #22c55e)",
-      },
-      promocode: {
-        glow: "rgba(255, 90, 79, 0.2)",
-        badge: "linear-gradient(135deg, #ff5a4f, #fb7185)",
-      },
-    };
 
     const accent = accents[type] || accents.default;
     const requestOrigin = new URL(request.url).origin;

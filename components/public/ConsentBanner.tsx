@@ -9,6 +9,12 @@ import { ChartBar, Megaphone, ShieldCheck } from "@phosphor-icons/react";
 
 const CONSENT_EXPIRY_DAYS = 365;
 
+const defaultPreferences: ConsentPreferences = {
+  necessary: true,
+  analytics: false,
+  marketing: false,
+};
+
 // Type declaration for Google Analytics gtag
 declare global {
   interface Window {
@@ -20,69 +26,53 @@ declare global {
   }
 }
 
+const updateGoogleAnalytics = (prefs: ConsentPreferences) => {
+  if (typeof window === "undefined" || !window.gtag) return;
+
+  // Update Google Analytics consent mode
+  window.gtag("consent", "update", {
+    analytics_storage: prefs.analytics ? "granted" : "denied",
+    ad_storage: prefs.marketing ? "granted" : "denied",
+    ad_user_data: prefs.marketing ? "granted" : "denied",
+    ad_personalization: prefs.marketing ? "granted" : "denied",
+  });
+};
+
+const getInitialConsentState = () => {
+  if (typeof window === "undefined") {
+    return { showBanner: true, preferences: defaultPreferences };
+  }
+
+  try {
+    const storedConsent = localStorage.getItem(CONSENT_STORAGE_KEY);
+    if (storedConsent) {
+      const consentData = JSON.parse(storedConsent);
+      const expiryDate = new Date(consentData.expiry);
+      if (expiryDate > new Date()) {
+        return {
+          showBanner: false,
+          preferences: consentData.preferences,
+        };
+      }
+    }
+  } catch {
+    // Invalid stored data - keep defaults
+  }
+
+  return { showBanner: true, preferences: defaultPreferences };
+};
+
 export function ConsentBanner() {
   const t = useTranslations("consent");
-  // Initialize from localStorage to avoid hydration mismatch
-  // Server and client will both start with the same default values
-  const [showBanner, setShowBanner] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      const storedConsent = localStorage.getItem(CONSENT_STORAGE_KEY);
-      if (storedConsent) {
-        const consentData = JSON.parse(storedConsent);
-        const expiryDate = new Date(consentData.expiry);
-        if (expiryDate > new Date()) {
-          return false; // Don't show banner if consent exists
-        }
-      }
-    } catch {
-      // Invalid stored data
-    }
-    return true; // Show banner if no valid consent
-  });
+
+  // Initialize with localStorage data (client-side only)
+  const initialState = getInitialConsentState();
+  const [showBanner, setShowBanner] = useState(initialState.showBanner);
   const [showSettings, setShowSettings] = useState(false);
-  const [preferences, setPreferences] = useState<ConsentPreferences>(() => {
-    if (typeof window === "undefined") {
-      return {
-        necessary: true,
-        analytics: false,
-        marketing: false,
-      };
-    }
-    try {
-      const storedConsent = localStorage.getItem(CONSENT_STORAGE_KEY);
-      if (storedConsent) {
-        const consentData = JSON.parse(storedConsent);
-        const expiryDate = new Date(consentData.expiry);
-        if (expiryDate > new Date()) {
-          return consentData.preferences;
-        }
-      }
-    } catch {
-      // Invalid stored data
-    }
-    return {
-      necessary: true,
-      analytics: false,
-      marketing: false,
-    };
-  });
-
-  const updateGoogleAnalytics = (prefs: ConsentPreferences) => {
-    if (typeof window === "undefined" || !window.gtag) return;
-
-    // Update Google Analytics consent mode
-    window.gtag("consent", "update", {
-      analytics_storage: prefs.analytics ? "granted" : "denied",
-      ad_storage: prefs.marketing ? "granted" : "denied",
-      ad_user_data: prefs.marketing ? "granted" : "denied",
-      ad_personalization: prefs.marketing ? "granted" : "denied",
-    });
-  };
+  const [preferences, setPreferences] = useState(initialState.preferences);
 
   useEffect(() => {
     // Update Google Analytics if consent exists (client-side only)
-    // This runs after hydration, so no setState needed here
     if (!showBanner && preferences) {
       updateGoogleAnalytics(preferences);
       // Notify analytics loader to mount scripts lazily
@@ -129,7 +119,7 @@ export function ConsentBanner() {
 
   const togglePreference = (key: keyof ConsentPreferences) => {
     if (key === "necessary") return; // Cannot disable necessary cookies
-    setPreferences((prev) => ({
+    setPreferences((prev: ConsentPreferences) => ({
       ...prev,
       [key]: !prev[key],
     }));

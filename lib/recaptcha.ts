@@ -28,6 +28,11 @@ export async function verifyRecaptcha(token: string | null | undefined): Promise
       }
     );
 
+    if (!response.ok) {
+      console.error("❌ reCAPTCHA API request failed:", response.status, response.statusText);
+      return false;
+    }
+
     const data = await response.json();
 
     if (!data.success) {

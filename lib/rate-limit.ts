@@ -28,7 +28,7 @@ export interface RateLimitConfig {
   /** Number of requests allowed */
   limit: number;
   /** Time window in milliseconds */
-  window: number;
+  timeWindow: number;
   /**
    * When true, counters are stored in Postgres so all instances share the same limit.
    * Use only for abuse-sensitive / mutating endpoints.
@@ -74,7 +74,7 @@ function memoryRateLimit(identifier: string, config: RateLimitConfig): RateLimit
   if (!entry || now > entry.resetTime) {
     entry = {
       count: 0,
-      resetTime: now + config.window,
+      resetTime: now + config.timeWindow,
     };
     inMemoryStore.set(key, entry);
   }
@@ -111,7 +111,7 @@ async function persistentRateLimit(
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
   const key = storeKey(identifier, config);
-  const windowMs = config.window;
+  const windowMs = config.timeWindow;
 
   try {
     const result = await db.execute(sql`
@@ -173,7 +173,7 @@ async function rateLimit(identifier: string, config: RateLimitConfig): Promise<R
       success: true,
       limit: config.limit,
       remaining: config.limit,
-      resetTime: now + config.window,
+      resetTime: now + config.timeWindow,
     };
   }
 
@@ -189,7 +189,7 @@ async function rateLimit(identifier: string, config: RateLimitConfig): Promise<R
  */
 export async function checkRateLimit(
   request: Request,
-  config: RateLimitConfig = { name: "default", limit: 10, window: 60000 }
+  config: RateLimitConfig = { name: "default", limit: 10, timeWindow: 60000 }
 ): Promise<RateLimitResult> {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -205,40 +205,40 @@ export async function checkRateLimit(
  */
 export const RateLimits = {
   // Login: 5 attempts per 15 minutes (memory - no login UI currently)
-  login: { name: "login", limit: 5, window: 15 * 60 * 1000 },
+  login: { name: "login", limit: 5, timeWindow: 15 * 60 * 1000 },
 
   // Cheap public GETs: per-instance is acceptable
-  api: { name: "api", limit: 60, window: 60 * 1000 },
+  api: { name: "api", limit: 60, timeWindow: 60 * 1000 },
 
   // Public actions (like, copy, dislike) - shared across instances
-  publicAction: { name: "publicAction", limit: 10, window: 60 * 1000, persistent: true },
+  publicAction: { name: "publicAction", limit: 10, timeWindow: 60 * 1000, persistent: true },
 
   // Views - shared
-  publicView: { name: "publicView", limit: 30, window: 60 * 1000, persistent: true },
+  publicView: { name: "publicView", limit: 30, timeWindow: 60 * 1000, persistent: true },
 
   // View dedup window per IP + promocode
-  viewDedup: { name: "viewDedup", limit: 1, window: 10 * 60 * 1000, persistent: true },
+  viewDedup: { name: "viewDedup", limit: 1, timeWindow: 10 * 60 * 1000, persistent: true },
 
   // Like/dislike dedup per IP + promocode
-  actionDedup: { name: "actionDedup", limit: 1, window: 60 * 60 * 1000, persistent: true },
+  actionDedup: { name: "actionDedup", limit: 1, timeWindow: 60 * 60 * 1000, persistent: true },
 
   // Contact form
-  contact: { name: "contact", limit: 3, window: 60 * 60 * 1000, persistent: true },
+  contact: { name: "contact", limit: 3, timeWindow: 60 * 60 * 1000, persistent: true },
 
   // Search - memory (read-only, already sanitized)
-  search: { name: "search", limit: 20, window: 60 * 1000 },
+  search: { name: "search", limit: 20, timeWindow: 60 * 1000 },
 
   // CSRF token issuance
-  csrf: { name: "csrf", limit: 30, window: 60 * 1000, persistent: true },
+  csrf: { name: "csrf", limit: 30, timeWindow: 60 * 1000, persistent: true },
 
   // Analytics ingest
-  analytics: { name: "analytics", limit: 60, window: 60 * 1000, persistent: true },
+  analytics: { name: "analytics", limit: 60, timeWindow: 60 * 1000, persistent: true },
 
   // Dynamic OG image generation (CPU-heavy) - shared + CDN cache on success
-  og: { name: "og", limit: 60, window: 60 * 1000, persistent: true },
+  og: { name: "og", limit: 60, timeWindow: 60 * 1000, persistent: true },
 
   // Admin API (unused currently)
-  admin: { name: "admin", limit: 60, window: 60 * 1000 },
+  admin: { name: "admin", limit: 60, timeWindow: 60 * 1000 },
 } as const satisfies Record<string, RateLimitConfig>;
 
 /**

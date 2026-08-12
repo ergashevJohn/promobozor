@@ -1,3 +1,4 @@
+import serialize from "serialize-javascript";
 import type { Promocode } from "./types";
 
 type BaseEntity = {
@@ -205,9 +206,6 @@ export default function StructuredData({
   }
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(jsonLd) }} />
   );
 }

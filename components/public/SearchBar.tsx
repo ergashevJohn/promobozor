@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { sanitizeSearchQuery } from "@/lib/search";
 import { CircleNotch, MagnifyingGlass, X } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
-import { useCallback, useId, useMemo, useState } from "react";
+import { useCallback, useId, useMemo, useState, useTransition } from "react";
 
 const EMPTY_PARAMS: Record<string, string> = {};
 type NavigationMode = "live" | "submit";
@@ -34,7 +34,7 @@ export default function SearchBar({
 
   const initialSearch = currentParams.search || "";
   const [searchValue, setSearchValue] = useState(initialSearch);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const [prevSearch, setPrevSearch] = useState(initialSearch);
   if (prevSearch !== initialSearch) {
@@ -68,8 +68,9 @@ export default function SearchBar({
   const debouncedSearchFn = useMemo(
     () =>
       debounce((value: string) => {
-        navigateWithSearch(value);
-        setIsLoading(false);
+        startTransition(() => {
+          navigateWithSearch(value);
+        });
       }, 300),
     [navigateWithSearch]
   );
@@ -78,14 +79,12 @@ export default function SearchBar({
     const value = e.target.value;
     setSearchValue(value);
     if (navigationMode === "live") {
-      setIsLoading(true);
       debouncedSearchFn(value);
     }
   };
 
   const handleClear = () => {
     setSearchValue("");
-    setIsLoading(false);
     if (navigationMode === "live") {
       navigateWithSearch("");
     }
@@ -125,18 +124,18 @@ export default function SearchBar({
             placeholder={`${placeholderText}…`}
             autoComplete="off"
             aria-label={placeholderText}
-            aria-busy={navigationMode === "live" && isLoading ? true : undefined}
+            aria-busy={navigationMode === "live" && isPending ? true : undefined}
             className={`bg-card/95 h-12 rounded-2xl border-[color:var(--border)] pl-10 text-base shadow-[0_24px_60px_-36px_rgba(15,20,25,0.28)] sm:h-14 ${
               navigationMode === "submit" ? "pr-12" : "pr-14"
             }`}
           />
           <div className="absolute top-1/2 right-1 flex -translate-y-1/2 transform items-center gap-1">
-            {navigationMode === "live" && isLoading && (
+            {navigationMode === "live" && isPending && (
               <span className="sr-only" role="status" aria-live="polite">
                 {t("loading")}
               </span>
             )}
-            {navigationMode === "live" && isLoading && (
+            {navigationMode === "live" && isPending && (
               <CircleNotch
                 className="text-muted-foreground h-4 w-4 animate-spin"
                 aria-hidden="true"

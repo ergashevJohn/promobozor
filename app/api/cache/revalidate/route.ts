@@ -2,6 +2,8 @@ import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { secureCompare } from "@/lib/secure-compare";
 
+const defaultTags = ["promocodes", "categories", "stores", "brands", "all"];
+
 function isAuthorized(request: NextRequest): boolean {
   const secret = process.env.REVALIDATE_SECRET || process.env.CRON_SECRET;
   if (!secret) {
@@ -41,7 +43,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Revalidate all standard cached tags
-    const defaultTags = ["promocodes", "categories", "stores", "brands", "all"];
     defaultTags.forEach((t) => revalidateTag(t, {}));
 
     return NextResponse.json({

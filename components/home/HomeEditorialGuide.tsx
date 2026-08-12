@@ -4,6 +4,8 @@ import { Link } from "@/i18n/navigation";
 import { ArrowRight, Question, ShieldWarning, Ticket } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
+const icons = [Ticket, ShieldWarning, Question];
+
 interface HomeEditorialGuideProps {
   locale: string;
 }
@@ -11,7 +13,6 @@ interface HomeEditorialGuideProps {
 export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
   const t = await getTranslations({ locale, namespace: "home.overhaul.guide" });
   const items = (await t.raw("items")) as Array<{ title: string; description: string }>;
-  const icons = [Ticket, ShieldWarning, Question];
 
   return (
     <section className="my-14">

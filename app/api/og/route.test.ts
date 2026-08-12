@@ -6,7 +6,7 @@ const checkRateLimit = vi.fn();
 vi.mock("@/lib/rate-limit", () => ({
   checkRateLimit,
   RateLimits: {
-    og: { name: "og", limit: 60, window: 60_000, persistent: true },
+    og: { name: "og", limit: 60, timeWindow: 60_000, persistent: true },
   },
 }));
 

@@ -241,10 +241,13 @@ export default async function sitemap({
     );
 
     // Store pages
-    const storeMap = new Map<string, { language: string; slug: string }[]>();
+    const storeMap = new Map<string, { language: string; slug: string; updatedAt: Date }[]>();
     allStoreTranslations.forEach((row) => {
       if (!storeMap.has(row.storeId)) storeMap.set(row.storeId, []);
-      storeMap.get(row.storeId)!.push({ language: row.language, slug: row.slug });
+      const existing = storeMap.get(row.storeId);
+      if (existing) {
+        existing.push({ language: row.language, slug: row.slug, updatedAt: row.updatedAt });
+      }
     });
 
     for (const [storeId, translations] of storeMap.entries()) {
@@ -265,7 +268,7 @@ export default async function sitemap({
 
       sitemapEntries.push({
         url: `${baseUrl}/${locale}/store/${currentTranslation.slug}`,
-        lastModified: allStoreTranslations.find((t) => t.storeId === storeId)?.updatedAt || now,
+        lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.7,
         alternates: { languages },
@@ -273,10 +276,13 @@ export default async function sitemap({
     }
 
     // Category pages
-    const categoryMap = new Map<string, { language: string; slug: string }[]>();
+    const categoryMap = new Map<string, { language: string; slug: string; updatedAt: Date }[]>();
     allCategoryTranslations.forEach((row) => {
       if (!categoryMap.has(row.categoryId)) categoryMap.set(row.categoryId, []);
-      categoryMap.get(row.categoryId)!.push({ language: row.language, slug: row.slug });
+      const existing = categoryMap.get(row.categoryId);
+      if (existing) {
+        existing.push({ language: row.language, slug: row.slug, updatedAt: row.updatedAt });
+      }
     });
 
     for (const [categoryId, translations] of categoryMap.entries()) {
@@ -297,8 +303,7 @@ export default async function sitemap({
 
       sitemapEntries.push({
         url: `${baseUrl}/${locale}/category/${currentTranslation.slug}`,
-        lastModified:
-          allCategoryTranslations.find((t) => t.categoryId === categoryId)?.updatedAt || now,
+        lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.7,
         alternates: { languages },
@@ -306,10 +311,13 @@ export default async function sitemap({
     }
 
     // Brand pages
-    const brandMap = new Map<string, { language: string; slug: string }[]>();
+    const brandMap = new Map<string, { language: string; slug: string; updatedAt: Date }[]>();
     allBrandTranslations.forEach((row) => {
       if (!brandMap.has(row.brandId)) brandMap.set(row.brandId, []);
-      brandMap.get(row.brandId)!.push({ language: row.language, slug: row.slug });
+      const existing = brandMap.get(row.brandId);
+      if (existing) {
+        existing.push({ language: row.language, slug: row.slug, updatedAt: row.updatedAt });
+      }
     });
 
     for (const [brandId, translations] of brandMap.entries()) {
@@ -330,7 +338,7 @@ export default async function sitemap({
 
       sitemapEntries.push({
         url: `${baseUrl}/${locale}/brand/${currentTranslation.slug}`,
-        lastModified: allBrandTranslations.find((t) => t.brandId === brandId)?.updatedAt || now,
+        lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.7,
         alternates: { languages },
@@ -338,13 +346,16 @@ export default async function sitemap({
     }
 
     // Promocode pages (only active and not expired)
-    const promocodeMap = new Map<string, { language: string; slug: string }[]>();
+    const promocodeMap = new Map<string, { language: string; slug: string; updatedAt: Date }[]>();
     allPromocodeTranslations.forEach((row) => {
       if (!promocodeMap.has(row.promocodeId)) promocodeMap.set(row.promocodeId, []);
-      promocodeMap.get(row.promocodeId)!.push({ language: row.language, slug: row.slug });
+      const existing = promocodeMap.get(row.promocodeId);
+      if (existing) {
+        existing.push({ language: row.language, slug: row.slug, updatedAt: row.updatedAt });
+      }
     });
 
-    for (const [promocodeId, translations] of promocodeMap.entries()) {
+    for (const [, translations] of promocodeMap.entries()) {
       const currentTranslation = translations.find((t) => t.language === locale);
       if (!currentTranslation) continue;
 
@@ -360,8 +371,7 @@ export default async function sitemap({
 
       sitemapEntries.push({
         url: `${baseUrl}/${locale}/promocode/${currentTranslation.slug}`,
-        lastModified:
-          allPromocodeTranslations.find((t) => t.promocodeId === promocodeId)?.updatedAt || now,
+        lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.6,
         alternates: { languages },

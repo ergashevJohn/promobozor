@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -194,18 +195,32 @@ export function PromocodeProvider({
     // TODO: Implement dislike API
   }, [disliked]);
 
-  const value: PromocodeContextValue = {
-    promocode,
-    translations,
-    lang,
-    copied,
-    liked,
-    disliked,
-    handleCopy,
-    handleShare,
-    handleLike,
-    handleDislike,
-  };
+  const value: PromocodeContextValue = useMemo(
+    () => ({
+      promocode,
+      translations,
+      lang,
+      copied,
+      liked,
+      disliked,
+      handleCopy,
+      handleShare,
+      handleLike,
+      handleDislike,
+    }),
+    [
+      promocode,
+      translations,
+      lang,
+      copied,
+      liked,
+      disliked,
+      handleCopy,
+      handleShare,
+      handleLike,
+      handleDislike,
+    ]
+  );
 
   return <PromocodeContext.Provider value={value}>{children}</PromocodeContext.Provider>;
 }

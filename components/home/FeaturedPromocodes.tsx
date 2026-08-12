@@ -90,9 +90,13 @@ const getFeatured = (locale: string) =>
   )();
 
 export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesProps) {
-  const { featuredPromocodes } = await getFeatured(locale);
-  const translations = await getHomeTranslations(locale);
-  const tStore = await getTranslations({ locale, namespace: "store" });
+  const [featuredResult, translations, tStore] = await Promise.all([
+    getFeatured(locale),
+    getHomeTranslations(locale),
+    getTranslations({ locale, namespace: "store" }),
+  ]);
+
+  const { featuredPromocodes } = featuredResult;
   const {
     home: t,
     common: tCommon,

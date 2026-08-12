@@ -1,3 +1,4 @@
+import serialize from "serialize-javascript";
 import { getHowToSteps } from "@/lib/entity-faq";
 
 interface HowToSchemaProps {
@@ -41,9 +42,6 @@ export function HowToSchema({
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialize(schema) }} />
   );
 }

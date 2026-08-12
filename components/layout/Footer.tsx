@@ -3,24 +3,24 @@ import { InstagramLogo, TelegramLogo, YoutubeLogo } from "@phosphor-icons/react/
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
+const socialLinks = [
+  { name: "PromoBozor Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogo },
+  {
+    name: "PromoBozor Instagram",
+    href: "https://www.instagram.com/promokoduz_app",
+    icon: InstagramLogo,
+  },
+  {
+    name: "PromoBozor YouTube",
+    href: "https://www.youtube.com/@promokoduz_app",
+    icon: YoutubeLogo,
+  },
+] as const;
+
 export async function Footer() {
   const t = await getTranslations("footer");
   const tCommon = await getTranslations("common");
   const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    { name: "PromoBozor Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogo },
-    {
-      name: "PromoBozor Instagram",
-      href: "https://www.instagram.com/promokoduz_app",
-      icon: InstagramLogo,
-    },
-    {
-      name: "PromoBozor YouTube",
-      href: "https://www.youtube.com/@promokoduz_app",
-      icon: YoutubeLogo,
-    },
-  ] as const;
 
   const mainLinks = [
     { href: "/" as const, label: tCommon("home") },

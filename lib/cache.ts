@@ -25,11 +25,14 @@ function generateCacheKey(
   prefix: string,
   params: Record<string, string | number | boolean | null | undefined>
 ): string {
-  const parts = Object.entries(params)
-    .filter(([, value]) => value !== null && value !== undefined && value !== "")
-    .map(([key, value]) => `${key}:${value}`)
-    .join(":");
-  return parts ? `${cachePrefix(prefix)}:${parts}` : cachePrefix(prefix);
+  // Single-pass key generation
+  const parts: string[] = [];
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== null && value !== undefined && value !== "") {
+      parts.push(`${key}:${value}`);
+    }
+  }
+  return parts.length > 0 ? `${cachePrefix(prefix)}:${parts.join(":")}` : cachePrefix(prefix);
 }
 
 /**

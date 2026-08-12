@@ -65,21 +65,21 @@ const validateBaseTranslations = (
 };
 
 // Store Translation Validation
-export const validateStoreTranslations = (
+const validateStoreTranslations = (
   translations: unknown
 ): translations is readonly StoreTranslationInput[] => {
   return validateBaseTranslations(translations);
 };
 
 // Category Translation Validation
-export const validateCategoryTranslations = (
+const validateCategoryTranslations = (
   translations: unknown
 ): translations is readonly CategoryTranslationInput[] => {
   return validateBaseTranslations(translations);
 };
 
 // Brand Translation Validation
-export const validateBrandTranslations = (
+const validateBrandTranslations = (
   translations: unknown
 ): translations is readonly BrandTranslationInput[] => {
   return validateBaseTranslations(translations);
@@ -132,7 +132,7 @@ export const validateNumber = (value: unknown, min: number, max?: number): boole
 };
 
 // Enum Validation
-export const validateEnum = (value: unknown, allowed: readonly string[]): boolean => {
+const validateEnum = (value: unknown, allowed: readonly string[]): boolean => {
   return allowed.includes(value as string);
 };
 

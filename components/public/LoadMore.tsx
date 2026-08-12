@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { sanitizeSearchQuery } from "@/lib/search";
 import { CircleNotch } from "@phosphor-icons/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import type { Promocode } from "./types";
 
 interface LoadMoreProps {
@@ -28,11 +28,9 @@ export default function LoadMore({ initialOffset, limit, filters, onLoadMore }: 
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const prevOffsetRef = useRef(initialOffset);
-  if (prevOffsetRef.current !== initialOffset) {
-    prevOffsetRef.current = initialOffset;
-    setHasMore(true);
-  }
+  // Use initialOffset as a key to reset state when offset changes
+  // The parent component can use: <LoadMore key={initialOffset} ... />
+  // This ensures fresh state when navigation occurs
 
   const handleLoadMore = async () => {
     if (isLoading) return;
