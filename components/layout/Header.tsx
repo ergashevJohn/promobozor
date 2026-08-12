@@ -15,6 +15,7 @@ export async function Header() {
     { href: "/stores" as const, label: t("stores") },
     { href: "/categories" as const, label: t("categories") },
     { href: "/brands" as const, label: t("brands") },
+    { href: "/blog" as const, label: t("blog") },
     { href: "/contact" as const, label: t("contact") },
   ];
 

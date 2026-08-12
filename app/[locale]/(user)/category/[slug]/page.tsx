@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
+import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import CategoryHero from "@/components/public/category/CategoryHero";
 import CategoryRelatedStores from "@/components/public/category/CategoryRelatedStores";
@@ -301,11 +301,6 @@ export default async function CategoryPage({
         promocodeCount={totalPromocodesCount}
         entityDescription={categoryTranslation?.description || undefined}
       />
-      <EntityFAQSchema
-        entityName={categoryTranslation?.name || categoryTitle}
-        entityType="category"
-        locale={locale}
-      />
       {schemaPromocodes.length > 0 && (
         <ItemListSchema
           items={schemaPromocodes.map((promocode) => {
@@ -381,6 +376,14 @@ export default async function CategoryPage({
               },
             }}
             t={t}
+          />
+
+          <EntityFAQSection
+            entityName={categoryTranslation?.name || categoryTitle}
+            entityType="category"
+            locale={locale}
+            title={t("faqTitle", { name: categoryTranslation?.name || categoryTitle })}
+            description={t("faqDescription", { name: categoryTranslation?.name || categoryTitle })}
           />
         </div>
       </div>

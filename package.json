@@ -33,6 +33,8 @@
     "slug:migrate:categories:dry": "tsx scripts/migrations/update-category-slugs.ts --dry-run",
     "slug:preview:brands": "tsx scripts/migrations/preview-brand-slugs.ts",
     "seo:verify": "node --import tsx scripts/seo/verify-indexability.ts",
+    "seo:inventory-gap": "tsx scripts/seo/inventory-gap-report.ts",
+    "seo:upsert-hubs": "tsx scripts/seo/upsert-hub-editorial.ts",
     "prepare": "husky",
     "test:e2e": "playwright test"
   },

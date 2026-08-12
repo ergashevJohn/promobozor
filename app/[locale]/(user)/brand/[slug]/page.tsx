@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { EntityFAQSchema } from "@/components/public/EntityFAQSchema";
+import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import BrandHero from "@/components/public/brand/BrandHero";
@@ -11,6 +11,7 @@ import StructuredData from "@/components/public/StructuredData";
 import type { Promocode } from "@/components/public/types";
 import { Locale } from "@/i18n/routing";
 import { getCachedBrandPromocodeCounts } from "@/lib/cache/promocode-counts";
+import { getHubEditorial } from "@/lib/hub-editorial";
 import { isValidLanguage } from "@/lib/i18n";
 import { getApprovedImageUrl } from "@/lib/media";
 import {
@@ -65,6 +66,11 @@ export async function generateMetadata({
     }
 
     const translation = brandData.translation;
+    const hubEditorial = getHubEditorial(slug, locale, "brand");
+    const hubDescription =
+      translation?.description && translation.description.trim().length >= 80
+        ? translation.description
+        : hubEditorial?.description || translation?.description || null;
 
     // Get promocode counts from cache (5-min cache for performance)
     const counts = await getCachedBrandPromocodeCounts(brandData.brand.id);
@@ -78,7 +84,7 @@ export async function generateMetadata({
       translation?.metaDescription ||
       generateBrandDescription(
         translation?.name || brandTitle,
-        translation?.description || null,
+        hubDescription,
         totalPromocodes,
         locale
       );
@@ -151,6 +157,7 @@ export default async function BrandPage({
     metaTitle: string | null;
     metaDescription: string | null;
   };
+  let resolvedBrandDescription: string | undefined;
 
   const brandData = await getCachedBrandBySlug(locale, slug);
 
@@ -161,6 +168,12 @@ export default async function BrandPage({
   try {
     brand = brandData.brand;
     brandTranslation = brandData.translation;
+
+    const hubEditorial = getHubEditorial(slug, locale, "brand");
+    resolvedBrandDescription =
+      brandTranslation?.description && brandTranslation.description.trim().length >= 80
+        ? brandTranslation.description
+        : hubEditorial?.description || brandTranslation?.description || undefined;
 
     // Fetch promocodes and stats for this brand
     const pageData = await fetchBrandPageData(brand.id, locale as Locale);
@@ -247,17 +260,12 @@ export default async function BrandPage({
         lang={locale}
         baseUrl={baseUrl}
         promocodeCount={totalPromocodesCount}
-        entityDescription={brandTranslation?.description || undefined}
-      />
-      <EntityFAQSchema
-        entityName={brandTranslation?.name || brandTitle}
-        entityType="brand"
-        locale={locale}
+        entityDescription={resolvedBrandDescription}
       />
       <LocalBusinessSchema
         name={brandTranslation?.name || brandTitle}
         url={`/brand/${slug}`}
-        description={brandTranslation?.description || undefined}
+        description={resolvedBrandDescription}
         logo={brand.imageUrl || undefined}
         priceRange="$$"
         // sameAs={brand.website ? [brand.website] : undefined}
@@ -284,7 +292,7 @@ export default async function BrandPage({
         {/* Hero Section - logo-forward */}
         <BrandHero
           brandName={brandTranslation?.name || brandTitle}
-          brandDescription={brandTranslation?.description}
+          brandDescription={resolvedBrandDescription}
           brandImageUrl={brandImageUrl}
           brandWebsiteUrl={brand.websiteUrl}
           totalPromocodes={totalPromocodesCount}
@@ -340,6 +348,14 @@ export default async function BrandPage({
               },
             }}
             t={t}
+          />
+
+          <EntityFAQSection
+            entityName={brandTranslation?.name || brandTitle}
+            entityType="brand"
+            locale={locale}
+            title={t("faqTitle", { name: brandTranslation?.name || brandTitle })}
+            description={t("faqDescription", { name: brandTranslation?.name || brandTitle })}
           />
         </div>
       </div>

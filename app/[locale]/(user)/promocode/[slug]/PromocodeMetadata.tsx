@@ -1,5 +1,4 @@
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
-import { HowToSchema } from "@/components/public/HowToSchema";
 import StructuredData from "@/components/public/StructuredData";
 import type { TransformedPromocode } from "./transformers";
 
@@ -30,16 +29,12 @@ type PromocodeMetadataProps = {
 
 export function PromocodeMetadata({
   promocode,
-  promocodeTranslation,
-  storeTranslation,
   breadcrumbItems,
   locale,
   baseUrl,
   rating,
   createdAt,
   updatedAt,
-  tPromocode,
-  tStore,
 }: PromocodeMetadataProps) {
   return (
     <>
@@ -52,13 +47,6 @@ export function PromocodeMetadata({
         rating={rating}
         datePublished={createdAt}
         dateModified={updatedAt}
-      />
-      <HowToSchema
-        promocodeTitle={promocodeTranslation?.title || tPromocode.title}
-        storeName={storeTranslation?.name || tStore.title}
-        locale={locale}
-        imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
-        baseUrl={baseUrl}
       />
     </>
   );

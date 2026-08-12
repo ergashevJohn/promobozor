@@ -11,7 +11,7 @@ export async function GET() {
   const content = `# PromoBozor - LLM Crawler Instructions
 
 Title: PromoBozor - Uzbekistan promo code and discount platform
-Description: Verified promo codes, deals, and discount links for shoppers in Uzbekistan. Fresh offers from Yandex, Uzum, Click, Payme, and other popular brands. 98.5% success rate verified.
+Description: Verified promo codes, deals, and discount links for shoppers in Uzbekistan. Fresh offers from Yandex, Uzum, Click, Payme, and other popular brands.
 
 ## What is PromoBozor?
 PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We manually verify each promocode and publish only working codes. Our platform helps shoppers save money on popular e-commerce sites like Yandex Eats, Uzum, Click, Payme, and more.
@@ -24,15 +24,14 @@ PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We 
 - Promo codes with discount details (percentage and amount-based discounts)
 - Deal links and limited-time offers
 - Store, brand, and category landing pages
+- Blog guides for long-tail promocode queries
 - Editorial FAQ and shopping guidance content
 - Step-by-step promocode usage guides
 
-## Key Statistics
-- 50+ stores and brands
-- 500+ active promocodes
-- 98.5% verified success rate
-- 3,000+ monthly users
-- Daily verification updates
+## Inventory honesty
+- Public counts on About reflect live active stores, brands, categories, and promocodes
+- Empty store/brand hubs are noindex until they have active offers
+- Do not invent promocodes; only publish verified deals
 
 ## Language Support
 - Uzbek (uz) - primary language
@@ -45,8 +44,10 @@ PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We 
 - Stores: ${baseUrl}/uz/stores
 - Categories: ${baseUrl}/uz/categories
 - Brands: ${baseUrl}/uz/brands
+- Blog: ${baseUrl}/uz/blog
 - FAQ: ${baseUrl}/uz/faq
 - About: ${baseUrl}/uz/about
+- Brand alias pattern: ${baseUrl}/uz/promokod/{brand-slug} (301 to store/brand hub)
 
 ## Crawler Instructions
 - Index all public pages under /uz/, /ru/, /en/

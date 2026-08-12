@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
+import { HowToSection } from "@/components/public/HowToSection";
 import PromocodeDetail from "@/components/public/PromocodeDetail";
 import { db, promocodeTranslations, promocodes, stores, storeTranslations } from "@/lib/db";
 import { isValidLanguage, type Language } from "@/lib/i18n";
@@ -369,6 +370,32 @@ export default async function PromocodeDetailPage({
               },
             }}
           />
+          {(() => {
+            const nowMs = Date.now();
+            const expiresAt = promocodeData.promocode.expiresAt;
+            const startsAt = promocodeData.promocode.startsAt;
+            const isActiveOffer =
+              promocodeData.promocode.status === "active" &&
+              (!expiresAt || expiresAt.getTime() > nowMs) &&
+              (!startsAt || startsAt.getTime() <= nowMs);
+
+            if (!isActiveOffer) {
+              return null;
+            }
+
+            return (
+              <div className="page-shell pb-12">
+                <HowToSection
+                  promocodeTitle={promocodeData.promocodeTranslation?.title || tPromocode("title")}
+                  storeName={promocodeData.storeTranslation?.name || tStore("title")}
+                  locale={locale}
+                  imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
+                  baseUrl={getBaseUrl()}
+                  title={tPromocode("howToTitle")}
+                />
+              </div>
+            );
+          })()}
         </>
       );
     }
