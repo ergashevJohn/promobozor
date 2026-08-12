@@ -6,13 +6,11 @@ import PopularStoresCategories from "@/components/home/PopularStoresCategories";
 import HeroSection from "@/components/public/HeroSection";
 import { OrganizationSchema } from "@/components/public/OrganizationSchema";
 import StructuredData from "@/components/public/StructuredData";
-import { SkeletonCardGrid, SkeletonPopularSection } from "@/components/ui/skeleton-card";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 // ISR: Revalidate every 30 minutes
 export const revalidate = 1800;
@@ -78,19 +76,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="page-shell space-y-0">
           <HomeIntentRoutes locale={locale} />
 
-          <Suspense
-            fallback={
-              <div className="section-rhythm">
-                <SkeletonCardGrid count={3} />
-              </div>
-            }
-          >
-            <FeaturedPromocodes locale={locale} />
-          </Suspense>
-
-          <Suspense fallback={<SkeletonPopularSection />}>
-            <PopularStoresCategories locale={locale} />
-          </Suspense>
+          <FeaturedPromocodes locale={locale} />
+          <PopularStoresCategories locale={locale} />
 
           <HomeEditorialGuide locale={locale} />
 
