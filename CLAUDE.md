@@ -253,16 +253,7 @@ Before considering code "done," verify:
 **Documentation Guidelines:**
 
 - Add comments for complex logic (why, not what)
-- Document public API functions with JSDoc comments:
-  ```typescript
-  /**
-   * Generates a SEO-friendly slug from text
-   * @param text - The input text to slugify
-   * @param language - The language code for transliteration (uz, ru, en)
-   * @returns A lowercase, hyphenated slug
-   */
-  export function generateSlug(text: string, language: Language): string;
-  ```
+- Document public API functions with JSDoc comments when behavior is non-obvious
 - Update CLAUDE.md when introducing new patterns or breaking changes
 - Keep README.md accurate for end-user documentation
 
@@ -339,10 +330,10 @@ app/
   [locale]/                        # Language dynamic segment (uz|ru|en) - managed by next-intl
     (user)/                        # Public site route group
       page.tsx                     # Homepage: /uz or /ru or /en
-      store/[slug]/page.tsx        # Store detail: /uz/store/yandex-eats
-      category/[slug]/page.tsx     # Category detail: /uz/category/food
-      brand/[slug]/page.tsx        # Brand detail: /uz/brand/yandex-go
-      promocode/[slug]/page.tsx    # Promocode detail: /uz/promocode/50-discount-on-yandex-eats
+      store/[slug]/page.tsx        # Store detail (public: /uz/do-kon/...)
+      category/[slug]/page.tsx     # Category detail (public: /uz/kategoriya/...)
+      brand/[slug]/page.tsx        # Brand detail (public: /uz/brend/...)
+      promocode/[slug]/page.tsx    # Promocode detail (public: /uz/chegirma/...)
       layout.tsx                   # Public layout (header/footer)
 ```
 
@@ -448,9 +439,10 @@ const stores = await db
 
 **2. Slug generation:**
 
-- Use `lib/slug.ts` `generateSlug()` function for SEO-friendly slugs
-- Slugs are transliterated (Cyrillic → Latin) and lowercased with hyphens
-- Slugs must be unique per language (enforced by database constraint)
+- Entity slugs live in translation tables and must be unique per language (DB constraint)
+- Public URLs use localized segments via `lib/routes.ts` (`getEntityPath`, `getListPath`)
+- Legacy English paths 301 via `proxy.ts` and the `redirects` table
+- One-time SEO slug migration tooling was removed after apply (restore from git history if needed)
 
 **3. UI Components:**
 

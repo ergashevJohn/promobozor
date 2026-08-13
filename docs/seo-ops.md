@@ -17,17 +17,7 @@ Public paths are locale-specific (internal App Router keys stay English):
 
 Legacy English paths (`/promocode/…`, `/store/…`, …) 301 to localized segments via `proxy.ts` and the `redirects` table.
 
-Slug migrations:
-
-```bash
-npm run slug:preview:all
-npm run slug:generate-mappings   # refresh mapping files from DB
-npm run slug:migrate:stores:dry
-npm run slug:migrate:categories:dry
-npm run slug:migrate:brands:dry
-npm run slug:migrate:promocodes:dry
-# after review, run without :dry (use dotenv -e .env.production for prod)
-```
+Slug migrations were applied once (2026). Legacy paths continue to 301 via the `redirects` table and `proxy.ts`. Do not re-run the removed `scripts/migrations/` tooling — restore from git history only if needed.
 
 ## Claims vs inventory
 
