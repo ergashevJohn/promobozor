@@ -51,11 +51,11 @@ export function getPromocodeDisplayData(
     ? Math.ceil((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
-  // Discount display
+  // Discount display — fixed locale avoids Node vs browser toLocaleString mismatches
   const discountDisplay =
     promocode.discountType === "percent"
       ? `${promocode.discountValue}%`
-      : `${promocode.discountValue?.toLocaleString()} ${promocode.currency || "UZS"}`;
+      : `${new Intl.NumberFormat("en-US").format(promocode.discountValue ?? 0)} ${promocode.currency || "UZS"}`;
 
   return {
     translation,

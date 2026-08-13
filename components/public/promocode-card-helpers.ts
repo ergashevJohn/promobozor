@@ -64,6 +64,17 @@ export function getCardInactiveState(promocode: Promocode) {
   };
 }
 
+/**
+ * Truncate by Unicode code points (not UTF-16 units) so we never split an emoji
+ * surrogate pair — mid-emoji slices cause SSR `` vs client emoji hydration #418.
+ */
+export function truncateAtCodePoint(text: string, maxChars: number): string {
+  const chars = Array.from(text);
+  if (chars.length <= maxChars) return text;
+  if (maxChars <= 1) return "…";
+  return `${chars.slice(0, maxChars - 1).join("")}…`;
+}
+
 /** Short readable conditions line for cards */
 export function summarizeConditions(conditions?: string | null): string | null {
   if (!conditions) return null;
@@ -72,5 +83,5 @@ export function summarizeConditions(conditions?: string | null): string | null {
     .replace(/\s+/g, " ")
     .trim();
   if (!cleaned) return null;
-  return cleaned.length > 90 ? `${cleaned.slice(0, 87)}…` : cleaned;
+  return truncateAtCodePoint(cleaned, 90);
 }

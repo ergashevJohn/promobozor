@@ -69,12 +69,16 @@ export default async function middleware(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
   const isProd = process.env.NODE_ENV === "production";
   const enforceTrustedTypes = process.env.TRUSTED_TYPES_ENFORCE === "true";
-  const trustedTypesDirectives = isProd
-    ? [
-        "trusted-types dompurify goog#html",
-        ...(enforceTrustedTypes ? ["require-trusted-types-for 'script'"] : []),
-      ]
-    : [];
+  // Only emit trusted-types when enforcement is on. A names-only directive still
+  // blocks browser extensions (vue, duplicate goog#html) and floods the console
+  // without adding real protection unless require-trusted-types-for is set.
+  const trustedTypesDirectives =
+    isProd && enforceTrustedTypes
+      ? [
+          "trusted-types dompurify goog#html 'allow-duplicates'",
+          "require-trusted-types-for 'script'",
+        ]
+      : [];
 
   // Do NOT put a per-request nonce in the browser CSP when HTML can be CDN/ISR
   // cached. Cached markup keeps old script nonces while middleware issues a new
@@ -90,6 +94,7 @@ export default async function middleware(request: NextRequest) {
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://va.vercel-scripts.com",
+    "https://static.cloudflareinsights.com",
   ]
     .filter((value): value is string => Boolean(value))
     .join(" ");
@@ -119,7 +124,7 @@ export default async function middleware(request: NextRequest) {
     `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline'",
     `img-src ${imgSrc}`,
-    "font-src 'self' data:",
+    "font-src 'self' data: https://vercel.live",
     `connect-src ${connectSrc}`,
     "frame-src 'self' https://vercel.live https://www.google.com",
     "frame-ancestors 'self'",

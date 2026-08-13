@@ -10,6 +10,12 @@ type Props = {
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 const YM_ID = process.env.NEXT_PUBLIC_YM_ID || "106390376";
 
+declare global {
+  interface Window {
+    ym?: ((...args: unknown[]) => void) & { a?: unknown[]; l?: number };
+  }
+}
+
 export default function AnalyticsClient({ nonce }: Props) {
   const [shouldLoad, setShouldLoad] = useState(false);
 
@@ -40,9 +46,7 @@ export default function AnalyticsClient({ nonce }: Props) {
     window.addEventListener("consent-updated", applyConsent);
 
     return () => {
-      // Clean up event listener
       window.removeEventListener("consent-updated", applyConsent);
-      // Clean up all pending timers
       timerIds.forEach((id) => {
         if (typeof window.cancelIdleCallback === "function") {
           window.cancelIdleCallback(id);
@@ -77,9 +81,33 @@ export default function AnalyticsClient({ nonce }: Props) {
       ) : null}
 
       {process.env.NODE_ENV === "production" ? (
-        <Script id="ym" nonce={nonce} strategy="afterInteractive">
-          {`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}','ym');ym(${YM_ID},'init',{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});`}
-        </Script>
+        <>
+          <Script id="ym-stub" nonce={nonce} strategy="afterInteractive">
+            {`
+              (function(m,i){
+                if (typeof m[i] === 'function') return;
+                m[i] = function(){(m[i].a = m[i].a || []).push(arguments)};
+                m[i].l = 1 * new Date();
+              })(window, 'ym');
+              if (typeof window.ym === 'function') {
+                window.ym(${YM_ID}, 'init', {
+                  ssr: true,
+                  webvisor: true,
+                  clickmap: true,
+                  ecommerce: 'dataLayer',
+                  accurateTrackBounce: true,
+                  trackLinks: true
+                });
+              }
+            `}
+          </Script>
+          <Script
+            id="ym-tag"
+            nonce={nonce}
+            strategy="afterInteractive"
+            src={`https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}`}
+          />
+        </>
       ) : null}
     </>
   );
