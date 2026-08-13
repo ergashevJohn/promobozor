@@ -263,11 +263,14 @@ export function usePromocodeDisplay() {
     ? Math.ceil((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
+  // Cache Intl formatter for performance (avoid recreating on every render)
+  const numberFormatter = useMemo(() => new Intl.NumberFormat("en-US"), []);
+
   // Discount display — fixed locale avoids Node vs browser toLocaleString hydration mismatches
   const discountDisplay =
     promocode.discountType === "percent"
       ? `${promocode.discountValue}%`
-      : `${new Intl.NumberFormat("en-US").format(promocode.discountValue ?? 0)} ${promocode.currency || "UZS"}`;
+      : `${numberFormatter.format(promocode.discountValue ?? 0)} ${promocode.currency || "UZS"}`;
 
   return {
     translation,

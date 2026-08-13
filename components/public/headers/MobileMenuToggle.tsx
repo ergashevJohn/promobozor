@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {
@@ -22,44 +22,74 @@ export function MobileMenuToggle({ children }: Props) {
   );
   const pathname = usePathname();
   const [menuPathname, setMenuPathname] = useState(pathname);
-  const menuId = useId();
-  const panelRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Route o'zgarganda menyuni yopish (effect o'rniga render paytida)
+  // Close menu when the route changes (adjust state during render; no ref access here)
   if (pathname !== menuPathname) {
     setMenuPathname(pathname);
-    setOpen(false);
+    if (open) {
+      setOpen(false);
+    }
   }
 
   const closeMenu = useCallback(() => {
+    dialogRef.current?.close();
     setOpen(false);
   }, []);
 
-  // Escape + body scroll lock
+  const openMenu = useCallback(() => {
+    setOpen(true);
+    // Use setTimeout to ensure dialog ref is set and open() can be called
+    setTimeout(() => {
+      dialogRef.current?.showModal();
+    }, 0);
+  }, []);
+
+  // Keep native <dialog> in sync when open becomes false (route change, toggle, Escape)
+  useEffect(() => {
+    if (open) return;
+    dialogRef.current?.close();
+  }, [open]);
+
+  // Body scroll lock (dialog.showModal handles focus trapping)
   useEffect(() => {
     if (!open) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        toggleRef.current?.focus();
-      }
-    };
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
 
+  // Handle dialog close event (Escape key, backdrop click)
   useEffect(() => {
-    if (!open) return;
-    panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const handleClose = () => {
+      setOpen(false);
+      toggleRef.current?.focus();
+    };
+
+    dialog.addEventListener("close", handleClose);
+    return () => {
+      dialog.removeEventListener("close", handleClose);
+    };
+  }, []);
+
+  // Set initial focus when dialog opens
+  useEffect(() => {
+    if (!open || !dialogRef.current) return;
+
+    // Focus first focusable element after a brief delay to ensure dialog is rendered
+    const timeoutId = setTimeout(() => {
+      dialogRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    }, 50);
+
+    return () => clearTimeout(timeoutId);
   }, [open]);
 
   // Portal: header dagi backdrop-blur fixed positioning ni buzadi
@@ -67,23 +97,19 @@ export function MobileMenuToggle({ children }: Props) {
     mounted &&
     createPortal(
       <>
-        <button
-          type="button"
-          aria-label={tCommon("closeMenu")}
-          tabIndex={open ? 0 : -1}
+        {/* Backdrop - handles backdrop clicks */}
+        <div
+          role="presentation"
           className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-200 md:hidden ${
             open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
           }`}
           onClick={closeMenu}
+          style={{ pointerEvents: open ? "auto" : "none" }}
         />
 
-        <div
-          id={menuId}
-          ref={panelRef}
-          role="dialog"
-          aria-modal="true"
+        <dialog
+          ref={dialogRef}
           aria-label={tCommon("mobileNav")}
-          hidden={!open}
           className={`border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-40 flex max-h-[min(30rem,calc(100dvh-5.75rem))] flex-col overflow-hidden rounded-[28px] border p-0 shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)] transition-[opacity,transform] duration-200 md:hidden ${
             open
               ? "pointer-events-auto translate-y-0 opacity-100"
@@ -91,16 +117,10 @@ export function MobileMenuToggle({ children }: Props) {
           }`}
           style={{
             bottom: "max(0.75rem, env(safe-area-inset-bottom))",
+            margin: 0,
           }}
         >
-          <div
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3"
-            onClick={(event) => {
-              if ((event.target as HTMLElement).closest("a")) {
-                closeMenu();
-              }
-            }}
-          >
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
             {children}
           </div>
 
@@ -111,7 +131,7 @@ export function MobileMenuToggle({ children }: Props) {
               </Link>
             </Button>
           </div>
-        </div>
+        </dialog>
       </>,
       document.body
     );
@@ -120,12 +140,11 @@ export function MobileMenuToggle({ children }: Props) {
     <div className="relative md:hidden">
       <Button
         ref={toggleRef}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => (open ? closeMenu() : openMenu())}
         variant="ghost"
         size="icon"
         aria-label={open ? tCommon("closeMenu") : tCommon("openMenu")}
         aria-expanded={open}
-        aria-controls={open ? menuId : undefined}
         aria-haspopup="dialog"
         className="relative z-[80] !size-11 min-h-11 min-w-11"
       >

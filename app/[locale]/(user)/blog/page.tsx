@@ -56,7 +56,12 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(itemListSchema)
+            .replace(/</g, "\\u003c")
+            .replace(/>/g, "\\u003e")
+            .replace(/&/g, "\\u0026"),
+        }}
       />
       <div className="page-shell py-10 md:py-14">
         <header className="mx-auto mb-10 max-w-3xl text-center">

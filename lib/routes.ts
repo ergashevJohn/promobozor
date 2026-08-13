@@ -145,19 +145,11 @@ export function getInternalEntityHref(entityType: EntityType, slug: string): str
   return `${INTERNAL_ENTITY_PATH[entityType]}/${slug}`;
 }
 
-export function getInternalListHref(listType: ListType): string {
-  return INTERNAL_LIST_PATH[listType];
-}
-
 /**
  * Legacy English path (pre-localization): /uz/promocode/my-slug
  */
 export function getLegacyEntityPath(locale: Locale, entityType: EntityType, slug: string): string {
   return `/${locale}/${LEGACY_ENTITY_SEGMENT[entityType]}/${slug}`;
-}
-
-export function getLegacyListPath(locale: Locale, listType: ListType): string {
-  return `/${locale}/${LEGACY_LIST_SEGMENT[listType]}`;
 }
 
 export function resolveEntityTypeFromSegment(segment: string): EntityType | null {
@@ -220,14 +212,6 @@ export function isCompetitorPromokodAliasPath(
   if (locale === "ru") return hasCompetitorSuffix;
   // UZ/EN: any /promokod/{slug} is competitor alias (deal paths are chegirma/deal)
   return true;
-}
-
-/**
- * Map internal entity type used by isGone() to localized/legacy URL segments.
- */
-export function getGoneEntityAliases(entityType: EntityType): string[] {
-  const localized = Object.values(LOCALIZED_ENTITY_SEGMENT[entityType]);
-  return Array.from(new Set([LEGACY_ENTITY_SEGMENT[entityType], ...localized, entityType]));
 }
 
 /** All detail URL segments that should participate in 410 checks */

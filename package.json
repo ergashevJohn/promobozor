@@ -29,7 +29,8 @@
     "seo:inventory-gap": "tsx scripts/seo/inventory-gap-report.ts",
     "seo:upsert-hubs": "tsx scripts/seo/upsert-hub-editorial.ts",
     "prepare": "husky",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "doctor": "npx react-doctor@latest"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

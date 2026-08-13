@@ -166,15 +166,20 @@ export default function PromocodesPageClient({
   const shouldFetch = useMemo(() => needsClientFetch(searchParams), [searchParams]);
   const paramsKey = searchParams.toString();
 
-  const [sectionData, setSectionData] = useState<PromocodesInitialSectionData>(initialSectionData);
+  const [fetchedData, setFetchedData] = useState<PromocodesInitialSectionData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
+  // Derive sectionData from props when not fetching, use fetched data when fetching
+  const sectionData: PromocodesInitialSectionData = shouldFetch
+    ? (fetchedData ?? initialSectionData)
+    : initialSectionData;
+
   useEffect(() => {
     if (!shouldFetch) {
-      setSectionData(initialSectionData);
       setIsLoading(false);
       setFetchError(false);
+      setFetchedData(null);
       return;
     }
 
@@ -226,7 +231,7 @@ export default function PromocodesPageClient({
         const totalPages = Math.max(1, Math.ceil(totalPromocodesCount / ITEMS_PER_PAGE));
 
         if (!cancelled) {
-          setSectionData({
+          setFetchedData({
             currentPage,
             totalPages,
             totalPromocodesCount,
@@ -240,17 +245,17 @@ export default function PromocodesPageClient({
         console.error("Error fetching promocodes:", error);
         if (!cancelled) {
           setFetchError(true);
-          setSectionData({
+          setFetchedData({
             currentPage: Math.max(1, parseInt(activeParams.get("page") || "1", 10) || 1),
             totalPages: 1,
             totalPromocodesCount: 0,
             promocodesList: [],
           });
         }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+      }
+
+      if (!cancelled) {
+        setIsLoading(false);
       }
     };
 

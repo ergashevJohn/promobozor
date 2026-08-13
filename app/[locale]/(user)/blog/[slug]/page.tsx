@@ -88,7 +88,12 @@ export default async function BlogPostPage({
       <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema)
+            .replace(/</g, "\\u003c")
+            .replace(/>/g, "\\u003e")
+            .replace(/&/g, "\\u0026"),
+        }}
       />
       <article className="page-shell py-8 md:py-12">
         <div className="mb-6">

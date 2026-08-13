@@ -1,6 +1,9 @@
 import type { Promocode } from "@/components/public/types";
 import { getApprovedImageUrl } from "@/lib/media";
 
+// Hoist Intl formatter to module scope for performance (created once, reused across all calls)
+const numberFormatter = new Intl.NumberFormat("en-US");
+
 export interface PromocodeDisplayData {
   translation: Record<string, string | null> | undefined;
   brandTranslation: Record<string, string | null> | undefined;
@@ -55,7 +58,7 @@ export function getPromocodeDisplayData(
   const discountDisplay =
     promocode.discountType === "percent"
       ? `${promocode.discountValue}%`
-      : `${new Intl.NumberFormat("en-US").format(promocode.discountValue ?? 0)} ${promocode.currency || "UZS"}`;
+      : `${numberFormatter.format(promocode.discountValue ?? 0)} ${promocode.currency || "UZS"}`;
 
   return {
     translation,

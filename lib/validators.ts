@@ -5,22 +5,6 @@ import { SUPPORTED_LANGUAGES, type Language } from "@/lib/i18n";
  * Prevents code duplication and ensures consistent validation across all endpoints
  */
 
-// Translation Types
-type BaseTranslationInput = {
-  language: Language;
-  name: string;
-  slug: string;
-  description?: string | null;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-};
-
-type StoreTranslationInput = BaseTranslationInput;
-
-type CategoryTranslationInput = BaseTranslationInput;
-
-type BrandTranslationInput = BaseTranslationInput;
-
 type PromocodeTranslationInput = {
   language: Language;
   title: string;
@@ -38,51 +22,6 @@ export const hasDistinctLanguageSlugs = (
 ): boolean => {
   const uniqueSlugs = new Set(translations.map((t) => normalizeSlug(t.slug)));
   return uniqueSlugs.size === translations.length;
-};
-
-// Base Translation Validation
-const validateBaseTranslations = (
-  translations: unknown
-): translations is readonly BaseTranslationInput[] => {
-  if (!Array.isArray(translations)) return false;
-  if (translations.length !== SUPPORTED_LANGUAGES.length) return false;
-  const seenLanguages = new Set<Language>();
-
-  for (const t of translations) {
-    if (!t.language || !SUPPORTED_LANGUAGES.includes(t.language)) return false;
-    if (seenLanguages.has(t.language)) return false;
-    seenLanguages.add(t.language);
-    if (!t.name || typeof t.name !== "string" || t.name.trim().length === 0) return false;
-    if (!t.slug || typeof t.slug !== "string" || t.slug.trim().length === 0) return false;
-    if (t.description && typeof t.description !== "string") return false;
-    if (t.metaTitle && typeof t.metaTitle !== "string") return false;
-    if (t.metaDescription && typeof t.metaDescription !== "string") return false;
-  }
-
-  if (!SUPPORTED_LANGUAGES.every((lang) => seenLanguages.has(lang))) return false;
-
-  return true;
-};
-
-// Store Translation Validation
-export const validateStoreTranslations = (
-  translations: unknown
-): translations is readonly StoreTranslationInput[] => {
-  return validateBaseTranslations(translations);
-};
-
-// Category Translation Validation
-export const validateCategoryTranslations = (
-  translations: unknown
-): translations is readonly CategoryTranslationInput[] => {
-  return validateBaseTranslations(translations);
-};
-
-// Brand Translation Validation
-export const validateBrandTranslations = (
-  translations: unknown
-): translations is readonly BrandTranslationInput[] => {
-  return validateBaseTranslations(translations);
 };
 
 // Promocode Translation Validation
@@ -129,11 +68,6 @@ export const validateNumber = (value: unknown, min: number, max?: number): boole
   if (num < min) return false;
   if (max !== undefined && num > max) return false;
   return true;
-};
-
-// Enum Validation
-export const validateEnum = (value: unknown, allowed: readonly string[]): boolean => {
-  return allowed.includes(value as string);
 };
 
 // Email Validation
