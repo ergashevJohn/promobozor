@@ -18,8 +18,8 @@ export async function Breadcrumbs({ items, locale, homeName }: BreadcrumbsProps)
   const allItems = [{ name: homeName || tCommon("home"), url: "/" }, ...items];
 
   return (
-    <nav aria-label={tCommon("breadcrumb")} className="mb-4">
-      <ol className="bg-card/95 inline-flex flex-wrap items-center gap-1 rounded-full border border-[color:var(--border)] px-2 py-1 text-sm shadow-[0_18px_40px_-30px_rgba(17,24,39,0.45)] sm:gap-2 sm:px-4 sm:py-2">
+    <nav aria-label={tCommon("breadcrumb")}>
+      <ol className="inline-flex flex-wrap items-center gap-1 rounded-full px-2 text-sm sm:gap-2 sm:px-4">
         {allItems.map((item, index) => {
           const isLast = index === allItems.length - 1;
 

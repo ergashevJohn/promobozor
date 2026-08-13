@@ -1,14 +1,14 @@
 "use client";
 
+import { useLocaleSwitch } from "@/lib/use-locale-switch";
+import { CaretDown } from "@phosphor-icons/react";
 import { useLocale } from "next-intl";
 import { type ChangeEvent } from "react";
-import { CaretDown } from "@phosphor-icons/react";
-import { useLocaleSwitch } from "@/lib/use-locale-switch";
 
 const languageOptions = [
-  { value: "uz", label: "O'zbekcha" },
-  { value: "ru", label: "Русский" },
-  { value: "en", label: "English" },
+  { value: "uz", label: "O'zbekcha", short: "O'z" },
+  { value: "ru", label: "Русский", short: "Ru" },
+  { value: "en", label: "English", short: "En" },
 ] as const;
 
 /**
@@ -36,11 +36,12 @@ export function LanguageSwitcher() {
         value={locale}
         onChange={handleLanguageChange}
         disabled={isLoading}
-        className="border-input text-foreground focus-visible:border-ring focus-visible:ring-ring/50 bg-card/90 h-11 w-[7.5rem] appearance-none rounded-full border pr-8 pl-3 text-xs font-medium shadow-[0_16px_36px_-30px_rgba(17,24,39,0.45)] transition-[border-color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 md:w-[148px] md:pl-4 md:text-sm"
+        className="border-input text-foreground focus-visible:border-ring focus-visible:ring-ring/50 bg-card/90 h-11 w-18 appearance-none rounded-full border pr-8 pl-3 text-xs font-medium shadow-[0_16px_36px_-30px_rgba(17,24,39,0.45)] transition-[border-color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 md:w-[148px] md:pl-4 md:text-sm"
       >
         {languageOptions.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            <span className="hidden sm:block">{option.label}</span>
+            <span className="block sm:hidden">{option.short}</span>
           </option>
         ))}
       </select>

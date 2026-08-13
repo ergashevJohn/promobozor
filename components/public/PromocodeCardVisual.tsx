@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getApprovedImageUrl } from "@/lib/media";
-import { SealCheck, Clock } from "@phosphor-icons/react/dist/ssr";
+import { Clock, SealCheck } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import {
@@ -84,11 +84,6 @@ export function PromocodeCardVisual({
               ) : (
                 <span className="rounded-md bg-[color:var(--secondary)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
                   {isExpiredByDate ? t.expired : t.disabled}
-                </span>
-              )}
-              {promocode.isFeatured && !isInactive && (
-                <span className="rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
-                  {t.featured}
                 </span>
               )}
             </div>
