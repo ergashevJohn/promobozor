@@ -14,15 +14,21 @@ import { notFound } from "next/navigation";
 
 const brandSans = Manrope({
   subsets: ["latin", "cyrillic", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   adjustFontFallback: true,
+  // Avoid unused subset preload warnings (uz/ru pages don't use every subset)
+  preload: false,
   variable: "--font-brand-sans",
 });
 
 const brandMono = JetBrains_Mono({
-  subsets: ["latin", "cyrillic", "latin-ext"],
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "700"],
   display: "swap",
   adjustFontFallback: true,
+  // Mono is only used on promocode codes — don't preload site-wide
+  preload: false,
   variable: "--font-brand-mono",
 });
 

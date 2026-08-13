@@ -15,7 +15,7 @@
     "test:coverage": "vitest --coverage",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
-    "check": "npm run format && npm run lint && npm run build && npm run type-check",
+    "check": "npm run format && npm run lint && npm run type-check && npm run build && npm run doctor",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
