@@ -7,6 +7,7 @@ import { categories, categoryTranslations, db, promocodes } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { getApprovedImageUrl } from "@/lib/media";
 import { generateFullMetadata } from "@/lib/metadata";
+import { getListLanguageAlternates, getListPath, type Locale as RouteLocale } from "@/lib/routes";
 import { and, asc, eq, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -65,10 +66,20 @@ export async function generateMetadata({
 
   const title = t("allCategories");
   const description = t("allCategoriesDescription");
-  const url = `/${locale}/categories`;
+  const lang = locale as RouteLocale;
+  const url = getListPath(lang, "categories");
 
   return {
-    ...generateFullMetadata(title, description, url, undefined, "website", locale, "/categories"),
+    ...generateFullMetadata(
+      title,
+      description,
+      url,
+      undefined,
+      "website",
+      locale,
+      "",
+      getListLanguageAlternates("categories")
+    ),
   };
 }
 
@@ -198,6 +209,7 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
         />
         {schemaItems.length > 0 && (
           <ItemListSchema
+            locale={locale}
             items={schemaItems}
             listName={t("allCategories")}
             listDescription={t("allCategoriesDescription")}

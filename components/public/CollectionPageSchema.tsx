@@ -1,4 +1,5 @@
 import serialize from "serialize-javascript";
+import { type Locale, resolveInternalHrefToPublicPath } from "@/lib/routes";
 
 /**
  * CollectionPageSchema - Schema.org CollectionPage markup for list pages
@@ -38,7 +39,7 @@ export function CollectionPageSchema({
     "@type": "CollectionPage",
     name,
     description,
-    url: `${baseUrl}${url}`,
+    url: `${baseUrl}${resolveInternalHrefToPublicPath(lang as Locale, url)}`,
     inLanguage: lang,
     ...(itemCount && {
       numberOfItems: itemCount,
@@ -51,7 +52,9 @@ export function CollectionPageSchema({
           item: {
             "@type": "Thing",
             name: item.name,
-            url: item.url.startsWith("http") ? item.url : `${baseUrl}${item.url}`,
+            url: item.url.startsWith("http")
+              ? item.url
+              : `${baseUrl}${resolveInternalHrefToPublicPath(lang as Locale, item.url)}`,
             ...(item.description && { description: item.description }),
             ...(item.image && { image: item.image }),
           },

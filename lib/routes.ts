@@ -92,6 +92,52 @@ export function getListPath(locale: Locale, listType: ListType): string {
   return `/${locale}/${getListSegment(locale, listType)}`;
 }
 
+/** Per-locale hreflang paths for a list page (for metadata alternates). */
+export function getListLanguageAlternates(listType: ListType): Record<Locale, string> {
+  return {
+    uz: getListPath("uz", listType),
+    ru: getListPath("ru", listType),
+    en: getListPath("en", listType),
+  };
+}
+
+const INTERNAL_LIST_BY_PATH = new Map<string, ListType>(
+  Object.entries(INTERNAL_LIST_PATH).map(([listType, path]) => [path, listType as ListType])
+);
+
+const INTERNAL_ENTITY_BY_PATH = new Map<string, EntityType>(
+  Object.entries(INTERNAL_ENTITY_PATH).map(([entityType, path]) => [path, entityType as EntityType])
+);
+
+/**
+ * Convert next-intl internal href to localized public path (with locale prefix).
+ * Examples: /promocodes → /uz/chegirmalar, /store/uzum → /uz/do-kon/uzum
+ */
+export function resolveInternalHrefToPublicPath(locale: Locale, internalHref: string): string {
+  if (internalHref === "/" || internalHref === "") {
+    return `/${locale}`;
+  }
+
+  const normalized = internalHref.startsWith("/") ? internalHref : `/${internalHref}`;
+  const parts = normalized.split("/").filter(Boolean);
+
+  if (parts.length === 1) {
+    const listType = INTERNAL_LIST_BY_PATH.get(normalized);
+    if (listType) {
+      return getListPath(locale, listType);
+    }
+  }
+
+  if (parts.length === 2) {
+    const entityType = INTERNAL_ENTITY_BY_PATH.get(`/${parts[0]}`);
+    if (entityType) {
+      return getEntityPath(locale, entityType, parts[1]);
+    }
+  }
+
+  return `/${locale}${normalized}`;
+}
+
 /**
  * Internal pathname for next-intl Link (without locale): /promocode/my-slug
  */

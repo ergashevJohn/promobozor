@@ -3,6 +3,7 @@ import { brands, brandTranslations, db, promocodes } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { getApprovedImageUrl } from "@/lib/media";
 import { generateFullMetadata } from "@/lib/metadata";
+import { getListLanguageAlternates, getListPath, type Locale as RouteLocale } from "@/lib/routes";
 import { and, desc, eq, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -67,10 +68,20 @@ export async function generateMetadata({
 
   const title = t("allBrands");
   const description = t("description");
-  const url = `/${locale}/brands`;
+  const lang = locale as RouteLocale;
+  const url = getListPath(lang, "brands");
 
   return {
-    ...generateFullMetadata(title, description, url, undefined, "website", locale, "/brands"),
+    ...generateFullMetadata(
+      title,
+      description,
+      url,
+      undefined,
+      "website",
+      locale,
+      "",
+      getListLanguageAlternates("brands")
+    ),
   };
 }
 
@@ -190,6 +201,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
         />
         {schemaItems.length > 0 && (
           <ItemListSchema
+            locale={locale}
             items={schemaItems}
             listName={t("allBrands")}
             listDescription={t("description")}

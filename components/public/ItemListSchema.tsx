@@ -1,5 +1,6 @@
 import serialize from "serialize-javascript";
 import { getBaseUrl } from "@/lib/metadata";
+import { type Locale, resolveInternalHrefToPublicPath } from "@/lib/routes";
 
 interface ItemListItem {
   name: string;
@@ -12,6 +13,7 @@ interface ItemListSchemaProps {
   items: ItemListItem[];
   listName?: string;
   listDescription?: string;
+  locale?: string;
 }
 
 /**
@@ -19,7 +21,7 @@ interface ItemListSchemaProps {
  * Used for store listings, category listings, brand listings, etc.
  * Helps search engines understand the list of items on the page
  */
-export function ItemListSchema({ items, listName, listDescription }: ItemListSchemaProps) {
+export function ItemListSchema({ items, listName, listDescription, locale }: ItemListSchemaProps) {
   const baseUrl = getBaseUrl();
 
   const schema = {
@@ -34,7 +36,11 @@ export function ItemListSchema({ items, listName, listDescription }: ItemListSch
       item: {
         "@type": "Offer",
         name: item.name,
-        url: item.url.startsWith("http") ? item.url : `${baseUrl}${item.url}`,
+        url: item.url.startsWith("http")
+          ? item.url
+          : locale
+            ? `${baseUrl}${resolveInternalHrefToPublicPath(locale as Locale, item.url)}`
+            : `${baseUrl}${item.url}`,
         ...(item.image && {
           image: item.image.startsWith("http") ? item.image : `${baseUrl}${item.image}`,
         }),

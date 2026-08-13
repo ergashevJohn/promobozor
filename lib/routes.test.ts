@@ -4,8 +4,10 @@ import {
   getInternalEntityHref,
   getLegacyEntityPath,
   getListPath,
+  getListLanguageAlternates,
   isCompetitorPromokodAliasPath,
   resolveEntityTypeFromSegment,
+  resolveInternalHrefToPublicPath,
   resolveLegacyLocalizedPath,
   resolveListTypeFromSegment,
 } from "./routes";
@@ -26,6 +28,20 @@ describe("routes helpers", () => {
     expect(getListPath("uz", "promocodes")).toBe("/uz/chegirmalar");
     expect(getListPath("ru", "stores")).toBe("/ru/magaziny");
     expect(getListPath("en", "brands")).toBe("/en/brands");
+  });
+
+  it("builds list hreflang alternates", () => {
+    expect(getListLanguageAlternates("promocodes")).toEqual({
+      uz: "/uz/chegirmalar",
+      ru: "/ru/promokody",
+      en: "/en/deals",
+    });
+  });
+
+  it("resolves internal hrefs to localized public paths", () => {
+    expect(resolveInternalHrefToPublicPath("uz", "/promocodes")).toBe("/uz/chegirmalar");
+    expect(resolveInternalHrefToPublicPath("ru", "/store/uzum")).toBe("/ru/magazin/uzum");
+    expect(resolveInternalHrefToPublicPath("en", "/")).toBe("/en");
   });
 
   it("builds legacy and internal hrefs", () => {

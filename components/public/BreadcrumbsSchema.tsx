@@ -1,5 +1,6 @@
 import serialize from "serialize-javascript";
 import { getBaseUrl } from "@/lib/metadata";
+import { type Locale, resolveInternalHrefToPublicPath } from "@/lib/routes";
 
 interface BreadcrumbItem {
   name: string;
@@ -20,10 +21,10 @@ export function BreadcrumbsSchema({ items, locale }: BreadcrumbsSchemaProps) {
 
   function resolveUrl(url: string): string {
     if (url.startsWith("http")) return url;
-    if (locale && !url.startsWith(`/${locale}`)) {
-      return `${baseUrl}/${locale}${url}`;
+    if (locale) {
+      return `${baseUrl}${resolveInternalHrefToPublicPath(locale as Locale, url)}`;
     }
-    return `${baseUrl}${url}`;
+    return `${baseUrl}${url.startsWith("/") ? url : `/${url}`}`;
   }
 
   const schema = {

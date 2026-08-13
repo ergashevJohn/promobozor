@@ -5,6 +5,7 @@ import StoresPageClient from "@/components/public/StoresPageClient";
 import { db, promocodes, stores, storeTranslations } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
+import { getListLanguageAlternates, getListPath, type Locale as RouteLocale } from "@/lib/routes";
 import { and, desc, eq, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -62,10 +63,20 @@ export async function generateMetadata({
 
   const title = t("allStores");
   const description = t("allStoresDescription");
-  const url = `/${locale}/stores`;
+  const lang = locale as RouteLocale;
+  const url = getListPath(lang, "stores");
 
   return {
-    ...generateFullMetadata(title, description, url, undefined, "website", locale, "/stores"),
+    ...generateFullMetadata(
+      title,
+      description,
+      url,
+      undefined,
+      "website",
+      locale,
+      "",
+      getListLanguageAlternates("stores")
+    ),
   };
 }
 

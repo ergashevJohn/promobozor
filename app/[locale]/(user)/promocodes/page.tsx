@@ -17,6 +17,7 @@ import {
 import { getFiltersData } from "@/lib/filters";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
+import { getListLanguageAlternates, getListPath, type Locale as RouteLocale } from "@/lib/routes";
 import {
   mapPromocodeListRow,
   promocodeListSelect,
@@ -142,9 +143,19 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "promocodesPage" });
   const title = t("metaTitle");
   const description = t("metaDescription");
-  const url = `/${locale}/promocodes`;
+  const lang = locale as RouteLocale;
+  const url = getListPath(lang, "promocodes");
 
-  return generateFullMetadata(title, description, url, undefined, "website", locale, "/promocodes");
+  return generateFullMetadata(
+    title,
+    description,
+    url,
+    undefined,
+    "website",
+    locale,
+    "",
+    getListLanguageAlternates("promocodes")
+  );
 }
 
 export default async function PromocodesPage({ params }: { params: Promise<{ locale: string }> }) {
