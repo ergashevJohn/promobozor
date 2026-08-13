@@ -1,6 +1,33 @@
 # SEO operations playbook (E-E-A-T + off-page)
 
-This complements on-site SEO work for promokoduz.uz vs competitor brand-hub coverage.
+This complements on-site SEO work for promobozor.uz vs competitor brand-hub coverage.
+
+## Localized URL segments
+
+Public paths are locale-specific (internal App Router keys stay English):
+
+| Entity           | uz                   | ru                   | en                 |
+| ---------------- | -------------------- | -------------------- | ------------------ |
+| Promocode detail | `/chegirma/[slug]`   | `/promokod/[slug]`   | `/deal/[slug]`     |
+| Promocode list   | `/chegirmalar`       | `/promokody`         | `/deals`           |
+| Store detail     | `/do-kon/[slug]`     | `/magazin/[slug]`    | `/store/[slug]`    |
+| Store list       | `/do-konlar`         | `/magaziny`          | `/stores`          |
+| Category detail  | `/kategoriya/[slug]` | `/kategoriya/[slug]` | `/category/[slug]` |
+| Brand detail     | `/brend/[slug]`      | `/brend/[slug]`      | `/brand/[slug]`    |
+
+Legacy English paths (`/promocode/…`, `/store/…`, …) 301 to localized segments via `proxy.ts` and the `redirects` table.
+
+Slug migrations:
+
+```bash
+npm run slug:preview:all
+npm run slug:generate-mappings   # refresh mapping files from DB
+npm run slug:migrate:stores:dry
+npm run slug:migrate:categories:dry
+npm run slug:migrate:brands:dry
+npm run slug:migrate:promocodes:dry
+# after review, run without :dry (use dotenv -e .env.production for prod)
+```
 
 ## Claims vs inventory
 
@@ -19,9 +46,9 @@ This complements on-site SEO work for promokoduz.uz vs competitor brand-hub cove
 
 ## Google Search Console / Yandex
 
-1. Verify property for `https://promokoduz.uz`
+1. Verify property for `https://promobozor.uz` (or current `NEXT_PUBLIC_BASE_URL`)
 2. Submit sitemaps: `/sitemap/uz.xml`, `/sitemap/ru.xml`, `/sitemap/en.xml`
-3. Inspect sample `/promokod/{brand}` aliases — they must 301 to store/brand hubs
+3. Inspect sample competitor aliases (`/{locale}/promokod/{brand}-promokod`) — they must 301 to store/brand hubs
 4. Monitor Coverage for soft-404s on expired promocode URLs (should be noindex)
 5. In Yandex Webmaster, mirror sitemap submission and check “Некачественные страницы”
 
@@ -29,7 +56,7 @@ This complements on-site SEO work for promokoduz.uz vs competitor brand-hub cove
 
 - Keep https://t.me/promokoduz_app linked from footer, about, and `llms.txt`
 - Post verified deal roundups with deep links to store/brand hubs (not only single promocode URLs)
-- Prefer hub URLs (`/uz/store/...`, `/uz/brand/...`) for evergreen link equity
+- Prefer hub URLs (`/uz/do-kon/...`, `/uz/brend/...`) for evergreen link equity
 
 ## Internal linking
 

@@ -1,9 +1,21 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
+import { resolvePromokodAliasRedirect } from "./lib/promokod-alias-resolve";
 import { getRedirectPath, isGone } from "./lib/redirects";
+import {
+  ALL_ENTITY_SEGMENTS_PATTERN,
+  ALL_LIST_SEGMENTS_PATTERN,
+  getListPath,
+  resolveLegacyLocalizedPath,
+  resolveListTypeFromSegment,
+  type Locale,
+} from "./lib/routes";
 
 const intlMiddleware = createMiddleware(routing);
+
+const goneSegmentRegex = new RegExp(`^/(uz|ru|en)/(${ALL_ENTITY_SEGMENTS_PATTERN})/([^/]+)$`);
+const listSegmentRegex = new RegExp(`^/(uz|ru|en)/(${ALL_LIST_SEGMENTS_PATTERN})/?$`);
 
 export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -18,9 +30,8 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 410 Gone Check for Bots and Users
-  // Match segments: /[locale]/store/[slug], /[locale]/promocode/[slug], etc.
-  const goneMatch = pathname.match(/^\/([a-z]{2})\/(store|promocode|category|brand)\/([^\/]+)$/);
+  // 410 Gone Check for Bots and Users (legacy + localized segments)
+  const goneMatch = pathname.match(goneSegmentRegex);
   if (goneMatch) {
     const [, , type, slug] = goneMatch;
 
@@ -44,8 +55,8 @@ export default async function middleware(request: NextRequest) {
       return value !== null && value !== "";
     });
     if (hasHomeFilters) {
-      const locale = homeLocaleMatch[1];
-      const target = new URL(`/${locale}/promocodes`, request.url);
+      const locale = homeLocaleMatch[1] as Locale;
+      const target = new URL(getListPath(locale, "promocodes"), request.url);
       request.nextUrl.searchParams.forEach((value, key) => {
         if (filterKeys.includes(key) && value !== "") {
           target.searchParams.set(key, value);
@@ -60,6 +71,22 @@ export default async function middleware(request: NextRequest) {
   if (redirectPath) {
     const redirectUrl = new URL(redirectPath, request.url);
     return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  // Legacy English segments → localized public paths (same slug)
+  const legacyLocalized = resolveLegacyLocalizedPath(pathname);
+  if (legacyLocalized && legacyLocalized !== pathname) {
+    const redirectUrl = new URL(legacyLocalized, request.url);
+    request.nextUrl.searchParams.forEach((value, key) => {
+      redirectUrl.searchParams.set(key, value);
+    });
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
+  // Competitor /promokod/{slug} alias → store/brand hub (proxy-level; avoids RU route clash)
+  const aliasTarget = await resolvePromokodAliasRedirect(pathname);
+  if (aliasTarget) {
+    return NextResponse.redirect(new URL(aliasTarget, request.url), 301);
   }
 
   // Track request start time for Server-Timing header
@@ -156,15 +183,18 @@ export default async function middleware(request: NextRequest) {
   response.headers.set("Content-Security-Policy", csp);
 
   // Filtered promocodes listing: keep page ISR, but tell crawlers not to index query variants
-  const promocodesLocaleMatch = pathname.match(/^\/(uz|ru|en)\/promocodes\/?$/);
-  if (promocodesLocaleMatch && request.method === "GET") {
-    const noindexKeys = ["storeId", "categoryId", "brandId", "search", "sortBy", "featured"];
-    const hasFilterQuery = noindexKeys.some((key) => {
-      const value = request.nextUrl.searchParams.get(key);
-      return value !== null && value !== "";
-    });
-    if (hasFilterQuery) {
-      response.headers.set("X-Robots-Tag", "noindex, follow");
+  const listMatch = pathname.match(listSegmentRegex);
+  if (listMatch && request.method === "GET") {
+    const listType = resolveListTypeFromSegment(listMatch[2]);
+    if (listType === "promocodes") {
+      const noindexKeys = ["storeId", "categoryId", "brandId", "search", "sortBy", "featured"];
+      const hasFilterQuery = noindexKeys.some((key) => {
+        const value = request.nextUrl.searchParams.get(key);
+        return value !== null && value !== "";
+      });
+      if (hasFilterQuery) {
+        response.headers.set("X-Robots-Tag", "noindex, follow");
+      }
     }
   }
 

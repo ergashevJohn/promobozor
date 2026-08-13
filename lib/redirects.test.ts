@@ -23,6 +23,9 @@ describe("isGone", () => {
 
     expect(isGone("promocode", "seasonal-deal")).toBe(true);
     expect(isGone("promo", "seasonal-deal")).toBe(true);
+    expect(isGone("chegirma", "seasonal-deal")).toBe(true);
+    expect(isGone("promokod", "seasonal-deal")).toBe(true);
+    expect(isGone("deal", "seasonal-deal")).toBe(true);
   });
 
   it("still respects non-promocode types strictly", () => {

@@ -32,6 +32,7 @@ import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
 import { isGone } from "@/lib/redirects";
+import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
@@ -91,7 +92,7 @@ export async function generateMetadata({
         totalPromocodes,
         locale
       );
-    const url = `/${locale}/brand/${slug}`;
+    const url = getEntityPath(locale as RouteLocale, "brand", slug);
 
     // Generate dynamic OG image
     const ogImage = generateOgImageUrl({
@@ -106,7 +107,7 @@ export async function generateMetadata({
 
     const languageAlternates: Record<string, string> = {};
     allTranslations.forEach((t) => {
-      languageAlternates[t.language] = `/${t.language}/brand/${t.slug}`;
+      languageAlternates[t.language] = getEntityPath(t.language as RouteLocale, "brand", t.slug);
     });
 
     return generateFullMetadata(

@@ -2,9 +2,9 @@ import "dotenv/config";
 
 import { and, eq, inArray } from "drizzle-orm";
 import { db } from "../../db";
-import { promocodeTranslations, redirects } from "../../db/schema";
+import { brandTranslations, redirects } from "../../db/schema";
 import type { Language } from "../../lib/i18n";
-import { PROMOCODE_SLUG_MAPPING } from "./promocode-slug-mapping";
+import { BRAND_SLUG_MAPPING } from "./brand-slug-mapping";
 import { buildEntityRedirects } from "./slug-migration-utils";
 
 const LOCALES = ["uz", "ru", "en"] as const;
@@ -18,7 +18,7 @@ type TranslationRow = {
 type CurrentByLanguage = Partial<Record<Locale, TranslationRow>>;
 
 type UpdateCandidate = {
-  promocodeId: string;
+  brandId: string;
   language: Locale;
   oldSlug: string;
   newSlug: string;
@@ -30,28 +30,28 @@ function shortId(id: string): string {
 
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
-  const promocodeIds = PROMOCODE_SLUG_MAPPING.map((item) => item.id);
+  const brandIds = BRAND_SLUG_MAPPING.map((item) => item.id);
 
-  if (promocodeIds.length === 0) {
-    console.log("ℹ️  No promocodes in mapping. Run generate-slug-mappings.ts first.");
+  if (brandIds.length === 0) {
+    console.log("ℹ️  No brands in mapping. Run generate-slug-mappings.ts first.");
     return;
   }
 
   const currentRows = await db
     .select({
-      promocodeId: promocodeTranslations.promocodeId,
-      language: promocodeTranslations.language,
-      slug: promocodeTranslations.slug,
+      brandId: brandTranslations.brandId,
+      language: brandTranslations.language,
+      slug: brandTranslations.slug,
     })
-    .from(promocodeTranslations)
-    .where(inArray(promocodeTranslations.promocodeId, promocodeIds));
+    .from(brandTranslations)
+    .where(inArray(brandTranslations.brandId, brandIds));
 
   const currentById = new Map<string, CurrentByLanguage>();
   for (const row of currentRows) {
-    if (!currentById.has(row.promocodeId)) {
-      currentById.set(row.promocodeId, {});
+    if (!currentById.has(row.brandId)) {
+      currentById.set(row.brandId, {});
     }
-    const bucket = currentById.get(row.promocodeId)!;
+    const bucket = currentById.get(row.brandId)!;
     bucket[row.language as Locale] = {
       language: row.language,
       slug: row.slug,
@@ -61,7 +61,7 @@ async function main() {
   const missingTranslations: string[] = [];
   const updates: UpdateCandidate[] = [];
 
-  for (const item of PROMOCODE_SLUG_MAPPING) {
+  for (const item of BRAND_SLUG_MAPPING) {
     const current = currentById.get(item.id);
 
     if (!current) {
@@ -83,7 +83,7 @@ async function main() {
       }
 
       updates.push({
-        promocodeId: item.id,
+        brandId: item.id,
         language: locale,
         oldSlug: normalizedCurrent,
         newSlug: normalizedNext,
@@ -100,7 +100,7 @@ async function main() {
   }
 
   const redirectMap = new Map<string, { fromPath: string; toPath: string }>();
-  for (const item of PROMOCODE_SLUG_MAPPING) {
+  for (const item of BRAND_SLUG_MAPPING) {
     const current = currentById.get(item.id)!;
     const oldSlugs = Array.from(
       new Set(LOCALES.map((locale) => current[locale]?.slug.trim()).filter(Boolean))
@@ -109,7 +109,7 @@ async function main() {
     for (const locale of LOCALES) {
       const targetSlug = item.slugs[locale].trim();
       for (const redirect of buildEntityRedirects({
-        entityType: "promocode",
+        entityType: "brand",
         locale,
         oldSlugs,
         newSlug: targetSlug,
@@ -122,7 +122,7 @@ async function main() {
   const redirectsToUpsert = Array.from(redirectMap.values());
 
   console.log(`ℹ️  Mode: ${dryRun ? "DRY RUN" : "APPLY"}`);
-  console.log(`ℹ️  Promocodes in mapping: ${PROMOCODE_SLUG_MAPPING.length}`);
+  console.log(`ℹ️  Brands in mapping: ${BRAND_SLUG_MAPPING.length}`);
   console.log(`ℹ️  Translation updates: ${updates.length}`);
   console.log(`ℹ️  Redirect upserts: ${redirectsToUpsert.length}`);
 
@@ -132,15 +132,9 @@ async function main() {
   }
 
   if (dryRun) {
-    console.log("\nPreview (first 10 updates):");
-    for (const row of updates.slice(0, 10)) {
-      console.log(
-        `  ${shortId(row.promocodeId)} [${row.language}] ${row.oldSlug} -> ${row.newSlug}`
-      );
-    }
-    console.log("\nRedirect preview (first 10):");
-    for (const row of redirectsToUpsert.slice(0, 10)) {
-      console.log(`  ${row.fromPath} -> ${row.toPath}`);
+    console.log("\nPreview updates:");
+    for (const row of updates) {
+      console.log(`  ${shortId(row.brandId)} [${row.language}] ${row.oldSlug} -> ${row.newSlug}`);
     }
     return;
   }
@@ -150,15 +144,15 @@ async function main() {
   await db.transaction(async (tx) => {
     for (const row of updates) {
       await tx
-        .update(promocodeTranslations)
+        .update(brandTranslations)
         .set({
           slug: row.newSlug,
           updatedAt: now,
         })
         .where(
           and(
-            eq(promocodeTranslations.promocodeId, row.promocodeId),
-            eq(promocodeTranslations.language, row.language)
+            eq(brandTranslations.brandId, row.brandId),
+            eq(brandTranslations.language, row.language)
           )
         );
     }
@@ -169,7 +163,7 @@ async function main() {
         .values({
           fromPath: row.fromPath,
           toPath: row.toPath,
-          entityType: "promocode",
+          entityType: "brand",
           statusCode: 301,
           isActive: true,
           updatedAt: now,
@@ -178,7 +172,7 @@ async function main() {
           target: redirects.fromPath,
           set: {
             toPath: row.toPath,
-            entityType: "promocode",
+            entityType: "brand",
             statusCode: 301,
             isActive: true,
             updatedAt: now,
@@ -187,7 +181,7 @@ async function main() {
     }
   });
 
-  console.log("✅ Promocode slug migration completed.");
+  console.log("✅ Brand slug migration completed.");
 }
 
 main().catch((error) => {

@@ -5,6 +5,7 @@ import { db } from "../../db";
 import { redirects, storeTranslations } from "../../db/schema";
 import type { Language } from "../../lib/i18n";
 import { STORE_SLUG_MAPPING } from "./store-slug-mapping";
+import { buildEntityRedirects } from "./slug-migration-utils";
 
 const LOCALES = ["uz", "ru", "en"] as const;
 type Locale = (typeof LOCALES)[number];
@@ -23,11 +24,6 @@ type UpdateCandidate = {
   newSlug: string;
 };
 
-type RedirectCandidate = {
-  fromPath: string;
-  toPath: string;
-};
-
 function shortId(id: string): string {
   return id.replaceAll("-", "").slice(0, 8);
 }
@@ -35,6 +31,11 @@ function shortId(id: string): string {
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const storeIds = STORE_SLUG_MAPPING.map((item) => item.id);
+
+  if (storeIds.length === 0) {
+    console.log("ℹ️  No stores in mapping. Run generate-slug-mappings.ts first.");
+    return;
+  }
 
   const currentRows = await db
     .select({
@@ -98,7 +99,7 @@ async function main() {
     process.exit(1);
   }
 
-  const redirectMap = new Map<string, RedirectCandidate>();
+  const redirectMap = new Map<string, { fromPath: string; toPath: string }>();
   for (const item of STORE_SLUG_MAPPING) {
     const current = currentById.get(item.id)!;
     const oldSlugs = Array.from(
@@ -107,13 +108,13 @@ async function main() {
 
     for (const locale of LOCALES) {
       const targetSlug = item.slugs[locale].trim();
-      for (const oldSlug of oldSlugs) {
-        const fromPath = `/${locale}/store/${oldSlug}`;
-        const toPath = `/${locale}/store/${targetSlug}`;
-        if (fromPath === toPath) {
-          continue;
-        }
-        redirectMap.set(fromPath, { fromPath, toPath });
+      for (const redirect of buildEntityRedirects({
+        entityType: "store",
+        locale,
+        oldSlugs,
+        newSlug: targetSlug,
+      })) {
+        redirectMap.set(redirect.fromPath, redirect);
       }
     }
   }
@@ -125,7 +126,7 @@ async function main() {
   console.log(`ℹ️  Translation updates: ${updates.length}`);
   console.log(`ℹ️  Redirect upserts: ${redirectsToUpsert.length}`);
 
-  if (updates.length === 0) {
+  if (updates.length === 0 && redirectsToUpsert.length === 0) {
     console.log("✅ No slug updates required. Mapping already applied.");
     return;
   }
@@ -134,6 +135,10 @@ async function main() {
     console.log("\nPreview updates:");
     for (const row of updates) {
       console.log(`  ${shortId(row.storeId)} [${row.language}] ${row.oldSlug} -> ${row.newSlug}`);
+    }
+    console.log("\nRedirect preview (first 10):");
+    for (const row of redirectsToUpsert.slice(0, 10)) {
+      console.log(`  ${row.fromPath} -> ${row.toPath}`);
     }
     return;
   }

@@ -3,7 +3,7 @@ import "dotenv/config";
 import { asc, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { brands, brandTranslations } from "../../db/schema";
-import { generateSlug } from "../../lib/slug";
+import { ensureUniqueSlug, generateBrandSeoSlug } from "../../lib/slug-seo";
 
 const LOCALES = ["uz", "ru", "en"] as const;
 type Locale = (typeof LOCALES)[number];
@@ -21,31 +21,6 @@ type BrandGroup = {
 
 function shortId(id: string): string {
   return id.replaceAll("-", "").slice(0, 8);
-}
-
-function uniqueWithinLanguage(
-  lang: Locale,
-  baseSlug: string,
-  brandId: string,
-  used: Record<Locale, Map<string, string>>
-): string {
-  const initial = baseSlug || `brand-${shortId(brandId)}`;
-  let candidate = initial;
-  let seq = 1;
-
-  while (true) {
-    const existingOwner = used[lang].get(candidate);
-    if (!existingOwner || existingOwner === brandId) {
-      break;
-    }
-    seq += 1;
-    const suffix = `-${shortId(brandId)}-${seq}`;
-    const truncatedBase = initial.slice(0, Math.max(1, 100 - suffix.length));
-    candidate = `${truncatedBase}${suffix}`;
-  }
-
-  used[lang].set(candidate, brandId);
-  return candidate;
 }
 
 async function main() {
@@ -86,14 +61,10 @@ async function main() {
   for (const brand of groups.values()) {
     for (const locale of LOCALES) {
       const current = brand.current[locale];
-      if (!current) {
-        continue;
-      }
+      if (!current) continue;
 
-      // Natural SEO: language variants may naturally match; we only ensure
-      // uniqueness inside the same language (DB constraint).
-      const natural = generateSlug(current.name);
-      brand.proposed[locale] = uniqueWithinLanguage(locale, natural, brand.id, usedByLanguage);
+      const natural = generateBrandSeoSlug({ brandName: current.name, language: locale });
+      brand.proposed[locale] = ensureUniqueSlug(natural, usedByLanguage[locale], brand.id);
     }
   }
 
@@ -129,7 +100,7 @@ async function main() {
     lines.push(rowParts.join("\t"));
   }
 
-  console.log("Brand slug preview (Natural SEO rule)\n");
+  console.log("Brand slug preview ({name}-chegirmalar/skidki/deals)\n");
   console.log(`Total brands: ${groups.size}`);
   console.log(`Brands with any changes: ${changedAny}`);
   console.log(

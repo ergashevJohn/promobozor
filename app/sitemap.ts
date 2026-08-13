@@ -1,4 +1,10 @@
 import { getBaseUrl } from "@/lib/metadata";
+import {
+  getEntityPath,
+  getListPath,
+  type ListType,
+  type Locale as RouteLocale,
+} from "@/lib/routes";
 import { MetadataRoute } from "next";
 
 import {
@@ -45,20 +51,28 @@ export default async function sitemap({
     },
   });
 
-  // List pages
-  const listPages = ["stores", "categories", "brands", "promocodes", "blog"];
+  // List pages (localized segments)
+  const listPages: Array<ListType | "blog"> = [
+    "stores",
+    "categories",
+    "brands",
+    "promocodes",
+    "blog",
+  ];
   for (const page of listPages) {
+    const pathFor = (loc: RouteLocale) =>
+      page === "blog" ? `/${loc}/blog` : getListPath(loc, page);
     sitemapEntries.push({
-      url: `${baseUrl}/${locale}/${page}`,
+      url: `${baseUrl}${pathFor(locale)}`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
       alternates: {
         languages: {
-          "x-default": `${baseUrl}/uz/${page}`,
-          uz: `${baseUrl}/uz/${page}`,
-          ru: `${baseUrl}/ru/${page}`,
-          en: `${baseUrl}/en/${page}`,
+          "x-default": `${baseUrl}${pathFor("uz")}`,
+          uz: `${baseUrl}${pathFor("uz")}`,
+          ru: `${baseUrl}${pathFor("ru")}`,
+          en: `${baseUrl}${pathFor("en")}`,
         },
       },
     });
@@ -211,16 +225,17 @@ export default async function sitemap({
 
       const languages: Record<string, string> = {};
       translations.forEach((t) => {
-        languages[t.language] = `${baseUrl}/${t.language}/store/${t.slug}`;
+        languages[t.language] =
+          `${baseUrl}${getEntityPath(t.language as RouteLocale, "store", t.slug)}`;
       });
 
       const uzTranslation = translations.find((t) => t.language === "uz");
       if (uzTranslation) {
-        languages["x-default"] = `${baseUrl}/uz/store/${uzTranslation.slug}`;
+        languages["x-default"] = `${baseUrl}${getEntityPath("uz", "store", uzTranslation.slug)}`;
       }
 
       sitemapEntries.push({
-        url: `${baseUrl}/${locale}/store/${currentTranslation.slug}`,
+        url: `${baseUrl}${getEntityPath(locale, "store", currentTranslation.slug)}`,
         lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.7,
@@ -244,16 +259,17 @@ export default async function sitemap({
 
       const languages: Record<string, string> = {};
       translations.forEach((t) => {
-        languages[t.language] = `${baseUrl}/${t.language}/category/${t.slug}`;
+        languages[t.language] =
+          `${baseUrl}${getEntityPath(t.language as RouteLocale, "category", t.slug)}`;
       });
 
       const uzTranslation = translations.find((t) => t.language === "uz");
       if (uzTranslation) {
-        languages["x-default"] = `${baseUrl}/uz/category/${uzTranslation.slug}`;
+        languages["x-default"] = `${baseUrl}${getEntityPath("uz", "category", uzTranslation.slug)}`;
       }
 
       sitemapEntries.push({
-        url: `${baseUrl}/${locale}/category/${currentTranslation.slug}`,
+        url: `${baseUrl}${getEntityPath(locale, "category", currentTranslation.slug)}`,
         lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.7,
@@ -277,16 +293,17 @@ export default async function sitemap({
 
       const languages: Record<string, string> = {};
       translations.forEach((t) => {
-        languages[t.language] = `${baseUrl}/${t.language}/brand/${t.slug}`;
+        languages[t.language] =
+          `${baseUrl}${getEntityPath(t.language as RouteLocale, "brand", t.slug)}`;
       });
 
       const uzTranslation = translations.find((t) => t.language === "uz");
       if (uzTranslation) {
-        languages["x-default"] = `${baseUrl}/uz/brand/${uzTranslation.slug}`;
+        languages["x-default"] = `${baseUrl}${getEntityPath("uz", "brand", uzTranslation.slug)}`;
       }
 
       sitemapEntries.push({
-        url: `${baseUrl}/${locale}/brand/${currentTranslation.slug}`,
+        url: `${baseUrl}${getEntityPath(locale, "brand", currentTranslation.slug)}`,
         lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.7,
@@ -310,16 +327,18 @@ export default async function sitemap({
 
       const languages: Record<string, string> = {};
       translations.forEach((t) => {
-        languages[t.language] = `${baseUrl}/${t.language}/promocode/${t.slug}`;
+        languages[t.language] =
+          `${baseUrl}${getEntityPath(t.language as RouteLocale, "promocode", t.slug)}`;
       });
 
       const uzTranslation = translations.find((t) => t.language === "uz");
       if (uzTranslation) {
-        languages["x-default"] = `${baseUrl}/uz/promocode/${uzTranslation.slug}`;
+        languages["x-default"] =
+          `${baseUrl}${getEntityPath("uz", "promocode", uzTranslation.slug)}`;
       }
 
       sitemapEntries.push({
-        url: `${baseUrl}/${locale}/promocode/${currentTranslation.slug}`,
+        url: `${baseUrl}${getEntityPath(locale, "promocode", currentTranslation.slug)}`,
         lastModified: currentTranslation.updatedAt || now,
         changeFrequency: "daily",
         priority: 0.6,

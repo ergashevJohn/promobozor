@@ -12,6 +12,7 @@ import {
 } from "@/lib/metadata";
 import { getPromocodeStaticParams } from "@/lib/queries/entities";
 import { isGone } from "@/lib/redirects";
+import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
 import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, redirect, unstable_rethrow } from "next/navigation";
@@ -108,7 +109,7 @@ export async function generateMetadata({
         locale
       );
 
-    const url = `/${locale}/promocode/${slug}`;
+    const url = getEntityPath(locale as RouteLocale, "promocode", slug);
 
     // Format discount text for OG image (with "chegirma" suffix)
     const discountTextForOG = discountText ? `${discountText} chegirma` : "";
@@ -127,7 +128,11 @@ export async function generateMetadata({
 
     const languageAlternates: Record<string, string> = {};
     allTranslations.forEach((t) => {
-      languageAlternates[t.language] = `/${t.language}/promocode/${t.slug}`;
+      languageAlternates[t.language] = getEntityPath(
+        t.language as RouteLocale,
+        "promocode",
+        t.slug
+      );
     });
 
     return generateFullMetadata(

@@ -10,6 +10,7 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { and, desc, eq, gt, isNull, lte, ne, or, sql } from "drizzle-orm";
+import { getEntityPath } from "@/lib/routes";
 import { unstable_cache } from "next/cache";
 import type { PromocodeDataRow } from "./transformers";
 
@@ -234,7 +235,7 @@ export async function findRedirectUrl(slug: string, locale: Locale) {
       .limit(1);
 
     if (correctTranslation) {
-      return `/${locale}/promocode/${correctTranslation.slug}`;
+      return getEntityPath(locale, "promocode", correctTranslation.slug);
     }
   }
 

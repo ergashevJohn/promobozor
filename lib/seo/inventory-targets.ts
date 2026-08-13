@@ -23,7 +23,7 @@ export function getTopInventoryTargets(limit = TOP_HUB_COUNT): InventoryTarget[]
     notes:
       hub.kind === "store"
         ? "Ensure active store hub + ≥3 verified promocodes when available"
-        : "Ensure brand hub page + link from /promokod/{slug} alias",
+        : "Ensure brand hub page + link from /promokod/{slug}-promokod alias",
   }));
 }
 

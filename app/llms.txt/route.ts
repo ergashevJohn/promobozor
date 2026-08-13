@@ -40,14 +40,14 @@ PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We 
 
 ## Key Pages
 - Homepage: ${baseUrl}/uz
-- All Promocodes: ${baseUrl}/uz/promocodes
-- Stores: ${baseUrl}/uz/stores
-- Categories: ${baseUrl}/uz/categories
-- Brands: ${baseUrl}/uz/brands
+- All Promocodes: ${baseUrl}/uz/chegirmalar
+- Stores: ${baseUrl}/uz/do-konlar
+- Categories: ${baseUrl}/uz/kategoriyalar
+- Brands: ${baseUrl}/uz/brendlar
 - Blog: ${baseUrl}/uz/blog
 - FAQ: ${baseUrl}/uz/faq
 - About: ${baseUrl}/uz/about
-- Brand alias pattern: ${baseUrl}/uz/promokod/{brand-slug} (301 to store/brand hub)
+- Brand alias pattern: ${baseUrl}/uz/promokod/{brand-slug}-promokod (301 to store/brand hub)
 
 ## Crawler Instructions
 - Index all public pages under /uz/, /ru/, /en/
