@@ -34,19 +34,19 @@ export const blogPosts: BlogPost[] = [
     body: {
       uz: [
         "Yandex Eats (Yandex Go ichidagi Eats) O‘zbekistonda yetkazib berish uchun eng ko‘p qidiriladigan promokod yo‘nalishlaridan biri.",
-        "Promokoduz’da faqat tekshirilgan takliflar chiqadi: kodni nusxalang, ilovada savatni to‘ldiring va to‘lovdan oldin promo maydonga qo‘ying.",
+        "PromoBozor’da faqat tekshirilgan takliflar chiqadi: kodni nusxalang, ilovada savatni to‘ldiring va to‘lovdan oldin promo maydonga qo‘ying.",
         "Ko‘p kodlar birinchi buyurtma yoki minimal savat shartiga bog‘liq. Har bir kartochkadagi shartlar va tugash sanasini o‘qing.",
         "Yangi kodlar uchun Yandex Eats brend sahifasini kuzating va muddati o‘tgan takliflarni ishlatmang.",
       ],
       ru: [
         "Yandex Eats — одно из самых популярных направлений промокодов в Узбекистане.",
-        "На Promokoduz публикуются проверенные предложения: скопируйте код, соберите корзину в приложении и вставьте промокод до оплаты.",
+        "На PromoBozor публикуются проверенные предложения: скопируйте код, соберите корзину в приложении и вставьте промокод до оплаты.",
         "Многие коды действуют на первый заказ или от минимальной суммы. Всегда читайте условия на карточке.",
         "Следите за страницей бренда Yandex Eats, чтобы не использовать устаревшие коды.",
       ],
       en: [
         "Yandex Eats is one of the most searched promocode topics in Uzbekistan.",
-        "On Promokoduz we list verified deals: copy the code, build your cart in the app, and paste it before checkout.",
+        "On PromoBozor we list verified deals: copy the code, build your cart in the app, and paste it before checkout.",
         "Many codes require a first order or a minimum basket. Always read the conditions on the card.",
         "Follow the Yandex Eats brand page so you do not reuse expired offers.",
       ],
@@ -70,17 +70,17 @@ export const blogPosts: BlogPost[] = [
     body: {
       uz: [
         "Uzum Market aksiyalari tez yangilanadi. Shuning uchun kodni ishlatishdan oldin amal qilish muddati va kategoriya cheklovini tekshiring.",
-        "Promokoduz store sahifasidagi aktiv takliflardan birini tanlang, kodni nusxalang va to‘lov sahifasidagi promo maydonga joylashtiring.",
+        "PromoBozor store sahifasidagi aktiv takliflardan birini tanlang, kodni nusxalang va to‘lov sahifasidagi promo maydonga joylashtiring.",
         "Agar kod ishlamasa: minimal summa, birinchi xarid sharti yoki muddat tugagan bo‘lishi mumkin. Bizga xabar bering — listingni yangilaymiz.",
       ],
       ru: [
         "Акции Uzum Market обновляются часто. Перед использованием проверьте срок и ограничения по категориям.",
-        "Выберите активное предложение на странице магазина Promokoduz, скопируйте код и вставьте его в поле промокода.",
+        "Выберите активное предложение на странице магазина PromoBozor, скопируйте код и вставьте его в поле промокода.",
         "Если код не сработал: возможны минимальная сумма, условие первого заказа или истекший срок. Сообщите нам — мы обновим листинг.",
       ],
       en: [
         "Uzum Market deals change quickly. Check expiry and category limits before you apply a code.",
-        "Pick an active offer on the Promokoduz store page, copy it, and paste it into the promo field at checkout.",
+        "Pick an active offer on the PromoBozor store page, copy it, and paste it into the promo field at checkout.",
         "If a code fails, it may need a minimum spend, first-order eligibility, or it may have expired. Tell us and we will refresh the listing.",
       ],
     },
@@ -105,21 +105,21 @@ export const blogPosts: BlogPost[] = [
         "2) «Nusxalash» tugmasi bilan kodni oling.",
         "3) Do‘kon ilovasi yoki saytiga o‘ting va savatni to‘ldiring.",
         "4) To‘lovdan oldin promo maydonga kodni qo‘ying va chegirmani tasdiqlang.",
-        "Promokoduz har bir listingni manba va muddat bo‘yicha tekshiradi; ishlamagan kodlarni tez yangilaydi.",
+        "PromoBozor har bir listingni manba va muddat bo‘yicha tekshiradi; ishlamagan kodlarni tez yangilaydi.",
       ],
       ru: [
         "1) Выберите активное предложение на странице магазина или бренда.",
         "2) Нажмите «Копировать».",
         "3) Откройте сайт или приложение магазина и соберите корзину.",
         "4) Вставьте код в поле промокода до оплаты.",
-        "Promokoduz проверяет источники и сроки, а неработающие коды обновляет быстро.",
+        "PromoBozor проверяет источники и сроки, а неработающие коды обновляет быстро.",
       ],
       en: [
         "1) Choose an active offer on a store or brand page.",
         "2) Tap Copy.",
         "3) Open the merchant app or site and build your cart.",
         "4) Paste the code into the promo field before paying.",
-        "Promokoduz verifies sources and expiry dates, and refreshes broken codes quickly.",
+        "PromoBozor verifies sources and expiry dates, and refreshes broken codes quickly.",
       ],
     },
   },
@@ -141,17 +141,17 @@ export const blogPosts: BlogPost[] = [
     body: {
       uz: [
         "To‘lov ilovalari aksiyalari ko‘pincha cashback, komissiya chegirmasi yoki hamkor do‘kon bonusiga bog‘liq.",
-        "Promokoduz’da Click va Payme brend hublaridan tekshirilgan taklifni oching, shartlarni o‘qing va faqat amal qilish muddati ichida faollashtiring.",
+        "PromoBozor’da Click va Payme brend hublaridan tekshirilgan taklifni oching, shartlarni o‘qing va faqat amal qilish muddati ichida faollashtiring.",
         "Agar kod ishlamasa, xizmat turi yoki mijoz segmenti mos kelmasligi mumkin — listingni yangilash uchun bizga yozing.",
       ],
       ru: [
         "Акции платёжных приложений часто связаны с кэшбэком, скидкой на комиссию или бонусом партнёра.",
-        "Откройте проверенное предложение в хабах Click или Payme на Promokoduz, прочитайте условия и активируйте только в срок действия.",
+        "Откройте проверенное предложение в хабах Click или Payme на PromoBozor, прочитайте условия и активируйте только в срок действия.",
         "Если код не сработал, возможно не подходит тип услуги или сегмент клиента — напишите нам для обновления.",
       ],
       en: [
         "Payment-app campaigns often involve cashback, fee discounts, or partner-store bonuses.",
-        "Open a verified Click or Payme hub offer on Promokoduz, read the conditions, and activate only while it is valid.",
+        "Open a verified Click or Payme hub offer on PromoBozor, read the conditions, and activate only while it is valid.",
         "If a code fails, the service type or customer segment may not match — tell us so we can refresh the listing.",
       ],
     },

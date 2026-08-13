@@ -49,7 +49,7 @@ export function getEntityFaqItems(entityName: string, locale: string): EntityFaq
       },
       {
         question: `Are ${entityName} promocodes free?`,
-        answer: `Yes. All ${entityName} promocodes on Promokoduz are free to view and use.`,
+        answer: `Yes. All ${entityName} promocodes on PromoBozor are free to view and use.`,
       },
       {
         question: `How long do ${entityName} promocodes last?`,

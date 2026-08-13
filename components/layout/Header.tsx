@@ -1,6 +1,6 @@
+import { DesktopNavLinks } from "@/components/public/headers/DesktopNavLinks";
 import { MobileMenuToggle } from "@/components/public/headers/MobileMenuToggle";
 import { MobileNavLinks } from "@/components/public/headers/MobileNavLinks";
-import { DesktopNavLinks } from "@/components/public/headers/DesktopNavLinks";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "@/i18n/navigation";
@@ -23,17 +23,25 @@ export async function Header({ locale }: { locale: string }) {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <div className="page-shell pointer-events-auto">
         <div className="border-border bg-card/90 flex items-center justify-between gap-2 rounded-full border px-3 py-2 shadow-[0_18px_50px_-28px_rgba(17,24,39,0.4)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-2.5">
-          <Link href="/" className="flex min-h-11 min-w-0 items-center py-1" translate="no">
-            <span className="relative h-8 w-28 overflow-hidden sm:h-10 sm:w-36">
-              <Image
-                src="/promobozor-logo.png"
-                alt="PromoBozor - chegirmalar va promokodlar"
-                fill
-                sizes="(max-width: 768px) 112px, 144px"
-                className="object-cover"
-                priority
-              />
-            </span>
+          <Link href="/" className="h-10">
+            <Image
+              src="/logo-white.png"
+              alt="PromoBozor - chegirmalar va promokodlar"
+              width={160}
+              height={40}
+              sizes="160px"
+              className="hidden dark:block"
+              priority={true}
+            />
+            <Image
+              src="/logo-black.png"
+              alt="PromoBozor - chegirmalar va promokodlar"
+              width={160}
+              height={40}
+              sizes="160px"
+              className="block dark:hidden"
+              priority={true}
+            />
           </Link>
 
           <DesktopNavLinks links={navLinks} label={t("mainNav")} />

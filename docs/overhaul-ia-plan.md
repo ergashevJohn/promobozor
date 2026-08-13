@@ -4,7 +4,7 @@ Last updated: 2026-04-29
 
 ## Goal
 
-PromoBozor'ni eski `Promokoduz` ko'rinishidan faqat rang va logo bilan emas, balki mahsulot hissi, sahifa ketma-ketligi va foydalanuvchi oqimi bo'yicha ham aniq ajratish.
+PromoBozor'ni eski `PromoBozor` ko'rinishidan faqat rang va logo bilan emas, balki mahsulot hissi, sahifa ketma-ketligi va foydalanuvchi oqimi bo'yicha ham aniq ajratish.
 
 Target perception:
 

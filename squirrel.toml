@@ -1,6 +1,6 @@
 [project]
 domains = []
-name = "promokoduz"
+name = "promobozor"
 
 [crawler]
 max_pages = 100

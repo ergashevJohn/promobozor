@@ -48,16 +48,23 @@ export async function Footer({ locale }: { locale: string }) {
       <div className="page-shell py-8 md:py-12">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.9fr_0.9fr]">
           <div>
-            <Link href="/" className="inline-flex items-center" translate="no">
-              <span className="relative h-10 w-36 overflow-hidden">
-                <Image
-                  src="/promobozor-logo.png"
-                  alt="PromoBozor"
-                  fill
-                  sizes="144px"
-                  className="object-cover"
-                />
-              </span>
+            <Link href="/" className="h-10">
+              <Image
+                src="/logo-white.png"
+                alt="PromoBozor - chegirmalar va promokodlar"
+                width={160}
+                height={40}
+                sizes="160px"
+                className="hidden dark:block"
+              />
+              <Image
+                src="/logo-black.png"
+                alt="PromoBozor - chegirmalar va promokodlar"
+                width={160}
+                height={40}
+                sizes="160px"
+                className="block dark:hidden"
+              />
             </Link>
             <p className="text-muted-foreground mt-4 max-w-sm text-sm leading-7">
               {t("description")}

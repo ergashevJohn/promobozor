@@ -6,7 +6,7 @@ Last updated: 2026-08-07
 
 This system exists to make PromoBozor feel:
 
-- more intentional than the old Promokoduz look
+- more intentional than the old PromoBozor look
 - less like a generic coupon directory
 - more like a trusted savings product
 

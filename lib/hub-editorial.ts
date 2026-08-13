@@ -21,9 +21,9 @@ export const HUB_EDITORIAL: HubEditorial[] = [
     name: { uz: "Yandex Eats", ru: "Yandex Eats", en: "Yandex Eats" },
     aliases: ["yandex-go-eats", "yandeks-eats"],
     description: {
-      uz: "Yandex Eats promokodlari birinchi buyurtma, minimal savat va yetkazib berish shartlariga bog‘liq bo‘lishi mumkin. Promokoduz’da faqat tekshirilgan takliflar chiqadi: kodni nusxalang, ilovada savatni to‘ldiring va to‘lovdan oldin promo maydonga qo‘ying. Har bir kartochkadagi muddat va shartlarni o‘qing — muddati o‘tgan kodlarni ishlatmang.",
-      ru: "Промокоды Yandex Eats часто зависят от первого заказа, минимальной суммы и условий доставки. На Promokoduz публикуются проверенные предложения: скопируйте код, соберите корзину и вставьте промокод до оплаты. Всегда читайте срок и условия на карточке.",
-      en: "Yandex Eats promocodes often depend on first-order rules, minimum basket size, and delivery conditions. On Promokoduz we list verified deals: copy the code, build your cart, and paste it before checkout. Always read the expiry and conditions on each card.",
+      uz: "Yandex Eats promokodlari birinchi buyurtma, minimal savat va yetkazib berish shartlariga bog‘liq bo‘lishi mumkin. PromoBozor’da faqat tekshirilgan takliflar chiqadi: kodni nusxalang, ilovada savatni to‘ldiring va to‘lovdan oldin promo maydonga qo‘ying. Har bir kartochkadagi muddat va shartlarni o‘qing — muddati o‘tgan kodlarni ishlatmang.",
+      ru: "Промокоды Yandex Eats часто зависят от первого заказа, минимальной суммы и условий доставки. На PromoBozor публикуются проверенные предложения: скопируйте код, соберите корзину и вставьте промокод до оплаты. Всегда читайте срок и условия на карточке.",
+      en: "Yandex Eats promocodes often depend on first-order rules, minimum basket size, and delivery conditions. On PromoBozor we list verified deals: copy the code, build your cart, and paste it before checkout. Always read the expiry and conditions on each card.",
     },
   },
   {
@@ -42,9 +42,9 @@ export const HUB_EDITORIAL: HubEditorial[] = [
     name: { uz: "Uzum", ru: "Uzum", en: "Uzum" },
     aliases: ["uzum-market", "uzummarket"],
     description: {
-      uz: "Uzum Market promokodlari checkout’da qo‘llanadi: savatni yig‘ing, promo maydonga kodni kiriting va chegirma qo‘llanayotganini tekshiring. Ba’zi kodlar kategoriya, birinchi xarid yoki minimal summaga bog‘liq. Promokoduz’da faqat jamoa tomonidan ko‘rib chiqilgan takliflar ko‘rsatiladi.",
-      ru: "Промокоды Uzum Market применяются на checkout: соберите корзину, введите код и убедитесь, что скидка применилась. Часть кодов зависит от категории, первой покупки или минимальной суммы. На Promokoduz — только проверенные предложения.",
-      en: "Uzum Market promocodes apply at checkout: build your cart, enter the code, and confirm the discount applied. Some codes are category-, first-purchase-, or minimum-order-specific. Promokoduz only lists reviewed offers.",
+      uz: "Uzum Market promokodlari checkout’da qo‘llanadi: savatni yig‘ing, promo maydonga kodni kiriting va chegirma qo‘llanayotganini tekshiring. Ba’zi kodlar kategoriya, birinchi xarid yoki minimal summaga bog‘liq. PromoBozor’da faqat jamoa tomonidan ko‘rib chiqilgan takliflar ko‘rsatiladi.",
+      ru: "Промокоды Uzum Market применяются на checkout: соберите корзину, введите код и убедитесь, что скидка применилась. Часть кодов зависит от категории, первой покупки или минимальной суммы. На PromoBozor — только проверенные предложения.",
+      en: "Uzum Market promocodes apply at checkout: build your cart, enter the code, and confirm the discount applied. Some codes are category-, first-purchase-, or minimum-order-specific. PromoBozor only lists reviewed offers.",
     },
   },
   {
