@@ -76,11 +76,14 @@ export default async function middleware(request: NextRequest) {
       ]
     : [];
 
+  // Do NOT put a per-request nonce in the browser CSP when HTML can be CDN/ISR
+  // cached. Cached markup keeps old script nonces while middleware issues a new
+  // CSP nonce → inline Next.js scripts are blocked → React never hydrates
+  // (theme toggle, language switch, client nav all break).
   const scriptSrc = [
     "'self'",
-    `'nonce-${nonce}'`,
+    "'unsafe-inline'",
     isDev ? "'unsafe-eval'" : null,
-    isDev ? "'unsafe-inline'" : null,
     "https://vercel.live",
     "https://www.googletagmanager.com",
     "https://mc.yandex.ru",
@@ -126,8 +129,8 @@ export default async function middleware(request: NextRequest) {
     ...trustedTypesDirectives,
   ].join("; ");
 
-  // Set CSP on request headers so Next.js can extract the nonce
-  // and auto-propagate it to all internal inline scripts during rendering
+  // Pass nonce to the request so dynamic SSR can still stamp scripts when rendered.
+  // The response CSP above intentionally does not require that nonce.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("Content-Security-Policy", csp);
   requestHeaders.set("x-nonce", nonce);
