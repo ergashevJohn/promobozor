@@ -27,9 +27,11 @@ Bir title’da 1 primary + ixtiyoriy yil/sana.
 
 ## Anti-thin
 
+- Store/category `bodyHtml` ≥150 so‘z, brand ≥120 so‘z — gap report va rewrite shu floor bilan o‘lchaydi (80 belgi emas)
 - 100% template FAQ taqiqlanadi — kamida ~30% noyob savol/javob
 - Generic “great online deals” taqiqlanadi
 - Expired/disabled aniq belgilansin / indekslanmasin
+- `lastVerifiedAt` / `lastReviewedAt` faqat haqiqiy review/verify da yangilanadi
 
 ## GEO / AI citation format
 
@@ -56,5 +58,7 @@ npx tsx scripts/seo/apply-0020-migration.ts
 npm run db:migrate                 # schema (0020_content_seo_fields)
 npm run seo:upsert-hub             # Tier-1 hub body/meta/faq
 npm run seo:enrich-tier1           # hub + bog‘langan/unverified promo + top category
+npm run seo:rewrite-existing       # barcha mavjud row uchun dry-run preview
+npm run seo:rewrite-existing:apply # existing data asosidagi rewrite'ni DBga qo‘llash
 npm run seo:gap-report             # inventory + content gaps
 ```

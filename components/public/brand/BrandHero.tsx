@@ -1,5 +1,6 @@
-import Image from "next/image";
+import SafeHtmlContent from "@/components/public/SafeHtmlContent";
 import { Buildings } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
 
 interface BrandHeroProps {
   brandName: string;
@@ -55,9 +56,10 @@ export default function BrandHero({
               {t("h1Title", { name: brandName })}
             </h1>
             {brandDescription && (
-              <p className="text-muted-foreground max-w-[65ch] text-lg leading-8">
-                {brandDescription}
-              </p>
+              <SafeHtmlContent
+                html={brandDescription}
+                className="text-muted-foreground max-w-[65ch] text-lg leading-8"
+              />
             )}
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <span className="text-muted-foreground text-sm">

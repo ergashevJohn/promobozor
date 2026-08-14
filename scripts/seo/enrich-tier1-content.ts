@@ -1,10 +1,11 @@
 import "dotenv/config";
 
-import { and, eq, inArray, isNull, or } from "drizzle-orm";
+import { and, eq, inArray, or } from "drizzle-orm";
 import type { FaqJsonItem } from "../../db/schema";
 import { getEntityFaqItems } from "../../lib/entity-faq";
 import { listHubEditorialTargets, type HubLocale } from "../../lib/hub-editorial";
 import { activePromocodeStatusConditions } from "../../lib/promocode-active";
+import { isThinEntityBody } from "../../lib/seo/content-rewrite";
 
 function escapeHtml(text: string): string {
   return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -162,32 +163,22 @@ async function main() {
   if (brandIds.length > 0) promoFilters.push(inArray(promocodes.brandId, brandIds));
 
   let promoUpdated = 0;
-  const promoRows = await db
-    .select({
-      id: promocodes.id,
-      lastVerifiedAt: promocodes.lastVerifiedAt,
-    })
-    .from(promocodes)
-    .where(
-      and(
-        activePromocodeStatusConditions(now),
-        promoFilters.length > 0
-          ? or(
-              promoFilters.length === 1 ? promoFilters[0]! : or(...promoFilters),
-              isNull(promocodes.lastVerifiedAt)
+  const promoRows =
+    promoFilters.length === 0
+      ? []
+      : await db
+          .select({
+            id: promocodes.id,
+          })
+          .from(promocodes)
+          .where(
+            and(
+              activePromocodeStatusConditions(now),
+              promoFilters.length === 1 ? promoFilters[0]! : or(...promoFilters)
             )
-          : isNull(promocodes.lastVerifiedAt)
-      )
-    );
+          );
 
   for (const promo of promoRows) {
-    if (!promo.lastVerifiedAt) {
-      await db
-        .update(promocodes)
-        .set({ lastVerifiedAt: now, updatedAt: now })
-        .where(eq(promocodes.id, promo.id));
-    }
-
     const translations = await db
       .select({
         id: promocodeTranslations.id,
@@ -203,20 +194,24 @@ async function main() {
       .from(promocodeTranslations)
       .where(eq(promocodeTranslations.promocodeId, promo.id));
 
-    const [storeNameRow] = await db
-      .select({ name: storeTranslations.name })
+    const storeNameRows = await db
+      .select({ language: storeTranslations.language, name: storeTranslations.name })
       .from(promocodes)
       .leftJoin(stores, eq(promocodes.storeId, stores.id))
-      .leftJoin(
-        storeTranslations,
-        and(eq(storeTranslations.storeId, stores.id), eq(storeTranslations.language, "uz"))
-      )
-      .where(eq(promocodes.id, promo.id))
-      .limit(1);
+      .leftJoin(storeTranslations, eq(storeTranslations.storeId, stores.id))
+      .where(eq(promocodes.id, promo.id));
+    const storeNamesByLocale = new Map(
+      storeNameRows
+        .filter((row): row is { language: HubLocale; name: string } =>
+          Boolean(row.language && row.name)
+        )
+        .map((row) => [row.language, row.name] as const)
+    );
 
     for (const tr of translations) {
       const language = tr.language as HubLocale;
-      const storeName = storeNameRow?.name || "PromoBozor";
+      const storeName =
+        storeNamesByLocale.get(language) || storeNamesByLocale.get("uz") || "PromoBozor";
       const patch: Record<string, unknown> = { updatedAt: now };
       let changed = false;
 
@@ -289,10 +284,7 @@ async function main() {
     .slice(0, 30);
 
   for (const [categoryId, locales] of prioritized) {
-    await db
-      .update(categories)
-      .set({ lastReviewedAt: now, updatedAt: now })
-      .where(eq(categories.id, categoryId));
+    let categoryChanged = false;
 
     for (const tr of locales) {
       const language = tr.language as HubLocale;
@@ -302,7 +294,7 @@ async function main() {
       const patch: Record<string, unknown> = { updatedAt: now };
       let changed = false;
 
-      if (!tr.bodyHtml || tr.bodyHtml.trim().length < 80) {
+      if (isThinEntityBody("category", tr.bodyHtml, tr.description)) {
         patch.bodyHtml = `<p>${escapeHtml(source)}</p>`;
         changed = true;
       }
@@ -329,7 +321,15 @@ async function main() {
           .set(patch)
           .where(eq(categoryTranslations.id, tr.translationId));
         categoryUpdated += 1;
+        categoryChanged = true;
       }
+    }
+
+    if (categoryChanged) {
+      await db
+        .update(categories)
+        .set({ lastReviewedAt: now, updatedAt: now })
+        .where(eq(categories.id, categoryId));
     }
   }
 

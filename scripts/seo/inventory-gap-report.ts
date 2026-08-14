@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import { and, count, eq, isNull, or, sql } from "drizzle-orm";
 import { activePromocodeStatusConditions } from "../../lib/promocode-active";
+import { FAQ_ITEM_FLOOR, isThinEntityBody } from "../../lib/seo/content-rewrite";
 import { getTopInventoryTargets, summarizeInventoryGap } from "../../lib/seo/inventory-targets";
 
 type ContentGapRow = {
@@ -79,13 +80,10 @@ async function main() {
 
         for (const tr of translations) {
           if (!tr.metaTitle || !tr.metaDescription) missingMeta += 1;
-          if (
-            !(tr.bodyHtml && tr.bodyHtml.trim().length >= 80) &&
-            !(tr.description && tr.description.trim().length >= 80)
-          ) {
-            missingBody += 1;
+          if (isThinEntityBody("store", tr.bodyHtml, tr.description)) missingBody += 1;
+          if (!tr.faqJson || !Array.isArray(tr.faqJson) || tr.faqJson.length < FAQ_ITEM_FLOOR) {
+            missingFaq += 1;
           }
-          if (!tr.faqJson || !Array.isArray(tr.faqJson) || tr.faqJson.length === 0) missingFaq += 1;
         }
       }
 
@@ -133,13 +131,10 @@ async function main() {
 
         for (const tr of translations) {
           if (!tr.metaTitle || !tr.metaDescription) missingMeta += 1;
-          if (
-            !(tr.bodyHtml && tr.bodyHtml.trim().length >= 80) &&
-            !(tr.description && tr.description.trim().length >= 80)
-          ) {
-            missingBody += 1;
+          if (isThinEntityBody("brand", tr.bodyHtml, tr.description)) missingBody += 1;
+          if (!tr.faqJson || !Array.isArray(tr.faqJson) || tr.faqJson.length < FAQ_ITEM_FLOOR) {
+            missingFaq += 1;
           }
-          if (!tr.faqJson || !Array.isArray(tr.faqJson) || tr.faqJson.length === 0) missingFaq += 1;
         }
       }
 
@@ -183,7 +178,7 @@ async function main() {
         or(
           isNull(categoryTranslations.metaTitle),
           isNull(categoryTranslations.bodyHtml),
-          sql`length(coalesce(${categoryTranslations.bodyHtml}, '')) < 80`
+          sql`coalesce(array_length(regexp_split_to_array(trim(regexp_replace(coalesce(${categoryTranslations.bodyHtml}, ''), '<[^>]*>', ' ', 'g')), '\\s+'), 1), 0) < 150`
         )
       )
     );

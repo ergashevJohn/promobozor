@@ -1,3 +1,5 @@
+import SafeHtmlContent from "@/components/public/SafeHtmlContent";
+
 interface CategoryHeroProps {
   categoryName: string;
   categoryDescription?: string | null;
@@ -24,9 +26,10 @@ export default function CategoryHero({
             {t("h1Title", { name: categoryName })}
           </h1>
           {categoryDescription && (
-            <p className="text-muted-foreground max-w-[65ch] text-lg leading-8">
-              {categoryDescription}
-            </p>
+            <SafeHtmlContent
+              html={categoryDescription}
+              className="text-muted-foreground max-w-[65ch] text-lg leading-8"
+            />
           )}
           <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-[color:var(--border)] pt-6">
             <div>

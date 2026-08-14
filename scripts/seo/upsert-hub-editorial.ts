@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import type { FaqJsonItem } from "../../db/schema";
 import { getEntityFaqItems } from "../../lib/entity-faq";
 import { listHubEditorialTargets, type HubLocale } from "../../lib/hub-editorial";
+import { isThinEntityBody } from "../../lib/seo/content-rewrite";
 
 function metaTitleFor(name: string, language: HubLocale): string {
   switch (language) {
@@ -92,13 +93,9 @@ async function main() {
         brandId = inserted.id;
         created += 1;
         console.log(`Created brand ${hub.slug}`);
-      } else {
-        await db
-          .update(brands)
-          .set({ lastReviewedAt: now, updatedAt: now })
-          .where(eq(brands.id, brandId));
       }
 
+      let brandTouched = !existing?.brandId;
       for (const language of ["uz", "ru", "en"] as const) {
         const [tr] = await db
           .select({
@@ -128,18 +125,27 @@ async function main() {
         };
 
         if (tr) {
-          const needsSeoBackfill =
-            !tr.bodyHtml ||
-            tr.bodyHtml.trim().length < 80 ||
-            !tr.description ||
-            tr.description.trim().length < 80 ||
-            !tr.metaTitle ||
-            !tr.faqJson ||
-            !Array.isArray(tr.faqJson) ||
-            tr.faqJson.length === 0;
-          if (needsSeoBackfill) {
-            await db.update(brandTranslations).set(payload).where(eq(brandTranslations.id, tr.id));
+          const patch: Record<string, unknown> = { updatedAt: now };
+          let changed = false;
+          if (isThinEntityBody("brand", tr.bodyHtml, tr.description)) {
+            patch.description = payload.description;
+            patch.shortSummary = payload.shortSummary;
+            patch.bodyHtml = payload.bodyHtml;
+            changed = true;
+          }
+          if (!tr.metaTitle) {
+            patch.metaTitle = payload.metaTitle;
+            patch.metaDescription = payload.metaDescription;
+            changed = true;
+          }
+          if (!tr.faqJson || !Array.isArray(tr.faqJson) || tr.faqJson.length === 0) {
+            patch.faqJson = payload.faqJson;
+            changed = true;
+          }
+          if (changed) {
+            await db.update(brandTranslations).set(patch).where(eq(brandTranslations.id, tr.id));
             updated += 1;
+            brandTouched = true;
           }
         } else {
           await db.insert(brandTranslations).values({
@@ -149,7 +155,15 @@ async function main() {
             ...payload,
           });
           created += 1;
+          brandTouched = true;
         }
+      }
+
+      if (brandTouched) {
+        await db
+          .update(brands)
+          .set({ lastReviewedAt: now, updatedAt: now })
+          .where(eq(brands.id, brandId));
       }
     } else {
       const [existing] = await db
@@ -175,13 +189,9 @@ async function main() {
         storeId = inserted.id;
         created += 1;
         console.log(`Created store ${hub.slug}`);
-      } else {
-        await db
-          .update(stores)
-          .set({ lastReviewedAt: now, updatedAt: now })
-          .where(eq(stores.id, storeId));
       }
 
+      let storeTouched = !existing?.storeId;
       for (const language of ["uz", "ru", "en"] as const) {
         const [tr] = await db
           .select({
@@ -211,18 +221,27 @@ async function main() {
         };
 
         if (tr) {
-          const needsSeoBackfill =
-            !tr.bodyHtml ||
-            tr.bodyHtml.trim().length < 80 ||
-            !tr.description ||
-            tr.description.trim().length < 80 ||
-            !tr.metaTitle ||
-            !tr.faqJson ||
-            !Array.isArray(tr.faqJson) ||
-            tr.faqJson.length === 0;
-          if (needsSeoBackfill) {
-            await db.update(storeTranslations).set(payload).where(eq(storeTranslations.id, tr.id));
+          const patch: Record<string, unknown> = { updatedAt: now };
+          let changed = false;
+          if (isThinEntityBody("store", tr.bodyHtml, tr.description)) {
+            patch.description = payload.description;
+            patch.shortSummary = payload.shortSummary;
+            patch.bodyHtml = payload.bodyHtml;
+            changed = true;
+          }
+          if (!tr.metaTitle) {
+            patch.metaTitle = payload.metaTitle;
+            patch.metaDescription = payload.metaDescription;
+            changed = true;
+          }
+          if (!tr.faqJson || !Array.isArray(tr.faqJson) || tr.faqJson.length === 0) {
+            patch.faqJson = payload.faqJson;
+            changed = true;
+          }
+          if (changed) {
+            await db.update(storeTranslations).set(patch).where(eq(storeTranslations.id, tr.id));
             updated += 1;
+            storeTouched = true;
           }
         } else {
           await db.insert(storeTranslations).values({
@@ -232,7 +251,15 @@ async function main() {
             ...payload,
           });
           created += 1;
+          storeTouched = true;
         }
+      }
+
+      if (storeTouched) {
+        await db
+          .update(stores)
+          .set({ lastReviewedAt: now, updatedAt: now })
+          .where(eq(stores.id, storeId));
       }
     }
   }
