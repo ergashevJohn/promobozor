@@ -25,6 +25,7 @@ import {
   getBaseUrl,
 } from "@/lib/metadata";
 import {
+  type CachedStoreBySlug,
   getCachedStoreBySlug,
   getStoreLanguageAlternates,
   getStoreStaticParams,
@@ -36,6 +37,253 @@ import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
+
+type StorePageTranslationFn = Awaited<ReturnType<typeof getTranslations>>;
+
+type StorePageTranslations = {
+  store: StorePageTranslationFn;
+  common: StorePageTranslationFn;
+  empty: StorePageTranslationFn;
+  card: StorePageTranslationFn;
+  promocode: StorePageTranslationFn;
+};
+
+type RelatedEntityLink = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+type BreadcrumbItem = {
+  name: string;
+  url: string;
+};
+
+// Extracted sub-components for better maintainability
+function StorePageContent({
+  store,
+  storeTranslation,
+  resolvedStoreDescription,
+  allPromocodes,
+  totalPromocodesCount,
+  featuredPromocodesCount,
+  totalViews,
+  totalCopies,
+  uniqueBrandCount,
+  uniqueCategoryCount,
+  relatedBrands,
+  relatedCategories,
+  breadcrumbItems,
+  slug,
+  locale,
+  translations,
+}: {
+  store: CachedStoreBySlug["store"];
+  storeTranslation: CachedStoreBySlug["translation"];
+  resolvedStoreDescription: string | undefined;
+  allPromocodes: Promocode[];
+  totalPromocodesCount: number;
+  featuredPromocodesCount: number;
+  totalViews: number;
+  totalCopies: number;
+  uniqueBrandCount: number;
+  uniqueCategoryCount: number;
+  relatedBrands: RelatedEntityLink[];
+  relatedCategories: RelatedEntityLink[];
+  breadcrumbItems: BreadcrumbItem[];
+  slug: string;
+  locale: string;
+  translations: StorePageTranslations;
+}) {
+  const baseUrl = getBaseUrl();
+  const t = translations.store;
+  const tCommon = translations.common;
+  const tEmpty = translations.empty;
+  const tCard = translations.card;
+  const tPromocode = translations.promocode;
+  const storeTitle = t("title");
+  const promocodeTitle = tPromocode("title");
+  const schemaPromocodes = allPromocodes.slice(0, 20);
+
+  return (
+    <>
+      <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
+      <StructuredData
+        type="Store"
+        data={{ ...store, translations: [storeTranslation] }}
+        lang={locale}
+        baseUrl={baseUrl}
+        promocodeCount={totalPromocodesCount}
+        entityDescription={resolvedStoreDescription}
+      />
+      <LocalBusinessSchema
+        name={storeTranslation?.name || storeTitle}
+        url={`/store/${slug}`}
+        description={resolvedStoreDescription}
+        logo={store.logoUrl || undefined}
+        priceRange="$$"
+        sameAs={store.websiteUrl ? [store.websiteUrl] : undefined}
+      />
+      {schemaPromocodes.length > 0 && (
+        <ItemListSchema
+          items={schemaPromocodes.map((promocode) => {
+            const translation = promocode.translations[0];
+            return {
+              name: translation?.title || promocodeTitle,
+              url: `/promocode/${translation?.slug || promocode.id}`,
+              image: promocode.imageUrl || undefined,
+              description: translation?.conditions || undefined,
+            };
+          })}
+          listName={`${storeTranslation?.name || storeTitle} ${t("promocodes")}`}
+          listDescription={`${t("activePromocodes")} ${storeTranslation?.name || storeTitle}`}
+        />
+      )}
+      <div>
+        <div className="page-shell py-6">
+          <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
+        </div>
+        <StoreHero
+          name={storeTranslation?.name || storeTitle}
+          description={resolvedStoreDescription}
+          logoUrl={store.logoUrl}
+          websiteUrl={store.websiteUrl}
+          totalPromocodesCount={totalPromocodesCount}
+          uniqueBrandCount={uniqueBrandCount}
+          uniqueCategoryCount={uniqueCategoryCount}
+          featuredPromocodesCount={featuredPromocodesCount}
+          totalViews={totalViews}
+          totalCopies={totalCopies}
+          translations={{
+            heroKicker: t("heroKicker"),
+            h1Title: t("h1Title", { name: storeTranslation?.name || storeTitle }),
+            activeRouteLabel: t("activeRouteLabel"),
+            activePromocodes: t("activePromocodes"),
+            brandMixLabel: t("brandMixLabel"),
+            connectedBrandsLabel: t("connectedBrandsLabel"),
+            categorySpreadLabel: t("categorySpreadLabel"),
+            activeCategoryPathsLabel: t("activeCategoryPathsLabel"),
+            storeTrustTitle: t("storeTrustTitle"),
+            storeTrustDescription: t("storeTrustDescription"),
+            visitWebsite: t("visitWebsite"),
+            views: t("views"),
+            uses: t("uses"),
+            altStoreLogo: tCommon("altStoreLogo"),
+            altStoreLogoWithSlug: (slug: string) => tCommon("altStoreLogoWithSlug", { slug }),
+            featured: tCommon("featured"),
+          }}
+          slug={slug}
+          locale={locale}
+        />
+        <div className="page-shell pt-2">
+          <VerifiedBadge
+            verifiedAt={store.lastReviewedAt}
+            locale={locale}
+            label={t("lastReviewed")}
+          />
+        </div>
+
+        <div className="page-shell py-12">
+          <section className="mb-10 grid gap-4 lg:grid-cols-2">
+            <StoreRelatedBrands
+              relatedBrands={relatedBrands}
+              translations={{
+                relatedBrandsDescription: t("relatedBrandsDescription"),
+                noLinkedBrands: t("noLinkedBrands"),
+              }}
+            />
+            <StoreRelatedCategories
+              relatedCategories={relatedCategories}
+              translations={{
+                relatedCategoriesDescription: t("relatedCategoriesDescription"),
+                noLinkedCategories: t("noLinkedCategories"),
+              }}
+            />
+          </section>
+
+          <section>
+            <div className="mb-8">
+              <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
+              <p className="text-muted-foreground mt-2">
+                {t("allPromocodesDescription", {
+                  name: storeTranslation?.name || storeTitle,
+                })}
+              </p>
+            </div>
+            {totalPromocodesCount > 0 ? (
+              <PromocodeListWithPagination
+                initialPromocodes={allPromocodes}
+                totalCount={totalPromocodesCount}
+                limit={20}
+                filters={{
+                  storeId: store.id,
+                }}
+                translations={{
+                  noPromocodes: tEmpty("noPromocodes"),
+                  noPromocodesDescription: tEmpty("noPromocodesDescription"),
+                  card: {
+                    featured: tCard("featured"),
+                    verified: tCard("verified"),
+                    fresh: tCard("fresh"),
+                    popular: tCard("popular"),
+                    endingSoon: tPromocode("expiresSoon"),
+                    unlimited: tCard("unlimited"),
+                    unknownStore: tCard("unknownStore"),
+                    storeTitle,
+                    promocodeTitle,
+                    activateLink: tCard("activateLink"),
+                    details: tCard("details"),
+                    viewDetails: tCard("viewDetails"),
+                    storeOffer: tCard("storeOffer"),
+                    brandOffer: tCard("brandOffer"),
+                    directDeal: tCard("directDeal"),
+                    codeReady: tCard("codeReady"),
+                    dealRoute: tCard("dealRoute"),
+                    promoCodeLabel: tCard("promoCodeLabel"),
+                    copy: tCard("copy"),
+                    copied: tCard("copied"),
+                    getDeal: tCard("getDeal"),
+                    like: tCard("like"),
+                    dislike: tCard("dislike"),
+                    expired: tCard("expired"),
+                    disabled: tCard("disabled"),
+                    conditionsLabel: tCard("conditionsLabel"),
+                    codeCopied: tPromocode("codeCopied"),
+                    copyError: tPromocode("copyError"),
+                  },
+                }}
+              />
+            ) : totalPromocodesCount === 0 ? (
+              <div className="empty-state-card">
+                <MagnifyingGlass
+                  className="text-muted-foreground mx-auto mb-4 h-12 w-12"
+                  aria-hidden="true"
+                />
+                <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
+                <p className="text-muted-foreground">{t("checkBackLater")}</p>
+                <Link
+                  href="/promocodes"
+                  className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                >
+                  {t("emptyCta")}
+                </Link>
+              </div>
+            ) : null}
+          </section>
+
+          <EntityFAQSection
+            entityName={storeTranslation?.name || storeTitle}
+            entityType="store"
+            locale={locale}
+            title={t("faqTitle", { name: storeTranslation?.name || storeTitle })}
+            description={t("faqDescription", { name: storeTranslation?.name || storeTitle })}
+            faqJson={storeTranslation?.faqJson}
+          />
+        </div>
+      </div>
+    </>
+  );
+}
 
 export async function generateStaticParams() {
   return getStoreStaticParams();
@@ -150,15 +398,6 @@ export default async function StorePage({
   }
 
   // Fetch store by slug
-  let allPromocodes: Promocode[] = [];
-  let totalPromocodesCount = 0;
-  let featuredPromocodesCount = 0;
-  let totalViews = 0;
-  let totalCopies = 0;
-  let store;
-  let storeTranslation;
-  let resolvedStoreDescription: string | undefined;
-
   let storeData;
   try {
     storeData = await getCachedStoreBySlug(locale, slug);
@@ -176,19 +415,25 @@ export default async function StorePage({
     notFound();
   }
 
+  const store = storeData.store;
+  const storeTranslation = storeData.translation;
+
+  const hubEditorial = getHubEditorial(slug, locale, "store");
+  const resolvedStoreDescription =
+    resolveEntityBody({
+      bodyHtml: storeTranslation?.bodyHtml,
+      shortSummary: storeTranslation?.shortSummary,
+      description: storeTranslation?.description,
+      hubDescription: hubEditorial?.description,
+    }) || undefined;
+
+  let allPromocodes: Promocode[] = [];
+  let totalPromocodesCount = 0;
+  let featuredPromocodesCount = 0;
+  let totalViews = 0;
+  let totalCopies = 0;
+
   try {
-    store = storeData.store;
-    storeTranslation = storeData.translation;
-
-    const hubEditorial = getHubEditorial(slug, locale, "store");
-    resolvedStoreDescription =
-      resolveEntityBody({
-        bodyHtml: storeTranslation?.bodyHtml,
-        shortSummary: storeTranslation?.shortSummary,
-        description: storeTranslation?.description,
-        hubDescription: hubEditorial?.description,
-      }) || undefined;
-
     // Fetch promocodes and stats for this store
     const pageData = await getCachedStorePageData(store.id, locale as "uz" | "ru" | "en");
 
@@ -206,6 +451,7 @@ export default async function StorePage({
     console.error("Language:", locale);
     notFound();
   }
+
   const [t, tCommon, tEmpty, tCard, tPromocode] = await Promise.all([
     getTranslations({ locale, namespace: "store" }),
     getTranslations({ locale, namespace: "common" }),
@@ -215,8 +461,6 @@ export default async function StorePage({
   ]);
 
   const storeTitle = t("title");
-  const promocodeTitle = tPromocode("title");
-  const schemaPromocodes = allPromocodes.slice(0, 20);
   const uniqueBrandCount = countUnique(allPromocodes, (item) => item.brand?.id);
   const uniqueCategoryCount = countUnique(allPromocodes, (item) => item.category?.id);
 
@@ -255,185 +499,30 @@ export default async function StorePage({
     },
   ];
 
-  const baseUrl = getBaseUrl();
-
   return (
-    <>
-      <BreadcrumbsSchema items={breadcrumbItems} locale={locale} />
-      <StructuredData
-        type="Store"
-        data={{ ...store, translations: [storeTranslation] }}
-        lang={locale}
-        baseUrl={baseUrl}
-        promocodeCount={totalPromocodesCount}
-        entityDescription={resolvedStoreDescription}
-      />
-      <LocalBusinessSchema
-        name={storeTranslation?.name || storeTitle}
-        url={`/store/${slug}`}
-        description={resolvedStoreDescription}
-        logo={store.logoUrl || undefined}
-        priceRange="$$"
-        sameAs={store.websiteUrl ? [store.websiteUrl] : undefined}
-      />
-      {schemaPromocodes.length > 0 && (
-        <ItemListSchema
-          items={schemaPromocodes.map((promocode) => {
-            const translation = promocode.translations[0];
-            return {
-              name: translation?.title || promocodeTitle,
-              url: `/promocode/${translation?.slug || promocode.id}`,
-              image: promocode.imageUrl || undefined,
-              description: translation?.conditions || undefined,
-            };
-          })}
-          listName={`${storeTranslation?.name || storeTitle} ${t("promocodes")}`}
-          listDescription={`${t("activePromocodes")} ${storeTranslation?.name || storeTitle}`}
-        />
-      )}
-      <div>
-        <div className="page-shell py-6">
-          <Breadcrumbs locale={locale} items={breadcrumbItems} homeName={tCommon("home")} />
-        </div>
-        <StoreHero
-          name={storeTranslation?.name || storeTitle}
-          description={resolvedStoreDescription}
-          logoUrl={store.logoUrl}
-          websiteUrl={store.websiteUrl}
-          totalPromocodesCount={totalPromocodesCount}
-          uniqueBrandCount={uniqueBrandCount}
-          uniqueCategoryCount={uniqueCategoryCount}
-          featuredPromocodesCount={featuredPromocodesCount}
-          totalViews={totalViews}
-          totalCopies={totalCopies}
-          translations={{
-            heroKicker: t("heroKicker"),
-            h1Title: t("h1Title", { name: storeTranslation?.name || storeTitle }),
-            activeRouteLabel: t("activeRouteLabel"),
-            activePromocodes: t("activePromocodes"),
-            brandMixLabel: t("brandMixLabel"),
-            connectedBrandsLabel: t("connectedBrandsLabel"),
-            categorySpreadLabel: t("categorySpreadLabel"),
-            activeCategoryPathsLabel: t("activeCategoryPathsLabel"),
-            storeTrustTitle: t("storeTrustTitle"),
-            storeTrustDescription: t("storeTrustDescription"),
-            visitWebsite: t("visitWebsite"),
-            views: t("views"),
-            uses: t("uses"),
-            altStoreLogo: tCommon("altStoreLogo"),
-            altStoreLogoWithSlug: (slug: string) => tCommon("altStoreLogoWithSlug", { slug }),
-            featured: tCommon("featured"),
-          }}
-          slug={slug}
-          locale={locale}
-        />
-        <div className="page-shell pt-2">
-          <VerifiedBadge
-            verifiedAt={store.lastReviewedAt}
-            locale={locale}
-            label={t("lastReviewed")}
-          />
-        </div>
-
-        <div className="page-shell py-12">
-          <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <StoreRelatedBrands
-              relatedBrands={relatedBrands}
-              translations={{
-                relatedBrandsDescription: t("relatedBrandsDescription"),
-                noLinkedBrands: t("noLinkedBrands"),
-              }}
-            />
-            <StoreRelatedCategories
-              relatedCategories={relatedCategories}
-              translations={{
-                relatedCategoriesDescription: t("relatedCategoriesDescription"),
-                noLinkedCategories: t("noLinkedCategories"),
-              }}
-            />
-          </section>
-
-          {/* All Promocodes */}
-          <section>
-            <div className="mb-8">
-              <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
-              <p className="text-muted-foreground mt-2">
-                {t("allPromocodesDescription", {
-                  name: storeTranslation?.name || storeTitle,
-                })}
-              </p>
-            </div>
-            {totalPromocodesCount > 0 ? (
-              <PromocodeListWithPagination
-                initialPromocodes={allPromocodes}
-                totalCount={totalPromocodesCount}
-                limit={20}
-                filters={{
-                  storeId: store.id,
-                }}
-                translations={{
-                  noPromocodes: tEmpty("noPromocodes"),
-                  noPromocodesDescription: tEmpty("noPromocodesDescription"),
-                  card: {
-                    featured: tCard("featured"),
-                    verified: tCard("verified"),
-                    fresh: tCard("fresh"),
-                    popular: tCard("popular"),
-                    endingSoon: tPromocode("expiresSoon"),
-                    unlimited: tCard("unlimited"),
-                    unknownStore: tCard("unknownStore"),
-                    storeTitle,
-                    promocodeTitle,
-                    activateLink: tCard("activateLink"),
-                    details: tCard("details"),
-                    viewDetails: tCard("viewDetails"),
-                    storeOffer: tCard("storeOffer"),
-                    brandOffer: tCard("brandOffer"),
-                    directDeal: tCard("directDeal"),
-                    codeReady: tCard("codeReady"),
-                    dealRoute: tCard("dealRoute"),
-                    promoCodeLabel: tCard("promoCodeLabel"),
-                    copy: tCard("copy"),
-                    copied: tCard("copied"),
-                    getDeal: tCard("getDeal"),
-                    like: tCard("like"),
-                    dislike: tCard("dislike"),
-                    expired: tCard("expired"),
-                    disabled: tCard("disabled"),
-                    conditionsLabel: tCard("conditionsLabel"),
-                    codeCopied: tPromocode("codeCopied"),
-                    copyError: tPromocode("copyError"),
-                  },
-                }}
-              />
-            ) : totalPromocodesCount === 0 ? (
-              <div className="empty-state-card">
-                <MagnifyingGlass
-                  className="text-muted-foreground mx-auto mb-4 h-12 w-12"
-                  aria-hidden="true"
-                />
-                <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noPromocodes")}</h2>
-                <p className="text-muted-foreground">{t("checkBackLater")}</p>
-                <Link
-                  href="/promocodes"
-                  className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                >
-                  {t("emptyCta")}
-                </Link>
-              </div>
-            ) : null}
-          </section>
-
-          <EntityFAQSection
-            entityName={storeTranslation?.name || storeTitle}
-            entityType="store"
-            locale={locale}
-            title={t("faqTitle", { name: storeTranslation?.name || storeTitle })}
-            description={t("faqDescription", { name: storeTranslation?.name || storeTitle })}
-            faqJson={storeTranslation?.faqJson}
-          />
-        </div>
-      </div>
-    </>
+    <StorePageContent
+      store={store}
+      storeTranslation={storeTranslation}
+      resolvedStoreDescription={resolvedStoreDescription}
+      allPromocodes={allPromocodes}
+      totalPromocodesCount={totalPromocodesCount}
+      featuredPromocodesCount={featuredPromocodesCount}
+      totalViews={totalViews}
+      totalCopies={totalCopies}
+      uniqueBrandCount={uniqueBrandCount}
+      uniqueCategoryCount={uniqueCategoryCount}
+      relatedBrands={relatedBrands}
+      relatedCategories={relatedCategories}
+      breadcrumbItems={breadcrumbItems}
+      slug={slug}
+      locale={locale}
+      translations={{
+        store: t,
+        common: tCommon,
+        empty: tEmpty,
+        card: tCard,
+        promocode: tPromocode,
+      }}
+    />
   );
 }

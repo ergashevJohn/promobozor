@@ -55,6 +55,37 @@ export type PromocodeRewrite = {
 
 const EMOJI_PATTERN = /[\u{1F1E6}-\u{1F1FF}\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu;
 
+// Cache Intl formatters at module scope for better performance
+const numberFormatterCache = new Map<string, Intl.NumberFormat>();
+const dateFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+function getNumberFormatter(locale: ContentLocale): Intl.NumberFormat {
+  const intlLocale = locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-US";
+  if (!numberFormatterCache.has(intlLocale)) {
+    numberFormatterCache.set(
+      intlLocale,
+      new Intl.NumberFormat(intlLocale, { maximumFractionDigits: 0 })
+    );
+  }
+  return numberFormatterCache.get(intlLocale)!;
+}
+
+function getDateFormatter(locale: ContentLocale): Intl.DateTimeFormat {
+  const intlLocale = locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-US";
+  if (!dateFormatterCache.has(intlLocale)) {
+    dateFormatterCache.set(
+      intlLocale,
+      new Intl.DateTimeFormat(intlLocale, {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+    );
+  }
+  return dateFormatterCache.get(intlLocale)!;
+}
+
 export const BODY_WORD_FLOOR: Record<EntityContentKind, number> = {
   store: 150,
   brand: 120,
@@ -108,10 +139,7 @@ function truncate(value: string, maxLength: number): string {
 }
 
 function formatNumber(value: number, locale: ContentLocale): string {
-  const intlLocale = locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-US";
-  return new Intl.NumberFormat(intlLocale, { maximumFractionDigits: 0 })
-    .format(value)
-    .replace(/\s/g, " ");
+  return getNumberFormatter(locale).format(value).replace(/\s/g, " ");
 }
 
 export function formatDiscount(
@@ -134,13 +162,7 @@ export function formatDiscount(
 }
 
 function localizedDate(value: Date, locale: ContentLocale): string {
-  const intlLocale = locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-US";
-  return new Intl.DateTimeFormat(intlLocale, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(value);
+  return getDateFormatter(locale).format(value);
 }
 
 function entityFallback(kind: EntityContentKind, name: string, locale: ContentLocale): string {
@@ -428,9 +450,11 @@ function buildConditions(
   const generatedFacts = [facts.minimum, facts.expiry].filter((value): value is string =>
     Boolean(value)
   );
+  // Use Set for O(1) lookups instead of array.includes() inside filter
+  const generatedFactsSet = new Set(generatedFacts);
   const existing = readableConditions(input.existingConditions)
     .split("\n")
-    .filter((line) => !generatedFacts.includes(line))
+    .filter((line) => !generatedFactsSet.has(line))
     .join("\n");
   const fallback =
     input.locale === "uz"

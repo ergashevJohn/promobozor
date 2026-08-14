@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Link, usePathname } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
+import { X } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
@@ -114,7 +115,7 @@ export function MobileMenuToggle({ children }: Props) {
     return () => dialog.removeEventListener("click", handleClick);
   }, [open, closeMenu]);
 
-  // Focus first link when panel opens
+  // Focus first interactive control when panel opens
   useEffect(() => {
     if (!open || !panelRef.current) return;
 
@@ -134,7 +135,7 @@ export function MobileMenuToggle({ children }: Props) {
         id={menuId}
         aria-label={tCommon("mobileNav")}
         onClose={handleDialogClose}
-        className={`border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-40 m-0 flex max-h-[min(30rem,calc(100dvh-5.75rem))] max-w-none flex-col overflow-hidden rounded-[28px] border p-0 shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)] transition-[opacity,transform] duration-200 md:hidden [&::backdrop]:bg-black/40 [&::backdrop]:backdrop-blur-[2px] ${
+        className={`border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-40 m-0 flex max-h-[min(30rem,calc(100dvh-5.75rem))] w-auto max-w-none flex-col overflow-hidden rounded-[28px] border p-0 shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)] transition-[opacity,transform] duration-200 md:hidden [&::backdrop]:bg-black/40 [&::backdrop]:backdrop-blur-[2px] ${
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-1 opacity-0"
@@ -143,16 +144,22 @@ export function MobileMenuToggle({ children }: Props) {
           bottom: "max(0.75rem, env(safe-area-inset-bottom))",
         }}
       >
-        <div ref={panelRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
-          {children}
+        <div className="border-border flex shrink-0 items-center justify-between gap-3 border-b px-3 py-2.5">
+          <p className="text-foreground truncate text-sm font-semibold">{tCommon("mobileNav")}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={tCommon("closeMenu")}
+            onClick={closeMenu}
+            className="!size-10 min-h-10 min-w-10 shrink-0"
+          >
+            <X size={20} aria-hidden="true" />
+          </Button>
         </div>
 
-        <div className="border-border border-t p-4">
-          <Button asChild size="lg" className="w-full">
-            <Link href="/promocodes" onClick={closeMenu}>
-              {tCommon("promocodes")}
-            </Link>
-          </Button>
+        <div ref={panelRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
+          {children}
         </div>
       </dialog>,
       document.body

@@ -91,6 +91,24 @@ export function howToHtmlToSteps(howToHtml: string | null | undefined): ContentH
   return [{ name: "How to use", text: plain }];
 }
 
+// Cache Intl formatters at module scope for better performance
+const dateFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+function getDateFormatter(locale: string): Intl.DateTimeFormat {
+  const localeTag = locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-US";
+  if (!dateFormatterCache.has(localeTag)) {
+    dateFormatterCache.set(
+      localeTag,
+      new Intl.DateTimeFormat(localeTag, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    );
+  }
+  return dateFormatterCache.get(localeTag)!;
+}
+
 export function formatVerifiedDate(
   value: Date | string | null | undefined,
   locale: string
@@ -99,10 +117,5 @@ export function formatVerifiedDate(
   const date = typeof value === "string" ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return null;
 
-  const localeTag = locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : "en-US";
-  return new Intl.DateTimeFormat(localeTag, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
+  return getDateFormatter(locale).format(date);
 }

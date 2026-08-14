@@ -74,7 +74,7 @@ describe("MobileMenuToggle", () => {
     expect(panel).not.toHaveAttribute("open");
   });
 
-  it("opens on toggle click", async () => {
+  it("opens on toggle click with full-width dialog classes", async () => {
     renderMenu();
 
     fireEvent.click(queryToggle()!);
@@ -84,6 +84,9 @@ describe("MobileMenuToggle", () => {
       expect(queryToggle()).toHaveAttribute("aria-label", "closeMenu");
       expect(getPanel()).toHaveAttribute("open");
     });
+
+    expect(getPanel()?.className).toContain("w-auto");
+    expect(getPanel()?.className).toContain("inset-x-3");
   });
 
   it("closes on second toggle click", async () => {
@@ -93,6 +96,24 @@ describe("MobileMenuToggle", () => {
     await waitFor(() => expect(queryToggle()).toHaveAttribute("aria-expanded", "true"));
 
     fireEvent.click(queryToggle()!);
+    await waitFor(() => {
+      expect(queryToggle()).toHaveAttribute("aria-expanded", "false");
+      expect(getPanel()).not.toHaveAttribute("open");
+    });
+  });
+
+  it("closes when the in-dialog close button is clicked", async () => {
+    renderMenu();
+
+    fireEvent.click(queryToggle()!);
+    await waitFor(() => expect(queryToggle()).toHaveAttribute("aria-expanded", "true"));
+
+    const panel = getPanel();
+    expect(panel).toBeTruthy();
+    const closeButton = panel!.querySelector<HTMLButtonElement>('button[aria-label="closeMenu"]');
+    expect(closeButton).toBeTruthy();
+    fireEvent.click(closeButton!);
+
     await waitFor(() => {
       expect(queryToggle()).toHaveAttribute("aria-expanded", "false");
       expect(getPanel()).not.toHaveAttribute("open");
