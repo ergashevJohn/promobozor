@@ -5,19 +5,19 @@ export type EntityType = "promocode" | "store" | "category" | "brand";
 export type ListType = "promocodes" | "stores" | "categories" | "brands";
 
 /** Internal (App Router) path keys used by next-intl Link hrefs */
-export const INTERNAL_ENTITY_PATH: Record<EntityType, string> = {
+export const INTERNAL_ENTITY_PATH = {
   promocode: "/promocode",
   store: "/store",
   category: "/category",
   brand: "/brand",
-};
+} as const satisfies Record<EntityType, `/${string}`>;
 
-export const INTERNAL_LIST_PATH: Record<ListType, string> = {
+export const INTERNAL_LIST_PATH = {
   promocodes: "/promocodes",
   stores: "/stores",
   categories: "/categories",
   brands: "/brands",
-};
+} as const satisfies Record<ListType, `/${string}`>;
 
 /** Localized public URL segments per locale */
 export const LOCALIZED_ENTITY_SEGMENT: Record<EntityType, Record<Locale, string>> = {
@@ -52,6 +52,12 @@ export const LEGACY_LIST_SEGMENT: Record<ListType, string> = {
 const ENTITY_BY_ANY_SEGMENT = new Map<string, EntityType>();
 const LIST_BY_ANY_SEGMENT = new Map<string, ListType>();
 
+/** Historical type tokens accepted by 410 gone checks (not public URL segments). */
+const EXTRA_GONE_ALIASES: Partial<Record<EntityType, readonly string[]>> = {
+  promocode: ["promo"],
+  store: ["dokon"],
+};
+
 for (const [entity, locales] of Object.entries(LOCALIZED_ENTITY_SEGMENT) as Array<
   [EntityType, Record<Locale, string>]
 >) {
@@ -59,6 +65,9 @@ for (const [entity, locales] of Object.entries(LOCALIZED_ENTITY_SEGMENT) as Arra
     ENTITY_BY_ANY_SEGMENT.set(segment, entity);
   }
   ENTITY_BY_ANY_SEGMENT.set(LEGACY_ENTITY_SEGMENT[entity], entity);
+  for (const alias of EXTRA_GONE_ALIASES[entity] ?? []) {
+    ENTITY_BY_ANY_SEGMENT.set(alias, entity);
+  }
 }
 
 for (const [list, locales] of Object.entries(LOCALIZED_LIST_SEGMENT) as Array<
@@ -230,90 +239,89 @@ export const ALL_LIST_SEGMENTS_PATTERN = Array.from(
   ])
 ).join("|");
 
+function localePathMap(build: (locale: Locale) => string): Record<Locale, string> {
+  return {
+    uz: build("uz"),
+    ru: build("ru"),
+    en: build("en"),
+  };
+}
+
+const STATIC_LOCALIZED_PATHNAMES = {
+  "/": "/",
+  "/about": localePathMap(() => "/about"),
+  "/contact": localePathMap(() => "/contact"),
+  "/faq": localePathMap(() => "/faq"),
+  "/privacy": localePathMap(() => "/privacy"),
+  "/terms": localePathMap(() => "/terms"),
+  "/blog": localePathMap(() => "/blog"),
+  "/blog/[slug]": localePathMap(() => "/blog/[slug]"),
+  "/how-we-verify-promocodes": localePathMap(() => "/how-we-verify-promocodes"),
+} as const;
+
+type EntityListPathnames = {
+  readonly [K in ListType as (typeof INTERNAL_LIST_PATH)[K]]: Record<Locale, string>;
+} & {
+  readonly [K in EntityType as `${(typeof INTERNAL_ENTITY_PATH)[K]}/[slug]`]: Record<
+    Locale,
+    string
+  >;
+};
+
+function buildEntityListPathnames(): EntityListPathnames {
+  const listEntries = (Object.keys(INTERNAL_LIST_PATH) as ListType[]).map((listType) => {
+    const internalPath = INTERNAL_LIST_PATH[listType];
+    return [
+      internalPath,
+      localePathMap((locale) => `/${LOCALIZED_LIST_SEGMENT[listType][locale]}`),
+    ] as const;
+  });
+
+  const entityEntries = (Object.keys(INTERNAL_ENTITY_PATH) as EntityType[]).map((entityType) => {
+    const internalPath = `${INTERNAL_ENTITY_PATH[entityType]}/[slug]` as const;
+    return [
+      internalPath,
+      localePathMap((locale) => `/${LOCALIZED_ENTITY_SEGMENT[entityType][locale]}/[slug]`),
+    ] as const;
+  });
+
+  return Object.fromEntries([...listEntries, ...entityEntries]) as EntityListPathnames;
+}
+
 /**
  * Build next-intl pathnames config for localized public URLs.
  * Internal keys stay English; middleware rewrites to localized segments.
+ * Entity/list entries are derived from LOCALIZED_* maps (single source of truth).
  */
-export const localizedPathnames = {
-  "/": "/",
-  "/about": {
-    uz: "/about",
-    ru: "/about",
-    en: "/about",
-  },
-  "/contact": {
-    uz: "/contact",
-    ru: "/contact",
-    en: "/contact",
-  },
-  "/faq": {
-    uz: "/faq",
-    ru: "/faq",
-    en: "/faq",
-  },
-  "/privacy": {
-    uz: "/privacy",
-    ru: "/privacy",
-    en: "/privacy",
-  },
-  "/terms": {
-    uz: "/terms",
-    ru: "/terms",
-    en: "/terms",
-  },
-  "/blog": {
-    uz: "/blog",
-    ru: "/blog",
-    en: "/blog",
-  },
-  "/blog/[slug]": {
-    uz: "/blog/[slug]",
-    ru: "/blog/[slug]",
-    en: "/blog/[slug]",
-  },
-  "/how-we-verify-promocodes": {
-    uz: "/how-we-verify-promocodes",
-    ru: "/how-we-verify-promocodes",
-    en: "/how-we-verify-promocodes",
-  },
-  "/promocodes": {
-    uz: "/chegirmalar",
-    ru: "/promokody",
-    en: "/deals",
-  },
-  "/promocode/[slug]": {
-    uz: "/chegirma/[slug]",
-    ru: "/promokod/[slug]",
-    en: "/deal/[slug]",
-  },
-  "/stores": {
-    uz: "/do-konlar",
-    ru: "/magaziny",
-    en: "/stores",
-  },
-  "/store/[slug]": {
-    uz: "/do-kon/[slug]",
-    ru: "/magazin/[slug]",
-    en: "/store/[slug]",
-  },
-  "/categories": {
-    uz: "/kategoriyalar",
-    ru: "/kategorii",
-    en: "/categories",
-  },
-  "/category/[slug]": {
-    uz: "/kategoriya/[slug]",
-    ru: "/kategoriya/[slug]",
-    en: "/category/[slug]",
-  },
-  "/brands": {
-    uz: "/brendlar",
-    ru: "/brendy",
-    en: "/brands",
-  },
-  "/brand/[slug]": {
-    uz: "/brend/[slug]",
-    ru: "/brend/[slug]",
-    en: "/brand/[slug]",
-  },
-} as const;
+export const localizedPathnames: typeof STATIC_LOCALIZED_PATHNAMES & EntityListPathnames = {
+  ...STATIC_LOCALIZED_PATHNAMES,
+  ...buildEntityListPathnames(),
+};
+
+/**
+ * Type tokens (legacy name, localized segment, or historical alias) that match a
+ * gone entry of the form `type:slug`.
+ */
+export function getGoneTypeAliases(type: string): string[] {
+  const normalizedType = type.trim().toLowerCase();
+  if (!normalizedType) {
+    return [];
+  }
+
+  const entityType =
+    (Object.keys(LEGACY_ENTITY_SEGMENT) as EntityType[]).find(
+      (entity) => entity === normalizedType
+    ) ?? resolveEntityTypeFromSegment(normalizedType);
+
+  if (!entityType) {
+    return [normalizedType];
+  }
+
+  return Array.from(
+    new Set([
+      LEGACY_ENTITY_SEGMENT[entityType],
+      ...Object.values(LOCALIZED_ENTITY_SEGMENT[entityType]),
+      ...(EXTRA_GONE_ALIASES[entityType] ?? []),
+    ])
+  );
+}

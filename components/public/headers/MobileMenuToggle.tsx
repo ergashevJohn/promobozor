@@ -24,6 +24,7 @@ export function MobileMenuToggle({ children }: Props) {
   const [menuPathname, setMenuPathname] = useState(pathname);
   const menuId = useId();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Close menu when the route changes (adjust state during render)
@@ -42,7 +43,24 @@ export function MobileMenuToggle({ children }: Props) {
     setOpen(true);
   }, []);
 
-  // Sync React open state with native <dialog> showModal()/close()
+  const handleDialogClose = useCallback(() => {
+    setOpen(false);
+    toggleRef.current?.focus();
+  }, []);
+
+  // Body scroll lock
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  // Native dialog modal open/close
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -51,31 +69,57 @@ export function MobileMenuToggle({ children }: Props) {
       if (!dialog.open) {
         dialog.showModal();
       }
-    } else if (dialog.open) {
+      return;
+    }
+
+    if (dialog.open) {
       dialog.close();
     }
   }, [open]);
 
-  // Native close (Escape, backdrop click) → sync state and restore focus to toggle
+  // Close menu when a nav link inside the panel is clicked
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!open || !panelRef.current) return;
 
-    const handleClose = () => {
-      setOpen(false);
-      toggleRef.current?.focus();
+    const panel = panelRef.current;
+    const handleClick = (event: MouseEvent) => {
+      if ((event.target as HTMLElement).closest("a")) {
+        closeMenu();
+      }
     };
 
-    dialog.addEventListener("close", handleClose);
-    return () => dialog.removeEventListener("close", handleClose);
-  }, []);
+    panel.addEventListener("click", handleClick);
+    return () => panel.removeEventListener("click", handleClick);
+  }, [open, closeMenu]);
 
-  // Focus first link when panel opens
+  // Close menu when the native dialog backdrop is clicked
   useEffect(() => {
     if (!open || !dialogRef.current) return;
 
+    const dialog = dialogRef.current;
+    const handleClick = (event: MouseEvent) => {
+      const rect = dialog.getBoundingClientRect();
+      const isBackdropClick =
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom;
+
+      if (isBackdropClick) {
+        closeMenu();
+      }
+    };
+
+    dialog.addEventListener("click", handleClick);
+    return () => dialog.removeEventListener("click", handleClick);
+  }, [open, closeMenu]);
+
+  // Focus first link when panel opens
+  useEffect(() => {
+    if (!open || !panelRef.current) return;
+
     const timeoutId = setTimeout(() => {
-      dialogRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+      panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
     }, 50);
 
     return () => clearTimeout(timeoutId);
@@ -89,7 +133,8 @@ export function MobileMenuToggle({ children }: Props) {
         ref={dialogRef}
         id={menuId}
         aria-label={tCommon("mobileNav")}
-        className={`border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-40 m-0 flex max-h-[min(30rem,calc(100dvh-5.75rem))] w-auto max-w-none flex-col overflow-hidden rounded-[28px] border p-0 shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)] transition-[opacity,transform] duration-200 backdrop:bg-black/40 backdrop:backdrop-blur-[2px] md:hidden ${
+        onClose={handleDialogClose}
+        className={`border-border bg-card fixed inset-x-3 top-[calc(4.75rem+0.35rem)] z-40 m-0 flex max-h-[min(30rem,calc(100dvh-5.75rem))] max-w-none flex-col overflow-hidden rounded-[28px] border p-0 shadow-[0_28px_72px_-28px_rgba(17,24,39,0.55)] transition-[opacity,transform] duration-200 md:hidden [&::backdrop]:bg-black/40 [&::backdrop]:backdrop-blur-[2px] ${
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-1 opacity-0"
@@ -98,7 +143,7 @@ export function MobileMenuToggle({ children }: Props) {
           bottom: "max(0.75rem, env(safe-area-inset-bottom))",
         }}
       >
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
+        <div ref={panelRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
           {children}
         </div>
 

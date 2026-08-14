@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   getEntityPath,
+  getGoneTypeAliases,
   getInternalEntityHref,
   getLegacyEntityPath,
-  getListPath,
   getListLanguageAlternates,
+  getListPath,
   isCompetitorPromokodAliasPath,
+  localizedPathnames,
   resolveEntityTypeFromSegment,
   resolveInternalHrefToPublicPath,
   resolveLegacyLocalizedPath,
@@ -68,5 +70,45 @@ describe("routes helpers", () => {
     expect(isCompetitorPromokodAliasPath("uz", "promokod", "yandex-eats")).toBe(true);
     expect(isCompetitorPromokodAliasPath("ru", "promokod", "yandex-eats")).toBe(false);
     expect(isCompetitorPromokodAliasPath("ru", "promokod", "yandex-eats-promokod")).toBe(true);
+  });
+
+  it("derives localizedPathnames from LOCALIZED_* maps", () => {
+    expect(localizedPathnames["/promocode/[slug]"]).toEqual({
+      uz: "/chegirma/[slug]",
+      ru: "/promokod/[slug]",
+      en: "/deal/[slug]",
+    });
+    expect(localizedPathnames["/store/[slug]"]).toEqual({
+      uz: "/do-kon/[slug]",
+      ru: "/magazin/[slug]",
+      en: "/store/[slug]",
+    });
+    expect(localizedPathnames["/promocodes"]).toEqual({
+      uz: "/chegirmalar",
+      ru: "/promokody",
+      en: "/deals",
+    });
+    expect(localizedPathnames["/stores"]).toEqual({
+      uz: "/do-konlar",
+      ru: "/magaziny",
+      en: "/stores",
+    });
+  });
+
+  it("derives gone type aliases from segment maps plus historical tokens", () => {
+    expect(getGoneTypeAliases("chegirma").sort()).toEqual(
+      ["chegirma", "deal", "promo", "promocode", "promokod"].sort()
+    );
+    expect(getGoneTypeAliases("promo").sort()).toEqual(
+      ["chegirma", "deal", "promo", "promocode", "promokod"].sort()
+    );
+    expect(getGoneTypeAliases("do-kon").sort()).toEqual(
+      ["do-kon", "dokon", "magazin", "store"].sort()
+    );
+    expect(getGoneTypeAliases("dokon").sort()).toEqual(
+      ["do-kon", "dokon", "magazin", "store"].sort()
+    );
+    expect(getGoneTypeAliases("brand").sort()).toEqual(["brand", "brend"].sort());
+    expect(getGoneTypeAliases("unknown-type")).toEqual(["unknown-type"]);
   });
 });

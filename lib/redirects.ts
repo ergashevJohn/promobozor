@@ -3,6 +3,7 @@
  */
 
 import { db, redirects } from "@/lib/db";
+import { getGoneTypeAliases } from "@/lib/routes";
 import { and, eq } from "drizzle-orm";
 
 const MAX_REDIRECT_HOPS = 5;
@@ -117,41 +118,6 @@ export async function getRedirectPath(fullPath: string): Promise<string | null> 
 export const GONE_SLUGS = new Set<string>([
   // Example: "promo:old-expired-promocode",
 ]);
-
-function getGoneTypeAliases(type: string): string[] {
-  const normalizedType = type.trim().toLowerCase();
-
-  // Keep backwards compatibility between legacy "promo" and current "promocode",
-  // plus localized URL segments (chegirma, promokod, deal, do-kon, …).
-  if (
-    normalizedType === "promo" ||
-    normalizedType === "promocode" ||
-    normalizedType === "chegirma" ||
-    normalizedType === "promokod" ||
-    normalizedType === "deal"
-  ) {
-    return ["promo", "promocode", "chegirma", "promokod", "deal"];
-  }
-
-  if (
-    normalizedType === "store" ||
-    normalizedType === "do-kon" ||
-    normalizedType === "dokon" ||
-    normalizedType === "magazin"
-  ) {
-    return ["store", "do-kon", "dokon", "magazin"];
-  }
-
-  if (normalizedType === "category" || normalizedType === "kategoriya") {
-    return ["category", "kategoriya"];
-  }
-
-  if (normalizedType === "brand" || normalizedType === "brend") {
-    return ["brand", "brend"];
-  }
-
-  return [normalizedType];
-}
 
 /**
  * Check if a slug is permanently gone
