@@ -5,7 +5,18 @@ import { getApprovedImageUrl } from "@/lib/media";
 const numberFormatter = new Intl.NumberFormat("en-US");
 
 export interface PromocodeDisplayData {
-  translation: Record<string, string | null> | undefined;
+  translation:
+    | {
+        language: string;
+        title: string;
+        slug: string;
+        shortDescription?: string | null;
+        conditions?: string | null;
+        howToHtml?: string | null;
+        editorVerdict?: string | null;
+        faqJson?: unknown;
+      }
+    | undefined;
   brandTranslation: Record<string, string | null> | undefined;
   storeTranslation: Record<string, string | null> | undefined;
   categoryTranslation: Record<string, string | null> | undefined;

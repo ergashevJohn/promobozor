@@ -5,6 +5,7 @@ import {
   foreignKey,
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -12,6 +13,12 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
+
+/** Locale FAQ items stored on translation rows */
+export type FaqJsonItem = {
+  question: string;
+  answer: string;
+};
 
 export const languageEnum = pgEnum("language", ["uz", "ru", "en"]);
 export const discountTypeEnum = pgEnum("discount_type", ["percent", "amount"]);
@@ -54,6 +61,7 @@ export const stores = pgTable(
     websiteUrl: text("website_url"),
     priority: integer("priority").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),
+    lastReviewedAt: timestamp("last_reviewed_at", { withTimezone: true }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -81,6 +89,10 @@ export const storeTranslations = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull(),
     description: text("description"),
+    shortSummary: text("short_summary"),
+    bodyHtml: text("body_html"),
+    howToHtml: text("how_to_html"),
+    faqJson: jsonb("faq_json").$type<FaqJsonItem[] | null>(),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
     searchVector: tsvector("search_vector"),
@@ -112,6 +124,7 @@ export const categories = pgTable(
     imageUrl: text("image_url"),
     sortOrder: integer("sort_order").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),
+    lastReviewedAt: timestamp("last_reviewed_at", { withTimezone: true }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -144,6 +157,10 @@ export const categoryTranslations = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull(),
     description: text("description"),
+    shortSummary: text("short_summary"),
+    bodyHtml: text("body_html"),
+    howToHtml: text("how_to_html"),
+    faqJson: jsonb("faq_json").$type<FaqJsonItem[] | null>(),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
     searchVector: tsvector("search_vector"),
@@ -176,6 +193,7 @@ export const brands = pgTable(
     imageUrl: text("image_url"),
     websiteUrl: text("website_url"),
     isActive: boolean("is_active").notNull().default(true),
+    lastReviewedAt: timestamp("last_reviewed_at", { withTimezone: true }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -199,6 +217,10 @@ export const brandTranslations = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull(),
     description: text("description"),
+    shortSummary: text("short_summary"),
+    bodyHtml: text("body_html"),
+    howToHtml: text("how_to_html"),
+    faqJson: jsonb("faq_json").$type<FaqJsonItem[] | null>(),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
     searchVector: tsvector("search_vector"),
@@ -245,6 +267,8 @@ export const promocodes = pgTable(
     dislikesCount: integer("dislikes_count").notNull().default(0),
     startsAt: timestamp("starts_at"),
     expiresAt: timestamp("expires_at"),
+    lastVerifiedAt: timestamp("last_verified_at", { withTimezone: true }),
+    minOrderAmount: integer("min_order_amount"),
     createdById: text("created_by_id")
       .notNull()
       .references(() => users.id),
@@ -364,6 +388,9 @@ export const promocodeTranslations = pgTable(
     slug: varchar("slug", { length: 255 }).notNull(),
     shortDescription: text("short_description"),
     conditions: text("conditions"),
+    howToHtml: text("how_to_html"),
+    faqJson: jsonb("faq_json").$type<FaqJsonItem[] | null>(),
+    editorVerdict: varchar("editor_verdict", { length: 300 }),
     metaTitle: varchar("meta_title", { length: 255 }),
     metaDescription: varchar("meta_description", { length: 500 }),
     searchVector: tsvector("search_vector"),

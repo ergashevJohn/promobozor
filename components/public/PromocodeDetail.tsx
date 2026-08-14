@@ -3,19 +3,19 @@
 import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import type { Language } from "@/lib/i18n";
+import { getPromocodeDisplayData } from "@/lib/promocode-utils";
 import GrouponCard from "./GrouponCard";
 import {
-  PromocodeProvider,
-  PromocodeHeader,
+  PromocodeActionButton,
   PromocodeCodeBox,
   PromocodeDiscount,
-  PromocodeActionButton,
   PromocodeExpiry,
+  PromocodeHeader,
+  PromocodeProvider,
   PromocodeStats,
   PromocodeTerms,
 } from "./promocode";
 import { Promocode } from "./types";
-import { getPromocodeDisplayData } from "@/lib/promocode-utils";
 
 const EMPTY_RELATED: Promocode[] = [];
 
@@ -58,6 +58,10 @@ interface PromocodeDetailProps {
       exploreKicker: string;
       exploreDescription: string;
       relatedDealsKicker: string;
+      editorVerdict: string;
+      lastVerified: string;
+      shortDescription: string;
+      minOrder: string;
     };
     common: {
       featured: string;
@@ -157,7 +161,12 @@ export default function PromocodeDetail({
             </div>
           </div>
 
-          <PromocodeTerms translations={translations} displayData={displayData} />
+          <PromocodeTerms
+            translations={translations}
+            displayData={displayData}
+            minOrderAmount={promocode.minOrderAmount}
+            currency={promocode.currency}
+          />
         </div>
       </Card>
 

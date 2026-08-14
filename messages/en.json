@@ -480,7 +480,8 @@
     "highActivityBadge": "High-activity route",
     "viewStorePromocodesAria": "View {name} promocodes",
     "faqTitle": "Questions about {name} promocodes",
-    "faqDescription": "How to find, copy, and apply {name} codes at checkout."
+    "faqDescription": "How to find, copy, and apply {name} codes at checkout.",
+    "lastReviewed": "Last reviewed"
   },
   "category": {
     "title": "Category",
@@ -524,7 +525,8 @@
     "offersKicker": "Best offers in this category",
     "allPromocodesDescription": "Explore live savings inside {name}, with active offers across stores and related brands.",
     "faqTitle": "Questions about the {name} category",
-    "faqDescription": "How to find and use promocodes in the {name} category."
+    "faqDescription": "How to find and use promocodes in the {name} category.",
+    "lastReviewed": "Last reviewed"
   },
   "brand": {
     "title": "Brand",
@@ -569,7 +571,8 @@
     "offersKicker": "Curated brand offers",
     "allPromocodesDescription": "A tighter look at savings tied to {name}, across multiple stores and active placements.",
     "faqTitle": "{name} promocode FAQ",
-    "faqDescription": "Short answers on using {name} discounts and how often they refresh."
+    "faqDescription": "Short answers on using {name} discounts and how often they refresh.",
+    "lastReviewed": "Last reviewed"
   },
   "promocode": {
     "title": "Promocode Details",
@@ -625,7 +628,11 @@
     "exploreKicker": "Keep exploring",
     "exploreDescription": "Move sideways into the store, brand, or category context around this offer to compare more active savings routes.",
     "relatedDealsKicker": "Related deals",
-    "howToTitle": "How to use this promocode"
+    "howToTitle": "How to use this promocode",
+    "lastVerified": "Last verified",
+    "editorVerdict": "Editor verdict",
+    "shortDescription": "Short description",
+    "minOrder": "Minimum order"
   },
   "filter": {
     "filters": "Filters",
@@ -996,7 +1003,8 @@
     "statsKicker": "Stats",
     "whyUsKicker": "Why us",
     "contactKicker": "Contact",
-    "statsBrands": "Brands"
+    "statsBrands": "Brands",
+    "affiliateDisclosure": "Affiliate disclosure: some links may earn PromoBozor a commission. This does not change the price you pay."
   },
   "verification": {
     "title": "How We Verify Promocodes Before Publishing",

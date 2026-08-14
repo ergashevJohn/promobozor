@@ -9,8 +9,8 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
-import { and, desc, eq, gt, isNull, lte, ne, or, sql } from "drizzle-orm";
 import { getEntityPath } from "@/lib/routes";
+import { and, desc, eq, gt, isNull, lte, ne, or, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import type { PromocodeDataRow } from "./transformers";
 
@@ -39,6 +39,7 @@ function serializePromocodeRow(row: {
       ...row.promocode,
       startsAt: toIsoString(row.promocode.startsAt),
       expiresAt: toIsoString(row.promocode.expiresAt),
+      lastVerifiedAt: toIsoString(row.promocode.lastVerifiedAt),
       createdAt: toIsoString(row.promocode.createdAt),
       updatedAt: toIsoString(row.promocode.updatedAt),
     },
@@ -262,6 +263,7 @@ export type PromocodeMetadataRow = {
     title: string;
     metaTitle: string | null;
     metaDescription: string | null;
+    shortDescription: string | null;
     conditions: string | null;
   } | null;
 };
@@ -289,6 +291,7 @@ async function fetchPromocodeMetadataData(
         title: promocodeTranslations.title,
         metaTitle: promocodeTranslations.metaTitle,
         metaDescription: promocodeTranslations.metaDescription,
+        shortDescription: promocodeTranslations.shortDescription,
         conditions: promocodeTranslations.conditions,
       },
     })

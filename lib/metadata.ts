@@ -337,10 +337,12 @@ export function generatePromocodeDescription(
   storeName: string,
   discount: string | null,
   conditions: string | null,
-  locale: string
+  locale: string,
+  shortDescription?: string | null
 ): string {
   const discountText = discount ? `${discount} ` : "";
-  const conditionsText = conditions ? conditions.substring(0, 100) : "";
+  const snippetSource = shortDescription?.trim() || conditions?.trim() || "";
+  const conditionsText = snippetSource ? snippetSource.substring(0, 100) : "";
 
   const descriptions = {
     uz: `${promocodeTitle} - ${storeName} do'koni uchun ${discountText}chegirma promokod.${conditionsText ? ` Shartlar: ${conditionsText}` : ""} Kodni nusxalang va tejang!`,

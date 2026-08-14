@@ -3,14 +3,18 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
+import { NotFoundUI } from "@/components/public/NotFoundUI";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
 import StoreHero from "@/components/public/store/StoreHero";
 import StoreRelatedBrands from "@/components/public/store/StoreRelatedBrands";
 import StoreRelatedCategories from "@/components/public/store/StoreRelatedCategories";
 import StructuredData from "@/components/public/StructuredData";
-import { Link } from "@/i18n/navigation";
 import type { Promocode } from "@/components/public/types";
+import { VerifiedBadge } from "@/components/public/VerifiedBadge";
+import { Link } from "@/i18n/navigation";
+import { countUnique } from "@/lib/array-utils";
 import { getCachedStorePromocodeCounts } from "@/lib/cache/promocode-counts";
+import { resolveEntityBody, stripHtml } from "@/lib/content-seo";
 import { getHubEditorial } from "@/lib/hub-editorial";
 import { isValidLanguage } from "@/lib/i18n";
 import {
@@ -26,14 +30,12 @@ import {
   getStoreStaticParams,
 } from "@/lib/queries/entities";
 import { getCachedStorePageData } from "@/lib/queries/store-page";
-import { countUnique } from "@/lib/array-utils";
+import { isGone } from "@/lib/redirects";
+import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
-import { isGone } from "@/lib/redirects";
-import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
-import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
   return getStoreStaticParams();
@@ -71,10 +73,13 @@ export async function generateMetadata({
 
     const translation = storeData.translation;
     const hubEditorial = getHubEditorial(slug, locale, "store");
-    const hubDescription =
-      translation?.description && translation.description.trim().length >= 80
-        ? translation.description
-        : hubEditorial?.description || translation?.description || null;
+    const hubDescription = resolveEntityBody({
+      bodyHtml: translation?.bodyHtml,
+      shortSummary: translation?.shortSummary,
+      description: translation?.description,
+      hubDescription: hubEditorial?.description,
+    });
+    const metaBodyPlain = hubDescription ? stripHtml(hubDescription) : null;
 
     // Get promocode counts from cache (5-min cache for performance)
     const promocodeCounts = await getCachedStorePromocodeCounts(storeData.store.id);
@@ -89,7 +94,7 @@ export async function generateMetadata({
       translation?.metaDescription ||
       generateStoreDescription(
         translation?.name || storeTitle,
-        hubDescription,
+        metaBodyPlain || translation?.shortSummary || null,
         totalPromocodes,
         featuredPromocodes,
         locale
@@ -177,9 +182,12 @@ export default async function StorePage({
 
     const hubEditorial = getHubEditorial(slug, locale, "store");
     resolvedStoreDescription =
-      storeTranslation?.description && storeTranslation.description.trim().length >= 80
-        ? storeTranslation.description
-        : hubEditorial?.description || storeTranslation?.description || undefined;
+      resolveEntityBody({
+        bodyHtml: storeTranslation?.bodyHtml,
+        shortSummary: storeTranslation?.shortSummary,
+        description: storeTranslation?.description,
+        hubDescription: hubEditorial?.description,
+      }) || undefined;
 
     // Fetch promocodes and stats for this store
     const pageData = await getCachedStorePageData(store.id, locale as "uz" | "ru" | "en");
@@ -319,6 +327,13 @@ export default async function StorePage({
           slug={slug}
           locale={locale}
         />
+        <div className="page-shell pt-2">
+          <VerifiedBadge
+            verifiedAt={store.lastReviewedAt}
+            locale={locale}
+            label={t("lastReviewed")}
+          />
+        </div>
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
@@ -415,6 +430,7 @@ export default async function StorePage({
             locale={locale}
             title={t("faqTitle", { name: storeTranslation?.name || storeTitle })}
             description={t("faqDescription", { name: storeTranslation?.name || storeTitle })}
+            faqJson={storeTranslation?.faqJson}
           />
         </div>
       </div>

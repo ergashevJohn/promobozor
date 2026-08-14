@@ -21,6 +21,7 @@ const storeBySlugSelect = {
     websiteUrl: stores.websiteUrl,
     priority: stores.priority,
     isActive: stores.isActive,
+    lastReviewedAt: stores.lastReviewedAt,
   },
   translation: {
     id: storeTranslations.id,
@@ -29,6 +30,10 @@ const storeBySlugSelect = {
     name: storeTranslations.name,
     slug: storeTranslations.slug,
     description: storeTranslations.description,
+    shortSummary: storeTranslations.shortSummary,
+    bodyHtml: storeTranslations.bodyHtml,
+    howToHtml: storeTranslations.howToHtml,
+    faqJson: storeTranslations.faqJson,
     metaTitle: storeTranslations.metaTitle,
     metaDescription: storeTranslations.metaDescription,
   },
@@ -42,6 +47,7 @@ const categoryBySlugSelect = {
     imageUrl: categories.imageUrl,
     sortOrder: categories.sortOrder,
     isActive: categories.isActive,
+    lastReviewedAt: categories.lastReviewedAt,
   },
   translation: {
     id: categoryTranslations.id,
@@ -50,6 +56,10 @@ const categoryBySlugSelect = {
     name: categoryTranslations.name,
     slug: categoryTranslations.slug,
     description: categoryTranslations.description,
+    shortSummary: categoryTranslations.shortSummary,
+    bodyHtml: categoryTranslations.bodyHtml,
+    howToHtml: categoryTranslations.howToHtml,
+    faqJson: categoryTranslations.faqJson,
     metaTitle: categoryTranslations.metaTitle,
     metaDescription: categoryTranslations.metaDescription,
   },
@@ -61,6 +71,7 @@ const brandBySlugSelect = {
     imageUrl: brands.imageUrl,
     websiteUrl: brands.websiteUrl,
     isActive: brands.isActive,
+    lastReviewedAt: brands.lastReviewedAt,
   },
   translation: {
     id: brandTranslations.id,
@@ -69,6 +80,10 @@ const brandBySlugSelect = {
     name: brandTranslations.name,
     slug: brandTranslations.slug,
     description: brandTranslations.description,
+    shortSummary: brandTranslations.shortSummary,
+    bodyHtml: brandTranslations.bodyHtml,
+    howToHtml: brandTranslations.howToHtml,
+    faqJson: brandTranslations.faqJson,
     metaTitle: brandTranslations.metaTitle,
     metaDescription: brandTranslations.metaDescription,
   },
@@ -81,6 +96,7 @@ export type CachedStoreBySlug = {
     websiteUrl: string | null;
     priority: number;
     isActive: boolean;
+    lastReviewedAt: Date | null;
   };
   translation: {
     id: string;
@@ -89,6 +105,10 @@ export type CachedStoreBySlug = {
     name: string;
     slug: string;
     description: string | null;
+    shortSummary: string | null;
+    bodyHtml: string | null;
+    howToHtml: string | null;
+    faqJson: unknown;
     metaTitle: string | null;
     metaDescription: string | null;
   };
@@ -131,6 +151,7 @@ export type CachedCategoryBySlug = {
     imageUrl: string | null;
     sortOrder: number;
     isActive: boolean;
+    lastReviewedAt: Date | null;
   };
   translation: {
     id: string;
@@ -139,6 +160,10 @@ export type CachedCategoryBySlug = {
     name: string;
     slug: string;
     description: string | null;
+    shortSummary: string | null;
+    bodyHtml: string | null;
+    howToHtml: string | null;
+    faqJson: unknown;
     metaTitle: string | null;
     metaDescription: string | null;
   };
@@ -182,6 +207,7 @@ export type CachedBrandBySlug = {
     imageUrl: string | null;
     websiteUrl: string | null;
     isActive: boolean;
+    lastReviewedAt: Date | null;
   };
   translation: {
     id: string;
@@ -190,6 +216,10 @@ export type CachedBrandBySlug = {
     name: string;
     slug: string;
     description: string | null;
+    shortSummary: string | null;
+    bodyHtml: string | null;
+    howToHtml: string | null;
+    faqJson: unknown;
     metaTitle: string | null;
     metaDescription: string | null;
   };

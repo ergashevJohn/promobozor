@@ -1,10 +1,19 @@
+import { howToHtmlToSteps, normalizeFaqItems } from "@/lib/content-seo";
+
 export type EntityFaqItem = { question: string; answer: string };
 
 /**
  * Shared FAQ copy for store/category/brand pages.
- * Used by both visible UI and JSON-LD so they stay in sync.
+ * DB faqJson wins when present; template copy is fallback only.
  */
-export function getEntityFaqItems(entityName: string, locale: string): EntityFaqItem[] {
+export function getEntityFaqItems(
+  entityName: string,
+  locale: string,
+  dbFaq?: unknown
+): EntityFaqItem[] {
+  const fromDb = normalizeFaqItems(dbFaq);
+  if (fromDb) return fromDb;
+
   const faqData: Record<string, EntityFaqItem[]> = {
     uz: [
       {
@@ -67,11 +76,28 @@ export function getEntityFaqItems(entityName: string, locale: string): EntityFaq
 
 export type HowToStep = { name: string; text: string };
 
+/**
+ * HowTo steps for promocode pages.
+ * Prefer structured DB steps / howToHtml; template is fallback only.
+ */
 export function getHowToSteps(
   promocodeTitle: string,
   storeName: string,
-  locale: string
+  locale: string,
+  options?: {
+    dbSteps?: HowToStep[] | null;
+    howToHtml?: string | null;
+  }
 ): HowToStep[] {
+  if (options?.dbSteps && options.dbSteps.length > 0) {
+    return options.dbSteps;
+  }
+
+  const fromHtml = howToHtmlToSteps(options?.howToHtml);
+  if (fromHtml && fromHtml.length > 0) {
+    return fromHtml;
+  }
+
   const steps: Record<string, HowToStep[]> = {
     uz: [
       {

@@ -158,6 +158,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           cta={t("founder.cta")}
         />
 
+        <p className="text-muted-foreground mx-auto mb-12 max-w-3xl text-center text-sm leading-7">
+          {t("affiliateDisclosure")}
+        </p>
+
         {/* Contact */}
         <AboutContact
           contactTitle={t("contactTitle")}

@@ -1,5 +1,5 @@
 import serialize from "serialize-javascript";
-import { getHowToSteps } from "@/lib/entity-faq";
+import { getHowToSteps, type HowToStep } from "@/lib/entity-faq";
 
 interface HowToSchemaProps {
   promocodeTitle: string;
@@ -7,6 +7,8 @@ interface HowToSchemaProps {
   locale: string;
   imageUrl?: string | null;
   baseUrl: string;
+  /** Optional DB / HTML-derived steps; template fallback when omitted */
+  steps?: HowToStep[];
 }
 
 /**
@@ -19,12 +21,14 @@ export function HowToSchema({
   locale,
   imageUrl,
   baseUrl,
+  steps,
 }: HowToSchemaProps) {
   const normalizedBaseUrl = baseUrl.replace(/\/$/, "");
   const resolveAbsoluteUrl = (url: string) =>
     url.startsWith("http") ? url : `${normalizedBaseUrl}${url.startsWith("/") ? url : `/${url}`}`;
   const howToImage = resolveAbsoluteUrl(imageUrl || "/icon.png");
-  const localeSteps = getHowToSteps(promocodeTitle, storeName, locale);
+  const localeSteps =
+    steps && steps.length > 0 ? steps : getHowToSteps(promocodeTitle, storeName, locale);
 
   const schema = {
     "@context": "https://schema.org",

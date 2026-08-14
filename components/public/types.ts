@@ -18,11 +18,17 @@ export type Promocode = {
   dislikesCount: number;
   startsAt?: string | null;
   expiresAt: string | null;
+  lastVerifiedAt?: string | null;
+  minOrderAmount?: number | null;
   translations: Array<{
     language: string;
     title: string;
     slug: string;
+    shortDescription?: string | null;
     conditions?: string | null;
+    howToHtml?: string | null;
+    editorVerdict?: string | null;
+    faqJson?: unknown;
   }>;
   store: Store | null;
   category?: Category | null;

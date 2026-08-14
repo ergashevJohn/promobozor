@@ -2,13 +2,17 @@ import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
-import CategoryHero from "@/components/public/category/CategoryHero";
-import CategoryRelatedStores from "@/components/public/category/CategoryRelatedStores";
-import CategoryRelatedBrands from "@/components/public/category/CategoryRelatedBrands";
-import CategoryPromocodes from "@/components/public/category/CategoryPromocodes";
+import { NotFoundUI } from "@/components/public/NotFoundUI";
 import StructuredData from "@/components/public/StructuredData";
+import { VerifiedBadge } from "@/components/public/VerifiedBadge";
+import CategoryHero from "@/components/public/category/CategoryHero";
+import CategoryPromocodes from "@/components/public/category/CategoryPromocodes";
+import CategoryRelatedBrands from "@/components/public/category/CategoryRelatedBrands";
+import CategoryRelatedStores from "@/components/public/category/CategoryRelatedStores";
 import type { Promocode } from "@/components/public/types";
+import { countUnique } from "@/lib/array-utils";
 import { getCachedCategoryPromocodeCounts } from "@/lib/cache/promocode-counts";
+import { resolveEntityBody, stripHtml } from "@/lib/content-seo";
 import { isValidLanguage } from "@/lib/i18n";
 import {
   generateCategoryDescription,
@@ -17,19 +21,17 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
+import { getCachedCategoryPageData } from "@/lib/queries/category-page";
 import {
   getCachedCategoryBySlug,
   getCategoryLanguageAlternates,
   getCategoryStaticParams,
 } from "@/lib/queries/entities";
-import { getCachedCategoryPageData } from "@/lib/queries/category-page";
-import { countUnique } from "@/lib/array-utils";
+import { isGone } from "@/lib/redirects";
+import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
 import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
-import { isGone } from "@/lib/redirects";
-import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
-import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
   return getCategoryStaticParams();
@@ -67,6 +69,12 @@ export async function generateMetadata({
     }
 
     const translation = categoryData.translation;
+    const resolvedBody = resolveEntityBody({
+      bodyHtml: translation?.bodyHtml,
+      shortSummary: translation?.shortSummary,
+      description: translation?.description,
+    });
+    const metaBodyPlain = resolvedBody ? stripHtml(resolvedBody) : null;
 
     // Get promocode counts from cache (5-min cache for performance)
     const counts = await getCachedCategoryPromocodeCounts(categoryData.category.id);
@@ -81,7 +89,7 @@ export async function generateMetadata({
       translation?.metaDescription ||
       generateCategoryDescription(
         translation?.name || categoryTitle,
-        translation?.description || null,
+        metaBodyPlain || translation?.shortSummary || translation?.description || null,
         totalPromocodes,
         totalStores,
         locale
@@ -175,6 +183,12 @@ export default async function CategoryPage({
   const categoryTitle = t("title");
   const promocodeTitle = tPromocode("title");
   const storeTitle = tStore("title");
+  const resolvedCategoryDescription =
+    resolveEntityBody({
+      bodyHtml: categoryTranslation?.bodyHtml,
+      shortSummary: categoryTranslation?.shortSummary,
+      description: categoryTranslation?.description,
+    }) || undefined;
   const schemaPromocodes = allPromocodes.slice(0, 20);
   const uniqueStoreCount = countUnique(allPromocodes, (item) => item.store?.id);
   const uniqueBrandCount = countUnique(allPromocodes, (item) => item.brand?.id);
@@ -224,7 +238,7 @@ export default async function CategoryPage({
         lang={locale}
         baseUrl={baseUrl}
         promocodeCount={totalPromocodesCount}
-        entityDescription={categoryTranslation?.description || undefined}
+        entityDescription={resolvedCategoryDescription}
       />
       {schemaPromocodes.length > 0 && (
         <ItemListSchema
@@ -248,12 +262,21 @@ export default async function CategoryPage({
         {/* Hero Section */}
         <CategoryHero
           categoryName={categoryTranslation?.name || categoryTitle}
-          categoryDescription={categoryTranslation?.metaDescription}
+          categoryDescription={
+            resolvedCategoryDescription || categoryTranslation?.metaDescription || undefined
+          }
           totalPromocodes={totalPromocodesCount}
           uniqueStoreCount={uniqueStoreCount}
           uniqueBrandCount={uniqueBrandCount}
           t={t}
         />
+        <div className="page-shell pt-2">
+          <VerifiedBadge
+            verifiedAt={category.lastReviewedAt}
+            locale={locale}
+            label={t("lastReviewed")}
+          />
+        </div>
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
@@ -309,6 +332,7 @@ export default async function CategoryPage({
             locale={locale}
             title={t("faqTitle", { name: categoryTranslation?.name || categoryTitle })}
             description={t("faqDescription", { name: categoryTranslation?.name || categoryTitle })}
+            faqJson={categoryTranslation?.faqJson}
           />
         </div>
       </div>

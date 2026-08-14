@@ -7,6 +7,8 @@ interface EntityFAQSectionProps {
   locale: string;
   title: string;
   description?: string;
+  /** DB faq_json when present — otherwise template fallback */
+  faqJson?: unknown;
 }
 
 /**
@@ -18,8 +20,9 @@ export function EntityFAQSection({
   locale,
   title,
   description,
+  faqJson,
 }: EntityFAQSectionProps) {
-  const items = getEntityFaqItems(entityName, locale);
+  const items = getEntityFaqItems(entityName, locale, faqJson);
 
   return (
     <section className="section-rhythm" aria-labelledby={`${entityType}-faq-heading`}>

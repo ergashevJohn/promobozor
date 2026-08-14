@@ -62,6 +62,19 @@ describe("Metadata Generation", () => {
       );
       expect(desc).toContain("Shartlar: Min order 100k");
     });
+
+    it("prefers shortDescription over conditions", () => {
+      const desc = generatePromocodeDescription(
+        "Promo 2026",
+        "Store",
+        "20%",
+        "Long conditions text that should be ignored",
+        "en",
+        "Short snippet for SERP"
+      );
+      expect(desc).toContain("Short snippet for SERP");
+      expect(desc).not.toContain("Long conditions");
+    });
   });
 
   describe("Multi-language fallback", () => {

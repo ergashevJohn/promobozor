@@ -2,6 +2,7 @@ import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { HowToSection } from "@/components/public/HowToSection";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 import PromocodeDetail from "@/components/public/PromocodeDetail";
+import { VerifiedBadge } from "@/components/public/VerifiedBadge";
 import { isValidLanguage, type Language } from "@/lib/i18n";
 import {
   generateFullMetadata,
@@ -106,7 +107,8 @@ export async function generateMetadata({
         storeTranslation?.name || storeTitle,
         discountText || null,
         translation?.conditions || null,
-        locale
+        locale,
+        translation?.shortDescription || null
       );
 
     const url = getEntityPath(locale as RouteLocale, "promocode", slug);
@@ -314,6 +316,10 @@ export default async function PromocodeDetailPage({
                 exploreKicker: tPromocode("exploreKicker"),
                 exploreDescription: tPromocode("exploreDescription"),
                 relatedDealsKicker: tPromocode("relatedDealsKicker"),
+                editorVerdict: tPromocode("editorVerdict"),
+                lastVerified: tPromocode("lastVerified"),
+                shortDescription: tPromocode("shortDescription"),
+                minOrder: tPromocode("minOrder"),
               },
               common: {
                 featured: tCommon("featured"),
@@ -349,6 +355,13 @@ export default async function PromocodeDetailPage({
               },
             }}
           />
+          <div className="page-shell pb-4">
+            <VerifiedBadge
+              verifiedAt={promocode.lastVerifiedAt}
+              locale={locale}
+              label={tPromocode("lastVerified")}
+            />
+          </div>
           {isActiveOffer ? (
             <div className="page-shell pb-12">
               <HowToSection
@@ -358,6 +371,7 @@ export default async function PromocodeDetailPage({
                 imageUrl={promocode.imageUrl || promocode.store?.logoUrl || "/icon.png"}
                 baseUrl={getBaseUrl()}
                 title={tPromocode("howToTitle")}
+                howToHtml={promocodeData.promocodeTranslation?.howToHtml}
               />
             </div>
           ) : null}

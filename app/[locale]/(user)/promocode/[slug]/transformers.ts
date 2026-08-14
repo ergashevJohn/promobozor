@@ -27,6 +27,8 @@ export type PromocodeDataRow = {
     /** Date from DB or ISO string after cache serialization */
     startsAt: Date | string | null;
     expiresAt: Date | string | null;
+    lastVerifiedAt: Date | string | null;
+    minOrderAmount: number | null;
     createdAt: Date | string | null;
     updatedAt: Date | string | null;
   };
@@ -62,7 +64,11 @@ export type PromocodeDataRow = {
     language: string;
     title: string;
     slug: string;
+    shortDescription: string | null;
     conditions: string | null;
+    howToHtml: string | null;
+    faqJson: unknown;
+    editorVerdict: string | null;
   } | null;
 };
 
@@ -84,11 +90,17 @@ export type TransformedPromocode = {
   dislikesCount: number;
   startsAt?: string | null;
   expiresAt: string | null;
+  lastVerifiedAt?: string | null;
+  minOrderAmount?: number | null;
   translations: Array<{
     language: string;
     title: string;
     slug: string;
+    shortDescription?: string | null;
     conditions?: string | null;
+    howToHtml?: string | null;
+    editorVerdict?: string | null;
+    faqJson?: unknown;
   }>;
   store: {
     id?: string;
@@ -146,13 +158,19 @@ export function transformPromocodeData(data: PromocodeDataRow): TransformedPromo
     dislikesCount: data.promocode.dislikesCount,
     startsAt: toIsoString(data.promocode.startsAt),
     expiresAt: toIsoString(data.promocode.expiresAt),
+    lastVerifiedAt: toIsoString(data.promocode.lastVerifiedAt),
+    minOrderAmount: data.promocode.minOrderAmount,
     translations: data.promocodeTranslation
       ? [
           {
             language: data.promocodeTranslation.language,
             title: data.promocodeTranslation.title,
             slug: data.promocodeTranslation.slug,
+            shortDescription: data.promocodeTranslation.shortDescription,
             conditions: data.promocodeTranslation.conditions,
+            howToHtml: data.promocodeTranslation.howToHtml,
+            editorVerdict: data.promocodeTranslation.editorVerdict,
+            faqJson: data.promocodeTranslation.faqJson,
           },
         ]
       : [],
@@ -231,13 +249,19 @@ export function transformRelatedPromocodes(data: PromocodeDataRow[]): Transforme
       dislikesCount: row.promocode.dislikesCount,
       startsAt: toIsoString(row.promocode.startsAt),
       expiresAt: toIsoString(row.promocode.expiresAt),
+      lastVerifiedAt: toIsoString(row.promocode.lastVerifiedAt),
+      minOrderAmount: row.promocode.minOrderAmount,
       translations: row.promocodeTranslation
         ? [
             {
               language: row.promocodeTranslation.language,
               title: row.promocodeTranslation.title,
               slug: row.promocodeTranslation.slug,
+              shortDescription: row.promocodeTranslation.shortDescription,
               conditions: row.promocodeTranslation.conditions,
+              howToHtml: row.promocodeTranslation.howToHtml,
+              editorVerdict: row.promocodeTranslation.editorVerdict,
+              faqJson: row.promocodeTranslation.faqJson,
             },
           ]
         : [],

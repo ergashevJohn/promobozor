@@ -3,14 +3,18 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
-import BrandHero from "@/components/public/brand/BrandHero";
-import BrandRelatedStores from "@/components/public/brand/BrandRelatedStores";
-import BrandRelatedCategories from "@/components/public/brand/BrandRelatedCategories";
-import BrandPromocodes from "@/components/public/brand/BrandPromocodes";
+import { NotFoundUI } from "@/components/public/NotFoundUI";
 import StructuredData from "@/components/public/StructuredData";
+import { VerifiedBadge } from "@/components/public/VerifiedBadge";
+import BrandHero from "@/components/public/brand/BrandHero";
+import BrandPromocodes from "@/components/public/brand/BrandPromocodes";
+import BrandRelatedCategories from "@/components/public/brand/BrandRelatedCategories";
+import BrandRelatedStores from "@/components/public/brand/BrandRelatedStores";
 import type { Promocode } from "@/components/public/types";
 import { Locale } from "@/i18n/routing";
+import { countUnique } from "@/lib/array-utils";
 import { getCachedBrandPromocodeCounts } from "@/lib/cache/promocode-counts";
+import { resolveEntityBody, stripHtml } from "@/lib/content-seo";
 import { getHubEditorial } from "@/lib/hub-editorial";
 import { isValidLanguage } from "@/lib/i18n";
 import { getApprovedImageUrl } from "@/lib/media";
@@ -21,19 +25,17 @@ import {
   generateOgImageUrl,
   getBaseUrl,
 } from "@/lib/metadata";
+import { getCachedBrandPageData } from "@/lib/queries/brand-page";
 import {
   getBrandLanguageAlternates,
   getBrandStaticParams,
   getCachedBrandBySlug,
 } from "@/lib/queries/entities";
-import { getCachedBrandPageData } from "@/lib/queries/brand-page";
-import { countUnique } from "@/lib/array-utils";
+import { isGone } from "@/lib/redirects";
+import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
 import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
-import { isGone } from "@/lib/redirects";
-import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
-import { NotFoundUI } from "@/components/public/NotFoundUI";
 
 export async function generateStaticParams() {
   return getBrandStaticParams();
@@ -71,10 +73,13 @@ export async function generateMetadata({
 
     const translation = brandData.translation;
     const hubEditorial = getHubEditorial(slug, locale, "brand");
-    const hubDescription =
-      translation?.description && translation.description.trim().length >= 80
-        ? translation.description
-        : hubEditorial?.description || translation?.description || null;
+    const hubDescription = resolveEntityBody({
+      bodyHtml: translation?.bodyHtml,
+      shortSummary: translation?.shortSummary,
+      description: translation?.description,
+      hubDescription: hubEditorial?.description,
+    });
+    const metaBodyPlain = hubDescription ? stripHtml(hubDescription) : null;
 
     // Get promocode counts from cache (5-min cache for performance)
     const counts = await getCachedBrandPromocodeCounts(brandData.brand.id);
@@ -88,7 +93,7 @@ export async function generateMetadata({
       translation?.metaDescription ||
       generateBrandDescription(
         translation?.name || brandTitle,
-        hubDescription,
+        metaBodyPlain || translation?.shortSummary || null,
         totalPromocodes,
         locale
       );
@@ -151,6 +156,7 @@ export default async function BrandPage({
     imageUrl: string | null;
     websiteUrl: string | null;
     isActive: boolean;
+    lastReviewedAt: Date | null;
   };
   let brandTranslation: {
     id: string;
@@ -159,6 +165,10 @@ export default async function BrandPage({
     name: string;
     slug: string;
     description: string | null;
+    shortSummary: string | null;
+    bodyHtml: string | null;
+    howToHtml: string | null;
+    faqJson: unknown;
     metaTitle: string | null;
     metaDescription: string | null;
   };
@@ -176,9 +186,12 @@ export default async function BrandPage({
 
     const hubEditorial = getHubEditorial(slug, locale, "brand");
     resolvedBrandDescription =
-      brandTranslation?.description && brandTranslation.description.trim().length >= 80
-        ? brandTranslation.description
-        : hubEditorial?.description || brandTranslation?.description || undefined;
+      resolveEntityBody({
+        bodyHtml: brandTranslation?.bodyHtml,
+        shortSummary: brandTranslation?.shortSummary,
+        description: brandTranslation?.description,
+        hubDescription: hubEditorial?.description,
+      }) || undefined;
 
     // Fetch promocodes and stats for this brand
     const pageData = await getCachedBrandPageData(brand.id, locale as Locale);
@@ -306,6 +319,13 @@ export default async function BrandPage({
           tCommon={tCommon}
           slug={slug}
         />
+        <div className="page-shell pt-2">
+          <VerifiedBadge
+            verifiedAt={brand.lastReviewedAt}
+            locale={locale}
+            label={t("lastReviewed")}
+          />
+        </div>
 
         <div className="page-shell py-12">
           <section className="mb-10 grid gap-4 lg:grid-cols-2">
@@ -361,6 +381,7 @@ export default async function BrandPage({
             locale={locale}
             title={t("faqTitle", { name: brandTranslation?.name || brandTitle })}
             description={t("faqDescription", { name: brandTranslation?.name || brandTitle })}
+            faqJson={brandTranslation?.faqJson}
           />
         </div>
       </div>

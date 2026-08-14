@@ -27,7 +27,10 @@
     "seed:prod": "dotenv -e .env.production -- tsx db/seed.ts",
     "seo:verify": "node --import tsx scripts/seo/verify-indexability.ts",
     "seo:inventory-gap": "tsx scripts/seo/inventory-gap-report.ts",
+    "seo:gap-report": "tsx scripts/seo/inventory-gap-report.ts",
     "seo:upsert-hubs": "tsx scripts/seo/upsert-hub-editorial.ts",
+    "seo:upsert-hub": "tsx scripts/seo/upsert-hub-editorial.ts",
+    "seo:enrich-tier1": "tsx scripts/seo/enrich-tier1-content.ts",
     "prepare": "husky",
     "test:e2e": "playwright test",
     "doctor": "npx react-doctor@latest"

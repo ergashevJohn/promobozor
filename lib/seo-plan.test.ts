@@ -21,11 +21,24 @@ describe("entity-faq", () => {
     expect(items[0]?.question).toContain("Click");
   });
 
+  it("prefers DB faqJson over templates", () => {
+    const items = getEntityFaqItems("Uzum", "uz", [{ question: "Custom Q?", answer: "Custom A." }]);
+    expect(items).toEqual([{ question: "Custom Q?", answer: "Custom A." }]);
+  });
+
   it("returns how-to steps for promocode pages", () => {
     const steps = getHowToSteps("10% chegirma", "Uzum", "en");
     expect(steps).toHaveLength(4);
     expect(steps[0]?.text).toContain("10% chegirma");
     expect(steps[2]?.text).toContain("Uzum");
+  });
+
+  it("uses howToHtml when provided", () => {
+    const steps = getHowToSteps("Sale", "Uzum", "en", {
+      howToHtml: "<ol><li>Copy code</li><li>Paste at checkout</li></ol>",
+    });
+    expect(steps).toHaveLength(2);
+    expect(steps[0]?.text).toContain("Copy code");
   });
 });
 
