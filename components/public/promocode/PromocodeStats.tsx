@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ShareNetwork, ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
+import { ShareNetwork, ThumbsDown, ThumbsUp } from "@phosphor-icons/react/dist/ssr";
 import { usePromocode } from "../PromocodeContext";
 
 export function PromocodeStats() {

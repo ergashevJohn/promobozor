@@ -1,6 +1,7 @@
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { CollectionPageSchema } from "@/components/public/CollectionPageSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
+import { StoresDirectoryGrid } from "@/components/public/StoresDirectoryGrid";
 import StoresPageClient from "@/components/public/StoresPageClient";
 import { db, promocodes, stores, storeTranslations } from "@/lib/db";
 import { isValidLanguage } from "@/lib/i18n";
@@ -128,15 +129,33 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
   }
 
   // Prepare items for ItemList schema (top 20 stores)
-  const schemaItems = storesData
-    .filter((row) => row.translation?.slug)
-    .slice(0, 20)
-    .map((row) => ({
-      name: row.translation?.name || t("title"),
-      url: `/store/${row.translation?.slug}`,
-      image: row.store.logoUrl || undefined,
-      description: row.translation?.description || undefined,
-    }));
+  const storesWithSlug = storesData.filter((row) => row.translation?.slug);
+  const directoryStores = storesWithSlug.map((row) => {
+    const name = row.translation?.name || t("title");
+    const slug = row.translation?.slug || row.store.id;
+    const description = row.translation?.description || "";
+    return {
+      id: row.store.id,
+      name,
+      slug,
+      logoUrl: row.store.logoUrl,
+      promocodesCount: row.promocodesCount || 0,
+      searchText: `${name} ${description}`.toLowerCase(),
+    };
+  });
+  const schemaItems = directoryStores.slice(0, 20).map((store) => ({
+    name: store.name,
+    url: `/store/${store.slug}`,
+    image: store.logoUrl || undefined,
+    description: undefined as string | undefined,
+  }));
+
+  const gridTranslations = {
+    promocodes: t("promocodes"),
+    viewOffers: t("viewOffers"),
+    altStoreLogo: tCommon("altStoreLogo"),
+    viewStorePromocodesAria: t.raw("viewStorePromocodesAria") as string,
+  };
 
   return (
     <>
@@ -151,7 +170,7 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
         name={t("allStores")}
         description={t("allStoresDescription")}
         url="/stores"
-        itemCount={storesData.length}
+        itemCount={directoryStores.length}
         items={schemaItems}
         lang={locale}
         baseUrl={getBaseUrl()}
@@ -164,26 +183,34 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
         />
       )}
       <StoresPageClient
-        storesData={storesData.filter((row) => row.translation?.slug)}
+        stores={directoryStores}
         translations={{
           allStores: t("allStores"),
           allStoresDescription: t("allStoresDescription"),
           findStore: t("findStore"),
           promocodes: t("promocodes"),
-          view: tCommon("view"),
           viewOffers: t("viewOffers"),
           noStoresFound: t("noStoresFound"),
           noStoresDescription: t("noStoresDescription"),
           searchHint: t("searchHint"),
-          storeTitle: t("title"),
           directoryKicker: t("directoryKicker"),
           directoryBadge: t("directoryBadge"),
           curatedRoutesCount: t("curatedRoutesCount", {
-            count: storesData.filter((row) => row.translation?.slug).length,
+            count: directoryStores.length,
           }),
           viewStorePromocodesAria: t.raw("viewStorePromocodesAria") as string,
+          altStoreLogo: tCommon("altStoreLogo"),
         }}
-      />
+      >
+        {directoryStores.length > 0 ? (
+          <StoresDirectoryGrid stores={directoryStores} translations={gridTranslations} />
+        ) : (
+          <div className="empty-state-card">
+            <h2 className="text-foreground mb-2 text-xl font-semibold">{t("noStoresFound")}</h2>
+            <p className="text-muted-foreground mt-2 text-sm">{t("noStoresDescription")}</p>
+          </div>
+        )}
+      </StoresPageClient>
     </>
   );
 }

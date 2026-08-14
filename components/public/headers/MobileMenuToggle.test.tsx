@@ -34,7 +34,7 @@ describe("MobileMenuToggle", () => {
 
   function renderMenu() {
     return render(
-      <MobileMenuToggle>
+      <MobileMenuToggle links={[{ href: "/stores", label: "Stores" }]} label="mobileNav">
         <Link href="/stores">Stores</Link>
       </MobileMenuToggle>
     );
@@ -171,7 +171,7 @@ describe("MobileMenuToggle", () => {
 
     mockPathname = "/stores";
     rerender(
-      <MobileMenuToggle>
+      <MobileMenuToggle links={[{ href: "/stores", label: "Stores" }]} label="mobileNav">
         <Link href="/stores">Stores</Link>
       </MobileMenuToggle>
     );

@@ -1,90 +1,49 @@
 "use client";
 
+import {
+  StoresDirectoryGrid,
+  type StoresDirectoryItem,
+} from "@/components/public/StoresDirectoryGrid";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
-import { getApprovedImageUrl } from "@/lib/media";
-import {
-  ArrowRight,
-  MagnifyingGlass,
-  SmileySad,
-  Storefront as StoreIcon,
-} from "@phosphor-icons/react";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { MagnifyingGlass, SmileySad } from "@phosphor-icons/react/dist/ssr";
+import { useMemo, useState, type ReactNode } from "react";
 
-type Store = {
-  id: string;
-  logoUrl: string | null;
-  websiteUrl: string | null;
-  priority: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type StoreTranslation = {
-  id: string;
-  storeId: string;
-  language: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  metaTitle: string | null;
-  metaDescription: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-} | null;
-
-type StoreData = {
-  store: Store;
-  translation: StoreTranslation;
-  promocodesCount: number;
-};
-
-interface StoresPageClientProps {
-  storesData: StoreData[];
+type StoresPageClientProps = {
+  stores: StoresDirectoryItem[];
   translations: {
     allStores: string;
     allStoresDescription: string;
     findStore: string;
     promocodes: string;
-    view: string;
     viewOffers: string;
     noStoresFound: string;
     searchHint: string;
-    storeTitle: string;
     noStoresDescription: string;
     directoryKicker: string;
     directoryBadge: string;
     curatedRoutesCount: string;
     viewStorePromocodesAria: string;
+    altStoreLogo: string;
   };
-}
+  /** SSR store grid for the default (unfiltered) view */
+  children: ReactNode;
+};
 
-function formatNamedMessage(template: string, values: Record<string, string | number>) {
-  return Object.entries(values).reduce(
-    (result, [key, value]) => result.replaceAll(`{${key}}`, String(value)),
-    template
-  );
-}
-
-export default function StoresPageClient({ storesData, translations: t }: StoresPageClientProps) {
+export default function StoresPageClient({
+  stores,
+  translations: t,
+  children,
+}: StoresPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const tCommon = useTranslations("common");
 
   const filteredStores = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return storesData;
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return null;
     }
-
-    const query = searchQuery.toLowerCase();
-    return storesData.filter((row) => {
-      const storeName = row.translation?.name?.toLowerCase() || "";
-      const storeDescription = row.translation?.description?.toLowerCase() || "";
-      return storeName.includes(query) || storeDescription.includes(query);
-    });
-  }, [storesData, searchQuery]);
+    return stores.filter((store) => store.searchText.includes(query));
+  }, [stores, searchQuery]);
 
   return (
     <div>
@@ -127,66 +86,18 @@ export default function StoresPageClient({ storesData, translations: t }: Stores
       </div>
 
       <div className="page-shell pb-12">
-        {filteredStores.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredStores.map((row, index) => {
-              const translation = row.translation;
-              const store = row.store;
-              const promocodesCount = row.promocodesCount || 0;
-              const storeName = translation?.name || t.storeTitle;
-              const storeLogoUrl = getApprovedImageUrl(store.logoUrl);
-              const href = `/store/${translation?.slug || store.id}`;
-
-              return (
-                <Link
-                  key={store.id}
-                  href={href}
-                  className="directory-card group"
-                  aria-label={formatNamedMessage(t.viewStorePromocodesAria, { name: storeName })}
-                >
-                  <div className="mb-4 flex items-center gap-4">
-                    <div className="bg-muted flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl">
-                      {storeLogoUrl ? (
-                        <Image
-                          src={storeLogoUrl}
-                          alt={
-                            translation?.name
-                              ? `${translation.name} - ${tCommon("altStoreLogo")}`
-                              : tCommon("altStoreLogoWithSlug", {
-                                  slug: translation?.slug || store.id,
-                                })
-                          }
-                          width={56}
-                          height={56}
-                          className="h-full w-full object-contain"
-                          sizes="56px"
-                          priority={index < 3}
-                          loading={index < 3 ? undefined : "lazy"}
-                        />
-                      ) : (
-                        <StoreIcon className="text-foreground h-7 w-7" />
-                      )}
-                    </div>
-
-                    <div className="min-w-0">
-                      <h2 className="text-foreground truncate text-xl font-semibold">
-                        {storeName}
-                      </h2>
-                      <p className="text-muted-foreground mt-1 text-sm">
-                        <span className="text-foreground font-semibold">{promocodesCount}</span>{" "}
-                        {t.promocodes}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="text-foreground inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
-                    <span>{t.viewOffers}</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+        {filteredStores === null ? (
+          children
+        ) : filteredStores.length > 0 ? (
+          <StoresDirectoryGrid
+            stores={filteredStores}
+            translations={{
+              promocodes: t.promocodes,
+              viewOffers: t.viewOffers,
+              altStoreLogo: t.altStoreLogo,
+              viewStorePromocodesAria: t.viewStorePromocodesAria,
+            }}
+          />
         ) : (
           <div className="empty-state-card">
             <SmileySad

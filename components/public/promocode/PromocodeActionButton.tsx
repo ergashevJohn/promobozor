@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Copy, ArrowSquareOut } from "@phosphor-icons/react";
+import { Copy, ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
 import { usePromocode, usePromocodeDisplay } from "../PromocodeContext";
 
 export function PromocodeActionButton() {

@@ -5,6 +5,7 @@ import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
+import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
 import StoreHero from "@/components/public/store/StoreHero";
 import StoreRelatedBrands from "@/components/public/store/StoreRelatedBrands";
 import StoreRelatedCategories from "@/components/public/store/StoreRelatedCategories";
@@ -104,6 +105,40 @@ function StorePageContent({
   const storeTitle = t("title");
   const promocodeTitle = tPromocode("title");
   const schemaPromocodes = allPromocodes.slice(0, 20);
+  const listTranslations = {
+    noPromocodes: tEmpty("noPromocodes"),
+    noPromocodesDescription: tEmpty("noPromocodesDescription"),
+    card: {
+      featured: tCard("featured"),
+      verified: tCard("verified"),
+      fresh: tCard("fresh"),
+      popular: tCard("popular"),
+      endingSoon: tPromocode("expiresSoon"),
+      unlimited: tCard("unlimited"),
+      unknownStore: tCard("unknownStore"),
+      storeTitle,
+      promocodeTitle,
+      activateLink: tCard("activateLink"),
+      details: tCard("details"),
+      viewDetails: tCard("viewDetails"),
+      storeOffer: tCard("storeOffer"),
+      brandOffer: tCard("brandOffer"),
+      directDeal: tCard("directDeal"),
+      codeReady: tCard("codeReady"),
+      dealRoute: tCard("dealRoute"),
+      promoCodeLabel: tCard("promoCodeLabel"),
+      copy: tCard("copy"),
+      copied: tCard("copied"),
+      getDeal: tCard("getDeal"),
+      like: tCard("like"),
+      dislike: tCard("dislike"),
+      expired: tCard("expired"),
+      disabled: tCard("disabled"),
+      conditionsLabel: tCard("conditionsLabel"),
+      codeCopied: tPromocode("codeCopied"),
+      copyError: tPromocode("copyError"),
+    },
+  };
 
   return (
     <>
@@ -218,41 +253,13 @@ function StorePageContent({
                 filters={{
                   storeId: store.id,
                 }}
-                translations={{
-                  noPromocodes: tEmpty("noPromocodes"),
-                  noPromocodesDescription: tEmpty("noPromocodesDescription"),
-                  card: {
-                    featured: tCard("featured"),
-                    verified: tCard("verified"),
-                    fresh: tCard("fresh"),
-                    popular: tCard("popular"),
-                    endingSoon: tPromocode("expiresSoon"),
-                    unlimited: tCard("unlimited"),
-                    unknownStore: tCard("unknownStore"),
-                    storeTitle,
-                    promocodeTitle,
-                    activateLink: tCard("activateLink"),
-                    details: tCard("details"),
-                    viewDetails: tCard("viewDetails"),
-                    storeOffer: tCard("storeOffer"),
-                    brandOffer: tCard("brandOffer"),
-                    directDeal: tCard("directDeal"),
-                    codeReady: tCard("codeReady"),
-                    dealRoute: tCard("dealRoute"),
-                    promoCodeLabel: tCard("promoCodeLabel"),
-                    copy: tCard("copy"),
-                    copied: tCard("copied"),
-                    getDeal: tCard("getDeal"),
-                    like: tCard("like"),
-                    dislike: tCard("dislike"),
-                    expired: tCard("expired"),
-                    disabled: tCard("disabled"),
-                    conditionsLabel: tCard("conditionsLabel"),
-                    codeCopied: tPromocode("codeCopied"),
-                    copyError: tPromocode("copyError"),
-                  },
-                }}
-              />
+                translations={listTranslations}
+              >
+                <PromocodeListOptimized
+                  promocodes={allPromocodes}
+                  translations={listTranslations}
+                />
+              </PromocodeListWithPagination>
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
                 <MagnifyingGlass

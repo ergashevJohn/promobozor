@@ -1,9 +1,11 @@
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { CollectionPageSchema } from "@/components/public/CollectionPageSchema";
+import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
 import PromocodesPageClient, {
   type PromocodesInitialSectionData,
   type PromocodesPageTranslations,
 } from "@/components/public/PromocodesPageClient";
+import ServerPagination from "@/components/public/ServerPagination";
 import type { Promocode } from "@/components/public/types";
 import {
   brands,
@@ -268,7 +270,43 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
         categories={filtersData.categoriesList}
         brands={filtersData.brandsList}
         translations={translations}
-      />
+      >
+        <section>
+          <div className="mb-8 flex flex-wrap items-center gap-3">
+            <div className="rounded-full bg-[color:var(--secondary)] px-4 py-2 text-sm font-semibold text-[color:var(--foreground)]">
+              {initialSectionData.totalPromocodesCount} {translations.offersFound}
+            </div>
+            {initialSectionData.totalPages > 1 && (
+              <div className="bg-card rounded-full border border-[color:var(--border)] px-4 py-2 text-sm text-[color:var(--muted-foreground)]">
+                {translations.page} {initialSectionData.currentPage}/{initialSectionData.totalPages}
+              </div>
+            )}
+          </div>
+
+          <PromocodeListOptimized
+            promocodes={initialSectionData.promocodesList}
+            translations={{
+              noPromocodes: translations.noPromocodes,
+              noPromocodesDescription: translations.noPromocodesDescription,
+              emptyHint: translations.emptyHint,
+              card: translations.card,
+            }}
+          />
+
+          <ServerPagination
+            currentPage={initialSectionData.currentPage}
+            totalPages={initialSectionData.totalPages}
+            baseUrl="/promocodes"
+            searchParams={{}}
+            translations={{
+              ariaLabel: translations.pagination,
+              previous: translations.previous,
+              next: translations.next,
+              page: translations.page,
+            }}
+          />
+        </section>
+      </PromocodesPageClient>
     </>
   );
 }

@@ -110,8 +110,9 @@ export function PromocodeListOptimized({
         }}
       />
 
-      {/* All cards are server components - no hydration per card */}
-      <div className="stagger-reveal grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr]">
+      {/* All cards are server components - no hydration per card.
+          Avoid stagger-reveal opacity:0 so LCP is not delayed. */}
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr]">
         {visiblePromocodes.map((promocode, index) => {
           const hiddenOnMobile = mobileMaxItems !== undefined && index >= mobileMaxItems;
           return (

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { sanitizeSearchQuery } from "@/lib/search";
-import { CircleNotch, MagnifyingGlass, X } from "@phosphor-icons/react";
+import { CircleNotch, MagnifyingGlass, X } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import { useCallback, useId, useMemo, useState, useTransition } from "react";
 

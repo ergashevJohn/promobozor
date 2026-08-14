@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "@phosphor-icons/react";
+import { Moon, Sun } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
 
 export function ThemeToggle() {
   const tCommon = useTranslations("common");
-  const { theme, resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -16,12 +16,7 @@ export function ThemeToggle() {
   );
 
   const toggleTheme = () => {
-    if (theme === "system") {
-      const isDarkSystem = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setTheme(isDarkSystem ? "light" : "dark");
-    } else {
-      setTheme(theme === "dark" ? "light" : "dark");
-    }
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
   if (!mounted) {

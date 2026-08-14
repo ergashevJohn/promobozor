@@ -95,7 +95,7 @@ export default function PromocodeList({
   const visiblePromocodes = maxItems ? promocodes.slice(0, maxItems) : promocodes;
 
   return (
-    <div className="stagger-reveal grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr]">
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-[1.15fr_0.95fr_1.05fr]">
       {visiblePromocodes.map((promocode, index) => {
         const hiddenOnMobile = mobileMaxItems !== undefined && index >= mobileMaxItems;
         return (

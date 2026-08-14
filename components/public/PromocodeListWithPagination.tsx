@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import LoadMore from "./LoadMore";
 import PromocodeList from "./PromocodeList";
@@ -58,6 +58,8 @@ interface PromocodeListWithPaginationProps {
       copyError: string;
     };
   };
+  /** SSR initial list (PromocodeListOptimized). Extra pages append client cards. */
+  children?: ReactNode;
 }
 
 export default function PromocodeListWithPagination({
@@ -66,6 +68,7 @@ export default function PromocodeListWithPagination({
   limit = 20,
   filters = EMPTY_FILTERS,
   translations,
+  children,
 }: PromocodeListWithPaginationProps) {
   const tCommon = useTranslations("common");
   const [additionalPromocodes, setAdditionalPromocodes] = useState<Promocode[]>([]);
@@ -85,10 +88,7 @@ export default function PromocodeListWithPagination({
     setAdditionalPromocodes([]);
   }
 
-  const promocodes = useMemo(
-    () => [...initialPromocodes, ...additionalPromocodes],
-    [initialPromocodes, additionalPromocodes]
-  );
+  const visibleCount = initialPromocodes.length + additionalPromocodes.length;
 
   const handleLoadMore = (newPromocodes: Promocode[]) => {
     setAdditionalPromocodes((prev) => {
@@ -101,23 +101,28 @@ export default function PromocodeListWithPagination({
     });
   };
 
-  const hasMore = promocodes.length < totalCount;
+  const hasMore = visibleCount < totalCount;
 
   return (
     <>
       {totalCount > 0 && (
         <div className="bg-card/95 mb-6 flex items-center justify-between gap-4 rounded-[22px] border border-[color:var(--border)] px-4 py-3 shadow-[0_18px_40px_-30px_rgba(17,24,39,0.35)]">
           <div className="text-sm text-[color:var(--muted-foreground)]">
-            <span className="text-foreground font-semibold">{promocodes.length}</span> /{" "}
-            {totalCount}
+            <span className="text-foreground font-semibold">{visibleCount}</span> / {totalCount}
           </div>
           <div className="brand-kicker !mb-0">{tCommon("listKicker")}</div>
         </div>
       )}
-      <PromocodeList promocodes={promocodes} translations={translations} />
+      {children ?? <PromocodeList promocodes={initialPromocodes} translations={translations} />}
+      {additionalPromocodes.length > 0 && (
+        <div className="mt-8">
+          <PromocodeList promocodes={additionalPromocodes} translations={translations} />
+        </div>
+      )}
       {hasMore && (
         <LoadMore
-          initialOffset={promocodes.length}
+          key={visibleCount}
+          initialOffset={visibleCount}
           limit={limit}
           filters={filters}
           onLoadMore={handleLoadMore}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocaleSwitch } from "@/lib/use-locale-switch";
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { useLocale } from "next-intl";
 import {
   useCallback,

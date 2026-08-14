@@ -1,6 +1,7 @@
 "use client";
 
 import { Link, usePathname } from "@/i18n/navigation";
+import type { Icon } from "@phosphor-icons/react";
 import {
   ArrowRight,
   Article,
@@ -9,8 +10,7 @@ import {
   SquaresFour,
   Storefront,
   Ticket,
-  type Icon,
-} from "@phosphor-icons/react";
+} from "@phosphor-icons/react/dist/ssr";
 
 type NavLink = {
   href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/blog" | "/contact";

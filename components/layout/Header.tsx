@@ -1,6 +1,5 @@
 import { DesktopNavLinks } from "@/components/public/headers/DesktopNavLinks";
 import { MobileMenuToggle } from "@/components/public/headers/MobileMenuToggle";
-import { MobileNavLinks } from "@/components/public/headers/MobileNavLinks";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link } from "@/i18n/navigation";
@@ -31,7 +30,6 @@ export async function Header({ locale }: { locale: string }) {
               height={40}
               sizes="160px"
               className="hidden dark:block"
-              priority={true}
             />
             <Image
               src="/logo-black.png"
@@ -40,7 +38,8 @@ export async function Header({ locale }: { locale: string }) {
               height={40}
               sizes="160px"
               className="block dark:hidden"
-              priority={true}
+              // Only the default (light) logo competes for LCP bandwidth
+              priority
             />
           </Link>
 
@@ -49,9 +48,7 @@ export async function Header({ locale }: { locale: string }) {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
             <ThemeToggle />
-            <MobileMenuToggle>
-              <MobileNavLinks links={navLinks} label={t("mobileNav")} />
-            </MobileMenuToggle>
+            <MobileMenuToggle links={navLinks} label={t("mobileNav")} />
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { sanitizeSearchQuery } from "@/lib/search";
-import { CircleNotch } from "@phosphor-icons/react";
+import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import type { Promocode } from "./types";

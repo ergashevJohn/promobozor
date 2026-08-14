@@ -266,34 +266,6 @@
     color: var(--ink-foreground);
   }
 
-  .hero-copy > * {
-    animation: stagger-fade-up 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
-  }
-
-  .hero-copy > *:nth-child(1) {
-    animation-delay: 30ms;
-  }
-
-  .hero-copy > *:nth-child(2) {
-    animation-delay: 80ms;
-  }
-
-  .hero-copy > *:nth-child(3) {
-    animation-delay: 130ms;
-  }
-
-  .hero-copy > *:nth-child(4) {
-    animation-delay: 180ms;
-  }
-
-  .hero-copy > *:nth-child(5) {
-    animation-delay: 230ms;
-  }
-
-  .hero-copy > *:nth-child(6) {
-    animation-delay: 280ms;
-  }
-
   .brand-section-heading {
     @apply text-foreground text-3xl font-semibold tracking-[-0.035em] text-balance md:text-4xl;
   }
@@ -380,62 +352,12 @@
   .ease-premium {
     transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   }
-
-  .stagger-reveal > * {
-    animation: stagger-fade-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
-  }
-
-  .stagger-reveal > *:nth-child(1) {
-    animation-delay: 0ms;
-  }
-  .stagger-reveal > *:nth-child(2) {
-    animation-delay: 70ms;
-  }
-  .stagger-reveal > *:nth-child(3) {
-    animation-delay: 140ms;
-  }
-  .stagger-reveal > *:nth-child(4) {
-    animation-delay: 210ms;
-  }
-  .stagger-reveal > *:nth-child(5) {
-    animation-delay: 280ms;
-  }
-  .stagger-reveal > *:nth-child(6) {
-    animation-delay: 350ms;
-  }
-  .stagger-reveal > *:nth-child(7) {
-    animation-delay: 420ms;
-  }
-  .stagger-reveal > *:nth-child(8) {
-    animation-delay: 490ms;
-  }
 }
 
 @media (min-width: 48rem) {
   :root {
     --page-gutter: 1.5rem;
     --section-space: 5rem;
-  }
-}
-
-@keyframes stagger-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stagger-reveal > * {
-    animation: none;
-  }
-
-  .hero-copy > * {
-    animation: none;
   }
 }
 

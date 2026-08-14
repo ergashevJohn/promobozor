@@ -16,8 +16,8 @@ const brandSans = Manrope({
   subsets: ["latin", "cyrillic", "latin-ext"],
   display: "swap",
   adjustFontFallback: true,
-  // Avoid unused subset preload warnings (uz/ru pages don't use every subset)
-  preload: false,
+  // Preload primary UI font to improve text LCP on mobile
+  preload: true,
   variable: "--font-brand-sans",
 });
 
@@ -120,7 +120,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
           <NextIntlClientProvider locale={locale} messages={clientMessages}>

@@ -7,7 +7,7 @@ import ServerPagination from "@/components/public/ServerPagination";
 import type { Promocode } from "@/components/public/types";
 import { SkeletonCardGrid } from "@/components/ui/skeleton-card";
 import { useBrowserSearchParams } from "@/lib/hooks/use-browser-search-params";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 const ITEMS_PER_PAGE = 24;
 
@@ -111,6 +111,8 @@ type PromocodesPageClientProps = {
   categories: FilterItem[];
   brands: FilterItem[];
   translations: PromocodesPageTranslations;
+  /** SSR default list (PromocodeListOptimized + pagination) for unfiltered page 1 */
+  children: ReactNode;
 };
 
 function searchParamsToRecord(searchParams: URLSearchParams): Record<string, string> {
@@ -160,6 +162,7 @@ export default function PromocodesPageClient({
   categories,
   brands,
   translations,
+  children,
 }: PromocodesPageClientProps) {
   const searchParams = useBrowserSearchParams();
   const currentParams = useMemo(() => searchParamsToRecord(searchParams), [searchParams]);
@@ -170,7 +173,6 @@ export default function PromocodesPageClient({
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
-  // Derive sectionData from props when not fetching, use fetched data when fetching
   const sectionData: PromocodesInitialSectionData = shouldFetch
     ? (fetchedData ?? initialSectionData)
     : initialSectionData;
@@ -324,7 +326,7 @@ export default function PromocodesPageClient({
       <div className="page-shell py-5 md:py-8">
         {isLoading ? (
           <SkeletonCardGrid count={ITEMS_PER_PAGE} />
-        ) : (
+        ) : shouldFetch ? (
           <section>
             <div className="mb-8 flex flex-wrap items-center gap-3">
               <div className="rounded-full bg-[color:var(--secondary)] px-4 py-2 text-sm font-semibold text-[color:var(--foreground)]">
@@ -388,6 +390,8 @@ export default function PromocodesPageClient({
               }}
             />
           </section>
+        ) : (
+          children
         )}
       </div>
     </>

@@ -2,18 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import { usePathname } from "@/i18n/navigation";
-import { X } from "@phosphor-icons/react";
+import { X } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
+type NavLink = {
+  href: "/promocodes" | "/stores" | "/categories" | "/brands" | "/blog" | "/contact";
+  label: string;
+};
+
 type Props = {
-  children: React.ReactNode;
+  links: NavLink[];
+  label: string;
+  children?: React.ReactNode;
 };
 
 const emptySubscribe = () => () => {};
 
-export function MobileMenuToggle({ children }: Props) {
+const MobileNavLinksLazy = dynamic(
+  () =>
+    import("@/components/public/headers/MobileNavLinks").then((mod) => ({
+      default: mod.MobileNavLinks,
+    })),
+  { ssr: false, loading: () => null }
+);
+
+export function MobileMenuToggle({ links, label, children }: Props) {
   const tCommon = useTranslations("common");
   const [open, setOpen] = useState(false);
   const mounted = useSyncExternalStore(
@@ -159,7 +175,7 @@ export function MobileMenuToggle({ children }: Props) {
         </div>
 
         <div ref={panelRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
-          {children}
+          {children ?? (open ? <MobileNavLinksLazy links={links} label={label} /> : null)}
         </div>
       </dialog>,
       document.body
