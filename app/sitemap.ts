@@ -129,22 +129,23 @@ export default async function sitemap({
     },
   });
 
-  // Blog guides (static editorial content)
+  // Blog guides (static editorial content, per-locale slugs)
   try {
-    const { getBlogPosts } = await import("@/lib/blog");
+    const { getBlogLanguageAlternates, getBlogPosts } = await import("@/lib/blog");
     const posts = getBlogPosts();
     for (const post of posts) {
+      const alternates = getBlogLanguageAlternates(post);
       sitemapEntries.push({
-        url: `${baseUrl}/${locale}/blog/${post.slug}`,
+        url: `${baseUrl}${alternates[locale]}`,
         lastModified: new Date(post.updatedAt),
         changeFrequency: "weekly",
         priority: 0.65,
         alternates: {
           languages: {
-            "x-default": `${baseUrl}/uz/blog/${post.slug}`,
-            uz: `${baseUrl}/uz/blog/${post.slug}`,
-            ru: `${baseUrl}/ru/blog/${post.slug}`,
-            en: `${baseUrl}/en/blog/${post.slug}`,
+            "x-default": `${baseUrl}${alternates.uz}`,
+            uz: `${baseUrl}${alternates.uz}`,
+            ru: `${baseUrl}${alternates.ru}`,
+            en: `${baseUrl}${alternates.en}`,
           },
         },
       });

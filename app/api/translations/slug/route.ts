@@ -9,11 +9,12 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
+import { getTranslatedBlogSlug, type BlogLocale } from "@/lib/blog";
 import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-type EntityType = "promocode" | "store" | "brand" | "category";
+type EntityType = "promocode" | "store" | "brand" | "category" | "blog";
 type Language = "uz" | "ru" | "en";
 
 const MAX_SLUG_LENGTH = 200;
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Validate entity type
-  if (!["promocode", "store", "brand", "category"].includes(entityType)) {
+  if (!["promocode", "store", "brand", "category", "blog"].includes(entityType)) {
     return NextResponse.json({ error: "Invalid entity type" }, { status: 400 });
   }
 
@@ -63,6 +64,19 @@ export async function GET(request: NextRequest) {
   // Same language - return current slug
   if (currentLanguage === targetLanguage) {
     return NextResponse.json({ slug: currentSlug });
+  }
+
+  // Static editorial blog posts — resolve without DB
+  if (entityType === "blog") {
+    const targetSlug = getTranslatedBlogSlug(
+      currentSlug,
+      currentLanguage as BlogLocale,
+      targetLanguage as BlogLocale
+    );
+    if (!targetSlug) {
+      return NextResponse.json({ slug: null }, { status: 404 });
+    }
+    return NextResponse.json({ slug: targetSlug });
   }
 
   try {

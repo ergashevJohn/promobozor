@@ -1,11 +1,16 @@
 export type BlogLocale = "uz" | "ru" | "en";
 
+export const BLOG_LOCALES: readonly BlogLocale[] = ["uz", "ru", "en"] as const;
+
 export type BlogPost = {
-  slug: string;
+  /** Per-locale URL slugs (Latin transliteration for RU). */
+  slug: Record<BlogLocale, string>;
+  /** Former shared slug used before localization — kept for 301 redirects. */
+  legacySlug: string;
   publishedAt: string;
   updatedAt: string;
-  relatedStoreSlug?: string;
-  relatedBrandSlug?: string;
+  relatedStoreSlug?: Record<BlogLocale, string>;
+  relatedBrandSlug?: Record<BlogLocale, string>;
   title: Record<BlogLocale, string>;
   description: Record<BlogLocale, string>;
   body: Record<BlogLocale, string[]>;
@@ -17,10 +22,19 @@ export type BlogPost = {
  */
 export const blogPosts: BlogPost[] = [
   {
-    slug: "yandex-eats-promokod-2026",
+    slug: {
+      uz: "yandex-eats-promokod-2026",
+      ru: "promokod-yandex-eats-2026",
+      en: "yandex-eats-promocode-2026",
+    },
+    legacySlug: "yandex-eats-promokod-2026",
     publishedAt: "2026-08-01",
     updatedAt: "2026-08-11",
-    relatedBrandSlug: "yandex-eats",
+    relatedBrandSlug: {
+      uz: "yandex-eats",
+      ru: "yandex-eda",
+      en: "yandex-eats",
+    },
     title: {
       uz: "Yandex Eats promokod 2026: birinchi buyurtmaga qanday tejash mumkin",
       ru: "Промокод Yandex Eats 2026: как сэкономить на первом заказе",
@@ -53,10 +67,19 @@ export const blogPosts: BlogPost[] = [
     },
   },
   {
-    slug: "uzum-market-promokod-qollanma",
+    slug: {
+      uz: "uzum-market-promokod-qollanma",
+      ru: "promokod-uzum-market-instruktsiya",
+      en: "uzum-market-promocode-guide",
+    },
+    legacySlug: "uzum-market-promokod-qollanma",
     publishedAt: "2026-08-05",
     updatedAt: "2026-08-11",
-    relatedStoreSlug: "uzum-market",
+    relatedStoreSlug: {
+      uz: "uzum-market",
+      ru: "uzum-market",
+      en: "uzum-market",
+    },
     title: {
       uz: "Uzum Market promokod: checkout’da to‘g‘ri qo‘llash qo‘llanmasi",
       ru: "Промокод Uzum Market: инструкция по применению на checkout",
@@ -86,7 +109,12 @@ export const blogPosts: BlogPost[] = [
     },
   },
   {
-    slug: "promokod-qanday-ishlatiladi",
+    slug: {
+      uz: "promokod-qanday-ishlatiladi",
+      ru: "kak-ispolzovat-promokod",
+      en: "how-to-use-a-promocode",
+    },
+    legacySlug: "promokod-qanday-ishlatiladi",
     publishedAt: "2026-07-20",
     updatedAt: "2026-08-11",
     title: {
@@ -124,10 +152,19 @@ export const blogPosts: BlogPost[] = [
     },
   },
   {
-    slug: "click-va-payme-promokod",
+    slug: {
+      uz: "click-va-payme-promokod",
+      ru: "promokody-click-i-payme",
+      en: "click-and-payme-promocodes",
+    },
+    legacySlug: "click-va-payme-promokod",
     publishedAt: "2026-08-08",
     updatedAt: "2026-08-11",
-    relatedBrandSlug: "click",
+    relatedBrandSlug: {
+      uz: "click",
+      ru: "click",
+      en: "click",
+    },
     title: {
       uz: "Click va Payme promokod: to‘lov ilovalarida qanday tejash mumkin",
       ru: "Промокоды Click и Payme: как экономить в платёжных приложениях",
@@ -158,10 +195,103 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+function postMatchesSlug(post: BlogPost, slug: string): boolean {
+  if (post.legacySlug === slug) return true;
+  return BLOG_LOCALES.some((locale) => post.slug[locale] === slug);
+}
+
+/**
+ * Find a post by any locale slug or the shared legacy slug.
+ */
+export function findBlogPostByAnySlug(slug: string): BlogPost | undefined {
+  return blogPosts.find((post) => postMatchesSlug(post, slug));
+}
+
+/**
+ * Resolve a post for a locale. Prefer exact locale slug; fall back to any/legacy
+ * so callers can permanent-redirect to the canonical locale slug.
+ */
+export function resolveBlogPost(
+  slug: string,
+  locale: BlogLocale
+): { post: BlogPost; canonicalSlug: string; needsRedirect: boolean } | null {
+  const byLocale = blogPosts.find((post) => post.slug[locale] === slug);
+  if (byLocale) {
+    return { post: byLocale, canonicalSlug: byLocale.slug[locale], needsRedirect: false };
+  }
+
+  const byAny = findBlogPostByAnySlug(slug);
+  if (!byAny) return null;
+
+  const canonicalSlug = byAny.slug[locale];
+  return {
+    post: byAny,
+    canonicalSlug,
+    needsRedirect: canonicalSlug !== slug,
+  };
+}
+
+/** @deprecated Prefer resolveBlogPost(slug, locale) for locale-aware lookup. */
 export function getBlogPost(slug: string): BlogPost | undefined {
-  return blogPosts.find((post) => post.slug === slug);
+  return findBlogPostByAnySlug(slug);
 }
 
 export function getBlogPosts(): BlogPost[] {
   return [...blogPosts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
+export function getBlogSlug(post: BlogPost, locale: BlogLocale): string {
+  return post.slug[locale];
+}
+
+export function getBlogPath(locale: BlogLocale, slug: string): string {
+  return `/${locale}/blog/${slug}`;
+}
+
+export function getBlogInternalHref(slug: string): string {
+  return `/blog/${slug}`;
+}
+
+/** Absolute-path language alternates for metadata / sitemap (includes locale prefix). */
+export function getBlogLanguageAlternates(post: BlogPost): Record<BlogLocale, string> {
+  return {
+    uz: getBlogPath("uz", post.slug.uz),
+    ru: getBlogPath("ru", post.slug.ru),
+    en: getBlogPath("en", post.slug.en),
+  };
+}
+
+export function getTranslatedBlogSlug(
+  currentSlug: string,
+  _currentLocale: BlogLocale,
+  targetLocale: BlogLocale
+): string | null {
+  const post = findBlogPostByAnySlug(currentSlug);
+  if (!post) return null;
+  return post.slug[targetLocale];
+}
+
+export function getRelatedBlogPosts(post: BlogPost, limit = 3): BlogPost[] {
+  return getBlogPosts()
+    .filter((candidate) => candidate.legacySlug !== post.legacySlug)
+    .slice(0, limit);
+}
+
+export function estimateReadingMinutes(post: BlogPost, locale: BlogLocale): number {
+  const words = post.body[locale].join(" ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 180));
+}
+
+export function formatBlogDate(date: string, locale: BlogLocale): string {
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(date));
+}
+
+export function getBlogStaticParams(): Array<{ locale: BlogLocale; slug: string }> {
+  return getBlogPosts().flatMap((post) =>
+    BLOG_LOCALES.map((locale) => ({ locale, slug: post.slug[locale] }))
+  );
 }

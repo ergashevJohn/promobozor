@@ -1,4 +1,6 @@
 import { usePathname, useRouter } from "@/i18n/navigation";
+import type { BlogLocale } from "@/lib/blog";
+import { getBlogInternalHref, getTranslatedBlogSlug } from "@/lib/blog";
 import { getInternalEntityHref, resolveEntityTypeFromSegment } from "@/lib/routes";
 import type { EntityType } from "@/lib/routes";
 import { useCallback, useState } from "react";
@@ -23,10 +25,17 @@ function parseDetailPath(pathname: string): { entityType: EntityType; slug: stri
   return { entityType, slug };
 }
 
+function parseBlogDetailPath(pathname: string): string | null {
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length !== 2) return null;
+  if (segments[0] !== "blog" || !segments[1]) return null;
+  return segments[1];
+}
+
 /**
  * Custom hook for handling locale switching with correct slugs for detail pages
- * On detail pages (promocode, store, brand, category), it fetches the correct slug
- * for the target language before navigating.
+ * On detail pages (promocode, store, brand, category, blog), it resolves the
+ * correct slug for the target language before navigating.
  */
 export function useLocaleSwitch() {
   const router = useRouter();
@@ -41,6 +50,22 @@ export function useLocaleSwitch() {
 
       // Same locale - no action needed
       if (targetLocale === currentLocale) {
+        setIsLoading(false);
+        return;
+      }
+
+      const blogSlug = parseBlogDetailPath(pathname);
+      if (blogSlug) {
+        const translated = getTranslatedBlogSlug(
+          blogSlug,
+          currentLocale as BlogLocale,
+          targetLocale as BlogLocale
+        );
+        if (translated) {
+          router.replace(getBlogInternalHref(translated), { locale: targetLocale });
+        } else {
+          router.replace("/blog", { locale: targetLocale });
+        }
         setIsLoading(false);
         return;
       }

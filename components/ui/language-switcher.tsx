@@ -32,7 +32,7 @@ function ResponsiveLabel({ label, short }: { label: string; short: string }) {
 /**
  * Language switcher component
  * Custom listbox so mobile/desktop labels can use real CSS (native <option> cannot).
- * On detail pages (promocode, store, brand, category), it fetches the correct slug
+ * On detail pages (promocode, store, brand, category, blog), it fetches the correct slug
  * for the target language before navigating.
  */
 export function LanguageSwitcher() {

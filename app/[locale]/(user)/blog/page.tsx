@@ -50,7 +50,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
 
   const schemaItems = posts.map((post) => ({
     name: post.title[lang],
-    url: `/blog/${post.slug}`,
+    url: `/blog/${post.slug[lang]}`,
     description: post.description[lang],
   }));
 
@@ -175,7 +175,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
             </div>
             <ul className="stagger-reveal grid gap-5 md:grid-cols-2">
               {remainingPosts.map((post) => (
-                <li key={post.slug}>
+                <li key={post.legacySlug}>
                   <BlogPostCard
                     post={post}
                     locale={lang}

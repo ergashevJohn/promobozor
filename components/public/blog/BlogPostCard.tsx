@@ -1,5 +1,11 @@
 import { Link } from "@/i18n/navigation";
-import type { BlogLocale, BlogPost } from "@/lib/blog";
+import {
+  formatBlogDate,
+  getBlogInternalHref,
+  getBlogSlug,
+  type BlogLocale,
+  type BlogPost,
+} from "@/lib/blog";
 import { ArrowRight, BookOpen, Storefront, Tag } from "@phosphor-icons/react/dist/ssr";
 
 type BlogPostCardProps = {
@@ -25,14 +31,6 @@ function getPostTag(post: BlogPost, labels: BlogPostCardProps["tagLabels"]) {
   return { label: labels.guide, icon: BookOpen };
 }
 
-function formatBlogDate(date: string, locale: BlogLocale) {
-  return new Intl.DateTimeFormat(locale, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(date));
-}
-
 export function BlogPostCard({
   post,
   locale,
@@ -43,6 +41,7 @@ export function BlogPostCard({
 }: BlogPostCardProps) {
   const tag = getPostTag(post, tagLabels);
   const TagIcon = tag.icon;
+  const href = getBlogInternalHref(getBlogSlug(post, locale));
 
   if (featured) {
     return (
@@ -64,7 +63,7 @@ export function BlogPostCard({
               </div>
               <h2 className="text-foreground text-2xl font-semibold tracking-tight text-balance md:text-3xl lg:text-4xl">
                 <Link
-                  href={`/blog/${post.slug}`}
+                  href={href}
                   className="transition-colors hover:text-[color:var(--accent-red)]"
                 >
                   {post.title[locale]}
@@ -75,7 +74,7 @@ export function BlogPostCard({
               </p>
             </div>
             <Link
-              href={`/blog/${post.slug}`}
+              href={href}
               className="mt-8 inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               {readMoreLabel}
@@ -112,10 +111,7 @@ export function BlogPostCard({
         </time>
       </div>
       <h2 className="text-foreground text-xl font-semibold tracking-tight text-balance">
-        <Link
-          href={`/blog/${post.slug}`}
-          className="transition-colors group-hover:text-[color:var(--accent-red)]"
-        >
+        <Link href={href} className="transition-colors group-hover:text-[color:var(--accent-red)]">
           {post.title[locale]}
         </Link>
       </h2>
@@ -123,7 +119,7 @@ export function BlogPostCard({
         {post.description[locale]}
       </p>
       <Link
-        href={`/blog/${post.slug}`}
+        href={href}
         className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--accent-red)] transition-[gap] group-hover:gap-2.5"
       >
         {readMoreLabel}
