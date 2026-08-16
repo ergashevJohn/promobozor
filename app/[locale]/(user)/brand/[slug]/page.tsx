@@ -339,6 +339,7 @@ export default async function BrandPage({
             totalPromocodesCount={totalPromocodesCount}
             brandId={brand.id}
             brandName={brandTranslation?.name || brandTitle}
+            listKicker={tCommon("listKicker")}
             translations={{
               noPromocodes: tEmpty("noPromocodes"),
               noPromocodesDescription: tEmpty("noPromocodesDescription"),

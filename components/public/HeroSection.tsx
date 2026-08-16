@@ -1,4 +1,5 @@
-import SearchBar from "@/components/public/SearchBar";
+import HeroSearchForm from "@/components/public/HeroSearchForm";
+import { getListPath, type Locale as RouteLocale } from "@/lib/routes";
 import { ArrowsClockwise, CheckCircle, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
@@ -11,14 +12,10 @@ interface HeroSectionProps {
 
 const TRUST_ICONS = [CheckCircle, ArrowsClockwise, MagnifyingGlass] as const;
 
-export default async function HeroSection({
-  locale,
-  searchParams,
-  searchBarNavigationMode = "live",
-  searchBarTargetPath,
-}: HeroSectionProps) {
+export default async function HeroSection({ locale, searchParams }: HeroSectionProps) {
   const t = await getTranslations({ locale, namespace: "home" });
   const trustPills = (await t.raw("trustPills")) as string[];
+  const formAction = getListPath(locale as RouteLocale, "promocodes");
 
   return (
     <section
@@ -57,11 +54,7 @@ export default async function HeroSection({
           </p>
 
           <div className="mt-8 w-full max-w-xl md:mt-10">
-            <SearchBar
-              currentParams={searchParams}
-              navigationMode={searchBarNavigationMode}
-              targetPath={searchBarTargetPath}
-            />
+            <HeroSearchForm formAction={formAction} defaultValue={searchParams?.search} />
           </div>
 
           <ul className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-0 sm:gap-y-2">

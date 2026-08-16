@@ -1,5 +1,6 @@
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
+import ServerPagination from "@/components/public/ServerPagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
@@ -15,6 +16,8 @@ import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowRight, MagnifyingGlass, Package } from "@phosphor-icons/react/dist/ssr";
+
+const ITEMS_PER_PAGE = 24;
 
 // Cached function to fetch all categories
 const getAllCategories = (locale: string) =>
@@ -85,14 +88,20 @@ export async function generateMetadata({
 
 export const revalidate = 86400;
 
-export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function CategoriesPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { locale } = await params;
+  const { page: pageParam } = await searchParams;
 
   if (!isValidLanguage(locale)) {
     notFound();
   }
 
-  // Fetch all active categories with translations
   type CategoriesData = Array<{
     category: typeof categories.$inferSelect;
     translation: typeof categoryTranslations.$inferSelect | null;
@@ -104,13 +113,10 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
 
   try {
     categoriesData = await getAllCategories(locale);
-
-    // Get translations
     t = await getTranslations({ locale, namespace: "category" });
     tCommon = await getTranslations({ locale, namespace: "common" });
   } catch (error) {
     const errorObj = error instanceof Error ? error : new Error(String(error));
-    // Check if it's a database table missing error (build time)
     if (
       errorObj.message?.includes("does not exist") ||
       errorObj.message?.includes("relation") ||
@@ -126,19 +132,22 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
       console.error("Error fetching categories:", errorObj);
       console.error("Error details:", errorObj.message);
       console.error("Language:", locale);
-      // Don't call notFound() during build - return empty state instead
       categoriesData = [];
       t = await getTranslations({ locale, namespace: "category" });
       tCommon = await getTranslations({ locale, namespace: "common" });
     }
   }
 
-  // Prepare items for ItemList schema (all categories)
   const visibleCategories = categoriesData.filter((row) => row.translation?.slug);
   const totalPromocodes = visibleCategories.reduce(
     (sum, row) => sum + (row.promocodesCount || 0),
     0
   );
+  const totalPages = Math.max(1, Math.ceil(visibleCategories.length / ITEMS_PER_PAGE));
+  const currentPage = Math.min(totalPages, Math.max(1, Number.parseInt(pageParam || "1", 10) || 1));
+  const pageStart = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pagedCategories = visibleCategories.slice(pageStart, pageStart + ITEMS_PER_PAGE);
+
   const schemaItems = visibleCategories.map((row) => ({
     name: row.translation?.name || t("title"),
     url: `/category/${row.translation?.slug}`,
@@ -148,7 +157,6 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
 
   return (
     <div>
-      {/* Hero Section */}
       <div className="page-shell py-10">
         <div className="page-hero-surface">
           <div className="mb-8 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -216,79 +224,93 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
           />
         )}
         {visibleCategories.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {visibleCategories.map((row, index) => {
-              const translation = row.translation;
-              const category = row.category;
-              const promocodesCount = row.promocodesCount || 0;
-              const categoryName = translation?.name || t("title");
-              const categoryImageUrl = getApprovedImageUrl(category.imageUrl);
+          <>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {pagedCategories.map((row, index) => {
+                const translation = row.translation;
+                const category = row.category;
+                const promocodesCount = row.promocodesCount || 0;
+                const categoryName = translation?.name || t("title");
+                const categoryImageUrl = getApprovedImageUrl(category.imageUrl);
 
-              return (
-                <Link
-                  key={category.id}
-                  href={`/category/${translation?.slug || category.id}`}
-                  className="directory-card group"
-                >
-                  {/* Category Image/Icon */}
-                  <div className="mb-5 flex items-start justify-between gap-4">
-                    <div className="flex h-24 items-center justify-center">
-                      {categoryImageUrl ? (
-                        <div className="bg-muted relative h-full w-24 overflow-hidden rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.35)]">
-                          <Image
-                            src={categoryImageUrl}
-                            alt={
-                              translation?.name
-                                ? `${translation.name} - ${tCommon("altCategoryImage")}`
-                                : tCommon("altCategoryImageWithSlug", {
-                                    slug: translation?.slug || category.id,
-                                  })
-                            }
-                            className="rounded-2xl object-cover"
-                            priority={index < 3}
-                            loading={index < 3 ? undefined : "lazy"}
-                            sizes="96px"
-                            fill
-                          />
-                        </div>
-                      ) : (
-                        <div className="bg-muted flex h-24 w-24 items-center justify-center rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
-                          <Package className="text-muted-foreground h-9 w-9" aria-hidden="true" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <h2 className="text-foreground text-2xl font-semibold">{categoryName}</h2>
-
-                  {translation?.metaDescription && (
-                    <p className="text-foreground mt-2 line-clamp-2 min-h-10 text-sm">
-                      {translation.metaDescription}
-                    </p>
-                  )}
-
-                  <div className="mt-4 flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--secondary)]/70 px-4 py-3">
-                    <div>
-                      <div className="text-xs font-semibold tracking-[0.12em] text-[color:var(--accent-red)] uppercase">
-                        {t("promocodes")}
-                      </div>
-                      <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                        {promocodesCount > 0 ? t("trustValue") : t("checkBackLater")}
+                return (
+                  <Link
+                    key={category.id}
+                    href={`/category/${translation?.slug || category.id}`}
+                    className="directory-card group"
+                  >
+                    <div className="mb-5 flex items-start justify-between gap-4">
+                      <div className="flex h-24 items-center justify-center">
+                        {categoryImageUrl ? (
+                          <div className="bg-muted relative h-full w-24 overflow-hidden rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.35)]">
+                            <Image
+                              src={categoryImageUrl}
+                              alt={
+                                translation?.name
+                                  ? `${translation.name} - ${tCommon("altCategoryImage")}`
+                                  : tCommon("altCategoryImageWithSlug", {
+                                      slug: translation?.slug || category.id,
+                                    })
+                              }
+                              className="rounded-2xl object-cover"
+                              priority={index < 3}
+                              loading={index < 3 ? undefined : "lazy"}
+                              sizes="96px"
+                              fill
+                            />
+                          </div>
+                        ) : (
+                          <div className="bg-muted flex h-24 w-24 items-center justify-center rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
+                            <Package className="text-muted-foreground h-9 w-9" aria-hidden="true" />
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="text-foreground text-2xl font-semibold">{promocodesCount}</div>
-                  </div>
 
-                  <div className="text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
-                    <span>
-                      {t("viewOffers")} {categoryName}
-                    </span>
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                    <h2 className="text-foreground text-2xl font-semibold">{categoryName}</h2>
+
+                    {translation?.metaDescription && (
+                      <p className="text-foreground mt-2 line-clamp-2 min-h-10 text-sm">
+                        {translation.metaDescription}
+                      </p>
+                    )}
+
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--secondary)]/70 px-4 py-3">
+                      <div>
+                        <div className="text-xs font-semibold tracking-[0.12em] text-[color:var(--accent-red)] uppercase">
+                          {t("promocodes")}
+                        </div>
+                        <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                          {promocodesCount > 0 ? t("trustValue") : t("checkBackLater")}
+                        </div>
+                      </div>
+                      <div className="text-foreground text-2xl font-semibold">
+                        {promocodesCount}
+                      </div>
+                    </div>
+
+                    <div className="text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
+                      <span>
+                        {t("viewOffers")} {categoryName}
+                      </span>
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            <ServerPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl="/categories"
+              translations={{
+                ariaLabel: tCommon("pagination"),
+                previous: tCommon("previous"),
+                next: tCommon("next"),
+                page: tCommon("page"),
+              }}
+            />
+          </>
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">

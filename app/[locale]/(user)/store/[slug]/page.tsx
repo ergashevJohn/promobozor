@@ -247,13 +247,15 @@ function StorePageContent({
             </div>
             {totalPromocodesCount > 0 ? (
               <PromocodeListWithPagination
-                initialPromocodes={allPromocodes}
+                initialCount={allPromocodes.length}
+                initialIds={allPromocodes.map((p) => p.id)}
                 totalCount={totalPromocodesCount}
                 limit={20}
                 filters={{
                   storeId: store.id,
                 }}
                 translations={listTranslations}
+                listKicker={tCommon("listKicker")}
               >
                 <PromocodeListOptimized
                   promocodes={allPromocodes}

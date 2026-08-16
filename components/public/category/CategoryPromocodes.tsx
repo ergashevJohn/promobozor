@@ -8,6 +8,7 @@ interface CategoryPromocodesProps {
   totalPromocodesCount: number;
   categoryId: string;
   categoryName: string;
+  listKicker: string;
   translations: {
     noPromocodes: string;
     noPromocodesDescription: string;
@@ -53,6 +54,7 @@ export default function CategoryPromocodes({
   totalPromocodesCount,
   categoryId,
   categoryName,
+  listKicker,
   translations,
   t,
 }: CategoryPromocodesProps) {
@@ -66,13 +68,15 @@ export default function CategoryPromocodes({
       </div>
       {totalPromocodesCount > 0 ? (
         <PromocodeListWithPagination
-          initialPromocodes={allPromocodes}
+          initialCount={allPromocodes.length}
+          initialIds={allPromocodes.map((p) => p.id)}
           totalCount={totalPromocodesCount}
           limit={20}
           filters={{
             categoryId: categoryId,
           }}
           translations={translations}
+          listKicker={listKicker}
         >
           <PromocodeListOptimized promocodes={allPromocodes} translations={translations} />
         </PromocodeListWithPagination>

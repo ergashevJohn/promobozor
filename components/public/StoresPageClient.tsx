@@ -2,6 +2,7 @@
 
 import {
   StoresDirectoryGrid,
+  type StoreSearchIndexItem,
   type StoresDirectoryItem,
 } from "@/components/public/StoresDirectoryGrid";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,8 @@ import { MagnifyingGlass, SmileySad } from "@phosphor-icons/react/dist/ssr";
 import { useMemo, useState, type ReactNode } from "react";
 
 type StoresPageClientProps = {
-  stores: StoresDirectoryItem[];
+  /** Slim search index — not the full SSR directory payload */
+  searchIndex: StoreSearchIndexItem[];
   translations: {
     allStores: string;
     allStoresDescription: string;
@@ -31,19 +33,27 @@ type StoresPageClientProps = {
 };
 
 export default function StoresPageClient({
-  stores,
+  searchIndex,
   translations: t,
   children,
 }: StoresPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredStores = useMemo(() => {
+  const filteredStores = useMemo((): StoresDirectoryItem[] | null => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
       return null;
     }
-    return stores.filter((store) => store.searchText.includes(query));
-  }, [stores, searchQuery]);
+    return searchIndex
+      .filter((store) => store.searchText.includes(query))
+      .map(({ id, name, slug, logoUrl, promocodesCount }) => ({
+        id,
+        name,
+        slug,
+        logoUrl,
+        promocodesCount,
+      }));
+  }, [searchIndex, searchQuery]);
 
   return (
     <div>

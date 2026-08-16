@@ -102,7 +102,7 @@ export default function PromocodeList({
           <div key={promocode.id} className={hiddenOnMobile ? "hidden sm:block" : ""}>
             <GrouponCardOptimized
               promocode={promocode}
-              priority={index < 4}
+              priority={index < 1}
               translations={translations.card}
             />
           </div>

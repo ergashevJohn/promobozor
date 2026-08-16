@@ -7,6 +7,10 @@ type NavLink = {
   label: string;
 };
 
+/**
+ * Lightweight client nav — only usePathname for aria-current.
+ * (Avoid headers() here: it would force the user layout dynamic and break ISR.)
+ */
 export function DesktopNavLinks({ links, label }: { links: NavLink[]; label: string }) {
   const pathname = usePathname();
 

@@ -8,6 +8,7 @@ interface BrandPromocodesProps {
   totalPromocodesCount: number;
   brandId: string;
   brandName: string;
+  listKicker: string;
   translations: {
     noPromocodes: string;
     noPromocodesDescription: string;
@@ -53,6 +54,7 @@ export default function BrandPromocodes({
   totalPromocodesCount,
   brandId,
   brandName,
+  listKicker,
   translations,
   t,
 }: BrandPromocodesProps) {
@@ -66,13 +68,15 @@ export default function BrandPromocodes({
       </div>
       {totalPromocodesCount > 0 ? (
         <PromocodeListWithPagination
-          initialPromocodes={allPromocodes}
+          initialCount={allPromocodes.length}
+          initialIds={allPromocodes.map((p) => p.id)}
           totalCount={totalPromocodesCount}
           limit={20}
           filters={{
             brandId: brandId,
           }}
           translations={translations}
+          listKicker={listKicker}
         >
           <PromocodeListOptimized promocodes={allPromocodes} translations={translations} />
         </PromocodeListWithPagination>

@@ -133,16 +133,22 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
   const directoryStores = storesWithSlug.map((row) => {
     const name = row.translation?.name || t("title");
     const slug = row.translation?.slug || row.store.id;
-    const description = row.translation?.description || "";
     return {
       id: row.store.id,
       name,
       slug,
       logoUrl: row.store.logoUrl,
       promocodesCount: row.promocodesCount || 0,
-      searchText: `${name} ${description}`.toLowerCase(),
     };
   });
+  const searchIndex = directoryStores.map((store) => ({
+    id: store.id,
+    name: store.name,
+    slug: store.slug,
+    logoUrl: store.logoUrl,
+    promocodesCount: store.promocodesCount,
+    searchText: store.name.toLowerCase(),
+  }));
   const schemaItems = directoryStores.slice(0, 20).map((store) => ({
     name: store.name,
     url: `/store/${store.slug}`,
@@ -183,7 +189,7 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
         />
       )}
       <StoresPageClient
-        stores={directoryStores}
+        searchIndex={searchIndex}
         translations={{
           allStores: t("allStores"),
           allStoresDescription: t("allStoresDescription"),

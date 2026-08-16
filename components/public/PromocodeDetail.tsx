@@ -4,7 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import type { Language } from "@/lib/i18n";
 import { getPromocodeDisplayData } from "@/lib/promocode-utils";
-import GrouponCard from "./GrouponCard";
+import { CardActionsProvider } from "@/components/public/CardActionsProvider";
+import GrouponCardServer from "@/components/public/GrouponCardServer";
 import {
   PromocodeActionButton,
   PromocodeCodeBox,
@@ -175,9 +176,15 @@ export default function PromocodeDetail({
           <h2 className="text-foreground mb-6 text-2xl font-semibold sm:text-3xl">
             {translations.promocode.relatedOffers}
           </h2>
+          <CardActionsProvider
+            translations={{
+              codeCopied: translations.promocode.codeCopied,
+              copyError: translations.promocode.copyError,
+            }}
+          />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {relatedPromocodes.map((promo) => (
-              <GrouponCard
+              <GrouponCardServer
                 key={promo.id}
                 promocode={promo}
                 translations={{

@@ -1,7 +1,7 @@
 "use client";
 
-import FilterBar from "@/components/public/FilterBar";
 import PromocodeList from "@/components/public/PromocodeList";
+import { PromocodesFiltersLazy } from "@/components/public/PromocodesFiltersLazy";
 import SearchBar from "@/components/public/SearchBar";
 import ServerPagination from "@/components/public/ServerPagination";
 import type { Promocode } from "@/components/public/types";
@@ -25,15 +25,6 @@ export type PromocodesInitialSectionData = {
   totalPages: number;
   totalPromocodesCount: number;
   promocodesList: Promocode[];
-};
-
-type FilterItem = {
-  id: string;
-  translations: Array<{
-    language: string;
-    name: string;
-    slug: string;
-  }>;
 };
 
 type CardTranslations = {
@@ -106,10 +97,13 @@ export type PromocodesPageTranslations = {
 
 type PromocodesPageClientProps = {
   locale: string;
-  initialSectionData: PromocodesInitialSectionData;
-  stores: FilterItem[];
-  categories: FilterItem[];
-  brands: FilterItem[];
+  /**
+   * Metadata for filtered/client fetches. Default SSR list lives in `children` —
+   * do not pass the full promocodesList here (keeps RSC→client payload slim).
+   */
+  initialSectionData: Omit<PromocodesInitialSectionData, "promocodesList"> & {
+    promocodesList?: Promocode[];
+  };
   translations: PromocodesPageTranslations;
   /** SSR default list (PromocodeListOptimized + pagination) for unfiltered page 1 */
   children: ReactNode;
@@ -158,9 +152,6 @@ function approximateTotal(
 export default function PromocodesPageClient({
   locale,
   initialSectionData,
-  stores,
-  categories,
-  brands,
   translations,
   children,
 }: PromocodesPageClientProps) {
@@ -173,9 +164,16 @@ export default function PromocodesPageClient({
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
+  const fallbackSectionData: PromocodesInitialSectionData = {
+    currentPage: initialSectionData.currentPage,
+    totalPages: initialSectionData.totalPages,
+    totalPromocodesCount: initialSectionData.totalPromocodesCount,
+    promocodesList: initialSectionData.promocodesList ?? [],
+  };
+
   const sectionData: PromocodesInitialSectionData = shouldFetch
-    ? (fetchedData ?? initialSectionData)
-    : initialSectionData;
+    ? (fetchedData ?? fallbackSectionData)
+    : fallbackSectionData;
 
   useEffect(() => {
     if (!shouldFetch) {
@@ -311,14 +309,12 @@ export default function PromocodesPageClient({
             />
           </div>
 
-          <FilterBar
-            key={`filters-${paramsKey}`}
+          <PromocodesFiltersLazy
+            locale={locale}
             pathname={`/${locale}/promocodes`}
-            stores={stores}
-            categories={categories}
-            brands={brands}
             currentParams={currentParams}
             translations={translations.filter}
+            filterKey={`filters-${paramsKey}`}
           />
         </div>
       </section>

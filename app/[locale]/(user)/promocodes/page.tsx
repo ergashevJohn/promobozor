@@ -16,7 +16,6 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
-import { getFiltersData } from "@/lib/filters";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
 import { getListLanguageAlternates, getListPath, type Locale as RouteLocale } from "@/lib/routes";
@@ -168,7 +167,7 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
     notFound();
   }
 
-  const [t, tCommon, tEmpty, tCard, tPromocode, tStore, tFilter, filtersData, initialSectionData] =
+  const [t, tCommon, tEmpty, tCard, tPromocode, tStore, tFilter, initialSectionData] =
     await Promise.all([
       getTranslations({ locale, namespace: "promocodesPage" }),
       getTranslations({ locale, namespace: "common" }),
@@ -177,7 +176,6 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
       getTranslations({ locale, namespace: "promocode" }),
       getTranslations({ locale, namespace: "store" }),
       getTranslations({ locale, namespace: "filter" }),
-      getFiltersData(locale),
       getCachedPromocodesSectionData(locale),
     ]);
 
@@ -265,10 +263,12 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
       />
       <PromocodesPageClient
         locale={locale}
-        initialSectionData={initialSectionData}
-        stores={filtersData.storesList}
-        categories={filtersData.categoriesList}
-        brands={filtersData.brandsList}
+        initialSectionData={{
+          currentPage: initialSectionData.currentPage,
+          totalPages: initialSectionData.totalPages,
+          totalPromocodesCount: initialSectionData.totalPromocodesCount,
+          // Default SSR list is in children — omit list from client payload
+        }}
         translations={translations}
       >
         <section>

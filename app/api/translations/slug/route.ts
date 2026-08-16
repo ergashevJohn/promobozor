@@ -1,6 +1,7 @@
+import { getTranslatedBlogSlug, type BlogLocale } from "@/lib/blog";
 import {
-  brandTranslations,
   brands,
+  brandTranslations,
   categories,
   categoryTranslations,
   db,
@@ -9,7 +10,6 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
-import { getTranslatedBlogSlug, type BlogLocale } from "@/lib/blog";
 import { checkRateLimit, RateLimits } from "@/lib/rate-limit";
 import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";

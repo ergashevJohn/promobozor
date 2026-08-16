@@ -1,15 +1,57 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useState, type ReactNode } from "react";
 import LoadMore from "./LoadMore";
 import PromocodeList from "./PromocodeList";
 import type { Promocode } from "./types";
 
 const EMPTY_FILTERS = {};
 
+export type PromocodeListTranslations = {
+  noPromocodes: string;
+  noPromocodesDescription: string;
+  emptyActionLabel?: string;
+  emptyActionHref?: string;
+  emptyHint?: string;
+  card: {
+    featured: string;
+    verified: string;
+    fresh: string;
+    popular: string;
+    endingSoon: string;
+    unlimited: string;
+    unknownStore: string;
+    storeTitle: string;
+    promocodeTitle: string;
+    activateLink: string;
+    details: string;
+    viewDetails: string;
+    storeOffer: string;
+    brandOffer: string;
+    directDeal: string;
+    codeReady: string;
+    dealRoute: string;
+    promoCodeLabel: string;
+    copy: string;
+    copied: string;
+    getDeal: string;
+    like: string;
+    dislike: string;
+    expired: string;
+    disabled: string;
+    conditionsLabel?: string;
+    codeCopied: string;
+    copyError: string;
+  };
+};
+
 interface PromocodeListWithPaginationProps {
-  initialPromocodes: Promocode[];
+  /** @deprecated Prefer initialCount + initialIds + children */
+  initialPromocodes?: Promocode[];
+  /** Number of SSR cards already rendered in children */
+  initialCount?: number;
+  /** Ids of SSR cards for load-more dedupe */
+  initialIds?: string[];
   totalCount: number;
   limit?: number;
   filters?: {
@@ -21,87 +63,41 @@ interface PromocodeListWithPaginationProps {
     excludeFeatured?: boolean;
     featured?: boolean;
   };
-  translations: {
-    noPromocodes: string;
-    noPromocodesDescription: string;
-    emptyActionLabel?: string;
-    emptyActionHref?: string;
-    emptyHint?: string;
-    card: {
-      featured: string;
-      verified: string;
-      fresh: string;
-      popular: string;
-      endingSoon: string;
-      unlimited: string;
-      unknownStore: string;
-      storeTitle: string;
-      promocodeTitle: string;
-      activateLink: string;
-      details: string;
-      viewDetails: string;
-      storeOffer: string;
-      brandOffer: string;
-      directDeal: string;
-      codeReady: string;
-      dealRoute: string;
-      promoCodeLabel: string;
-      copy: string;
-      copied: string;
-      getDeal: string;
-      like: string;
-      dislike: string;
-      expired: string;
-      disabled: string;
-      conditionsLabel?: string;
-      codeCopied: string;
-      copyError: string;
-    };
-  };
+  translations: PromocodeListTranslations;
+  listKicker: string;
   /** SSR initial list (PromocodeListOptimized). Extra pages append client cards. */
   children?: ReactNode;
 }
 
+/**
+ * Thin client wrapper: SSR list via children; only offset/ids/total cross the boundary
+ * (not the full promocode objects) when initialCount/initialIds are provided.
+ */
 export default function PromocodeListWithPagination({
   initialPromocodes,
+  initialCount,
+  initialIds,
   totalCount,
   limit = 20,
   filters = EMPTY_FILTERS,
   translations,
+  listKicker,
   children,
 }: PromocodeListWithPaginationProps) {
-  const tCommon = useTranslations("common");
+  const resolvedCount = initialCount ?? initialPromocodes?.length ?? 0;
+  const resolvedIds = initialIds ?? initialPromocodes?.map((p) => p.id) ?? [];
   const [additionalPromocodes, setAdditionalPromocodes] = useState<Promocode[]>([]);
 
-  const filtersKey = useMemo(() => JSON.stringify(filters), [filters]);
-  const initialIdsKey = useMemo(
-    () => JSON.stringify(initialPromocodes.map((p) => p.id)),
-    [initialPromocodes]
-  );
-
-  const [prevFiltersKey, setPrevFiltersKey] = useState(filtersKey);
-  const [prevIdsKey, setPrevIdsKey] = useState(initialIdsKey);
-
-  if (prevFiltersKey !== filtersKey || prevIdsKey !== initialIdsKey) {
-    setPrevFiltersKey(filtersKey);
-    setPrevIdsKey(initialIdsKey);
-    setAdditionalPromocodes([]);
-  }
-
-  const visibleCount = initialPromocodes.length + additionalPromocodes.length;
+  const visibleCount = resolvedCount + additionalPromocodes.length;
+  const hasMore = visibleCount < totalCount;
 
   const handleLoadMore = (newPromocodes: Promocode[]) => {
     setAdditionalPromocodes((prev) => {
-      const existingIds = new Set([
-        ...initialPromocodes.map((p) => p.id),
-        ...prev.map((p) => p.id),
-      ]);
+      const existingIds = new Set([...resolvedIds, ...prev.map((p) => p.id)]);
       const unique = newPromocodes.filter((p) => !existingIds.has(p.id));
       return unique.length > 0 ? [...prev, ...unique] : prev;
     });
   };
-
-  const hasMore = visibleCount < totalCount;
 
   return (
     <>
@@ -110,10 +106,13 @@ export default function PromocodeListWithPagination({
           <div className="text-sm text-[color:var(--muted-foreground)]">
             <span className="text-foreground font-semibold">{visibleCount}</span> / {totalCount}
           </div>
-          <div className="brand-kicker !mb-0">{tCommon("listKicker")}</div>
+          <div className="brand-kicker !mb-0">{listKicker}</div>
         </div>
       )}
-      {children ?? <PromocodeList promocodes={initialPromocodes} translations={translations} />}
+      {children ??
+        (initialPromocodes ? (
+          <PromocodeList promocodes={initialPromocodes} translations={translations} />
+        ) : null)}
       {additionalPromocodes.length > 0 && (
         <div className="mt-8">
           <PromocodeList promocodes={additionalPromocodes} translations={translations} />

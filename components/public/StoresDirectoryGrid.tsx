@@ -9,7 +9,16 @@ export type StoresDirectoryItem = {
   slug: string;
   logoUrl: string | null;
   promocodesCount: number;
+};
+
+/** Lightweight client search index (no long descriptions serialized beyond searchText). */
+export type StoreSearchIndexItem = {
+  id: string;
+  name: string;
+  slug: string;
   searchText: string;
+  logoUrl: string | null;
+  promocodesCount: number;
 };
 
 type StoresDirectoryGridProps = {
@@ -42,7 +51,6 @@ export function StoresDirectoryGrid({ stores, translations: t }: StoresDirectory
             href={href}
             className="directory-card group"
             aria-label={formatNamedMessage(t.viewStorePromocodesAria, { name: store.name })}
-            data-store-search={store.searchText}
           >
             <div className="mb-4 flex items-center gap-4">
               <div className="bg-muted flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl">

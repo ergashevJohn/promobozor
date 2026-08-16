@@ -12,10 +12,13 @@ import { notFound } from "next/navigation";
 import { ArrowRight, Buildings, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
+import ServerPagination from "@/components/public/ServerPagination";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
+
+const ITEMS_PER_PAGE = 24;
 
 // Cached function to fetch all brands with promocode counts
 const getAllBrands = (locale: string) =>
@@ -87,8 +90,15 @@ export async function generateMetadata({
 
 export const revalidate = 86400;
 
-export default async function BrandsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function BrandsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { locale } = await params;
+  const { page: pageParam } = await searchParams;
 
   if (!isValidLanguage(locale)) {
     notFound();
@@ -129,6 +139,10 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
   const tCommon = await getTranslations({ locale, namespace: "common" });
   const visibleBrands = brandsData.filter((row) => row.translation?.slug);
   const totalPromocodes = visibleBrands.reduce((sum, row) => sum + (row.promocodesCount || 0), 0);
+  const totalPages = Math.max(1, Math.ceil(visibleBrands.length / ITEMS_PER_PAGE));
+  const currentPage = Math.min(totalPages, Math.max(1, Number.parseInt(pageParam || "1", 10) || 1));
+  const pageStart = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pagedBrands = visibleBrands.slice(pageStart, pageStart + ITEMS_PER_PAGE);
 
   // Prepare items for ItemList schema (all brands)
   const schemaItems = visibleBrands.map((row) => ({
@@ -208,78 +222,93 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
           />
         )}
         {visibleBrands.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {visibleBrands.map((row, index) => {
-              const translation = row.translation;
-              const brand = row.brand;
-              const promocodesCount = row.promocodesCount || 0;
-              const brandName = translation?.name || t("title");
-              const brandImageUrl = getApprovedImageUrl(brand.imageUrl);
+          <>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {pagedBrands.map((row, index) => {
+                const translation = row.translation;
+                const brand = row.brand;
+                const promocodesCount = row.promocodesCount || 0;
+                const brandName = translation?.name || t("title");
+                const brandImageUrl = getApprovedImageUrl(brand.imageUrl);
 
-              return (
-                <Link
-                  key={brand.id}
-                  href={`/brand/${translation?.slug || brand.id}`}
-                  className="directory-card group"
-                >
-                  <div className="mb-5 flex items-start justify-between gap-4">
-                    <div className="flex size-16 items-center justify-start">
-                      {brandImageUrl ? (
-                        <div className="relative h-full w-full flex-shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.35)]">
-                          <Image
-                            src={brandImageUrl}
-                            alt={
-                              translation?.name
-                                ? `${translation.name} - ${tCommon("altBrandLogo")}`
-                                : tCommon("altBrandLogoWithSlug", {
-                                    slug: translation?.slug || brand.id,
-                                  })
-                            }
-                            fill
-                            className="object-cover"
-                            priority={index < 3}
-                            loading={index < 3 ? undefined : "lazy"}
-                            sizes="64px"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
-                          <Buildings className="h-7 w-7" aria-hidden="true" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <h2 className="text-foreground text-2xl font-semibold">{brandName}</h2>
-
-                  {translation?.metaDescription && (
-                    <p className="text-muted-foreground mt-2 line-clamp-2 min-h-10 text-sm">
-                      {translation.metaDescription}
-                    </p>
-                  )}
-
-                  <div className="mt-4 flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--secondary)]/70 px-4 py-3">
-                    <div>
-                      <div className="text-xs font-semibold tracking-[0.12em] text-[color:var(--accent-red)] uppercase">
-                        {t("promocodes")}
-                      </div>
-                      <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                        {promocodesCount > 0 ? t("trustValue") : t("checkBackLater")}
+                return (
+                  <Link
+                    key={brand.id}
+                    href={`/brand/${translation?.slug || brand.id}`}
+                    className="directory-card group"
+                  >
+                    <div className="mb-5 flex items-start justify-between gap-4">
+                      <div className="flex size-16 items-center justify-start">
+                        {brandImageUrl ? (
+                          <div className="relative h-full w-full flex-shrink-0 overflow-hidden rounded-2xl bg-[color:var(--secondary)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.35)]">
+                            <Image
+                              src={brandImageUrl}
+                              alt={
+                                translation?.name
+                                  ? `${translation.name} - ${tCommon("altBrandLogo")}`
+                                  : tCommon("altBrandLogoWithSlug", {
+                                      slug: translation?.slug || brand.id,
+                                    })
+                              }
+                              fill
+                              className="object-cover"
+                              priority={index < 3}
+                              loading={index < 3 ? undefined : "lazy"}
+                              sizes="64px"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
+                            <Buildings className="h-7 w-7" aria-hidden="true" />
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="text-foreground text-2xl font-semibold">{promocodesCount}</div>
-                  </div>
 
-                  <div className="text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
-                    <span>
-                      {t("viewOffers")} {brandName}
-                    </span>
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                    <h2 className="text-foreground text-2xl font-semibold">{brandName}</h2>
+
+                    {translation?.metaDescription && (
+                      <p className="text-muted-foreground mt-2 line-clamp-2 min-h-10 text-sm">
+                        {translation.metaDescription}
+                      </p>
+                    )}
+
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--border)] bg-[color:var(--secondary)]/70 px-4 py-3">
+                      <div>
+                        <div className="text-xs font-semibold tracking-[0.12em] text-[color:var(--accent-red)] uppercase">
+                          {t("promocodes")}
+                        </div>
+                        <div className="mt-1 text-sm text-[color:var(--muted-foreground)]">
+                          {promocodesCount > 0 ? t("trustValue") : t("checkBackLater")}
+                        </div>
+                      </div>
+                      <div className="text-foreground text-2xl font-semibold">
+                        {promocodesCount}
+                      </div>
+                    </div>
+
+                    <div className="text-foreground mt-5 inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
+                      <span>
+                        {t("viewOffers")} {brandName}
+                      </span>
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            <ServerPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl="/brands"
+              translations={{
+                ariaLabel: tCommon("pagination"),
+                previous: tCommon("previous"),
+                next: tCommon("next"),
+                page: tCommon("page"),
+              }}
+            />
+          </>
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">

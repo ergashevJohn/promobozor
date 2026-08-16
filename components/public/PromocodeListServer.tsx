@@ -119,7 +119,7 @@ export function PromocodeListOptimized({
             <div key={promocode.id} className={hiddenOnMobile ? "hidden sm:block" : ""}>
               <GrouponCardServer
                 promocode={promocode}
-                priority={index < 4}
+                priority={index < 1}
                 translations={translations.card}
               />
             </div>

@@ -3,11 +3,6 @@ import { describe, expect, it, vi } from "vitest";
 import PromocodeListWithPagination from "./PromocodeListWithPagination";
 import type { Promocode } from "./types";
 
-vi.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => "uz",
-}));
-
 vi.mock("./LoadMore", () => ({
   default: () => <button type="button">load-more</button>,
 }));
@@ -74,8 +69,10 @@ describe("PromocodeListWithPagination", () => {
   it("renders SSR children for the initial list instead of client cards", () => {
     render(
       <PromocodeListWithPagination
-        initialPromocodes={[makePromocode("a")]}
+        initialCount={1}
+        initialIds={["a"]}
         totalCount={1}
+        listKicker="kicker"
         translations={{
           noPromocodes: "empty",
           noPromocodesDescription: "desc",
@@ -95,6 +92,7 @@ describe("PromocodeListWithPagination", () => {
       <PromocodeListWithPagination
         initialPromocodes={[makePromocode("a"), makePromocode("b")]}
         totalCount={2}
+        listKicker="kicker"
         translations={{
           noPromocodes: "empty",
           noPromocodesDescription: "desc",

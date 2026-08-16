@@ -290,6 +290,7 @@ export default async function CategoryPage({
             totalPromocodesCount={totalPromocodesCount}
             categoryId={category.id}
             categoryName={categoryTranslation?.name || categoryTitle}
+            listKicker={tCommon("listKicker")}
             translations={{
               noPromocodes: tEmpty("noPromocodes"),
               noPromocodesDescription: tEmpty("noPromocodesDescription"),

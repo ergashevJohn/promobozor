@@ -1,8 +1,8 @@
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { BlogLocale } from "@/lib/blog";
 import { getBlogInternalHref, getTranslatedBlogSlug } from "@/lib/blog";
-import { getInternalEntityHref, resolveEntityTypeFromSegment } from "@/lib/routes";
 import type { EntityType } from "@/lib/routes";
+import { getInternalEntityHref, resolveEntityTypeFromSegment } from "@/lib/routes";
 import { useCallback, useState } from "react";
 
 /**
