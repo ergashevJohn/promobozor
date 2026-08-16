@@ -80,12 +80,12 @@
     "blog": "Blog"
   },
   "LocaleLayout": {
-    "title": "PromoBozor - Chegirmalar va promokodlar bozori",
-    "description": "PromoBozor - foydali chegirmalar, promokodlar va kuponlarni bir joyda toping. Online do'konlar va servislar uchun eng yaxshi takliflarni ko'ring va xaridda ko'proq tejang."
+    "title": "PromoBozor - Takliflarni solishtirish va shartlarni tushuntirish",
+    "description": "PromoBozor - tekshirilgan promokod va chegirmalarni solishtiring, shartlarini tushuning va mos taklifni tanlang. Online do'konlar va servislar uchun editorial yondashuv."
   },
   "header": {
     "title": "PromoBozor",
-    "tagline": "Chegirmalar va promokodlar bozori",
+    "tagline": "Takliflarni solishtiring, shartlarni tekshiring",
     "menu": "Menyu"
   },
   "footer": {
@@ -95,7 +95,8 @@
     "terms": "Foydalanish shartlari",
     "verification": "Promokodlarni qanday tekshiramiz",
     "allRights": "Barcha huquqlar himoyalangan",
-    "description": "PromoBozor foydalanuvchilarga turli do'kon va xizmatlar uchun foydali promokodlar va chegirmalarni bir joyda topishga yordam beradi.",
+    "description": "PromoBozor foydalanuvchilarga turli do'kon va xizmatlar uchun foydali promokodlar va chegirmalarni bir joyda topish, solishtirish va shartlarini tushunishga yordam beradi.",
+    "socialNetworkNote": "Telegram, Instagram va YouTube — PromoBozor va Promokoduz loyihalari uchun umumiy network. Bu ikki alohida sayt, bitta domen emas.",
     "quickLinks": "Tezkor havolalar",
     "legal": "Huquqiy ma'lumotlar",
     "socialMedia": "Ijtimoiy tarmoqlar",
@@ -109,9 +110,9 @@
     "blog": "Blog va qo‘llanmalar"
   },
   "home": {
-    "title": "Chegirmalar va promokodlarni bir joyda toping",
-    "subtitle": "Onlayn do'konlar va servislar uchun tekshirilgan takliflarni toping, shartlarini tez tushuning va xaridda ko'proq tejang.",
-    "description": "PromoBozor orqali online xaridlar uchun foydali, saralangan va ishonchli promokodlar hamda chegirmalarni toping.",
+    "title": "Takliflarni solishtiring, shartlarni tekshiring, ishonchli variantni tanlang",
+    "subtitle": "Onlayn do'kon va servislar uchun tekshirilgan promokodlarni yonma-yon solishtiring — foyda, muddat va cheklovlarni bir qarashda ko'ring.",
+    "description": "PromoBozor tezkor katalog emas: takliflarni solishtirish, shartlarni tushuntirish va tekshirilgan variantni tanlash uchun mo‘ljallangan.",
     "featuredPromocodes": "Tavsiya etilgan promokod va chegirmalar",
     "featuredDescription": "Qo'lda saralangan, dolzarb va foyda beradigan takliflar",
     "allPromocodes": "Barcha tekshirilgan promokodlar",
@@ -119,7 +120,7 @@
     "popularStores": "Mashhur do'konlar",
     "popularCategories": "Mashhur kategoriyalar",
     "popularBrands": "Mashhur brendlar",
-    "trustPills": ["Tekshirilgan takliflar", "Har kuni yangilanadi", "Tez va qulay qidiruv"],
+    "trustPills": ["Tekshirilgan takliflar", "Shartlar ochiq", "Solishtirish uchun qulay"],
     "heroInsight": {
       "label": "PromoBozor tavsiyasi",
       "title": "Marketpleyslar, yetkazib berish, bank va servislar uchun foydali takliflar",
@@ -386,6 +387,14 @@
         {
           "question": "PromoBozor’dagi promokodlar bepulmi?",
           "answer": "Ha. Promokodlarni ko'rish, nusxalash va ishlatish xaridorlar uchun mutlaqo bepul."
+        },
+        {
+          "question": "PromoBozor va Promokoduz bir xil saytmi?",
+          "answer": "Yo‘q. Bu ikki alohida loyiha. PromoBozor takliflarni solishtirish va shartlarni tushuntirishga e’tibor beradi. Telegram/Instagram/YouTube kanallari ikkala loyiha uchun umumiy network."
+        },
+        {
+          "question": "Taklifni tanlashdan oldin nimalarni solishtirish kerak?",
+          "answer": "Foyda turi, minimal summa, yangi/eski foydalanuvchi cheklovi, amal qilish muddati va kod yoki havola orqali faollashtirishni yonma-yon tekshiring."
         },
         {
           "question": "Takliflar qanchalik tez yangilanadi?",
@@ -828,15 +837,19 @@
       },
       {
         "question": "Promokodlar bepulmi?",
-        "answer": "Ha, barcha promokodlar mutlaqo bepul. PromoBozor saytidan foydalanish hech qanday to'lov talab qilmaydi. Bizning vazifamiz - O'zbekiston foydalanuvchilari uchun eng yaxshi chegirmalarni topish va ularni bir joyda jam qilishdir. Siz promokodlarni nusxalash, ulardan foydalanish va chegirmalar olish uchun hech qanday to'lov to'lamaysiz. Biz do'konlar va brendlar bilan hamkorlik qilamiz, ammo bu sizga hech qanday qo'shimcha xarajat tug'dirmaydi. Shuningdek, ba'zi saytlardan farqli o'laroq, biz ro'yxatdan o'tishni talab qilmaymiz, shaxsiy ma'lumotlaringizni yig'maymiz yoki boshqa shartlarni yuklamaymiz. Biz saytda promokodlarni qidirish, topish va foydalanishni iloji qancha oson va qulay qilishga harakat qilamiz. Agar savollaringiz bo'lsa, biz bilan Telegram orqali bog'lanishingiz mumkin."
+        "answer": "Ha, barcha promokodlar mutlaqo bepul. PromoBozor saytidan foydalanish hech qanday to'lov talab qilmaydi. Bizning vazifamiz - O'zbekiston foydalanuvchilari uchun eng yaxshi chegirmalarni topish, solishtirish va ularni bir joyda jam qilishdir. Siz promokodlarni nusxalash, ulardan foydalanish va chegirmalar olish uchun hech qanday to'lov to'lamaysiz."
+      },
+      {
+        "question": "PromoBozor va Promokoduz bir xil saytmi?",
+        "answer": "Yo‘q. Bu ikki alohida loyiha. PromoBozor takliflarni solishtirish va shartlarni tushuntirishga e’tibor beradi. Telegram, Instagram va YouTube kanallari ikkala loyiha uchun umumiy network — bitta domen emas."
       },
       {
         "question": "Promokod ishlamasa nima qilish kerak?",
-        "answer": "Agar promokod ishlamasa, avvalo uning amal qilish muddatini tekshiring. Muddat tugagan bo'lsa, promokod ishlamaydi. Agar muddat hali tugamagan bo'lsa, kodni to'g'ri kiritganingizga ishonch hosil qiling - ba'zilar katta-kichik harflarga sezgir. Shuningdek, promokodning qo'llash shartlarini o'qing - masalan, minimum xarid summasi, ma'lum toifadagi mahsulotlar yoki yangi mijozlar uchun cheklovlar bo'lishi mumkin. Hamma narsa to'g'ri bo'lgan holda kod ishlamay qolsa, do'kon yoki xizmatning mijozlarga xizmat ko'rsatish xizmati bilan bog'lanishni maslahat beramiz. Shuningdek, bizga xabar bering - biz promokodni tekshirib, kerak bo'lsa, uni yangilaymiz yoki o'chirib tashlaymiz. Bizning foydalanuvchilarimiz orqali promokodlarning sifatini nazorat qilamiz va 24 soat ichida muammolarni hal qilamiz. Telegram kanalimizda yoki sahifadagi 'Xabar berish' tugmasi orqali biz bilan bog'lanishingiz mumkin."
+        "answer": "Agar promokod ishlamasa, avvalo uning amal qilish muddatini tekshiring. Muddat tugagan bo'lsa, promokod ishlamaydi. Agar muddat hali tugamagan bo'lsa, kodni to'g'ri kiritganingizga ishonch hosil qiling - ba'zilar katta-kichik harflarga sezgir. Shuningdek, promokodning qo'llash shartlarini o'qing - masalan, minimum xarid summasi, ma'lum toifadagi mahsulotlar yoki yangi mijozlar uchun cheklovlar bo'lishi mumkin. Hamma narsa to'g'ri bo'lgan holda kod ishlamay qolsa, do'kon yoki xizmatning mijozlarga xizmat ko'rsatish xizmati bilan bog'lanishni maslahat beramiz. Shuningdek, bizga xabar bering - biz promokodni tekshirib, kerak bo'lsa, uni yangilaymiz yoki o'chirib tashlaymiz."
       },
       {
         "question": "Yangi promokodlar qanchalik tez qo'shiladi?",
-        "answer": "Biz har kuni yangi promokodlar qo'shamiz va ularni muntazam ravishda yangilab boramiz. Jamoamiz kundalik ravishda O'zbekistondagi eng mashhur do'konlar va xizmatlarning yangi takliflarini kuzatib boradi. Yandex Eats, Uzum, Click, Payme va boshqa platformalar har kuni yangi chegirmalar va aksiyalarni e'lon qiladi, biz esa ularni darhol saytimizga qo'shamiz. Maxsus tadbirlar va bayramlar oldidan - masalan, Navro'z, Mustaqillik kuni yoki Yangi yil arafasida - promokodlar soni sezilarli darajada ortadi. Shuning uchun eng yangi takliflardan xabardor bo'lish uchun saytni muntazam tekshirib turing yoki bizning Telegram kanalimizga obuna bo'ling. Biz shuningdek, mashhur do'konlarning maxusi aksiyalari uchun alohida sahifalarni yaratamiz, u yerda barcha amaldagi promokodlar jamlangan bo'ladi."
+        "answer": "Biz muntazam ravishda yangi promokodlar qo‘shamiz va muddati o‘tganlarini tozalaymiz. Jamoamiz O'zbekistondagi mashhur do'kon va xizmatlarning yangi takliflarini kuzatib boradi. Eng yangi takliflardan xabardor bo‘lish uchun saytni tekshirib turing yoki umumiy Telegram kanalimizga obuna bo‘ling."
       }
     ],
     "heroKicker": "FAQ"
@@ -950,11 +963,11 @@
   },
   "about": {
     "title": "PromoBozor haqida va editorial standartlar",
-    "description": "PromoBozor - O'zbekiston xaridorlari uchun tekshirilgan promokodlar, foydali chegirmalar va aniq foydalanish shartlarini bir joyda jamlaydigan platforma.",
+    "description": "PromoBozor - O'zbekiston xaridorlari uchun tekshirilgan promokodlarni solishtirish, shartlarni tushuntirish va ishonchli taklifni tanlash platformasi.",
     "heroTitle": "PromoBozor haqida",
-    "heroDescription": "PromoBozor foydalanuvchiga foydali, tushunarli va ishonchli takliflarni topishga yordam beradigan mahalliy promokod platformasidir.",
+    "heroDescription": "PromoBozor tezkor katalog emas: takliflarni solishtirish, cheklovlarni ochiq ko‘rsatish va tekshirilgan variantni tanlash uchun mo‘ljallangan mahalliy platforma.",
     "missionTitle": "Bizning maqsadimiz",
-    "missionDescription": "PromoBozor O'zbekiston bozorida ishlaydigan promokod va chegirmalarni bir joyga to'plab, xaridorlarga vaqtni tejash va foydali taklifni tez topish imkonini beradi.",
+    "missionDescription": "PromoBozor O'zbekiston bozoridagi promokod va chegirmalarni bir joyga to‘plab, foydalanuvchiga shartlarni solishtirish va mos taklifni tanlash imkonini beradi — birinchi uchragan kodni emas.",
     "howWeWork": "Qanday ishlaymiz",
     "howWeWorkDescription": "Jamoamiz har bir taklifning manbasi, muddati va qo'llanish shartlarini ko'rib chiqadi. Ishonch past bo'lgan yoki muddati tugagan listinglar tezda yangilanadi yoki olib tashlanadi.",
     "statsTitle": "Raqamlarda",

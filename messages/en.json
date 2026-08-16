@@ -80,12 +80,12 @@
     "blog": "Blog"
   },
   "LocaleLayout": {
-    "title": "PromoBozor - Deals and promo code marketplace",
-    "description": "PromoBozor helps you find useful discounts, promo codes, and coupons in one place. Explore trusted offers for online stores and services and save more."
+    "title": "PromoBozor - Compare offers and understand conditions",
+    "description": "PromoBozor helps you compare verified promo codes and discounts, understand the conditions, and pick a trustworthy option for online stores and services."
   },
   "header": {
     "title": "PromoBozor",
-    "tagline": "Deals and promo code marketplace",
+    "tagline": "Compare offers, check the conditions",
     "menu": "Menu"
   },
   "footer": {
@@ -95,7 +95,8 @@
     "terms": "Terms of Service",
     "verification": "How We Verify Promocodes",
     "allRights": "All rights reserved",
-    "description": "PromoBozor helps shoppers discover useful promo codes, coupons, and discounts for stores and services in one trusted place.",
+    "description": "PromoBozor helps shoppers compare useful promo codes, coupons, and discounts for stores and services, understand the conditions, and pick a verified option.",
+    "socialNetworkNote": "Telegram, Instagram, and YouTube are a shared network for the PromoBozor and Promokoduz projects. They are two separate sites, not one domain.",
     "quickLinks": "Quick Links",
     "legal": "Legal",
     "socialMedia": "Social Media",
@@ -142,9 +143,9 @@
     "conditionsLabel": "Terms"
   },
   "home": {
-    "title": "Find discounts and promo codes in one place",
-    "subtitle": "Find verified offers for online stores, services, and marketplaces, understand the terms quickly, and save more on every order.",
-    "description": "Find useful, curated, and trustworthy promo codes and discounts for online shopping with PromoBozor.",
+    "title": "Compare offers, check conditions, pick a verified option",
+    "subtitle": "Compare verified promo codes for online stores and services side by side — benefit, timing, and limits at a glance.",
+    "description": "PromoBozor is not just a fast catalog: it is built to compare offers, explain conditions, and help you choose a verified deal.",
     "featuredPromocodes": "Featured promo codes and deals",
     "featuredDescription": "Manually curated, fresh, and genuinely useful offers",
     "allPromocodes": "All verified promocodes",
@@ -152,7 +153,7 @@
     "popularStores": "Popular Stores",
     "popularCategories": "Popular Categories",
     "popularBrands": "Popular Brands",
-    "trustPills": ["Verified offers", "Updated daily", "Fast, simple search"],
+    "trustPills": ["Verified offers", "Clear conditions", "Built for comparison"],
     "heroInsight": {
       "label": "PromoBozor insight",
       "title": "Useful offers across marketplaces, food delivery, banking, and services",
@@ -416,8 +417,16 @@
           "answer": "Yes. Browsing, copying and using promocodes on PromoBozor is completely free for shoppers."
         },
         {
+          "question": "Are PromoBozor and Promokoduz the same site?",
+          "answer": "No. They are two separate projects. PromoBozor focuses on comparing offers and explaining conditions. Telegram/Instagram/YouTube channels are a shared network for both projects."
+        },
+        {
+          "question": "What should I compare before choosing an offer?",
+          "answer": "Benefit type, minimum spend, new/returning customer limits, expiry, and whether activation uses a code or a deal link."
+        },
+        {
           "question": "How often are deals updated?",
-          "answer": "Our team reviews offers every day, adds fresh submissions and removes expired or inactive deals as soon as they are confirmed."
+          "answer": "Our team regularly reviews offers, adds fresh submissions and removes expired or inactive deals as soon as they are confirmed."
         },
         {
           "question": "What happens if a promocode stops working?",
@@ -823,15 +832,19 @@
       },
       {
         "question": "Are promocodes free?",
-        "answer": "Yes, all promocodes are completely free. Using PromoBozor requires no payment whatsoever. Our mission is to find the best discounts for Uzbekistan users and compile them in one place. You don't pay anything to copy, use, or receive discounts from promocodes. We partner with stores and brands, but this comes at no additional cost to you. Unlike some sites, we don't require registration, collect personal information, or impose other conditions. We strive to make finding, accessing, and using promocodes as easy and convenient as possible. If you have questions, you can reach us via Telegram."
+        "answer": "Yes, all promocodes are completely free. Using PromoBozor requires no payment. Our mission is to help Uzbekistan shoppers compare discounts, understand conditions, and pick a verified option."
+      },
+      {
+        "question": "Are PromoBozor and Promokoduz the same site?",
+        "answer": "No. They are two separate projects. PromoBozor focuses on comparing offers and explaining conditions. Telegram, Instagram, and YouTube are a shared network for both projects — not one domain."
       },
       {
         "question": "What should I do if a promocode doesn't work?",
-        "answer": "If a promocode doesn't work, first check its expiration date. Expired codes won't work. If the date hasn't passed, ensure you've entered the code correctly - some are case-sensitive. Also, read the promocode terms - there may be restrictions like minimum purchase amount, specific categories, or new customers only. If everything seems correct but the code still doesn't work, we recommend contacting the store's customer service. Also, please notify us - we'll verify and update or remove the promocode if needed. We rely on our users to help maintain promocode quality and resolve issues within 24 hours. You can reach us through our Telegram channel or the 'Report' button on the page."
+        "answer": "First check the expiry date and that you entered the code correctly. Then read the terms: minimum spend, categories, or new-customer limits. If it still fails, tell us — we will recheck and update or remove the listing."
       },
       {
         "question": "How often are new promocodes added?",
-        "answer": "We add new promocodes every day and regularly update existing ones. Our team monitors daily the latest offers from the most popular stores and services in Uzbekistan. Yandex Eats, Uzum, Click, Payme, and other platforms announce new discounts and promotions daily, and we add them to our site immediately. Before special events and holidays - such as Navruz, Independence Day, or New Year - the number of promocodes increases significantly. To stay informed about the latest offers, check our site regularly or subscribe to our Telegram channel. We also create dedicated pages for popular stores where all current promocodes are collected."
+        "answer": "We regularly add new promocodes and remove expired ones. The team monitors offers from popular stores and services in Uzbekistan. To stay current, check the site or follow the shared Telegram channel."
       }
     ],
     "heroKicker": "FAQ"
@@ -945,11 +958,11 @@
   },
   "about": {
     "title": "About PromoBozor and Our Editorial Standards",
-    "description": "PromoBozor is a shopper-focused platform in Uzbekistan where verified promocodes, useful discounts, and clear usage terms are gathered in one place.",
+    "description": "PromoBozor helps Uzbekistan shoppers compare verified promo codes, understand conditions, and pick a trustworthy deal.",
     "heroTitle": "About PromoBozor",
-    "heroDescription": "PromoBozor helps shoppers discover useful, clear, and trustworthy offers for everyday online purchases in Uzbekistan.",
+    "heroDescription": "PromoBozor is not just a fast catalog: it helps shoppers compare offers, surface restrictions clearly, and choose a verified option.",
     "missionTitle": "Our Mission",
-    "missionDescription": "PromoBozor brings working promocodes and discounts together for the Uzbekistan market so shoppers can save time and find better-value offers faster.",
+    "missionDescription": "PromoBozor gathers promocodes and discounts for the Uzbekistan market so shoppers can compare conditions and pick a fitting offer — not just the first code they see.",
     "howWeWork": "How We Work",
     "howWeWorkDescription": "Our team reviews the source, expiry status, and usage conditions behind each offer. Expired, misleading, or low-confidence listings are updated or removed quickly.",
     "statsTitle": "By the Numbers",

@@ -1,4 +1,5 @@
 import type { FaqJsonItem } from "@/db/schema";
+import { getSiteVoice, type SiteVoiceProfile } from "@/lib/seo/site-voice";
 
 export type ContentLocale = "uz" | "ru" | "en";
 export type EntityContentKind = "store" | "brand" | "category";
@@ -19,6 +20,7 @@ export type EntityRewriteInput = {
   name: string;
   existingDescription: string | null;
   deals: DealFact[];
+  profile?: SiteVoiceProfile;
 };
 
 export type EntityRewrite = {
@@ -41,6 +43,7 @@ export type PromocodeRewriteInput = {
   type: "code" | "link";
   minOrderAmount: number | null;
   expiresAt: Date | null;
+  profile?: SiteVoiceProfile;
 };
 
 export type PromocodeRewrite = {
@@ -227,13 +230,15 @@ function buildEntityUz(
   const examples = names
     ? `<p><strong>Joriy takliflardan misollar:</strong> ${escapeHtml(names)}.</p>`
     : "";
+  const voice = getSiteVoice(input.profile);
   const bodyHtml = [
     `<p>${escapeHtml(intro)}</p>`,
+    `<p>${escapeHtml(voice.framing.uz)}</p>`,
     "<h2>Faol takliflar va ularning mazmuni</h2>",
-    `<p>${escapeHtml(availability)} PromoBozor takliflarni kod yoki maxsus havola turiga ajratadi. Bu foydalanuvchiga chegirma qanday olinishi, qaysi bosqichda faollashtirilishi va qo‘shimcha shart bor-yo‘qligini tez tushunishga yordam beradi.</p>`,
+    `<p>${escapeHtml(availability)} ${escapeHtml(voice.offerSeparation.uz)}</p>`,
     examples,
-    "<h2>Promokodni tanlashda nimalarni tekshirish kerak?</h2>",
-    "<ul><li>Taklif yangi yoki mavjud foydalanuvchilar uchun ekanini tekshiring.</li><li>Minimal buyurtma summasi, mahsulot toifasi va hududiy cheklovlarni o‘qing.</li><li>Chegirma savatda yoki to‘lov sahifasida qo‘llanganini yakuniy to‘lovdan oldin tasdiqlang.</li><li>Kod ishlamasa, yozilishidagi bo‘sh joylarni va amal qilish muddatini qayta tekshiring.</li></ul>",
+    `<h2>${escapeHtml(voice.compareChecklistTitle.uz)}</h2>`,
+    "<ul><li>Taklif yangi yoki mavjud foydalanuvchilar uchun ekanini tekshiring.</li><li>Minimal buyurtma summasi, mahsulot toifasi va hududiy cheklovlarni o‘qing.</li><li>Chegirma savatda yoki to‘lov sahifasida qo‘llanganini yakuniy to‘lovdan oldin tasdiqlang.</li><li>Kod ishlamasa, yozilishidagi bo‘sh joylarni va amal qilish muddatini qayta tekshiring.</li><li>Bir nechta kartochkani yonma-yon solishtirib, mos shartli variantni tanlang.</li></ul>",
     `<h2>${escapeHtml(input.name)} takliflaridan foydalanish</h2>`,
     `<p>Kodli taklifda promokodni nusxalab, ${escapeHtml(input.name)} sayt yoki ilovasidagi promo maydonga kiriting. Havolali aksiyada esa kartochkadagi tugma orqali hamkor sahifaga o‘ting. Har ikki holatda kartochkadagi shartlar asosiy manba hisoblanadi: foiz yoki summa, minimal xarid, foydalanuvchi turi va muddat bir taklifdan boshqasiga farq qilishi mumkin.</p>`,
     "<p>Kontent o‘qishga qulay bo‘lishi uchun asosiy foyda avval, cheklovlar esa alohida ko‘rsatiladi. Taklif ma’lumotlari o‘zgarsa, sahifadagi tekshiruv sanasi va tavsif ham yangilanadi.</p>",
@@ -246,17 +251,16 @@ function buildEntityUz(
       question: `${input.name} uchun hozir nechta faol taklif bor?`,
       answer:
         count > 0
-          ? `PromoBozor bazasida hozir ${input.name} bilan bog‘langan ${count} ta faol taklif ko‘rsatilgan. Son vaqt o‘tishi bilan o‘zgaradi: yangi takliflar qo‘shiladi, muddati o‘tganlari faol ro‘yxatdan olinadi.`
-          : `Hozir ${input.name} uchun faol taklif ko‘rsatilmagan. Sahifa saqlanadi va yangi, tekshirilgan promokod paydo bo‘lganda yangilanadi.`,
+          ? voice.inventoryAnswer.uz.withOffers(input.name, count)
+          : voice.inventoryAnswer.uz.withoutOffers(input.name),
     },
     {
       question: `${input.name} promokodini qanday ishlataman?`,
       answer: `Kartochkani ochib, taklif kodli bo‘lsa kodni nusxalang va ${input.name} sayt yoki ilovasidagi promo maydonga kiriting. Taklif havolali bo‘lsa, kartochkadagi tugma orqali hamkor sahifaga o‘ting. To‘lovdan oldin chegirma qo‘llanganini tekshiring.`,
     },
     {
-      question: `${input.name} kodi ishlamasa nima qilish kerak?`,
-      answer:
-        "Avval amal qilish muddati, minimal buyurtma, foydalanuvchi turi, mahsulot yoki hudud cheklovlarini tekshiring. Kodni ortiqcha bo‘shliqsiz kiriting. Shartlar mos bo‘lsa-yu chegirma chiqmasa, taklif tugagan bo‘lishi mumkin.",
+      question: voice.uniqueFaq.uz.question(input.name),
+      answer: voice.uniqueFaq.uz.answer(input.name),
     },
   ];
   return { bodyHtml, faqJson };
@@ -276,13 +280,15 @@ function buildEntityRu(
   const examples = names
     ? `<p><strong>Примеры актуальных предложений:</strong> ${escapeHtml(names)}.</p>`
     : "";
+  const voice = getSiteVoice(input.profile);
   const bodyHtml = [
     `<p>${escapeHtml(intro)}</p>`,
+    `<p>${escapeHtml(voice.framing.ru)}</p>`,
     "<h2>Актуальные предложения и их условия</h2>",
-    `<p>${escapeHtml(availability)} PromoBozor разделяет предложения на промокоды и специальные ссылки. Так проще понять, нужно ли вводить код вручную, на каком этапе активировать скидку и какие ограничения проверить перед оплатой.</p>`,
+    `<p>${escapeHtml(availability)} ${escapeHtml(voice.offerSeparation.ru)}</p>`,
     examples,
-    "<h2>Что проверить перед использованием?</h2>",
-    "<ul><li>Уточните, доступна ли акция новым или действующим клиентам.</li><li>Проверьте минимальную сумму заказа, категорию товара и региональные ограничения.</li><li>До оплаты убедитесь, что скидка появилась в корзине или на странице оформления.</li><li>Если код не сработал, удалите лишние пробелы и ещё раз проверьте срок действия.</li></ul>",
+    `<h2>${escapeHtml(voice.compareChecklistTitle.ru)}</h2>`,
+    "<ul><li>Уточните, доступна ли акция новым или действующим клиентам.</li><li>Проверьте минимальную сумму заказа, категорию товара и региональные ограничения.</li><li>До оплаты убедитесь, что скидка появилась в корзине или на странице оформления.</li><li>Если код не сработал, удалите лишние пробелы и ещё раз проверьте срок действия.</li><li>Сравните несколько карточек рядом и выберите вариант с подходящими условиями.</li></ul>",
     `<h2>Как использовать предложения ${escapeHtml(input.name)}</h2>`,
     `<p>Для предложения с кодом скопируйте промокод и вставьте его в специальное поле на сайте или в приложении ${escapeHtml(input.name)}. Если акция открывается по ссылке, перейдите на сайт партнёра кнопкой в карточке. Условия карточки остаются главным ориентиром: размер скидки, минимальная покупка, тип клиента и срок могут отличаться.</p>`,
     "<p>Текст построен так, чтобы сначала показать выгоду, а затем ограничения. При изменении условий обновляются описание и дата проверки, поэтому перед покупкой полезно сверить текущую карточку.</p>",
@@ -295,17 +301,16 @@ function buildEntityRu(
       question: `Сколько активных предложений ${input.name} доступно сейчас?`,
       answer:
         count > 0
-          ? `Сейчас в базе PromoBozor опубликовано ${count} активных предложений, связанных с ${input.name}. Количество меняется: новые акции добавляются после проверки, а завершённые перестают считаться действующими.`
-          : `Сейчас активных предложений ${input.name} нет. Страница сохранена и будет обновлена, когда появится новый проверенный промокод.`,
+          ? voice.inventoryAnswer.ru.withOffers(input.name, count)
+          : voice.inventoryAnswer.ru.withoutOffers(input.name),
     },
     {
       question: `Как применить промокод ${input.name}?`,
       answer: `Откройте карточку. Если это промокод, скопируйте его и вставьте в поле для купона на сайте или в приложении ${input.name}. Если это акция по ссылке, перейдите на сайт партнёра кнопкой в карточке. До оплаты проверьте итоговую сумму.`,
     },
     {
-      question: `Почему код ${input.name} может не сработать?`,
-      answer:
-        "Проверьте срок, минимальную сумму, тип клиента, категорию товара и регион акции. Вставляйте код без лишних пробелов. Если все условия выполнены, но скидки нет, предложение могло завершиться раньше заявленного срока.",
+      question: voice.uniqueFaq.ru.question(input.name),
+      answer: voice.uniqueFaq.ru.answer(input.name),
     },
   ];
   return { bodyHtml, faqJson };
@@ -325,13 +330,15 @@ function buildEntityEn(
   const examples = names
     ? `<p><strong>Examples of current offers:</strong> ${escapeHtml(names)}.</p>`
     : "";
+  const voice = getSiteVoice(input.profile);
   const bodyHtml = [
     `<p>${escapeHtml(intro)}</p>`,
+    `<p>${escapeHtml(voice.framing.en)}</p>`,
     "<h2>Current offers and what they include</h2>",
-    `<p>${escapeHtml(availability)} PromoBozor separates manual promo codes from deal links. This makes it easier to see how a discount is activated, where it should appear, and which restrictions need checking before payment.</p>`,
+    `<p>${escapeHtml(availability)} ${escapeHtml(voice.offerSeparation.en)}</p>`,
     examples,
-    "<h2>What should you check before using an offer?</h2>",
-    "<ul><li>Confirm whether the campaign is for new or existing customers.</li><li>Read the minimum-spend, product-category, and location restrictions.</li><li>Before paying, make sure the discount appears in the cart or checkout total.</li><li>If a code fails, remove extra spaces and check the validity period again.</li></ul>",
+    `<h2>${escapeHtml(voice.compareChecklistTitle.en)}</h2>`,
+    "<ul><li>Confirm whether the campaign is for new or existing customers.</li><li>Read the minimum-spend, product-category, and location restrictions.</li><li>Before paying, make sure the discount appears in the cart or checkout total.</li><li>If a code fails, remove extra spaces and check the validity period again.</li><li>Compare a few cards side by side and pick the offer whose conditions fit.</li></ul>",
     `<h2>How to use ${escapeHtml(input.name)} offers</h2>`,
     `<p>For a code-based offer, copy the promo code and paste it into the coupon field on the ${escapeHtml(input.name)} website or app. For a link-based campaign, use the button on the offer card to open the partner page. The card terms remain the primary reference because discount size, minimum order, customer eligibility, and timing can vary between offers.</p>`,
     "<p>The content is arranged to show the benefit first and the restrictions separately. When offer details change, the description and review date are refreshed, so check the current card before completing a purchase.</p>",
@@ -344,17 +351,16 @@ function buildEntityEn(
       question: `How many active ${input.name} offers are available now?`,
       answer:
         count > 0
-          ? `PromoBozor currently lists ${count} active offers linked to ${input.name}. The number changes as new deals are checked and added, while ended promotions are removed from the active count.`
-          : `There are no active ${input.name} offers right now. This page is retained and will be updated when a new verified promotion becomes available.`,
+          ? voice.inventoryAnswer.en.withOffers(input.name, count)
+          : voice.inventoryAnswer.en.withoutOffers(input.name),
     },
     {
       question: `How do I apply a ${input.name} promo code?`,
       answer: `Open the offer card. If it contains a code, copy it into the coupon field on the ${input.name} website or app. If it is a link deal, use the card button to visit the partner page. Confirm the reduced total before payment.`,
     },
     {
-      question: `Why might a ${input.name} code fail?`,
-      answer:
-        "Check the expiry, minimum spend, customer eligibility, product category, and location rules. Paste the code without extra spaces. If every condition matches but the price does not change, the campaign may have ended early.",
+      question: voice.uniqueFaq.en.question(input.name),
+      answer: voice.uniqueFaq.en.answer(input.name),
     },
   ];
   return { bodyHtml, faqJson };

@@ -32,10 +32,21 @@ function parseBlogDetailPath(pathname: string): string | null {
   return segments[1];
 }
 
+function currentSearchWithoutQuestion(): string {
+  if (typeof window === "undefined") return "";
+  return window.location.search.replace(/^\?/, "");
+}
+
+function withPreservedQuery(path: string, search: string): string {
+  if (!search) return path;
+  return `${path}?${search}`;
+}
+
 /**
  * Custom hook for handling locale switching with correct slugs for detail pages
  * On detail pages (promocode, store, brand, category, blog), it resolves the
  * correct slug for the target language before navigating.
+ * Query params are preserved across locale switches.
  */
 export function useLocaleSwitch() {
   const router = useRouter();
@@ -47,6 +58,7 @@ export function useLocaleSwitch() {
     async (targetLocale: string, currentLocale: string) => {
       setIsLoading(true);
       setError(null);
+      const search = currentSearchWithoutQuestion();
 
       // Same locale - no action needed
       if (targetLocale === currentLocale) {
@@ -62,9 +74,11 @@ export function useLocaleSwitch() {
           targetLocale as BlogLocale
         );
         if (translated) {
-          router.replace(getBlogInternalHref(translated), { locale: targetLocale });
+          router.replace(withPreservedQuery(getBlogInternalHref(translated), search), {
+            locale: targetLocale,
+          });
         } else {
-          router.replace("/blog", { locale: targetLocale });
+          router.replace(withPreservedQuery("/blog", search), { locale: targetLocale });
         }
         setIsLoading(false);
         return;
@@ -75,7 +89,7 @@ export function useLocaleSwitch() {
 
       if (!detailInfo) {
         // Not a detail page - use standard navigation
-        router.replace(pathname, { locale: targetLocale });
+        router.replace(withPreservedQuery(pathname, search), { locale: targetLocale });
         setIsLoading(false);
         return;
       }
@@ -96,7 +110,7 @@ export function useLocaleSwitch() {
         if (!response.ok) {
           if (response.status === 404) {
             // Entity not found - redirect to home
-            router.replace("/", { locale: targetLocale });
+            router.replace(withPreservedQuery("/", search), { locale: targetLocale });
             return;
           }
           throw new Error("Failed to fetch translation");
@@ -106,16 +120,16 @@ export function useLocaleSwitch() {
 
         if (data.slug) {
           const newPathname = getInternalEntityHref(entityType, data.slug);
-          router.replace(newPathname, { locale: targetLocale });
+          router.replace(withPreservedQuery(newPathname, search), { locale: targetLocale });
         } else {
           // No translation in target language - redirect to home
-          router.replace("/", { locale: targetLocale });
+          router.replace(withPreservedQuery("/", search), { locale: targetLocale });
         }
       } catch (err) {
         console.error("Error switching locale:", err);
         setError("Failed to switch language");
         // Fallback to standard navigation on error
-        router.replace(pathname, { locale: targetLocale });
+        router.replace(withPreservedQuery(pathname, search), { locale: targetLocale });
       } finally {
         setIsLoading(false);
       }

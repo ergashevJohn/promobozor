@@ -13,17 +13,23 @@ Til strategiyasi: **uz + ru + en teng**. Har locale mustaqil matn (copy-paste ta
 
 ## Title / H1 pattern (stuffing yo‘q)
 
-- **uz:** `{Entity} promokodlari — faol chegirma va kuponlar`
-- **ru:** `Промокоды {Entity} — купоны и скидки`
-- **en:** `{Entity} Promo Codes & Coupons — Verified Deals`
+- **uz:** `{Entity} promokodlari — solishtirish va shartlar`
+- **ru:** `Промокоды {Entity} — сравнение и условия`
+- **en:** `{Entity} Promo Codes — Compare Verified Deals`
 
 Bir title’da 1 primary + ixtiyoriy yil/sana.
 
+## Site voice
+
+- Profil: `promobozor-editorial` (`lib/seo/site-voice.ts`)
+- Framing: solishtirish + shartlar + tekshirilgan tanlov (tez katalog da’vosi markazda emas)
+- Ijtimoiy tarmoqlar: umumiy network disclosure (PromoBozor ≠ Promokoduz)
+
 ## Intent kalit so‘zlar
 
-- uz: promokod, chegirma, kupon, UZS, Click/Payme (kontekstda)
-- ru: промокод, купон, скидка
-- en: promo code, coupon, verified + “Uzbekistan / UZS” bir jumla
+- uz: promokod, chegirma, kupon, solishtirish, shartlar, UZS, Click/Payme (kontekstda)
+- ru: промокод, купон, скидка, сравнение, условия
+- en: promo code, coupon, compare, conditions, verified + “Uzbekistan / UZS” bir jumla
 
 ## Anti-thin
 
@@ -32,6 +38,7 @@ Bir title’da 1 primary + ixtiyoriy yil/sana.
 - Generic “great online deals” taqiqlanadi
 - Expired/disabled aniq belgilansin / indekslanmasin
 - `lastVerifiedAt` / `lastReviewedAt` faqat haqiqiy review/verify da yangilanadi
+- Yolg‘on son yoki isbotsiz “har kuni tekshirildi” da’volari yo‘q
 
 ## GEO / AI citation format
 
@@ -39,15 +46,17 @@ Bir title’da 1 primary + ixtiyoriy yil/sana.
 2. Numbered how-to (3–5)
 3. FAQ javoblari 40–80 so‘z
 4. Shartlar bullet (min order, exclusions)
+5. Solishtirish checklist (foyda / muddat / cheklov)
 
 ## Verify ritmi (Tier 2/3 ops)
 
-| Ish                             | Chastota    |
-| ------------------------------- | ----------- |
-| Top 50 store / hot promo verify | Har 3–7 kun |
-| Expired/disabled tozalash       | Kunlik      |
-| `npm run seo:gap-report`        | Haftalik    |
-| Category intro refresh          | Chorakda    |
+| Ish                             | Chastota      |
+| ------------------------------- | ------------- |
+| Top 50 store / hot promo verify | Har 3–7 kun   |
+| Expired/disabled tozalash       | Kunlik        |
+| `npm run seo:gap-report`        | Haftalik      |
+| `npm run seo:compare-sites`     | Overlap oldin |
+| Category intro refresh          | Chorakda      |
 
 ## Skriptlar
 
@@ -56,9 +65,12 @@ Bir title’da 1 primary + ixtiyoriy yil/sana.
 npx tsx scripts/seo/apply-0020-migration.ts
 
 npm run db:migrate                 # schema (0020_content_seo_fields)
+npm run seo:compare-sites          # peer vs local overlap + internal URL dups
 npm run seo:upsert-hub             # Tier-1 hub body/meta/faq
 npm run seo:enrich-tier1           # hub + bog‘langan/unverified promo + top category
-npm run seo:rewrite-existing       # barcha mavjud row uchun dry-run preview
+npm run seo:rewrite-existing       # dry-run (default); --overlap-report / --apply
 npm run seo:rewrite-existing:apply # existing data asosidagi rewrite'ni DBga qo‘llash
+npx tsx scripts/seo/merge-internal-duplicates.ts  # internal hub merge dry-run
 npm run seo:gap-report             # inventory + content gaps
+npm run seo:verify -- <urls...>    # indexability smoke
 ```

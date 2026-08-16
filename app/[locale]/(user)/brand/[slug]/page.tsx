@@ -115,7 +115,7 @@ export async function generateMetadata({
       languageAlternates[t.language] = getEntityPath(t.language as RouteLocale, "brand", t.slug);
     });
 
-    return generateFullMetadata(
+    const metadata = generateFullMetadata(
       title,
       description,
       url,
@@ -125,6 +125,12 @@ export async function generateMetadata({
       "",
       languageAlternates
     );
+
+    if (totalPromocodes === 0) {
+      return { ...metadata, robots: { index: false, follow: true } };
+    }
+
+    return metadata;
   } catch {
     return {};
   }

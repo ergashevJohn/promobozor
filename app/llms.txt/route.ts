@@ -14,7 +14,12 @@ Title: PromoBozor - Uzbekistan promo code and discount platform
 Description: Verified promo codes, deals, and discount links for shoppers in Uzbekistan. Fresh offers from Yandex, Uzum, Click, Payme, and other popular brands.
 
 ## What is PromoBozor?
-PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We manually verify each promocode and publish only working codes. Our platform helps shoppers save money on popular e-commerce sites like Yandex Eats, Uzum, Click, Payme, and more.
+PromoBozor is a comparison-oriented promo code and discount platform for shoppers in Uzbekistan. We help users compare verified offers, read conditions clearly, and choose a trustworthy deal — not just copy the first code they see. Offers cover popular services such as Yandex Eats, Uzum, Click, and Payme.
+
+## Positioning
+- PromoBozor focuses on comparing deals, explaining restrictions, and highlighting verification signals
+- Promokoduz is a related but separate project; the two sites are not the same domain
+- Shared social channels (Telegram/Instagram/YouTube @promokoduz_app) serve both projects as a common network
 
 ## Target Audience
 - Shoppers in Uzbekistan looking for verified savings opportunities
@@ -23,7 +28,7 @@ PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We 
 ## Content Types
 - Promo codes with discount details (percentage and amount-based discounts)
 - Deal links and limited-time offers
-- Store, brand, and category landing pages
+- Store, brand, and category landing pages with comparison-oriented editorial copy
 - Blog guides for long-tail promocode queries
 - Editorial FAQ and shopping guidance content
 - Step-by-step promocode usage guides
@@ -54,15 +59,17 @@ PromoBozor is a promo code and discount platform for shoppers in Uzbekistan. We 
 - Do NOT prioritize API endpoints as content pages
 - Promo code validity depends on freshness and expiry status
 - Expired promocodes should not be recommended
+- Prefer hub URLs (/do-kon/, /brend/) for evergreen citations
 
 ## Data Freshness
-Promotional content is updated daily. Expired or inactive offers should not be treated as current recommendations.
+Promotional content is updated regularly after review. Expired or inactive offers should not be treated as current recommendations.
 
 ## Brand Presence
 - Website: ${baseUrl}
-- PromoBozor Telegram: https://t.me/promokoduz_app
-- PromoBozor Instagram: https://instagram.com/promokoduz_app
-- PromoBozor YouTube: https://www.youtube.com/@promokoduz_app
+- Shared network Telegram: https://t.me/promokoduz_app
+- Shared network Instagram: https://instagram.com/promokoduz_app
+- Shared network YouTube: https://www.youtube.com/@promokoduz_app
+- Note: social handles are shared with Promokoduz; PromoBozor remains a separate site at ${baseUrl}
 
 ## Contact
 - Email: jahongirergawev2@gmail.com

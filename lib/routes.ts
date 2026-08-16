@@ -223,6 +223,13 @@ export function isCompetitorPromokodAliasPath(
   return true;
 }
 
+/**
+ * RU deal slugs must not end with -promokod/-promocode or proxy will 301 them to a hub.
+ */
+export function isUnsafeRuPromokodDealSlug(slug: string): boolean {
+  return /-(promokod|promocode)$/i.test(slug.trim());
+}
+
 /** All detail URL segments that should participate in 410 checks */
 export const ALL_ENTITY_SEGMENTS_PATTERN = Array.from(
   new Set([

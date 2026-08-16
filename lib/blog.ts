@@ -48,19 +48,19 @@ export const blogPosts: BlogPost[] = [
     body: {
       uz: [
         "Yandex Eats (Yandex Go ichidagi Eats) O‘zbekistonda yetkazib berish uchun eng ko‘p qidiriladigan promokod yo‘nalishlaridan biri.",
-        "PromoBozor’da faqat tekshirilgan takliflar chiqadi: kodni nusxalang, ilovada savatni to‘ldiring va to‘lovdan oldin promo maydonga qo‘ying.",
+        "PromoBozor’da faqat tekshirilgan takliflar chiqadi: alternativlarni solishtiring, shartlarni tekshiring, kodni nusxalang, ilovada savatni to‘ldiring va to‘lovdan oldin promo maydonga qo‘ying.",
         "Ko‘p kodlar birinchi buyurtma yoki minimal savat shartiga bog‘liq. Har bir kartochkadagi shartlar va tugash sanasini o‘qing.",
         "Yangi kodlar uchun Yandex Eats brend sahifasini kuzating va muddati o‘tgan takliflarni ishlatmang.",
       ],
       ru: [
         "Yandex Eats — одно из самых популярных направлений промокодов в Узбекистане.",
-        "На PromoBozor публикуются проверенные предложения: скопируйте код, соберите корзину в приложении и вставьте промокод до оплаты.",
+        "На PromoBozor публикуются проверенные предложения: сравните альтернативы, проверьте условия, скопируйте код, соберите корзину в приложении и вставьте промокод до оплаты.",
         "Многие коды действуют на первый заказ или от минимальной суммы. Всегда читайте условия на карточке.",
         "Следите за страницей бренда Yandex Eats, чтобы не использовать устаревшие коды.",
       ],
       en: [
         "Yandex Eats is one of the most searched promocode topics in Uzbekistan.",
-        "On PromoBozor we list verified deals: copy the code, build your cart in the app, and paste it before checkout.",
+        "On PromoBozor we list verified deals: compare alternatives, check conditions, copy the code, build your cart in the app, and paste it before checkout.",
         "Many codes require a first order or a minimum basket. Always read the conditions on the card.",
         "Follow the Yandex Eats brand page so you do not reuse expired offers.",
       ],

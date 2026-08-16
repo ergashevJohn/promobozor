@@ -12,6 +12,7 @@ type UrlCheckResult = {
   xRobotsTag: string | null;
   metaRobots: string | null;
   canonical: string | null;
+  hreflang: Record<string, string>;
   noindexDetected: boolean;
   error: string | null;
 };
@@ -98,6 +99,23 @@ function extractCanonicalLink(html: string): string | null {
   return null;
 }
 
+function extractHreflangMap(html: string): Record<string, string> {
+  const linkTags = html.match(/<link\b[^>]*>/gi) ?? [];
+  const map: Record<string, string> = {};
+
+  for (const tag of linkTags) {
+    const rel = extractAttr(tag, "rel")?.toLowerCase();
+    if (rel !== "alternate") continue;
+    const hreflang = extractAttr(tag, "hreflang");
+    const href = extractAttr(tag, "href");
+    if (hreflang && href) {
+      map[hreflang.toLowerCase()] = href;
+    }
+  }
+
+  return map;
+}
+
 function hasNoindexDirective(...values: Array<string | null>): boolean {
   return values.some((value) => value?.toLowerCase().includes("noindex"));
 }
@@ -120,6 +138,7 @@ async function checkUrl(inputUrl: string): Promise<UrlCheckResult> {
       xRobotsTag: null,
       metaRobots: null,
       canonical: null,
+      hreflang: {},
       noindexDetected: false,
       error: "Invalid URL format. Expected absolute URL (e.g. https://example.com/page).",
     };
@@ -137,6 +156,7 @@ async function checkUrl(inputUrl: string): Promise<UrlCheckResult> {
     const xRobotsTag = response.headers.get("x-robots-tag");
     const metaRobots = extractMetaContentByName(html, "robots");
     const canonical = extractCanonicalLink(html);
+    const hreflang = extractHreflangMap(html);
     const noindexDetected = hasNoindexDirective(xRobotsTag, metaRobots);
 
     return {
@@ -146,6 +166,7 @@ async function checkUrl(inputUrl: string): Promise<UrlCheckResult> {
       xRobotsTag,
       metaRobots,
       canonical,
+      hreflang,
       noindexDetected,
       error: null,
     };
@@ -158,6 +179,7 @@ async function checkUrl(inputUrl: string): Promise<UrlCheckResult> {
       xRobotsTag: null,
       metaRobots: null,
       canonical: null,
+      hreflang: {},
       noindexDetected: false,
       error: message,
     };
@@ -172,6 +194,19 @@ function printResults(results: UrlCheckResult[]): void {
     console.log(`x-robots-tag: ${result.xRobotsTag ?? "-"}`);
     console.log(`meta robots: ${result.metaRobots ?? "-"}`);
     console.log(`canonical: ${result.canonical ?? "-"}`);
+    const hreflangKeys = Object.keys(result.hreflang);
+    if (hreflangKeys.length > 0) {
+      console.log(
+        `hreflang: ${hreflangKeys
+          .sort()
+          .map((key) => `${key}=${result.hreflang[key]}`)
+          .join(" | ")}`
+      );
+      const hasLocales = ["uz", "ru", "en", "x-default"].every((key) => hreflangKeys.includes(key));
+      console.log(`hreflang reciprocal set: ${hasLocales ? "yes" : "incomplete"}`);
+    } else {
+      console.log("hreflang: -");
+    }
     console.log(`noindex detected: ${result.noindexDetected ? "yes" : "no"}`);
     if (result.error) {
       console.log(`error: ${result.error}`);

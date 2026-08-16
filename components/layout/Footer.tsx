@@ -69,6 +69,9 @@ export async function Footer({ locale }: { locale: string }) {
             <p className="text-muted-foreground mt-4 max-w-sm text-sm leading-7">
               {t("description")}
             </p>
+            <p className="text-muted-foreground mt-3 max-w-sm text-xs leading-6">
+              {t("socialNetworkNote")}
+            </p>
             <div className="mt-5 flex flex-wrap gap-2">
               {socialLinks.map(({ name, href, icon: Icon }) => (
                 <a

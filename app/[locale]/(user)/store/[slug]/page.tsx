@@ -373,7 +373,7 @@ export async function generateMetadata({
       languageAlternates[t.language] = getEntityPath(t.language as RouteLocale, "store", t.slug);
     });
 
-    return generateFullMetadata(
+    const metadata = generateFullMetadata(
       title,
       description,
       url,
@@ -383,6 +383,13 @@ export async function generateMetadata({
       "",
       languageAlternates
     );
+
+    // Empty hubs stay discoverable via links but should not compete in organic SERPs.
+    if (totalPromocodes === 0) {
+      return { ...metadata, robots: { index: false, follow: true } };
+    }
+
+    return metadata;
   } catch {
     return {};
   }

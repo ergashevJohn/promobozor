@@ -58,7 +58,7 @@ export function getEntityFaqItems(
       },
       {
         question: `Are ${entityName} promocodes free?`,
-        answer: `Yes. All ${entityName} promocodes on PromoBozor are free to view and use.`,
+        answer: `Yes. All ${entityName} promocodes on PromoBozor are free to view and use. Compare conditions on each card before activating.`,
       },
       {
         question: `How long do ${entityName} promocodes last?`,

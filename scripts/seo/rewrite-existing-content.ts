@@ -1,5 +1,7 @@
 import "dotenv/config";
 
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { eq } from "drizzle-orm";
 import {
   brandTranslations,
@@ -22,6 +24,8 @@ import {
   type DealFact,
   type EntityContentKind,
 } from "../../lib/seo/content-rewrite";
+import { combinedSimilarity } from "../../lib/seo/content-similarity";
+import { resolveSiteVoiceProfile, type SiteVoiceProfile } from "../../lib/seo/site-voice";
 
 type EntityTranslationRow = {
   id: string;
@@ -56,7 +60,80 @@ type RewriteStats = {
   promocodes: number;
   sourceDescriptionsUsed: number;
   fallbackDescriptionsUsed: number;
+  skippedByFilter: number;
 };
+
+type CliOptions = {
+  apply: boolean;
+  profile: SiteVoiceProfile;
+  overlapReportPath?: string;
+  entityTypes: Set<EntityContentKind | "promocode"> | null;
+  locales: Set<ContentLocale> | null;
+  ids: Set<string> | null;
+  translationIds: Set<string> | null;
+};
+
+function parseArgs(argv: string[]): CliOptions {
+  const options: CliOptions = {
+    apply: argv.includes("--apply"),
+    profile: "promobozor-editorial",
+    entityTypes: null,
+    locales: null,
+    ids: null,
+    translationIds: null,
+  };
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+    if (arg === "--profile") {
+      options.profile = resolveSiteVoiceProfile(argv[i + 1]);
+      i += 1;
+    } else if (arg.startsWith("--profile=")) {
+      options.profile = resolveSiteVoiceProfile(arg.slice("--profile=".length));
+    } else if (arg === "--overlap-report") {
+      options.overlapReportPath = argv[i + 1];
+      i += 1;
+    } else if (arg.startsWith("--overlap-report=")) {
+      options.overlapReportPath = arg.slice("--overlap-report=".length);
+    } else if (arg === "--entity-type") {
+      options.entityTypes ??= new Set();
+      options.entityTypes.add(argv[i + 1] as EntityContentKind | "promocode");
+      i += 1;
+    } else if (arg.startsWith("--entity-type=")) {
+      options.entityTypes ??= new Set();
+      options.entityTypes.add(
+        arg.slice("--entity-type=".length) as EntityContentKind | "promocode"
+      );
+    } else if (arg === "--locale") {
+      options.locales ??= new Set();
+      options.locales.add(argv[i + 1] as ContentLocale);
+      i += 1;
+    } else if (arg.startsWith("--locale=")) {
+      options.locales ??= new Set();
+      options.locales.add(arg.slice("--locale=".length) as ContentLocale);
+    } else if (arg === "--ids") {
+      options.ids ??= new Set();
+      for (const id of (argv[i + 1] ?? "").split(",").filter(Boolean)) options.ids.add(id);
+      i += 1;
+    } else if (arg.startsWith("--ids=")) {
+      options.ids ??= new Set();
+      for (const id of arg.slice("--ids=".length).split(",").filter(Boolean)) options.ids.add(id);
+    } else if (arg === "--translation-ids") {
+      options.translationIds ??= new Set();
+      for (const id of (argv[i + 1] ?? "").split(",").filter(Boolean)) {
+        options.translationIds.add(id);
+      }
+      i += 1;
+    } else if (arg.startsWith("--translation-ids=")) {
+      options.translationIds ??= new Set();
+      for (const id of arg.slice("--translation-ids=".length).split(",").filter(Boolean)) {
+        options.translationIds.add(id);
+      }
+    }
+  }
+
+  return options;
+}
 
 function entityKey(entityId: string, locale: ContentLocale): string {
   return `${entityId}:${locale}`;
@@ -95,16 +172,45 @@ function printPreview(
   name: string,
   locale: ContentLocale,
   bodyHtml: string,
-  metaTitle: string
+  metaTitle: string,
+  similarityDrop: number
 ): void {
   console.log(
-    `[preview] ${label}/${locale} ${name}: ${wordCount(bodyHtml)} words; meta="${metaTitle}"`
+    `[preview] ${label}/${locale} ${name}: ${wordCount(bodyHtml)} words; meta="${metaTitle}"; similarityDrop=${similarityDrop.toFixed(3)}`
   );
 }
 
 function sourceDescription(row: EntityTranslationRow): string | null {
   const firstParagraph = row.bodyHtml?.match(/<p>([\s\S]*?)<\/p>/i)?.[1];
   return plainText(firstParagraph) || plainText(row.description) || null;
+}
+
+function allowEntity(
+  options: CliOptions,
+  kind: EntityContentKind | "promocode",
+  locale: ContentLocale,
+  entityId: string,
+  translationId: string
+): boolean {
+  if (options.entityTypes && !options.entityTypes.has(kind)) return false;
+  if (options.locales && !options.locales.has(locale)) return false;
+  if (options.ids && !options.ids.has(entityId)) return false;
+  if (options.translationIds && !options.translationIds.has(translationId)) return false;
+  return true;
+}
+
+async function loadOverlapTranslationIds(filePath: string): Promise<Set<string>> {
+  const raw = await readFile(filePath, "utf8");
+  const parsed = JSON.parse(raw) as {
+    translationIds?: string[];
+    overlaps?: Array<{ translationId?: string }>;
+  };
+  const ids = new Set<string>();
+  for (const id of parsed.translationIds ?? []) ids.add(id);
+  for (const row of parsed.overlaps ?? []) {
+    if (row.translationId) ids.add(row.translationId);
+  }
+  return ids;
 }
 
 async function loadData(): Promise<{
@@ -186,7 +292,13 @@ async function main(): Promise<void> {
     throw new Error("DATABASE_URL is required");
   }
 
-  const apply = process.argv.includes("--apply");
+  const options = parseArgs(process.argv.slice(2));
+  if (options.overlapReportPath) {
+    const fromManifest = await loadOverlapTranslationIds(options.overlapReportPath);
+    options.translationIds ??= new Set();
+    for (const id of fromManifest) options.translationIds.add(id);
+  }
+
   const { storeRows, brandRows, categoryRows, promoRows } = await loadData();
   const stats: RewriteStats = {
     stores: 0,
@@ -195,8 +307,18 @@ async function main(): Promise<void> {
     promocodes: 0,
     sourceDescriptionsUsed: 0,
     fallbackDescriptionsUsed: 0,
+    skippedByFilter: 0,
   };
   const now = new Date();
+  const snapshot: Array<{
+    kind: string;
+    translationId: string;
+    locale: ContentLocale;
+    beforeBody: string | null;
+    afterBody: string;
+    similarityToBefore: number;
+  }> = [];
+
   const storeNames = new Map(
     storeRows.map((row) => [entityKey(row.entityId, row.language), row.name] as const)
   );
@@ -214,6 +336,10 @@ async function main(): Promise<void> {
   ): Promise<void> => {
     const previewed = new Set<ContentLocale>();
     for (const row of rows) {
+      if (!allowEntity(options, kind, row.language, row.entityId, row.id)) {
+        stats.skippedByFilter += 1;
+        continue;
+      }
       const existingDescription = sourceDescription(row);
       const rewrite = buildEntityRewrite({
         kind,
@@ -221,15 +347,35 @@ async function main(): Promise<void> {
         name: row.name,
         existingDescription,
         deals: dealsForEntity(promoRows, kind, row.entityId, row.language),
+        profile: options.profile,
       });
       if (existingDescription) stats.sourceDescriptionsUsed += 1;
       else stats.fallbackDescriptionsUsed += 1;
+
+      const beforeBody = row.bodyHtml || row.description;
+      const similarityToBefore = combinedSimilarity(beforeBody, rewrite.bodyHtml);
+      snapshot.push({
+        kind,
+        translationId: row.id,
+        locale: row.language,
+        beforeBody,
+        afterBody: rewrite.bodyHtml,
+        similarityToBefore,
+      });
+
       if (!previewed.has(row.language)) {
-        printPreview(kind, row.name, row.language, rewrite.bodyHtml, rewrite.metaTitle);
+        printPreview(
+          kind,
+          row.name,
+          row.language,
+          rewrite.bodyHtml,
+          rewrite.metaTitle,
+          1 - similarityToBefore
+        );
         previewed.add(row.language);
       }
 
-      if (apply) {
+      if (options.apply) {
         if (kind === "store") {
           await tx
             .update(storeTranslations)
@@ -261,6 +407,10 @@ async function main(): Promise<void> {
 
     const previewed = new Set<ContentLocale>();
     for (const row of promoRows) {
+      if (!allowEntity(options, "promocode", row.language, row.id, row.translationId)) {
+        stats.skippedByFilter += 1;
+        continue;
+      }
       const name =
         (row.storeId ? storeNames.get(entityKey(row.storeId, row.language)) : null) ??
         (row.brandId ? brandNames.get(entityKey(row.brandId, row.language)) : null) ??
@@ -277,14 +427,24 @@ async function main(): Promise<void> {
         type: row.type,
         minOrderAmount: row.minOrderAmount,
         expiresAt: row.expiresAt,
+        profile: options.profile,
+      });
+      const similarityToBefore = combinedSimilarity(row.conditions, rewrite.conditions);
+      snapshot.push({
+        kind: "promocode",
+        translationId: row.translationId,
+        locale: row.language,
+        beforeBody: row.conditions,
+        afterBody: rewrite.conditions,
+        similarityToBefore,
       });
       if (!previewed.has(row.language)) {
         console.log(
-          `[preview] promocode/${row.language} ${row.title}: short="${rewrite.shortDescription}"`
+          `[preview] promocode/${row.language} ${row.title}: short="${rewrite.shortDescription}"; similarityDrop=${(1 - similarityToBefore).toFixed(3)}`
         );
         previewed.add(row.language);
       }
-      if (apply) {
+      if (options.apply) {
         await tx
           .update(promocodeTranslations)
           .set({ ...rewrite, updatedAt: now })
@@ -294,13 +454,37 @@ async function main(): Promise<void> {
     }
   });
 
+  const outDir = path.join(process.cwd(), "reports");
+  await mkdir(outDir, { recursive: true });
+  const snapshotPath = path.join(
+    outDir,
+    options.apply ? "rewrite-snapshot-applied.json" : "rewrite-snapshot-dry-run.json"
+  );
+  await writeFile(
+    snapshotPath,
+    JSON.stringify(
+      {
+        mode: options.apply ? "applied" : "dry-run",
+        profile: options.profile,
+        generatedAt: now.toISOString(),
+        stats,
+        rows: snapshot,
+      },
+      null,
+      2
+    ),
+    "utf8"
+  );
+
   console.log(
     JSON.stringify(
       {
-        mode: apply ? "applied" : "dry-run",
+        mode: options.apply ? "applied" : "dry-run",
+        profile: options.profile,
         ...stats,
-        note: apply
-          ? "Existing active entity and promocode translations were rewritten."
+        snapshotPath,
+        note: options.apply
+          ? "Existing filtered entity and promocode translations were rewritten."
           : "No database rows changed. Re-run with --apply after reviewing previews.",
       },
       null,

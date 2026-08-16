@@ -5,15 +5,16 @@ import type { FaqJsonItem } from "../../db/schema";
 import { getEntityFaqItems } from "../../lib/entity-faq";
 import { listHubEditorialTargets, type HubLocale } from "../../lib/hub-editorial";
 import { isThinEntityBody } from "../../lib/seo/content-rewrite";
+import { getSiteVoice } from "../../lib/seo/site-voice";
 
 function metaTitleFor(name: string, language: HubLocale): string {
   switch (language) {
     case "uz":
-      return `${name} promokodlari — faol chegirma va kuponlar`;
+      return `${name} promokodlari — solishtirish va shartlar`;
     case "ru":
-      return `Промокоды ${name} — купоны и скидки`;
+      return `Промокоды ${name} — сравнение и условия`;
     case "en":
-      return `${name} Promo Codes & Coupons — Verified Deals`;
+      return `${name} Promo Codes — Compare Verified Deals`;
     default: {
       const _exhaustive: never = language;
       return _exhaustive;
@@ -27,28 +28,18 @@ function shortSummaryFor(description: string): string {
   return `${plain.slice(0, 177).trim()}...`;
 }
 
-function bodyHtmlFor(description: string): string {
-  return `<p>${description.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>`;
+function bodyHtmlFor(description: string, language: HubLocale): string {
+  const voice = getSiteVoice("promobozor-editorial");
+  return `<p>${description.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p><p>${voice.framing[language].replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>`;
 }
 
 function faqFor(name: string, language: HubLocale): FaqJsonItem[] {
+  const voice = getSiteVoice("promobozor-editorial");
   const items = getEntityFaqItems(name, language);
-  // Seed with template + one entity-specific unique question so FAQ is not 100% generic.
-  const unique: FaqJsonItem =
-    language === "uz"
-      ? {
-          question: `${name} promokodlari O‘zbekistonda qanday to‘lov usullari bilan ishlaydi?`,
-          answer: `${name} takliflari odatda UZS va mahalliy to‘lov (Click, Payme yoki do‘konning o‘z usuli) bilan ishlaydi. Aniq shartlar har bir kartochkada ko‘rsatiladi.`,
-        }
-      : language === "ru"
-        ? {
-            question: `Какие способы оплаты обычно работают с промокодами ${name}?`,
-            answer: `Предложения ${name} обычно работают с UZS и локальными методами оплаты. Точные условия указаны на карточке каждого промокода.`,
-          }
-        : {
-            question: `Which payment methods usually work with ${name} promocodes?`,
-            answer: `${name} deals typically work with UZS and local Uzbekistan payment methods. Exact terms are listed on each offer card.`,
-          };
+  const unique: FaqJsonItem = {
+    question: voice.uniqueFaq[language].question(name),
+    answer: voice.uniqueFaq[language].answer(name),
+  };
   return [...items.slice(0, 3), unique];
 }
 
@@ -117,7 +108,7 @@ async function main() {
           name,
           description,
           shortSummary: shortSummaryFor(description),
-          bodyHtml: bodyHtmlFor(description),
+          bodyHtml: bodyHtmlFor(description, language),
           faqJson: faqFor(name, language),
           metaTitle: metaTitleFor(name, language),
           metaDescription: description.slice(0, 155),
@@ -213,7 +204,7 @@ async function main() {
           name,
           description,
           shortSummary: shortSummaryFor(description),
-          bodyHtml: bodyHtmlFor(description),
+          bodyHtml: bodyHtmlFor(description, language),
           faqJson: faqFor(name, language),
           metaTitle: metaTitleFor(name, language),
           metaDescription: description.slice(0, 155),

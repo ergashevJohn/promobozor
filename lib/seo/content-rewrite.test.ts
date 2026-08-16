@@ -63,6 +63,9 @@ describe("content rewrite", () => {
       expect(result.bodyHtml).toContain("Hostinger");
       expect(result.bodyHtml).toContain("20%");
       expect(result.faqJson).toHaveLength(3);
+      expect(result.faqJson.some((item) => /solishtir|сравн|compare/i.test(item.question))).toBe(
+        true
+      );
       expect(result.metaTitle.length).toBeLessThanOrEqual(60);
       expect(result.metaDescription.length).toBeLessThanOrEqual(155);
     }

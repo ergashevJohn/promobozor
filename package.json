@@ -31,8 +31,10 @@
     "seo:upsert-hubs": "tsx scripts/seo/upsert-hub-editorial.ts",
     "seo:upsert-hub": "tsx scripts/seo/upsert-hub-editorial.ts",
     "seo:enrich-tier1": "tsx scripts/seo/enrich-tier1-content.ts",
+    "seo:compare-sites": "tsx scripts/seo/compare-cross-site-content.ts",
     "seo:rewrite-existing": "tsx scripts/seo/rewrite-existing-content.ts",
     "seo:rewrite-existing:apply": "tsx scripts/seo/rewrite-existing-content.ts --apply",
+    "seo:merge-internal": "tsx scripts/seo/merge-internal-duplicates.ts",
     "prepare": "husky",
     "test:e2e": "playwright test",
     "doctor": "npx react-doctor@latest"

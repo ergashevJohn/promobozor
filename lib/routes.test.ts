@@ -7,6 +7,7 @@ import {
   getListLanguageAlternates,
   getListPath,
   isCompetitorPromokodAliasPath,
+  isUnsafeRuPromokodDealSlug,
   localizedPathnames,
   resolveEntityTypeFromSegment,
   resolveInternalHrefToPublicPath,
@@ -70,6 +71,12 @@ describe("routes helpers", () => {
     expect(isCompetitorPromokodAliasPath("uz", "promokod", "yandex-eats")).toBe(true);
     expect(isCompetitorPromokodAliasPath("ru", "promokod", "yandex-eats")).toBe(false);
     expect(isCompetitorPromokodAliasPath("ru", "promokod", "yandex-eats-promokod")).toBe(true);
+  });
+
+  it("flags unsafe RU deal slugs that collide with hub aliases", () => {
+    expect(isUnsafeRuPromokodDealSlug("payme-plus-30-dney")).toBe(false);
+    expect(isUnsafeRuPromokodDealSlug("payme-promokod")).toBe(true);
+    expect(isUnsafeRuPromokodDealSlug("payme-promocode")).toBe(true);
   });
 
   it("derives localizedPathnames from LOCALIZED_* maps", () => {

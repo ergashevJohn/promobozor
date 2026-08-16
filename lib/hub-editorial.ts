@@ -62,9 +62,9 @@ export const HUB_EDITORIAL: HubEditorial[] = [
     kind: "brand",
     name: { uz: "Click", ru: "Click", en: "Click" },
     description: {
-      uz: "Click promokodlari odatda to‘lovlar, cashback yoki ilova ichidagi xizmatlarga tegishli. Kodni nusxalang va Click ilovasidagi tegishli bo‘limda faollashtiring. Har bir taklifning muddati va foydalanish limiti kartochkada ko‘rsatiladi.",
-      ru: "Промокоды Click обычно относятся к платежам, кэшбэку или сервисам внутри приложения. Скопируйте код и активируйте его в нужном разделе Click. Срок и лимиты указаны на карточке.",
-      en: "Click promocodes usually cover payments, cashback, or in-app services. Copy the code and activate it in the relevant Click section. Expiry and usage limits are shown on each card.",
+      uz: "Click promokodlari odatda to‘lovlar, cashback yoki ilova ichidagi xizmatlarga tegishli. PromoBozor’da alternativ takliflarni solishtiring, shartlarni tekshiring, so‘ng kodni Click ilovasidagi tegishli bo‘limda faollashtiring. Har bir taklifning muddati va foydalanish limiti kartochkada ko‘rsatiladi.",
+      ru: "Промокоды Click обычно относятся к платежам, кэшбэку или сервисам внутри приложения. На PromoBozor сравните альтернативы, проверьте условия, затем активируйте код в нужном разделе Click. Срок и лимиты указаны на карточке.",
+      en: "Click promocodes usually cover payments, cashback, or in-app services. On PromoBozor compare alternatives, check conditions, then activate the code in the relevant Click section. Expiry and usage limits are shown on each card.",
     },
   },
   {
@@ -72,9 +72,9 @@ export const HUB_EDITORIAL: HubEditorial[] = [
     kind: "brand",
     name: { uz: "Payme", ru: "Payme", en: "Payme" },
     description: {
-      uz: "Payme chegirma va bonuslari to‘lov, o‘tkazma yoki hamkor aksiyalariga bog‘liq bo‘lishi mumkin. Taklifni oching, shartlarni o‘qing va ilovada ko‘rsatilgan tartibda faollashtiring. Muddati o‘tgan yoki shartlarga mos kelmaydigan kodlar ishlamasligi mumkin.",
-      ru: "Скидки и бонусы Payme могут относиться к платежам, переводам или партнёрским акциям. Откройте предложение, прочитайте условия и активируйте в приложении. Истёкшие или неподходящие по условиям коды могут не сработать.",
-      en: "Payme discounts and bonuses may apply to payments, transfers, or partner campaigns. Open the offer, read the rules, and activate it in the app. Expired or mismatched codes may fail.",
+      uz: "Payme chegirma va bonuslari to‘lov, o‘tkazma yoki hamkor aksiyalariga bog‘liq bo‘lishi mumkin. PromoBozor’da bir nechta aktiv taklifni yonma-yon solishtiring: foyda, muddat va cheklovlarni tekshiring, keyin ilovada ko‘rsatilgan tartibda faollashtiring. Muddati o‘tgan yoki shartlarga mos kelmaydigan kodlar ishlamasligi mumkin.",
+      ru: "Скидки и бонусы Payme могут относиться к платежам, переводам или партнёрским акциям. На PromoBozor сравните несколько активных предложений рядом: выгода, срок и ограничения — затем активируйте в приложении. Истёкшие или неподходящие по условиям коды могут не сработать.",
+      en: "Payme discounts and bonuses may apply to payments, transfers, or partner campaigns. On PromoBozor compare active offers side by side — benefit, timing, and limits — then activate in the app. Expired or mismatched codes may fail.",
     },
   },
   {

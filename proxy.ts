@@ -194,6 +194,11 @@ export default async function middleware(request: NextRequest) {
       });
       if (hasFilterQuery) {
         response.headers.set("X-Robots-Tag", "noindex, follow");
+        // Point crawlers at the clean listing URL (optional canonical improvement).
+        const locale = listMatch[1] as Locale;
+        const cleanPath = getListPath(locale, "promocodes");
+        const cleanUrl = new URL(cleanPath, request.url).toString();
+        response.headers.set("Link", `<${cleanUrl}>; rel="canonical"`);
       }
     }
   }
