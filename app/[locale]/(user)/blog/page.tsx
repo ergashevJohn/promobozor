@@ -2,6 +2,7 @@ import { BlogPostCard } from "@/components/public/blog/BlogPostCard";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { CollectionPageSchema } from "@/components/public/CollectionPageSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
+import { HubEditorialSection } from "@/components/public/HubEditorialSection";
 import { Link } from "@/i18n/navigation";
 import { getBlogPosts, type BlogLocale } from "@/lib/blog";
 import { isValidLanguage } from "@/lib/i18n";
@@ -27,7 +28,8 @@ export async function generateMetadata({
     `/${locale}/blog`,
     undefined,
     "website",
-    locale
+    locale,
+    "/blog"
   );
 }
 
@@ -189,6 +191,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
           </section>
         ) : null}
       </div>
+      <HubEditorialSection locale={locale} kind="blog" />
     </>
   );
 }

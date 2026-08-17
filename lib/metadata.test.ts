@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  generateFullMetadata,
   generateCategoryTitle,
   generatePromocodeDescription,
   generatePromocodeTitle,
@@ -8,6 +9,33 @@ import {
 } from "./metadata";
 
 describe("Metadata Generation", () => {
+  describe("blog index alternates", () => {
+    it.each(["uz", "ru", "en"] as const)(
+      "generates a self-canonical and all hreflang links for %s",
+      (locale) => {
+        const metadata = generateFullMetadata(
+          "Blog",
+          "Guide collection",
+          `/${locale}/blog`,
+          undefined,
+          "website",
+          locale,
+          "/blog"
+        );
+
+        expect(metadata.alternates).toEqual({
+          canonical: `http://localhost:3000/${locale}/blog`,
+          languages: {
+            "x-default": "http://localhost:3000/uz/blog",
+            uz: "http://localhost:3000/uz/blog",
+            ru: "http://localhost:3000/ru/blog",
+            en: "http://localhost:3000/en/blog",
+          },
+        });
+      }
+    );
+  });
+
   describe("generateStoreTitle", () => {
     it("generates correct title for Uzbek", () => {
       const title = generateStoreTitle("Uzum", 5, "uz");

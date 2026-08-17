@@ -17,6 +17,9 @@ type BlogPostDetailProps = {
   labels: {
     updated: string;
     published: string;
+    authorBy: string;
+    authorName: string;
+    authorRole: string;
     readingTime: string;
     verifiedBadge: string;
     verifiedHint: string;
@@ -95,6 +98,16 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
             <h1 className="page-hero-heading max-w-[18ch] md:max-w-none">{post.title[locale]}</h1>
             <p className="page-hero-copy mt-4">{post.description[locale]}</p>
             <div className="text-muted-foreground mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <span>
+                {labels.authorBy}:{" "}
+                <Link
+                  href="/about"
+                  className="font-medium text-[color:var(--foreground)] underline-offset-4 hover:underline"
+                >
+                  {labels.authorName}
+                </Link>{" "}
+                — {labels.authorRole}
+              </span>
               <time dateTime={post.publishedAt}>
                 {labels.published}: {formatBlogDate(post.publishedAt, locale)}
               </time>

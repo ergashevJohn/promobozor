@@ -1,6 +1,7 @@
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { CollectionPageSchema } from "@/components/public/CollectionPageSchema";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
+import { HubEditorialSection } from "@/components/public/HubEditorialSection";
 import { StoresDirectoryGrid } from "@/components/public/StoresDirectoryGrid";
 import StoresPageClient from "@/components/public/StoresPageClient";
 import { db, promocodes, stores, storeTranslations } from "@/lib/db";
@@ -217,6 +218,7 @@ export default async function StoresPage({ params }: { params: Promise<{ locale:
           </div>
         )}
       </StoresPageClient>
+      <HubEditorialSection locale={locale} kind="stores" />
     </>
   );
 }

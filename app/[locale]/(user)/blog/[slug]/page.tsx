@@ -10,6 +10,7 @@ import {
   resolveBlogPost,
   type BlogLocale,
 } from "@/lib/blog";
+import { getBlogAuthorSchema } from "@/lib/blog-author";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -85,11 +86,7 @@ export default async function BlogPostPage({
     dateModified: post.updatedAt,
     inLanguage: locale,
     mainEntityOfPage: `${baseUrl}${getBlogPath(lang, resolved.canonicalSlug)}`,
-    author: {
-      "@type": "Organization",
-      name: "PromoBozor",
-      url: baseUrl,
-    },
+    author: getBlogAuthorSchema({ baseUrl, locale, name: t("authorName") }),
     publisher: {
       "@type": "Organization",
       name: "PromoBozor",
@@ -125,6 +122,9 @@ export default async function BlogPostPage({
         labels={{
           updated: t("updated"),
           published: t("published"),
+          authorBy: t("authorBy"),
+          authorName: t("authorName"),
+          authorRole: t("authorRole"),
           readingTime: t("readingTime", { minutes: estimateReadingMinutes(post, lang) }),
           verifiedBadge: t("verifiedBadge"),
           verifiedHint: t("verifiedHint"),

@@ -1,5 +1,6 @@
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { CollectionPageSchema } from "@/components/public/CollectionPageSchema";
+import { HubEditorialSection } from "@/components/public/HubEditorialSection";
 import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
 import PromocodesPageClient, {
   type PromocodesInitialSectionData,
@@ -307,6 +308,7 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
           />
         </section>
       </PromocodesPageClient>
+      <HubEditorialSection locale={locale} kind="promocodes" />
     </>
   );
 }

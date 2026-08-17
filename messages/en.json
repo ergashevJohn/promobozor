@@ -1078,6 +1078,65 @@
     "saveTime": "Save time",
     "saveTimeValue": "Filter before browsing"
   },
+  "hubEditorial": {
+    "promocodes": {
+      "eyebrow": "Use offers thoughtfully",
+      "title": "What should you check before choosing a promocode?",
+      "intro": "A promocode is more than a discount string. It can be tied to a particular store, order type, customer segment, or expiry date. Reading the card before copying a code helps prevent an unexpected rejection while you are completing an order.",
+      "paragraphs": [
+        "First, make sure the offer belongs to the store or service you intend to use. A campaign with a similar name on another platform can have different rules. The promo field and the way it is applied can also differ between an app and a website. Read the card title, discount type, and short description together rather than relying on a single phrase.",
+        "The next step is to review the expiry date and restrictions. Some promocodes are only for a first order, new customers, or a minimum basket value. Others apply to a specific category, region, or delivery method. Before entering a code at checkout, confirm that every relevant requirement matches the order you are making.",
+        "An offer’s status can change because a store may end a campaign early, apply a usage limit, or update its rules. The date and conditions on this site support your decision, but the store’s checkout page provides the final confirmation. Treat a promocode as a verified, currently listed opportunity rather than a guaranteed discount.",
+        "If a code does not work, do not keep entering it repeatedly. The basket may be below the minimum amount, the offer may be first-order only, your account may not qualify, or another discount may be incompatible. Some codes are activated only in the merchant’s app or after opening an official campaign link.",
+        "PromoBozor aims to make the choice clearer by displaying the offer type, likely conditions, and listing status together. If you spot an inactive or unclear code, please report it. Those reports help us recheck cards and refresh outdated information sooner. Before placing an order, also compare the final price shown by the store itself."
+      ],
+      "checklistTitle": "A quick check before you save",
+      "checklist": [
+        "Confirm that the offer belongs to the store, app, or service you are using.",
+        "Read the expiry date, minimum spend, first-order rule, and category restrictions.",
+        "Verify that the discount appears in the final checkout total.",
+        "If a code fails, check the condition and store message first, then report it."
+      ]
+    },
+    "stores": {
+      "eyebrow": "Using the store directory",
+      "title": "How to find a suitable promocode on a store page",
+      "intro": "The store directory arranges promocodes by where you shop. It lets you compare currently listed offers for a brand or service without scrolling through the full catalogue. A displayed code count is a useful starting signal, while the conditions on each individual card should guide the final purchase decision.",
+      "paragraphs": [
+        "Start by searching for the store name and opening its page. Similar brand or service names can have different rules, so it is useful to check the logo and description too. Active offers are gathered on the store page, making it easier to distinguish a percentage discount, a fixed-value bonus, a delivery campaign, or a direct deal link.",
+        "The number of promocodes shown on a page reflects the currently listed offers; it does not mean every code suits every customer. One may be for new users, while another is limited to a category or mobile app. Treat the count as a starting point for comparison, not as a quality guarantee for every listed offer.",
+        "Store campaigns change quickly. For the best result, compare the date, minimum basket, and application rules on the card with the items in your order. If your basket already has an automatic campaign, check whether it can be combined with the promocode. The final checkout total remains the most reliable measure.",
+        "When several offers are available, the highest percentage is not always the best choice. A smaller discount with fewer restrictions can save more on your particular basket. Compare free delivery, maximum discount caps, rewards that apply to a later purchase, and product-level limitations before deciding.",
+        "Reporting inactive codes or outdated directory information is also valuable. PromoBozor is not intended to show the largest possible number of listings; it should help shoppers make an understandable choice. User feedback, official store conditions, and expiry details are reviewed over time. The merchant’s official rules always take priority during checkout."
+      ],
+      "checklistTitle": "Assess these details on a store page",
+      "checklist": [
+        "Check that the store name, logo, and service type match your intended purchase.",
+        "Use the promocode count as a broad signal and read each offer separately.",
+        "Compare the headline discount with its cap and compatibility with other campaigns.",
+        "Confirm the final price and official store rules during checkout."
+      ]
+    },
+    "blog": {
+      "eyebrow": "Guide methodology",
+      "title": "How are PromoBozor guides prepared?",
+      "intro": "The blog exists to answer common promocode questions more clearly. Its purpose is to help readers understand an offer’s conditions, expiry, and checkout use—not simply copy a code. Every article is written around practical steps a reader can follow in a real shopping flow.",
+      "paragraphs": [
+        "Article topics come from common questions about Uzbekistan stores, payment services, and delivery apps. We explain where to enter a code, why it may be rejected, and what a first-order condition means. These guides do not replace a merchant’s official rules; they are designed to help readers read and interpret those rules correctly.",
+        "When preparing content, we consider the offer type, restrictions, and practical checkout sequence. If a general tip relates to a specific brand, readers can use the relevant store or brand listing for current offers. Promocodes change over time, so an article’s principle should always be checked against the live offer card and the merchant’s final checkout page.",
+        "Every article displays a publication date and an updated date. An update may reflect new information, a clarified sentence, or a review of steps that matter to shoppers. The date is not decorative: it helps a reader judge how current the information is for promocodes and time-limited campaigns.",
+        "Articles are published under Jahongir Ergashev, PromoBozor’s founder and editor. This makes the authorship source clear and tells readers whose editorial method is behind the material when they have a question or correction. Advice in an article never guarantees a result or a discount, because the merchant sets the final rule.",
+        "If you find an outdated step, an unclear condition, or an example that does not match your situation, reporting it is useful. Reader feedback helps make the material more practical. A trustworthy guide is not a text that never changes; it is content that is openly reviewed when needed and puts the reader’s interest first."
+      ],
+      "checklistTitle": "Keep this in mind while reading a guide",
+      "checklist": [
+        "Check the publication and update dates, especially for time-limited campaigns.",
+        "Test the steps against your basket, region, and account type.",
+        "Compare article advice with the current promocode card and checkout rules.",
+        "Reporting unclear or outdated information helps improve future guides."
+      ]
+    }
+  },
   "blog": {
     "title": "Promocode guides and tips",
     "description": "Guides on applying Uzbekistan store promocodes, reading conditions, and finding verified offers.",
@@ -1098,6 +1157,9 @@
     "readMore": "Read more",
     "updated": "Updated",
     "published": "Published",
+    "authorBy": "Author",
+    "authorName": "Jahongir Ergashev",
+    "authorRole": "PromoBozor founder and editor",
     "readingTime": "{minutes} min read",
     "verifiedBadge": "Verified by PromoBozor",
     "verifiedHint": "Conditions, expiry dates, and practical tips are refreshed by our team.",

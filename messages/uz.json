@@ -1083,6 +1083,65 @@
     "saveTime": "Vaqt tejang",
     "saveTimeValue": "Ko'rishdan oldin filtrlang"
   },
+  "hubEditorial": {
+    "promocodes": {
+      "eyebrow": "Takliflardan ongli foydalanish",
+      "title": "Promokodni tanlashdan oldin nimani tekshirish kerak?",
+      "intro": "Promokod faqat chegirma matni emas. U ma’lum do‘kon, buyurtma turi, xaridor segmenti yoki amal qilish muddatiga bog‘langan shartli taklif bo‘lishi mumkin. Shu sabab, kodni nusxalashdan oldin kartochkadagi ma’lumotni o‘qish xarid jarayonida kutilmagan rad javoblarining oldini oladi.",
+      "paragraphs": [
+        "Avvalo taklif qaysi do‘kon yoki xizmatga tegishli ekanini tekshiring. Bir xil nomli aksiya turli platformalarda boshqa shart bilan ishlashi mumkin. Ayniqsa, ilova ichidagi va veb-saytdagi buyurtmalarda promokod maydoni yoki qo‘llanish qoidasi farq qilishi ehtimoli bor. PromoBozor kartochkasidagi nom, chegirma turi va qisqa izohni birgalikda ko‘ring.",
+        "Keyingi muhim qadam — muddat va cheklovlarni baholash. Ba’zi promokodlar faqat birinchi buyurtmaga, faqat yangi foydalanuvchiga yoki minimal savat summasiga qo‘llanadi. Ayrimlari ma’lum mahsulot toifasi, hudud yoki yetkazib berish usuliga tegishli bo‘ladi. Kodni to‘lov oynasiga qo‘yishdan avval ushbu talablarning buyurtmangizga mosligini tekshirish eng to‘g‘ri yondashuvdir.",
+        "Taklifning faolligi o‘zgarishi mumkin, chunki do‘konlar aksiyalarni muddatidan oldin tugatishi, limit qo‘yishi yoki yangi qoida kiritishi mumkin. Saytda ko‘rsatilgan sana va shartlar xarid qilish qaroriga yordam beradi, biroq yakuniy tasdiq do‘kon checkout sahifasida yuz beradi. Shuning uchun promokod ishlashi kafolat deb emas, tekshirilgan va hozircha mavjud imkoniyat deb qabul qilinadi.",
+        "Kod ishlamasa, uni takror-takror kiritish o‘rniga xato sababini aniqlang. Minimal summa yetarli emasligi, aksiya faqat birinchi xaridga mo‘ljallangani, hisobingiz tegishli segmentga kirmasligi yoki boshqa chegirma bilan birga qo‘llanmasligi mumkin. Ba’zan kod faqat ilovada yoki faqat rasmiy havola orqali ochilgan sahifada faollashadi.",
+        "PromoBozor foydalanuvchiga tanlash uchun shaffofroq ma’lumot berishga intiladi: taklifning turi, ehtimoliy sharti va amal qilish holati bir joyda ko‘rsatiladi. Nofaol yoki tushunarsiz kodni ko‘rsangiz, bu haqda xabar berish foydali. Bunday fikrlar listinglarni qayta tekshirish va eskirgan ma’lumotlarni tezroq yangilashga yordam beradi. Xaridni yakunlashdan oldin do‘konning o‘zidagi yakuniy narxni ham solishtiring."
+      ],
+      "checklistTitle": "Tejashdan oldingi qisqa tekshiruv",
+      "checklist": [
+        "Taklif aynan siz foydalanayotgan do‘kon, ilova yoki xizmatga tegishli ekanini tekshiring.",
+        "Muddat, minimal summa, birinchi buyurtma va mahsulot toifasi talablarini o‘qing.",
+        "Chegirma checkout’da hisoblangan yakuniy narxda aks etganini tasdiqlang.",
+        "Kod ishlamasa, shartni va do‘kon ko‘rsatgan xabarni tekshirib, so‘ng xabar bering."
+      ]
+    },
+    "stores": {
+      "eyebrow": "Do‘kon katalogidan foydalanish",
+      "title": "Do‘kon sahifasidan mos promokodni qanday topish mumkin?",
+      "intro": "Do‘konlar katalogi promokodlarni savdo joyi bo‘yicha tartiblaydi. Bu sizga umumiy ro‘yxatni aylantirmasdan, kerakli brend yoki xizmat uchun hozir ko‘rinayotgan takliflarni solishtirish imkonini beradi. Katalogdagi sonlar yo‘nalish beradigan ko‘rsatkich, yakuniy xarid qarori esa har bir taklif shartiga tayanishi kerak.",
+      "paragraphs": [
+        "Avval do‘kon nomini qidirib toping va uning sahifasini oching. O‘xshash nomli brendlar yoki xizmatlar bo‘lishi mumkin, shuning uchun logo va tavsifni ham tekshirish foydali. Do‘kon sahifasida aktiv takliflar bir joyda ko‘rinadi; shu orqali foizli chegirma, summali bonus, yetkazib berish aksiyasi yoki bevosita havola kabi variantlarni farqlash osonlashadi.",
+        "Sahifadagi promokodlar soni ayni damda mavjud bo‘lgan listinglar miqdorini anglatadi, lekin har bir kod barcha foydalanuvchiga mos bo‘ladi degani emas. Bitta kod yangi mijoz uchun, boshqasi ma’lum toifa yoki mobil ilova uchun mo‘ljallangan bo‘lishi mumkin. Sonni sifat belgisi sifatida emas, tanlash uchun boshlang‘ich nuqta sifatida qabul qiling.",
+        "Do‘kon aksiyalari tez almashadi. Shuning uchun eng yaxshi natija uchun kartochkadagi muddat, minimal savat va qo‘llash qoidalarini savatdagi mahsulotlaringiz bilan solishtiring. Agar buyurtmada boshqa avtomatik aksiya bo‘lsa, promokod bilan birga ishlash- ishlamasligini ham ko‘ring. Checkout’dagi yakuniy summa har doim asosiy mezon bo‘lib qoladi.",
+        "Bir nechta taklif ko‘rsatilganida eng katta foizga darhol yopishib qolmaslik kerak. Kichikroq foizli, ammo cheklovi kam bo‘lgan kod sizning savatingizda ko‘proq tejash berishi mumkin. Yetkazib berish bepul bo‘lishi, bonus faqat keyingi xaridga tushishi yoki chegirma maksimal limit bilan cheklanishi kabi tafsilotlarni solishtiring.",
+        "Katalogdan topilgan nofaol kod yoki eskirgan ma’lumot haqida xabar berish ham muhim. PromoBozor maqsadi faqat ko‘p listing ko‘rsatish emas, balki xaridor uchun tushunarli tanlov yaratishdir. Foydalanuvchi fikri, do‘konning rasmiy shartlari va muddatlar muntazam qayta ko‘rilganda sahifa foydaliroq bo‘ladi. Xarid vaqtida do‘konning rasmiy qoidasi ustuvor hisoblanadi."
+      ],
+      "checklistTitle": "Do‘kon sahifasida baholang",
+      "checklist": [
+        "Do‘kon nomi, logo va xizmat turining buyurtmangizga mosligini tekshiring.",
+        "Promokodlar sonini umumiy ko‘rsatkich deb oling, har bir taklifni alohida o‘qing.",
+        "Eng katta chegirma bilan birga maksimal limit va boshqa aksiyalar bilan mosligini solishtiring.",
+        "Yakuniy narx va do‘konning rasmiy qoidalarini checkout bosqichida tasdiqlang."
+      ]
+    },
+    "blog": {
+      "eyebrow": "Qo‘llanmalar metodikasi",
+      "title": "PromoBozor qo‘llanmalari qanday tayyorlanadi?",
+      "intro": "Blog promokod bilan bog‘liq odatiy savollarga aniqroq javob berish uchun yaratilgan. Maqsad foydalanuvchini faqat kod nusxalashga emas, uning sharti, muddati va checkout’dagi qo‘llanishini tushunishga yordam berishdir. Har maqola o‘quvchi amalda bajara oladigan qadamlar asosida yoziladi.",
+      "paragraphs": [
+        "Maqola mavzulari O‘zbekistondagi do‘konlar, to‘lov xizmatlari va yetkazib berish ilovalarida ko‘p uchraydigan savollardan tanlanadi. Masalan, kod qayerga kiritilishi, nima uchun rad etilishi yoki birinchi buyurtma sharti nimani anglatishi tushuntiriladi. Bu qo‘llanmalar rasmiy do‘kon qoidalarini almashtirmaydi; ular ularni o‘qish va to‘g‘ri talqin qilishga yordam beradi.",
+        "Kontentni tayyorlashda taklif turi, cheklovlar va amaliy checkout ketma-ketligi hisobga olinadi. Umumiy maslahatlar muayyan brendga tegishli bo‘lsa, o‘quvchi sahifadan tegishli do‘kon yoki brend listingiga o‘tishi mumkin. Biroq promokodlar vaqt bilan o‘zgaradi, shuning uchun maqoladagi tamoyilni amaldagi taklif kartochkasi va do‘konning yakuniy sahifasi bilan tekshirish kerak.",
+        "Har maqolada chop etilgan va yangilangan sana ko‘rsatiladi. Yangilanish yangi ma’lumot paydo bo‘lgani, matn aniqlashtirilgani yoki foydalanuvchi uchun muhim qadamlar qayta ko‘rib chiqilganini anglatishi mumkin. Sana faqat bezak emas: u o‘quvchiga promokod va aksiya mavzusida ma’lumotning qanchalik yangi ekanini baholashga yordam beradi.",
+        "Maqolalar PromoBozor asoschisi va muharriri Jahongir Ergashev nomidan e’lon qilinadi. Bu mualliflik manbasini aniq ko‘rsatadi va savol yoki tuzatish bo‘lsa, foydalanuvchi kimning metodikasi asosida material tayyorlanganini biladi. Maqoladagi tavsiyalar hech qachon natija yoki chegirmani kafolatlamaydi, chunki yakuniy qoidani do‘kon belgilaydi.",
+        "Agar maqolada eskirgan qadam, noaniq shart yoki sizning holatingizga mos kelmaydigan misolni ko‘rsangiz, murojaat qilish foydali. O‘quvchi fikri materiallarni amaliyroq qilishga yordam beradi. Ishonchli qo‘llanma degani doimo o‘zgarmaydigan matn emas, balki yangilanish zarur bo‘lganda ochiq qayta ko‘riladigan va foydalanuvchi manfaatini birinchi o‘ringa qo‘yadigan kontentdir."
+      ],
+      "checklistTitle": "Maqolani o‘qishda yodda tuting",
+      "checklist": [
+        "Nashr va yangilanish sanasini ko‘ring, ayniqsa muddatli aksiyalar haqida o‘qiyotgan bo‘lsangiz.",
+        "Qadamlarni o‘z savatingiz, hududingiz va hisob turiga moslab tekshiring.",
+        "Maqoladagi maslahatni amaldagi promokod kartochkasi hamda checkout qoidasi bilan solishtiring.",
+        "Noaniq yoki eskirgan ma’lumotni bildirishingiz material sifatini yaxshilashga yordam beradi."
+      ]
+    }
+  },
   "blog": {
     "title": "Promokod qo‘llanmalari va maslahatlar",
     "description": "O‘zbekiston do‘konlari uchun promokodlardan to‘g‘ri foydalanish, shartlarni tushunish va tekshirilgan takliflarni topish bo‘yicha qo‘llanmalar.",
@@ -1103,6 +1162,9 @@
     "readMore": "Davomini o‘qish",
     "updated": "Yangilangan",
     "published": "Chop etilgan",
+    "authorBy": "Muallif",
+    "authorName": "Jahongir Ergashev",
+    "authorRole": "PromoBozor asoschisi va muharriri",
     "readingTime": "{minutes} daqiqa o‘qish",
     "verifiedBadge": "PromoBozor tomonidan tekshirilgan",
     "verifiedHint": "Shartlar, muddat va amaliy maslahatlar jamoa tomonidan yangilanadi.",
