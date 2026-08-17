@@ -1,11 +1,11 @@
 import "dotenv/config";
 
+import { eq } from "drizzle-orm";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { eq } from "drizzle-orm";
 import {
-  brandTranslations,
   brands,
+  brandTranslations,
   categories,
   categoryTranslations,
   db,

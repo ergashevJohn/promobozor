@@ -14,16 +14,16 @@
  */
 import "dotenv/config";
 
+import { eq } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { eq } from "drizzle-orm";
 import { db } from "../../db";
 import {
   brandTranslations,
   brands,
-  categoryTranslations,
   categories,
+  categoryTranslations,
   promocodes,
   redirects,
   storeTranslations,
