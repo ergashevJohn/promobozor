@@ -389,10 +389,6 @@
           "answer": "Ha. Promokodlarni ko'rish, nusxalash va ishlatish xaridorlar uchun mutlaqo bepul."
         },
         {
-          "question": "PromoBozor va Promokoduz bir xil saytmi?",
-          "answer": "Yo‘q. Bu ikki alohida loyiha. PromoBozor takliflarni solishtirish va shartlarni tushuntirishga e’tibor beradi. Telegram/Instagram/YouTube kanallari ikkala loyiha uchun umumiy network."
-        },
-        {
           "question": "Taklifni tanlashdan oldin nimalarni solishtirish kerak?",
           "answer": "Foyda turi, minimal summa, yangi/eski foydalanuvchi cheklovi, amal qilish muddati va kod yoki havola orqali faollashtirishni yonma-yon tekshiring."
         },
@@ -838,10 +834,6 @@
       {
         "question": "Promokodlar bepulmi?",
         "answer": "Ha, barcha promokodlar mutlaqo bepul. PromoBozor saytidan foydalanish hech qanday to'lov talab qilmaydi. Bizning vazifamiz - O'zbekiston foydalanuvchilari uchun eng yaxshi chegirmalarni topish, solishtirish va ularni bir joyda jam qilishdir. Siz promokodlarni nusxalash, ulardan foydalanish va chegirmalar olish uchun hech qanday to'lov to'lamaysiz."
-      },
-      {
-        "question": "PromoBozor va Promokoduz bir xil saytmi?",
-        "answer": "Yo‘q. Bu ikki alohida loyiha. PromoBozor takliflarni solishtirish va shartlarni tushuntirishga e’tibor beradi. Telegram, Instagram va YouTube kanallari ikkala loyiha uchun umumiy network — bitta domen emas."
       },
       {
         "question": "Promokod ishlamasa nima qilish kerak?",

@@ -417,10 +417,6 @@
           "answer": "Yes. Browsing, copying and using promocodes on PromoBozor is completely free for shoppers."
         },
         {
-          "question": "Are PromoBozor and Promokoduz the same site?",
-          "answer": "No. They are two separate projects. PromoBozor focuses on comparing offers and explaining conditions. Telegram/Instagram/YouTube channels are a shared network for both projects."
-        },
-        {
           "question": "What should I compare before choosing an offer?",
           "answer": "Benefit type, minimum spend, new/returning customer limits, expiry, and whether activation uses a code or a deal link."
         },
@@ -833,10 +829,6 @@
       {
         "question": "Are promocodes free?",
         "answer": "Yes, all promocodes are completely free. Using PromoBozor requires no payment. Our mission is to help Uzbekistan shoppers compare discounts, understand conditions, and pick a verified option."
-      },
-      {
-        "question": "Are PromoBozor and Promokoduz the same site?",
-        "answer": "No. They are two separate projects. PromoBozor focuses on comparing offers and explaining conditions. Telegram, Instagram, and YouTube are a shared network for both projects — not one domain."
       },
       {
         "question": "What should I do if a promocode doesn't work?",
