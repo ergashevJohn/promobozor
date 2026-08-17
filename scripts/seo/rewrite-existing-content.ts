@@ -295,8 +295,11 @@ async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
   if (options.overlapReportPath) {
     const fromManifest = await loadOverlapTranslationIds(options.overlapReportPath);
-    options.translationIds ??= new Set();
-    for (const id of fromManifest) options.translationIds.add(id);
+    // Explicit translation filters narrow the reviewed overlap manifest; they
+    // must never widen it. This keeps small production samples truly scoped.
+    options.translationIds = options.translationIds
+      ? new Set([...options.translationIds].filter((id) => fromManifest.has(id)))
+      : fromManifest;
   }
 
   const { storeRows, brandRows, categoryRows, promoRows } = await loadData();

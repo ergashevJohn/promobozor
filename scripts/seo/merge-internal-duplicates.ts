@@ -2,8 +2,9 @@
  * Soft-merge internal semantic duplicates after human review of the overlap report.
  *
  * Default: dry-run. Reads reports/cross-site-dupes.json (or --report) internalDuplicates
- * and emits a merge plan. With --apply + --pair=leftId:rightId (canonical=left),
- * rewrites promocode FKs, merges translations when missing, inserts redirects, deactivates duplicate.
+ * and emits a merge plan. With --apply + --pair=canonicalId:duplicateId,
+ * rewrites promocode FKs, inserts redirects, and deactivates the duplicate.
+ * Either side of an audited pair may be selected as canonical.
  *
  * Cross-type store↔brand pairs are never auto-merged.
  *
@@ -234,7 +235,12 @@ async function main() {
   }
 
   const plans: MergePlan[] = [];
+  const plannedPairs = new Set<string>();
   for (const dup of dups) {
+    const pairKey = [dup.kind, ...[dup.leftEntityId, dup.rightEntityId].sort()].join(":");
+    if (plannedPairs.has(pairKey)) continue;
+    plannedPairs.add(pairKey);
+
     if (dup.kind === "promocode") {
       plans.push({
         kind: dup.kind,
@@ -283,12 +289,30 @@ async function main() {
   }
 
   for (const pair of pairs) {
-    const plan = plans.find(
-      (p) => p.canonicalId === pair.canonicalId && p.duplicateId === pair.duplicateId
+    const audited = dups.find(
+      (dup) =>
+        (dup.leftEntityId === pair.canonicalId && dup.rightEntityId === pair.duplicateId) ||
+        (dup.leftEntityId === pair.duplicateId && dup.rightEntityId === pair.canonicalId)
     );
-    if (!plan) {
+    if (!audited) {
       throw new Error(`Pair ${pair.canonicalId}:${pair.duplicateId} not found in merge plan`);
     }
+
+    const canonicalIsLeft = audited.leftEntityId === pair.canonicalId;
+    const plan: MergePlan = {
+      kind: audited.kind,
+      canonicalId: pair.canonicalId,
+      duplicateId: pair.duplicateId,
+      canonicalSlug: canonicalIsLeft ? audited.leftSlug : audited.rightSlug,
+      duplicateSlug: canonicalIsLeft ? audited.rightSlug : audited.leftSlug,
+      locale: audited.locale,
+      reason: audited.reason,
+      redirects: await buildRedirects(audited.kind, pair.duplicateId, pair.canonicalId),
+      ...(audited.kind === "promocode"
+        ? { blockedReason: "Promocode duplicate — review manually; do not auto-merge" }
+        : {}),
+    };
+
     if (plan.blockedReason) {
       console.warn(`Skip ${pair.canonicalId}:${pair.duplicateId}: ${plan.blockedReason}`);
       continue;
