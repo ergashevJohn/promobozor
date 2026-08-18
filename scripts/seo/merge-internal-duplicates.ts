@@ -14,7 +14,7 @@
  */
 import "dotenv/config";
 
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -175,6 +175,10 @@ async function applyMerge(plan: MergePlan): Promise<void> {
           .where(eq(promocodes.storeId, plan.duplicateId));
         await tx
           .update(stores)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(stores.id, plan.canonicalId));
+        await tx
+          .update(stores)
           .set({ isActive: false, updatedAt: new Date() })
           .where(eq(stores.id, plan.duplicateId));
         break;
@@ -184,6 +188,10 @@ async function applyMerge(plan: MergePlan): Promise<void> {
           .update(promocodes)
           .set({ brandId: plan.canonicalId, updatedAt: new Date() })
           .where(eq(promocodes.brandId, plan.duplicateId));
+        await tx
+          .update(brands)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(brands.id, plan.canonicalId));
         await tx
           .update(brands)
           .set({ isActive: false, updatedAt: new Date() })
@@ -197,6 +205,10 @@ async function applyMerge(plan: MergePlan): Promise<void> {
           .where(eq(promocodes.categoryId, plan.duplicateId));
         await tx
           .update(categories)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(categories.id, plan.canonicalId));
+        await tx
+          .update(categories)
           .set({ isActive: false, updatedAt: new Date() })
           .where(eq(categories.id, plan.duplicateId));
         break;
@@ -205,6 +217,13 @@ async function applyMerge(plan: MergePlan): Promise<void> {
         const _exhaustive: never = kind;
         void _exhaustive;
       }
+    }
+
+    // A canonical URL must render the live hub, never redirect back to a
+    // duplicate left over from an earlier merge or hand-created redirect.
+    const canonicalPaths = [...new Set(plan.redirects.map((redirect) => redirect.toPath))];
+    if (canonicalPaths.length > 0) {
+      await tx.delete(redirects).where(inArray(redirects.fromPath, canonicalPaths));
     }
 
     for (const redirect of plan.redirects) {
@@ -218,7 +237,16 @@ async function applyMerge(plan: MergePlan): Promise<void> {
           statusCode: 301,
           isActive: true,
         })
-        .onConflictDoNothing();
+        .onConflictDoUpdate({
+          target: redirects.fromPath,
+          set: {
+            toPath: redirect.toPath,
+            entityType: kind,
+            statusCode: 301,
+            isActive: true,
+            updatedAt: new Date(),
+          },
+        });
     }
   });
 }
