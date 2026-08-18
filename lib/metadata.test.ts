@@ -6,6 +6,7 @@ import {
   generatePromocodeTitle,
   generateStoreDescription,
   generateStoreTitle,
+  getBaseUrl,
 } from "./metadata";
 
 describe("Metadata Generation", () => {
@@ -13,6 +14,7 @@ describe("Metadata Generation", () => {
     it.each(["uz", "ru", "en"] as const)(
       "generates a self-canonical and all hreflang links for %s",
       (locale) => {
+        const baseUrl = getBaseUrl();
         const metadata = generateFullMetadata(
           "Blog",
           "Guide collection",
@@ -24,12 +26,12 @@ describe("Metadata Generation", () => {
         );
 
         expect(metadata.alternates).toEqual({
-          canonical: `http://localhost:3000/${locale}/blog`,
+          canonical: `${baseUrl}/${locale}/blog`,
           languages: {
-            "x-default": "http://localhost:3000/uz/blog",
-            uz: "http://localhost:3000/uz/blog",
-            ru: "http://localhost:3000/ru/blog",
-            en: "http://localhost:3000/en/blog",
+            "x-default": `${baseUrl}/uz/blog`,
+            uz: `${baseUrl}/uz/blog`,
+            ru: `${baseUrl}/ru/blog`,
+            en: `${baseUrl}/en/blog`,
           },
         });
       }
