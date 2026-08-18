@@ -2,9 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "PromoBozor - Chegirmalar va promokodlar bozori",
+    name: "PromoBozor - Takliflarni solishtirish va shartlar",
     short_name: "PromoBozor",
-    description: "PromoBozor - foydali chegirmalar, promokodlar va kuponlarni bir joyda toping",
+    description:
+      "Tekshirilgan promokod va chegirmalarni solishtiring, shartlarini tushuning va mos taklifni tanlang.",
     start_url: "/uz",
     display: "standalone",
     background_color: "#ffffff",

@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     // Get parameters - truncate to bound rendering cost
     const title = (searchParams.get("title") || "PromoBozor").slice(0, 120);
     const description = (
-      searchParams.get("description") || "Chegirmalar va promokodlar bozori"
+      searchParams.get("description") || "Takliflarni solishtirish va shartlarni tekshirish"
     ).slice(0, 300);
     const type = (searchParams.get("type") || "default").slice(0, 32);
     const logo = searchParams.get("logo");
@@ -252,7 +252,7 @@ export async function GET(request: NextRequest) {
               alignItems: "center",
             }}
           >
-            Chegirmalar va promokodlar bozori
+            Takliflarni solishtiring, shartlarni tekshiring
           </div>
         </div>
       </div>,

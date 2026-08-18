@@ -55,7 +55,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <StructuredData type="Homepage" data={{}} lang={locale} baseUrl={baseUrl} />
       <OrganizationSchema
         name="PromoBozor"
-        description="PromoBozor foydalanuvchilarga online do'konlar va servislar uchun foydali chegirmalar, promokodlar va kuponlarni bir joyda topishga yordam beradigan zamonaviy platforma."
+        description="PromoBozor tekshirilgan promokod va chegirmalarni solishtirish, shartlarini tushunish va mos taklifni tanlashga yordam beradigan platforma."
         sameAs={[
           "https://t.me/promokoduz_app",
           "https://instagram.com/promokoduz_app",
