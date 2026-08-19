@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ShareNetwork, ThumbsDown, ThumbsUp } from "@phosphor-icons/react/dist/ssr";
+import { ShareNetworkIcon, ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react/dist/ssr";
 import { usePromocode } from "../PromocodeContext";
 
 export function PromocodeStats() {
@@ -33,7 +33,7 @@ export function PromocodeStats() {
             onClick={handleShare}
             aria-label={t.share}
           >
-            <ShareNetwork size={18} aria-hidden="true" />
+            <ShareNetworkIcon size={18} aria-hidden="true" />
             <span className="hidden sm:inline">{t.share}</span>
           </Button>
           <Button
@@ -47,7 +47,7 @@ export function PromocodeStats() {
             aria-label={`${tCard.like} (${promocode.likesCount})`}
             title={tCard.like}
           >
-            <ThumbsUp size={18} fill={liked ? "currentColor" : "none"} aria-hidden="true" />
+            <ThumbsUpIcon size={18} fill="currentColor" aria-hidden="true" />
             <span className="hidden sm:inline">{promocode.likesCount}</span>
             <span className="sm:hidden">{promocode.likesCount}</span>
           </Button>
@@ -60,7 +60,7 @@ export function PromocodeStats() {
             aria-label={`${tCard.dislike} (${promocode.dislikesCount})`}
             title={tCard.dislike}
           >
-            <ThumbsDown size={18} fill={disliked ? "currentColor" : "none"} aria-hidden="true" />
+            <ThumbsDownIcon size={18} fill="currentColor" aria-hidden="true" />
             <span className="hidden sm:inline">{promocode.dislikesCount}</span>
             <span className="sm:hidden">{promocode.dislikesCount}</span>
           </Button>

@@ -1,8 +1,8 @@
 import { Link } from "@/i18n/navigation";
-import { WarningCircle, Star } from "@phosphor-icons/react/dist/ssr";
+import type { PromocodeDisplayData } from "@/lib/promocode-utils";
+import { StarIcon, WarningCircleIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import type { Promocode } from "../types";
-import type { PromocodeDisplayData } from "@/lib/promocode-utils";
 
 export function PromocodeHeader({
   promocode,
@@ -38,7 +38,7 @@ export function PromocodeHeader({
               height={64}
               priority
               sizes="64px"
-              className="h-16 w-16 rounded-xl object-contain"
+              className="h-16 w-16 rounded-xl object-cover"
             />
           ) : (
             <span className="text-muted-foreground text-2xl font-bold">
@@ -65,7 +65,7 @@ export function PromocodeHeader({
       <div className="flex items-center gap-2">
         {promocode.isFeatured && !isInactive && (
           <div className="flex items-center gap-1.5 rounded-xl bg-[color:var(--accent)] px-3 py-1.5">
-            <Star size={14} className="fill-accent-red text-accent-red" />
+            <StarIcon size={14} className="fill-accent-red text-accent-red" />
             <span className="text-accent-red text-xs font-semibold">{tCommon.featured}</span>
           </div>
         )}
@@ -77,7 +77,7 @@ export function PromocodeHeader({
                 : "bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]"
             }`}
           >
-            <WarningCircle size={14} />
+            <WarningCircleIcon size={14} />
             <span>{isExpired ? tCard.expired : tCard.disabled}</span>
           </div>
         )}

@@ -58,7 +58,7 @@ export function PromocodeCardVisual({
                 src={displayImageUrl}
                 alt={displayName}
                 fill
-                className="object-contain"
+                className="object-cover"
                 priority={priority}
                 sizes="48px"
               />

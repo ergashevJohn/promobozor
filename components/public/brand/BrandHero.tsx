@@ -39,7 +39,7 @@ export default function BrandHero({
                     : tCommon("altBrandLogoWithSlug", { slug })
                 }
                 fill
-                className="object-contain p-3"
+                className="object-cover"
                 sizes="144px"
                 priority
               />
