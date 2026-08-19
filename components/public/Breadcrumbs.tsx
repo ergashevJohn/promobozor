@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { CaretRight, House } from "@phosphor-icons/react/dist/ssr";
+import { CaretRightIcon, HouseIcon } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface BreadcrumbItem {
@@ -26,9 +26,9 @@ export async function Breadcrumbs({ items, locale, homeName }: BreadcrumbsProps)
           return (
             <li key={item.url} className="flex items-center gap-1 sm:gap-2">
               {index === 0 ? (
-                <House className="text-muted-foreground h-4 w-4" />
+                <HouseIcon className="text-muted-foreground h-4 w-4" />
               ) : (
-                <CaretRight className="text-muted-foreground h-4 w-4" />
+                <CaretRightIcon className="text-muted-foreground h-4 w-4" />
               )}
               {isLast ? (
                 <span

@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { WarningCircle, House, MagnifyingGlass, Storefront, Tag } from "@phosphor-icons/react";
+import {
+  WarningCircleIcon,
+  HouseIcon,
+  MagnifyingGlassIcon,
+  StorefrontIcon,
+  TagIcon,
+} from "@phosphor-icons/react";
 import NextLink from "next/link";
 
 interface NotFoundUIProps {
@@ -27,25 +33,25 @@ export function NotFoundUI({
     {
       href: `/${locale}`,
       label: c("home"),
-      icon: House,
+      icon: HouseIcon,
       description: c("goHome"),
     },
     {
       href: `/${locale}/stores`,
       label: c("stores"),
-      icon: Storefront,
+      icon: StorefrontIcon,
       description: c("viewAllStores"),
     },
     {
       href: `/${locale}/categories`,
       label: c("categories"),
-      icon: Tag,
+      icon: TagIcon,
       description: c("viewCategories"),
     },
     {
       href: `/${locale}/brands`,
       label: c("brands"),
-      icon: Tag,
+      icon: TagIcon,
       description: c("viewBrands"),
     },
   ];
@@ -63,7 +69,7 @@ export function NotFoundUI({
         {/* Error Icon and Message */}
         <div className="mb-6 flex justify-center">
           <div className="rounded-full bg-[color:var(--accent)] p-4">
-            <WarningCircle className="h-12 w-12 text-[color:var(--accent-red)]" />
+            <WarningCircleIcon className="h-12 w-12 text-[color:var(--accent-red)]" />
           </div>
         </div>
 
@@ -79,7 +85,7 @@ export function NotFoundUI({
         <div className="mb-12">
           <Button asChild size="lg">
             <NextLink href={`/${locale}`}>
-              <House className="mr-2 h-5 w-5" />
+              <HouseIcon className="mr-2 h-5 w-5" />
               {t("goHome")}
             </NextLink>
           </Button>
@@ -115,7 +121,7 @@ export function NotFoundUI({
           <p className="text-muted-foreground mb-4 text-sm">{t("orSearch")}</p>
           <Button asChild variant="outline">
             <NextLink href={`/${locale}`}>
-              <MagnifyingGlass className="mr-2 h-4 w-4" />
+              <MagnifyingGlassIcon className="mr-2 h-4 w-4" />
               {c("search")}
             </NextLink>
           </Button>

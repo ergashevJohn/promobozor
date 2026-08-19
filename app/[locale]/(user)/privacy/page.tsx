@@ -2,7 +2,7 @@ import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
-import { Shield } from "@phosphor-icons/react/dist/ssr";
+import { ShieldIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -65,7 +65,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
           <div className="page-hero-surface mb-12 text-center">
             <div className="mb-4 flex justify-center">
               <div className="rounded-full bg-[color:var(--accent)] p-4 text-[color:var(--accent-red)]">
-                <Shield className="h-12 w-12" />
+                <ShieldIcon className="h-12 w-12" />
               </div>
             </div>
             <div className="brand-kicker mb-4">{t("heroKicker")}</div>

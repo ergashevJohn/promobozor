@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { CaretDown, FunnelSimple } from "@phosphor-icons/react/dist/ssr";
+import { CaretDownIcon, FunnelSimpleIcon } from "@phosphor-icons/react/dist/ssr";
 
 const EMPTY_PARAMS: Record<string, string> = {};
 
@@ -182,7 +182,7 @@ function MobileFilterForm({
       >
         <summary className="text-foreground flex min-h-12 cursor-pointer list-none items-center gap-3 px-4 py-3 text-sm font-semibold marker:content-none [&::-webkit-details-marker]:hidden">
           <span className="bg-secondary text-muted-foreground inline-flex size-9 shrink-0 items-center justify-center rounded-xl">
-            <FunnelSimple size={18} aria-hidden="true" />
+            <FunnelSimpleIcon size={18} aria-hidden="true" />
           </span>
           <span className="min-w-0 flex-1 text-left">{translations.filters}</span>
           {activeFiltersCount > 0 && (
@@ -193,7 +193,7 @@ function MobileFilterForm({
               {activeFiltersCount}
             </span>
           )}
-          <CaretDown
+          <CaretDownIcon
             className="text-muted-foreground size-4 shrink-0 transition-transform group-open:rotate-180"
             aria-hidden="true"
           />

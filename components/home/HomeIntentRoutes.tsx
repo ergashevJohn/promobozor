@@ -1,15 +1,15 @@
 import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
 import {
-  ArrowRight,
-  Buildings,
-  MagnifyingGlass,
-  SquaresFour,
-  Storefront,
+  ArrowRightIcon,
+  BuildingsIcon,
+  MagnifyingGlassIcon,
+  SquaresFourIcon,
+  StorefrontIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
-const icons = [MagnifyingGlass, Storefront, SquaresFour, Buildings];
+const icons = [MagnifyingGlassIcon, StorefrontIcon, SquaresFourIcon, BuildingsIcon];
 
 interface HomeIntentRoutesProps {
   locale: string;
@@ -39,7 +39,7 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
         >
           {t("cta")}
           <CtaIcon>
-            <ArrowRight size={16} weight="light" />
+            <ArrowRightIcon size={16} weight="light" />
           </CtaIcon>
         </Link>
       </div>
@@ -80,7 +80,7 @@ export async function HomeIntentRoutes({ locale }: HomeIntentRoutesProps) {
 
                   <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
                     <span>{t("cardCta")}</span>
-                    <ArrowRight
+                    <ArrowRightIcon
                       size={14}
                       weight="light"
                       className="transition-transform group-hover:translate-x-0.5"

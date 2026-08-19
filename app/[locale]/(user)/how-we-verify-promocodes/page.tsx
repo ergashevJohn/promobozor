@@ -5,20 +5,26 @@ import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata } from "@/lib/metadata";
 import {
-  ArrowRight,
-  SealCheck,
-  Clock,
-  ArrowsClockwise,
-  MagnifyingGlass,
-  ShieldCheck,
-  Warning,
+  ArrowRightIcon,
+  SealCheckIcon,
+  ClockIcon,
+  ArrowsClockwiseIcon,
+  MagnifyingGlassIcon,
+  ShieldCheckIcon,
+  WarningIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-const stepIcons = [MagnifyingGlass, ShieldCheck, Clock, SealCheck, ArrowsClockwise];
-const standardIcons = [SealCheck, ShieldCheck, Warning];
+const stepIcons = [
+  MagnifyingGlassIcon,
+  ShieldCheckIcon,
+  ClockIcon,
+  SealCheckIcon,
+  ArrowsClockwiseIcon,
+];
+const standardIcons = [SealCheckIcon, ShieldCheckIcon, WarningIcon];
 
 export async function generateMetadata({
   params,
@@ -79,7 +85,7 @@ export default async function VerificationPage({
 
           <div className="relative mx-auto max-w-4xl text-center">
             <div className="brand-kicker mb-4">
-              <ShieldCheck className="h-4 w-4" />
+              <ShieldCheckIcon className="h-4 w-4" />
               <span>{t("heroBadge")}</span>
             </div>
             <h1 className="page-hero-heading text-4xl md:text-5xl">{t("heroTitle")}</h1>
@@ -95,7 +101,7 @@ export default async function VerificationPage({
 
           <div className="grid gap-4 lg:grid-cols-5">
             {steps.map((step, index) => {
-              const Icon = stepIcons[index] || SealCheck;
+              const Icon = stepIcons[index] || SealCheckIcon;
 
               return (
                 <article key={step.title} className="metric-card p-5">
@@ -122,7 +128,7 @@ export default async function VerificationPage({
 
             <div className="mt-8 grid gap-4">
               {standards.map((item, index) => {
-                const Icon = standardIcons[index] || SealCheck;
+                const Icon = standardIcons[index] || SealCheckIcon;
 
                 return (
                   <div key={item.title} className="surface-card flex gap-4 p-5">
@@ -147,7 +153,7 @@ export default async function VerificationPage({
                   key={item}
                   className="bg-card flex items-start gap-3 rounded-xl border border-[color:var(--border)] px-4 py-3"
                 >
-                  <Warning className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--accent-red)]" />
+                  <WarningIcon className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--accent-red)]" />
                   <span className="text-foreground leading-7">{item}</span>
                 </li>
               ))}
@@ -163,13 +169,13 @@ export default async function VerificationPage({
               <Button asChild size="lg" className="rounded-full">
                 <Link href="/contact">
                   {t("ctaPrimary")}
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRightIcon className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full">
                 <Link href="/faq">
                   {t("ctaSecondary")}
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRightIcon className="h-4 w-4" />
                 </Link>
               </Button>
             </div>

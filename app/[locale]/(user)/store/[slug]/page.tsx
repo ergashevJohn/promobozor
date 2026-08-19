@@ -34,7 +34,7 @@ import {
 import { getCachedStorePageData } from "@/lib/queries/store-page";
 import { isGone } from "@/lib/redirects";
 import { getEntityPath, type Locale as RouteLocale } from "@/lib/routes";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound, unstable_rethrow } from "next/navigation";
@@ -264,7 +264,7 @@ function StorePageContent({
               </PromocodeListWithPagination>
             ) : totalPromocodesCount === 0 ? (
               <div className="empty-state-card">
-                <MagnifyingGlass
+                <MagnifyingGlassIcon
                   className="text-muted-foreground mx-auto mb-4 h-12 w-12"
                   aria-hidden="true"
                 />

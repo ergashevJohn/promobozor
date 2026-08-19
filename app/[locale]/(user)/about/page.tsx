@@ -10,7 +10,12 @@ import { PersonSchema } from "@/components/public/PersonSchema";
 import { getCachedInventoryStats } from "@/lib/cache/inventory-stats";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
-import { ArrowsClockwise, CheckCircle, Globe, Lightning } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowsClockwiseIcon,
+  CheckCircleIcon,
+  GlobeIcon,
+  LightningIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -55,10 +60,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const aboutUrl = `${getBaseUrl()}/${locale}/about`;
 
   const reasons = [
-    { icon: CheckCircle, title: t("reason1Title"), description: t("reason1Description") },
-    { icon: ArrowsClockwise, title: t("reason2Title"), description: t("reason2Description") },
-    { icon: Lightning, title: t("reason3Title"), description: t("reason3Description") },
-    { icon: Globe, title: t("reason4Title"), description: t("reason4Description") },
+    { icon: CheckCircleIcon, title: t("reason1Title"), description: t("reason1Description") },
+    { icon: ArrowsClockwiseIcon, title: t("reason2Title"), description: t("reason2Description") },
+    { icon: LightningIcon, title: t("reason3Title"), description: t("reason3Description") },
+    { icon: GlobeIcon, title: t("reason4Title"), description: t("reason4Description") },
   ];
 
   let storeCount = 0;

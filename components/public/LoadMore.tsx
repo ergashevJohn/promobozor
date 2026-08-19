@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { sanitizeSearchQuery } from "@/lib/search";
-import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
+import { CircleNotchIcon } from "@phosphor-icons/react/dist/ssr";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import type { Promocode } from "./types";
@@ -89,7 +89,7 @@ export default function LoadMore({ initialOffset, limit, filters, onLoadMore }: 
       >
         {isLoading ? (
           <>
-            <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
+            <CircleNotchIcon className="mr-2 h-4 w-4 animate-spin" />
             {t("loading")}
           </>
         ) : (

@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { isValidLanguage } from "@/lib/i18n";
 import {
-  WarningCircle,
-  House,
-  MagnifyingGlass,
-  Storefront,
-  Tag,
+  WarningCircleIcon,
+  HouseIcon,
+  MagnifyingGlassIcon,
+  StorefrontIcon,
+  TagIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -53,25 +53,25 @@ export default async function NotFound({ params }: NotFoundProps) {
     {
       href: "/",
       label: c("home"),
-      icon: House,
+      icon: HouseIcon,
       description: c("goHome"),
     },
     {
       href: "/stores",
       label: c("stores"),
-      icon: Storefront,
+      icon: StorefrontIcon,
       description: c("viewAllStores"),
     },
     {
       href: "/categories",
       label: c("categories"),
-      icon: Tag,
+      icon: TagIcon,
       description: c("viewCategories"),
     },
     {
       href: "/brands",
       label: c("brands"),
-      icon: Tag,
+      icon: TagIcon,
       description: c("viewBrands"),
     },
   ];
@@ -87,7 +87,7 @@ export default async function NotFound({ params }: NotFoundProps) {
         {/* Error Icon and Message */}
         <div className="mb-6 flex justify-center">
           <div className="bg-muted rounded-full p-4">
-            <WarningCircle className="text-muted-foreground h-12 w-12" />
+            <WarningCircleIcon className="text-muted-foreground h-12 w-12" />
           </div>
         </div>
 
@@ -101,7 +101,7 @@ export default async function NotFound({ params }: NotFoundProps) {
         <div className="mb-12">
           <Button asChild size="lg">
             <Link href="/">
-              <House className="mr-2 h-5 w-5" />
+              <HouseIcon className="mr-2 h-5 w-5" />
               {t("goHome")}
             </Link>
           </Button>
@@ -137,7 +137,7 @@ export default async function NotFound({ params }: NotFoundProps) {
           <p className="text-muted-foreground mb-4 text-sm">{t("orSearch")}</p>
           <Button asChild variant="outline">
             <Link href="/">
-              <MagnifyingGlass className="mr-2 h-4 w-4" />
+              <MagnifyingGlassIcon className="mr-2 h-4 w-4" />
               {c("search")}
             </Link>
           </Button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocaleSwitch } from "@/lib/use-locale-switch";
-import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
 import { useLocale } from "next-intl";
 import {
   useCallback,
@@ -154,7 +154,7 @@ export function LanguageSwitcher() {
         className="border-input text-foreground focus-visible:border-ring focus-visible:ring-ring/50 bg-card/90 relative flex h-11 w-18 items-center rounded-full border pr-8 pl-3 text-left text-xs font-medium shadow-[0_16px_36px_-30px_rgba(17,24,39,0.45)] transition-[border-color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-60 sm:w-28 md:w-[148px] md:pl-4 md:text-sm"
       >
         <ResponsiveLabel label={current.label} short={current.short} />
-        <CaretDown
+        <CaretDownIcon
           className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2"
           aria-hidden="true"
         />

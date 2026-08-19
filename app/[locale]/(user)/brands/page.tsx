@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, Buildings, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, BuildingsIcon, MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 
 import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import ServerPagination from "@/components/public/ServerPagination";
@@ -259,7 +259,7 @@ export default async function BrandsPage({
                           </div>
                         ) : (
                           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)] shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
-                            <Buildings className="h-7 w-7" aria-hidden="true" />
+                            <BuildingsIcon className="h-7 w-7" aria-hidden="true" />
                           </div>
                         )}
                       </div>
@@ -291,7 +291,7 @@ export default async function BrandsPage({
                       <span>
                         {t("viewOffers")} {brandName}
                       </span>
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRightIcon className="h-4 w-4" />
                     </div>
                   </Link>
                 );
@@ -312,7 +312,7 @@ export default async function BrandsPage({
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <MagnifyingGlass
+              <MagnifyingGlassIcon
                 className="text-muted-foreground mx-auto mb-4 h-12 w-12"
                 aria-hidden="true"
               />

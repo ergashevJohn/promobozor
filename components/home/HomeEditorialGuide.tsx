@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, Question, ShieldWarning, Ticket } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowRightIcon,
+  QuestionIcon,
+  ShieldWarningIcon,
+  TicketIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
-const icons = [Ticket, ShieldWarning, Question];
+const icons = [TicketIcon, ShieldWarningIcon, QuestionIcon];
 
 interface HomeEditorialGuideProps {
   locale: string;
@@ -37,7 +42,7 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
                 <Link href="/how-we-verify-promocodes">
                   {t("primaryCta")}
                   <CtaIcon>
-                    <ArrowRight size={16} weight="light" />
+                    <ArrowRightIcon size={16} weight="light" />
                   </CtaIcon>
                 </Link>
               </Button>
@@ -45,7 +50,7 @@ export async function HomeEditorialGuide({ locale }: HomeEditorialGuideProps) {
                 <Link href="/faq">
                   {t("secondaryCta")}
                   <CtaIcon>
-                    <ArrowRight size={16} weight="light" />
+                    <ArrowRightIcon size={16} weight="light" />
                   </CtaIcon>
                 </Link>
               </Button>

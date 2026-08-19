@@ -1,5 +1,5 @@
 import { formatVerifiedDate } from "@/lib/content-seo";
-import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface VerifiedBadgeProps {
   verifiedAt: Date | string | null | undefined;
@@ -28,7 +28,7 @@ export function VerifiedBadge({ verifiedAt, locale, label, className }: Verified
         "text-muted-foreground inline-flex items-center gap-2 text-sm leading-6 font-medium"
       }
     >
-      <CheckCircle
+      <CheckCircleIcon
         className="size-4 shrink-0 text-[color:var(--accent-red)]"
         weight="fill"
         aria-hidden

@@ -7,7 +7,12 @@ import { Link } from "@/i18n/navigation";
 import { getBlogPosts, type BlogLocale } from "@/lib/blog";
 import { isValidLanguage } from "@/lib/i18n";
 import { generateFullMetadata, getBaseUrl } from "@/lib/metadata";
-import { ArrowRight, BookOpenText, CheckCircle, Newspaper } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowRightIcon,
+  BookOpenTextIcon,
+  CheckCircleIcon,
+  NewspaperIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -105,7 +110,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
           <div className="grid gap-3 md:grid-cols-3">
             <div className="surface-stat">
               <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent-red)]/10 text-[color:var(--accent-red)]">
-                <BookOpenText className="h-5 w-5" aria-hidden="true" />
+                <BookOpenTextIcon className="h-5 w-5" aria-hidden="true" />
               </div>
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("topicsLabel")}
@@ -114,7 +119,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
             </div>
             <div className="surface-stat">
               <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent-red)]/10 text-[color:var(--accent-red)]">
-                <CheckCircle className="h-5 w-5" aria-hidden="true" />
+                <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
               </div>
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("trustLabel")}
@@ -125,7 +130,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
             </div>
             <div className="surface-stat">
               <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent-red)]/10 text-[color:var(--accent-red)]">
-                <Newspaper className="h-5 w-5" aria-hidden="true" />
+                <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
               </div>
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
                 {t("ctaLabel")}
@@ -172,7 +177,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
                 className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--card)] px-4 text-sm font-semibold text-[color:var(--foreground)] transition-colors hover:border-[color:var(--accent-red)]/40 hover:text-[color:var(--accent-red)]"
               >
                 {t("allOffers")}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
             <ul className="stagger-reveal grid gap-5 md:grid-cols-2">

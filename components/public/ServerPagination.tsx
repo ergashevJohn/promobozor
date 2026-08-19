@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface ServerPaginationProps {
   currentPage: number;
@@ -87,12 +87,12 @@ export default function ServerPagination({
           className={navBtnClass}
           aria-label={translations.previous}
         >
-          <CaretLeft size={16} />
+          <CaretLeftIcon size={16} />
           <span className="hidden sm:inline">{translations.previous}</span>
         </Link>
       ) : (
         <span className={navBtnDisabledClass}>
-          <CaretLeft size={16} />
+          <CaretLeftIcon size={16} />
           <span className="hidden sm:inline">{translations.previous}</span>
         </span>
       )}
@@ -144,12 +144,12 @@ export default function ServerPagination({
           aria-label={translations.next}
         >
           <span className="hidden sm:inline">{translations.next}</span>
-          <CaretRight size={16} />
+          <CaretRightIcon size={16} />
         </Link>
       ) : (
         <span className={navBtnDisabledClass}>
           <span className="hidden sm:inline">{translations.next}</span>
-          <CaretRight size={16} />
+          <CaretRightIcon size={16} />
         </span>
       )}
     </nav>

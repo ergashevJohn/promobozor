@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getApprovedImageUrl } from "@/lib/media";
-import { ArrowRight, Buildings, CreditCard } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, BuildingsIcon, CreditCardIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 interface Brand {
@@ -43,7 +43,7 @@ export default function PopularBrands({ brands, browse, tCommon }: Props) {
           className="text-foreground inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[color:var(--accent-red)]"
         >
           <span>{tCommon("viewAll")}</span>
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
 
@@ -72,7 +72,7 @@ export default function PopularBrands({ brands, browse, tCommon }: Props) {
                     </div>
                   ) : (
                     <div className="bg-card flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ring-1 ring-[color:var(--border)]">
-                      <Buildings className="text-muted-foreground h-5 w-5" aria-hidden="true" />
+                      <BuildingsIcon className="text-muted-foreground h-5 w-5" aria-hidden="true" />
                     </div>
                   )}
                   <div className="min-w-0">
@@ -80,7 +80,7 @@ export default function PopularBrands({ brands, browse, tCommon }: Props) {
                       {brand.name}
                     </div>
                     <div className="text-muted-foreground mt-1 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.14em] uppercase">
-                      <CreditCard className="h-3.5 w-3.5" aria-hidden="true" />
+                      <CreditCardIcon className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>{browse.brands.cardLabel}</span>
                     </div>
                   </div>

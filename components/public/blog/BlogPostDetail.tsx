@@ -2,13 +2,13 @@ import { BlogPostCard } from "@/components/public/blog/BlogPostCard";
 import { Link } from "@/i18n/navigation";
 import { formatBlogDate, getRelatedBlogPosts, type BlogLocale, type BlogPost } from "@/lib/blog";
 import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  CheckCircle,
-  Clock,
-  Storefront,
-  Tag,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  BookOpenIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  StorefrontIcon,
+  TagIcon,
 } from "@phosphor-icons/react/dist/ssr";
 
 type BlogPostDetailProps = {
@@ -40,12 +40,12 @@ type BlogPostDetailProps = {
 
 function getPostTag(post: BlogPost, labels: BlogPostDetailProps["labels"]) {
   if (post.relatedStoreSlug) {
-    return { label: labels.storeGuideTag, icon: Storefront };
+    return { label: labels.storeGuideTag, icon: StorefrontIcon };
   }
   if (post.relatedBrandSlug) {
-    return { label: labels.brandGuideTag, icon: Tag };
+    return { label: labels.brandGuideTag, icon: TagIcon };
   }
-  return { label: labels.guideTag, icon: BookOpen };
+  return { label: labels.guideTag, icon: BookOpenIcon };
 }
 
 function parseStepParagraph(paragraph: string): { step?: string; text: string } {
@@ -74,7 +74,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
           href="/blog"
           className="text-muted-foreground hover:text-foreground inline-flex min-h-11 items-center gap-2 text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
           {labels.backToBlog}
         </Link>
       </div>
@@ -91,7 +91,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
                 {tag.label}
               </span>
               <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase">
-                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                <ClockIcon className="h-3.5 w-3.5" aria-hidden="true" />
                 {labels.readingTime}
               </span>
             </div>
@@ -119,7 +119,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
 
           <aside className="surface-stat space-y-4">
             <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--accent-red)]/10 text-[color:var(--accent-red)]">
-              <CheckCircle className="h-5 w-5" aria-hidden="true" />
+              <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
               <div className="text-sm font-semibold text-[color:var(--foreground)]">
@@ -134,7 +134,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
               <div className="flex flex-col gap-2">
                 {post.relatedStoreSlug ? (
                   <Link href={`/store/${post.relatedStoreSlug[locale]}`} className="brand-chip">
-                    <Storefront
+                    <StorefrontIcon
                       className="h-4 w-4 text-[color:var(--accent-red)]"
                       aria-hidden="true"
                     />
@@ -143,7 +143,10 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
                 ) : null}
                 {post.relatedBrandSlug ? (
                   <Link href={`/brand/${post.relatedBrandSlug[locale]}`} className="brand-chip">
-                    <Tag className="h-4 w-4 text-[color:var(--accent-red)]" aria-hidden="true" />
+                    <TagIcon
+                      className="h-4 w-4 text-[color:var(--accent-red)]"
+                      aria-hidden="true"
+                    />
                     {labels.relatedBrand}
                   </Link>
                 ) : null}
@@ -152,7 +155,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
                   className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[color:var(--accent-red)] px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 >
                   {labels.allOffers}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
             </div>
@@ -214,7 +217,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
               href="/blog"
               className="brand-chip hover:border-[color:var(--accent-red)]/40 hover:text-[color:var(--accent-red)]"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
               {labels.backToBlog}
             </Link>
             <Link
@@ -222,7 +225,7 @@ export function BlogPostDetail({ post, locale, labels }: BlogPostDetailProps) {
               className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[color:var(--accent-red)] px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               {labels.allOffers}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </article>

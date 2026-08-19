@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Copy, Star } from "@phosphor-icons/react/dist/ssr";
+import { CopyIcon, StarIcon } from "@phosphor-icons/react/dist/ssr";
 import { useReducer } from "react";
 import { toast } from "sonner";
 
@@ -102,17 +102,17 @@ export function GrouponCardActions({
     >
       {type === "link" ? (
         <>
-          <Star size={16} className="mr-1.5" aria-hidden="true" />
+          <StarIcon size={16} className="mr-1.5" aria-hidden="true" />
           {translations.getDeal}
         </>
       ) : copied ? (
         <>
-          <Copy size={16} className="mr-1.5" aria-hidden="true" />
+          <CopyIcon size={16} className="mr-1.5" aria-hidden="true" />
           {translations.copied}
         </>
       ) : (
         <>
-          <Copy size={16} className="mr-1.5" aria-hidden="true" />
+          <CopyIcon size={16} className="mr-1.5" aria-hidden="true" />
           {translations.copy}
         </>
       )}

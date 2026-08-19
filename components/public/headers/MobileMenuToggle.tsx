@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { usePathname } from "@/i18n/navigation";
-import { X } from "@phosphor-icons/react/dist/ssr";
+import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
@@ -170,7 +170,7 @@ export function MobileMenuToggle({ links, label, children }: Props) {
             onClick={closeMenu}
             className="!size-10 min-h-10 min-w-10 shrink-0"
           >
-            <X size={20} aria-hidden="true" />
+            <XIcon size={20} aria-hidden="true" />
           </Button>
         </div>
 

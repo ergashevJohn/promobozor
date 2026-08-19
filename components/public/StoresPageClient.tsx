@@ -7,7 +7,7 @@ import {
 } from "@/components/public/StoresDirectoryGrid";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
-import { MagnifyingGlass, SmileySad } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlassIcon, SmileySadIcon } from "@phosphor-icons/react/dist/ssr";
 import { useMemo, useState, type ReactNode } from "react";
 
 type StoresPageClientProps = {
@@ -77,7 +77,7 @@ export default function StoresPageClient({
             <label htmlFor="store-search" className="sr-only">
               {t.findStore}
             </label>
-            <MagnifyingGlass
+            <MagnifyingGlassIcon
               className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
               aria-hidden="true"
             />
@@ -110,7 +110,7 @@ export default function StoresPageClient({
           />
         ) : (
           <div className="empty-state-card">
-            <SmileySad
+            <SmileySadIcon
               className="text-muted-foreground mx-auto mb-4 h-12 w-12"
               aria-hidden="true"
             />

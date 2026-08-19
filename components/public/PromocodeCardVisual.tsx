@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getApprovedImageUrl } from "@/lib/media";
-import { Clock, SealCheck } from "@phosphor-icons/react/dist/ssr";
+import { ClockIcon, SealCheckIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import {
@@ -75,7 +75,7 @@ export function PromocodeCardVisual({
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               {!isInactive ? (
                 <span className="inline-flex items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
-                  <SealCheck
+                  <SealCheckIcon
                     className="h-3.5 w-3.5 text-[color:var(--accent-red)]"
                     aria-hidden="true"
                   />
@@ -127,7 +127,7 @@ export function PromocodeCardVisual({
           <div className="flex items-center gap-1 text-xs font-medium text-[color:var(--muted-foreground)]">
             {timeRemaining ? (
               <>
-                <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <ClockIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span className="shrink-0">{timeRemaining}</span>
               </>
             ) : null}

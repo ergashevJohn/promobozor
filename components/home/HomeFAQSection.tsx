@@ -2,7 +2,7 @@ import { FAQSchema } from "@/components/public/FAQSchema";
 import { Button } from "@/components/ui/button";
 import { CtaIcon } from "@/components/ui/cta-icon";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HomeFAQSectionProps {
@@ -48,7 +48,7 @@ export async function HomeFAQSection({ locale }: HomeFAQSectionProps) {
             <Link href="/faq">
               {t("seeAll")}
               <CtaIcon>
-                <ArrowRight size={16} weight="light" />
+                <ArrowRightIcon size={16} weight="light" />
               </CtaIcon>
             </Link>
           </Button>
@@ -56,7 +56,7 @@ export async function HomeFAQSection({ locale }: HomeFAQSectionProps) {
             <Link href="/how-we-verify-promocodes">
               {t("verificationCta")}
               <CtaIcon>
-                <ArrowRight size={16} weight="light" />
+                <ArrowRightIcon size={16} weight="light" />
               </CtaIcon>
             </Link>
           </Button>

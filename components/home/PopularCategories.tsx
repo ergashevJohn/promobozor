@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { getApprovedImageUrl } from "@/lib/media";
-import { ArrowRight, Tag } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, TagIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 interface Category {
@@ -44,7 +44,7 @@ export default function PopularCategories({ categories, browse, tCommon }: Props
           className="text-foreground inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[color:var(--accent-red)]"
         >
           <span>{tCommon("viewAll")}</span>
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRightIcon className="h-4 w-4" />
         </Link>
       </div>
 
@@ -82,7 +82,7 @@ export default function PopularCategories({ categories, browse, tCommon }: Props
                       </div>
                     ) : (
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--secondary)] text-[color:var(--accent-red)]">
-                        <Tag className="h-5 w-5" />
+                        <TagIcon className="h-5 w-5" />
                       </div>
                     )}
                   </div>
@@ -92,7 +92,7 @@ export default function PopularCategories({ categories, browse, tCommon }: Props
                   </p>
                   <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--foreground)] transition-colors group-hover:text-[color:var(--accent-red)]">
                     <span>{browse.categories.cardCta}</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRightIcon className="h-4 w-4" />
                   </div>
                 </CardContent>
               </Card>

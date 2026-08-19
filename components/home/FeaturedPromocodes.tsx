@@ -17,7 +17,7 @@ import {
 } from "@/lib/queries/promocode-list";
 import { getHomeTranslations } from "@/lib/translations";
 import { and, asc, eq, isNull, lte, ne, or } from "drizzle-orm";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
@@ -129,7 +129,7 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
             className="text-foreground inline-flex min-h-11 items-center gap-1 text-sm font-medium transition-colors hover:text-[color:var(--accent-red)]"
           >
             {tCommon("viewAll")}
-            <ArrowRight size={16} />
+            <ArrowRightIcon size={16} />
           </Link>
         </div>
         <div className="empty-state-card">
@@ -158,7 +158,7 @@ export default async function FeaturedPromocodes({ locale }: FeaturedPromocodesP
         >
           {tCommon("viewAll")}
           <CtaIcon>
-            <ArrowRight size={16} weight="light" />
+            <ArrowRightIcon size={16} weight="light" />
           </CtaIcon>
         </Link>
       </div>

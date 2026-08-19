@@ -1,6 +1,6 @@
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
 import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Promocode } from "@/components/public/types";
 
 interface BrandPromocodesProps {
@@ -82,7 +82,7 @@ export default function BrandPromocodes({
         </PromocodeListWithPagination>
       ) : totalPromocodesCount === 0 ? (
         <div className="empty-state-card">
-          <MagnifyingGlass
+          <MagnifyingGlassIcon
             className="text-muted-foreground mx-auto mb-4 h-12 w-12"
             aria-hidden="true"
           />

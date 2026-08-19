@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { CONSENT_STORAGE_KEY, type ConsentPreferences } from "@/lib/consent";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { ChartBar, Megaphone, ShieldCheck } from "@phosphor-icons/react";
+import { ChartBarIcon, MegaphoneIcon, ShieldCheckIcon } from "@phosphor-icons/react";
 
 const CONSENT_EXPIRY_DAYS = 365;
 
@@ -132,7 +132,7 @@ export function ConsentBanner() {
       key: "necessary" as const,
       title: t("necessary"),
       description: t("necessaryDescription"),
-      icon: ShieldCheck,
+      icon: ShieldCheckIcon,
       checked: true,
       disabled: true,
     },
@@ -140,7 +140,7 @@ export function ConsentBanner() {
       key: "analytics" as const,
       title: t("analytics"),
       description: t("analyticsDescription"),
-      icon: ChartBar,
+      icon: ChartBarIcon,
       checked: preferences.analytics,
       disabled: false,
     },
@@ -148,7 +148,7 @@ export function ConsentBanner() {
       key: "marketing" as const,
       title: t("marketing"),
       description: t("marketingDescription"),
-      icon: Megaphone,
+      icon: MegaphoneIcon,
       checked: preferences.marketing,
       disabled: false,
     },
@@ -162,7 +162,7 @@ export function ConsentBanner() {
             <div className="mb-3 flex flex-col gap-2 md:mb-5 md:flex-row md:items-start md:justify-between">
               <div className="max-w-3xl">
                 <div className="brand-kicker mb-2 md:mb-3">
-                  <ShieldCheck className="h-4 w-4" />
+                  <ShieldCheckIcon className="h-4 w-4" />
                   <span>{t("title")}</span>
                 </div>
                 <p className="text-muted-foreground line-clamp-2 text-sm leading-6 md:line-clamp-none md:text-base">

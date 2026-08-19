@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowsClockwise, Shield } from "@phosphor-icons/react/dist/ssr";
+import { ArrowsClockwiseIcon, ShieldIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface AboutCardsProps {
   missionTitle: string;
@@ -21,7 +21,7 @@ export function AboutCards({
           <CardContent className="p-8">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 rounded-2xl bg-[color:var(--accent)] p-3 text-[color:var(--accent-red)]">
-                <Shield className="h-8 w-8" />
+                <ShieldIcon className="h-8 w-8" />
               </div>
               <div>
                 <h2 className="text-foreground mb-3 text-2xl font-semibold">{missionTitle}</h2>
@@ -37,7 +37,7 @@ export function AboutCards({
           <CardContent className="p-8">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 rounded-2xl bg-[color:var(--accent)] p-3 text-[color:var(--accent-red)]">
-                <ArrowsClockwise className="h-8 w-8" />
+                <ArrowsClockwiseIcon className="h-8 w-8" />
               </div>
               <div>
                 <h2 className="text-foreground mb-3 text-2xl font-semibold">{howWeWork}</h2>

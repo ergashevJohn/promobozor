@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { sanitizeSearchQuery } from "@/lib/search";
-import { CircleNotch, MagnifyingGlass, X } from "@phosphor-icons/react/dist/ssr";
+import { CircleNotchIcon, MagnifyingGlassIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import { useCallback, useId, useMemo, useState, useTransition } from "react";
 
@@ -111,7 +111,7 @@ export default function SearchBar({
         }`}
       >
         <div className="relative flex-1">
-          <MagnifyingGlass
+          <MagnifyingGlassIcon
             className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform"
             aria-hidden="true"
           />
@@ -136,7 +136,7 @@ export default function SearchBar({
               </span>
             )}
             {navigationMode === "live" && isPending && (
-              <CircleNotch
+              <CircleNotchIcon
                 className="text-muted-foreground h-4 w-4 animate-spin"
                 aria-hidden="true"
               />
@@ -150,7 +150,7 @@ export default function SearchBar({
                 aria-label={t("clear")}
                 className="h-11 min-h-11 w-11 min-w-11 p-0"
               >
-                <X className="h-4 w-4" aria-hidden="true" />
+                <XIcon className="h-4 w-4" aria-hidden="true" />
               </Button>
             )}
           </div>

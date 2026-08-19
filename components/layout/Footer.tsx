@@ -1,19 +1,23 @@
 import { Link } from "@/i18n/navigation";
-import { InstagramLogo, TelegramLogo, YoutubeLogo } from "@phosphor-icons/react/dist/ssr";
+import {
+  InstagramLogoIcon,
+  TelegramLogoIcon,
+  YoutubeLogoIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
 const socialLinks = [
-  { name: "PromoBozor Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogo },
+  { name: "PromoBozor Telegram", href: "https://t.me/promokoduz_app", icon: TelegramLogoIcon },
   {
     name: "PromoBozor Instagram",
     href: "https://www.instagram.com/promokoduz_app",
-    icon: InstagramLogo,
+    icon: InstagramLogoIcon,
   },
   {
     name: "PromoBozor YouTube",
     href: "https://www.youtube.com/@promokoduz_app",
-    icon: YoutubeLogo,
+    icon: YoutubeLogoIcon,
   },
 ] as const;
 

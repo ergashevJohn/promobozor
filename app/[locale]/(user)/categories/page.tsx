@@ -15,7 +15,7 @@ import { getTranslations } from "next-intl/server";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, MagnifyingGlass, Package } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, MagnifyingGlassIcon, PackageIcon } from "@phosphor-icons/react/dist/ssr";
 
 const ITEMS_PER_PAGE = 24;
 
@@ -261,7 +261,10 @@ export default async function CategoriesPage({
                           </div>
                         ) : (
                           <div className="bg-muted flex h-24 w-24 items-center justify-center rounded-2xl shadow-[0_18px_40px_-24px_rgba(17,24,39,0.24)]">
-                            <Package className="text-muted-foreground h-9 w-9" aria-hidden="true" />
+                            <PackageIcon
+                              className="text-muted-foreground h-9 w-9"
+                              aria-hidden="true"
+                            />
                           </div>
                         )}
                       </div>
@@ -293,7 +296,7 @@ export default async function CategoriesPage({
                       <span>
                         {t("viewOffers")} {categoryName}
                       </span>
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRightIcon className="h-4 w-4" />
                     </div>
                   </Link>
                 );
@@ -314,7 +317,7 @@ export default async function CategoriesPage({
         ) : (
           <Card className="empty-state-card border-none shadow-none">
             <CardContent className="py-4 text-center">
-              <MagnifyingGlass
+              <MagnifyingGlassIcon
                 className="text-muted-foreground mx-auto mb-4 h-12 w-12"
                 aria-hidden="true"
               />

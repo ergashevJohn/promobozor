@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { Envelope } from "@phosphor-icons/react/dist/ssr";
+import { EnvelopeIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface AboutContactProps {
   contactTitle: string;
@@ -24,7 +24,7 @@ export function AboutContact({ contactTitle, contactDescription }: AboutContactP
           href="/contact"
           className="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex items-center gap-2 rounded-lg px-6 py-3 font-medium transition-colors"
         >
-          <Envelope className="h-4 w-4" />
+          <EnvelopeIcon className="h-4 w-4" />
           Email: jahongirergawev2@gmail.com
         </Link>
       </div>

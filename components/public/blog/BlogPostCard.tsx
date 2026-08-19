@@ -6,7 +6,12 @@ import {
   type BlogLocale,
   type BlogPost,
 } from "@/lib/blog";
-import { ArrowRight, BookOpen, Storefront, Tag } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  StorefrontIcon,
+  TagIcon,
+} from "@phosphor-icons/react/dist/ssr";
 
 type BlogPostCardProps = {
   post: BlogPost;
@@ -23,12 +28,12 @@ type BlogPostCardProps = {
 
 function getPostTag(post: BlogPost, labels: BlogPostCardProps["tagLabels"]) {
   if (post.relatedStoreSlug) {
-    return { label: labels.store, icon: Storefront };
+    return { label: labels.store, icon: StorefrontIcon };
   }
   if (post.relatedBrandSlug) {
-    return { label: labels.brand, icon: Tag };
+    return { label: labels.brand, icon: TagIcon };
   }
-  return { label: labels.guide, icon: BookOpen };
+  return { label: labels.guide, icon: BookOpenIcon };
 }
 
 export function BlogPostCard({
@@ -78,7 +83,7 @@ export function BlogPostCard({
               className="mt-8 inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-[color:var(--accent-red)] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             >
               {readMoreLabel}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
           <div className="relative hidden min-h-[16rem] overflow-hidden lg:block">
@@ -123,7 +128,7 @@ export function BlogPostCard({
         className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--accent-red)] transition-[gap] group-hover:gap-2.5"
       >
         {readMoreLabel}
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
       </Link>
     </article>
   );

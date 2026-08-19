@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Copy, ArrowSquareOut } from "@phosphor-icons/react/dist/ssr";
+import { CopyIcon, ArrowSquareOutIcon } from "@phosphor-icons/react/dist/ssr";
 import { usePromocode, usePromocodeDisplay } from "../PromocodeContext";
 
 export function PromocodeActionButton() {
@@ -30,7 +30,7 @@ export function PromocodeActionButton() {
         }`}
         disabled={copied || isInactive}
       >
-        <Copy size={18} className="mr-2" />
+        <CopyIcon size={18} className="mr-2" />
         <span>{isInactive ? t.expired : copied ? `✓ ${t.copied}` : t.copyCode}</span>
       </Button>
     );
@@ -45,7 +45,7 @@ export function PromocodeActionButton() {
         aria-label={isInactive ? t.expired : t.activateLink}
         className={`w-full rounded-full py-4 sm:py-3 ${isInactive ? "cursor-not-allowed bg-[color:var(--secondary)] text-[color:var(--muted-foreground)]" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}
       >
-        <ArrowSquareOut size={18} className="mr-2" />
+        <ArrowSquareOutIcon size={18} className="mr-2" />
         {isInactive ? t.expired : t.activateLink}
       </Button>
     );

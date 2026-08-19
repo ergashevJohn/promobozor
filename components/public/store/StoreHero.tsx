@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Storefront } from "@phosphor-icons/react/dist/ssr";
+import { StorefrontIcon } from "@phosphor-icons/react/dist/ssr";
 import { getApprovedImageUrl } from "@/lib/media";
 import StoreDescription from "@/components/public/StoreDescription";
 
@@ -76,7 +76,7 @@ export default function StoreHero({
                 </div>
               ) : (
                 <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-4xl md:size-20">
-                  <Storefront className="text-foreground size-10 md:size-12" />
+                  <StorefrontIcon className="text-foreground size-10 md:size-12" />
                 </div>
               )}
               <div>

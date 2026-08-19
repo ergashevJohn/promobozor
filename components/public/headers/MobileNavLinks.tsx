@@ -3,13 +3,13 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import type { Icon } from "@phosphor-icons/react";
 import {
-  ArrowRight,
-  Article,
-  Buildings,
-  EnvelopeSimple,
-  SquaresFour,
-  Storefront,
-  Ticket,
+  ArrowRightIcon,
+  ArticleIcon,
+  BuildingsIcon,
+  EnvelopeSimpleIcon,
+  SquaresFourIcon,
+  StorefrontIcon,
+  TicketIcon,
 } from "@phosphor-icons/react/dist/ssr";
 
 type NavLink = {
@@ -18,12 +18,12 @@ type NavLink = {
 };
 
 const NAV_ICONS: Record<NavLink["href"], Icon> = {
-  "/promocodes": Ticket,
-  "/stores": Storefront,
-  "/categories": SquaresFour,
-  "/brands": Buildings,
-  "/blog": Article,
-  "/contact": EnvelopeSimple,
+  "/promocodes": TicketIcon,
+  "/stores": StorefrontIcon,
+  "/categories": SquaresFourIcon,
+  "/brands": BuildingsIcon,
+  "/blog": ArticleIcon,
+  "/contact": EnvelopeSimpleIcon,
 };
 
 export function MobileNavLinks({ links, label }: { links: NavLink[]; label: string }) {
@@ -56,7 +56,7 @@ export function MobileNavLinks({ links, label }: { links: NavLink[]; label: stri
               <Icon size={20} aria-hidden="true" />
             </span>
             <span className="min-w-0 flex-1 text-left">{link.label}</span>
-            <ArrowRight
+            <ArrowRightIcon
               className={`size-4 shrink-0 transition-transform ${
                 isActive
                   ? "text-[color:var(--accent-red)]"

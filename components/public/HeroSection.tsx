@@ -1,6 +1,10 @@
 import HeroSearchForm from "@/components/public/HeroSearchForm";
 import { getListPath, type Locale as RouteLocale } from "@/lib/routes";
-import { ArrowsClockwise, CheckCircle, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowsClockwiseIcon,
+  CheckCircleIcon,
+  MagnifyingGlassIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 interface HeroSectionProps {
@@ -10,7 +14,7 @@ interface HeroSectionProps {
   searchBarTargetPath?: string;
 }
 
-const TRUST_ICONS = [CheckCircle, ArrowsClockwise, MagnifyingGlass] as const;
+const TRUST_ICONS = [CheckCircleIcon, ArrowsClockwiseIcon, MagnifyingGlassIcon] as const;
 
 export default async function HeroSection({ locale, searchParams }: HeroSectionProps) {
   const t = await getTranslations({ locale, namespace: "home" });

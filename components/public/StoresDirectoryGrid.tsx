@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getApprovedImageUrl } from "@/lib/media";
-import { ArrowRight, Storefront as StoreIcon } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, StorefrontIcon as StoreIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 export type StoresDirectoryItem = {
@@ -81,7 +81,7 @@ export function StoresDirectoryGrid({ stores, translations: t }: StoresDirectory
 
             <div className="text-foreground inline-flex min-h-11 w-full items-center justify-between rounded-xl border border-[color:var(--border)] bg-[color:var(--secondary)]/60 px-4 text-sm font-medium transition-colors group-hover:border-[color:var(--accent-red)] group-hover:bg-[color:var(--accent)]">
               <span>{t.viewOffers}</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRightIcon className="h-4 w-4" />
             </div>
           </Link>
         );

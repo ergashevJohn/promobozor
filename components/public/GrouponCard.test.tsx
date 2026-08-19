@@ -43,26 +43,34 @@ vi.mock("sonner", () => ({
 
 // Mock Phosphor icons
 vi.mock("@phosphor-icons/react", () => ({
-  SealCheck: ({ className }: any) => <span data-testid="icon-badge-check" className={className} />,
-  Check: ({ className }: any) => <span data-testid="icon-check" className={className} />,
-  Clock: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
-  Copy: ({ className }: any) => <span data-testid="icon-copy" className={className} />,
-  Eye: ({ className }: any) => <span data-testid="icon-eye" className={className} />,
-  CircleNotch: ({ className }: any) => <span data-testid="icon-loader" className={className} />,
-  Star: ({ className }: any) => <span data-testid="icon-star" className={className} />,
-  Ticket: ({ className }: any) => <span data-testid="icon-ticket-percent" className={className} />,
-  ThumbsDown: ({ className }: any) => <span data-testid="icon-thumbs-down" className={className} />,
-  ThumbsUp: ({ className }: any) => <span data-testid="icon-thumbs-up" className={className} />,
+  SealCheckIcon: ({ className }: any) => (
+    <span data-testid="icon-badge-check" className={className} />
+  ),
+  CheckIcon: ({ className }: any) => <span data-testid="icon-check" className={className} />,
+  ClockIcon: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
+  CopyIcon: ({ className }: any) => <span data-testid="icon-copy" className={className} />,
+  EyeIcon: ({ className }: any) => <span data-testid="icon-eye" className={className} />,
+  CircleNotchIcon: ({ className }: any) => <span data-testid="icon-loader" className={className} />,
+  StarIcon: ({ className }: any) => <span data-testid="icon-star" className={className} />,
+  TicketIcon: ({ className }: any) => (
+    <span data-testid="icon-ticket-percent" className={className} />
+  ),
+  ThumbsDownIcon: ({ className }: any) => (
+    <span data-testid="icon-thumbs-down" className={className} />
+  ),
+  ThumbsUpIcon: ({ className }: any) => <span data-testid="icon-thumbs-up" className={className} />,
 }));
 
 vi.mock("@phosphor-icons/react/dist/ssr", () => ({
-  SealCheck: ({ className }: any) => <span data-testid="icon-badge-check" className={className} />,
-  Check: ({ className }: any) => <span data-testid="icon-check" className={className} />,
-  Clock: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
-  Copy: ({ className }: any) => <span data-testid="icon-copy" className={className} />,
-  Eye: ({ className }: any) => <span data-testid="icon-eye" className={className} />,
-  CircleNotch: ({ className }: any) => <span data-testid="icon-loader" className={className} />,
-  Star: ({ className }: any) => <span data-testid="icon-star" className={className} />,
+  SealCheckIcon: ({ className }: any) => (
+    <span data-testid="icon-badge-check" className={className} />
+  ),
+  CheckIcon: ({ className }: any) => <span data-testid="icon-check" className={className} />,
+  ClockIcon: ({ className }: any) => <span data-testid="icon-clock" className={className} />,
+  CopyIcon: ({ className }: any) => <span data-testid="icon-copy" className={className} />,
+  EyeIcon: ({ className }: any) => <span data-testid="icon-eye" className={className} />,
+  CircleNotchIcon: ({ className }: any) => <span data-testid="icon-loader" className={className} />,
+  StarIcon: ({ className }: any) => <span data-testid="icon-star" className={className} />,
 }));
 
 // Mock API calls

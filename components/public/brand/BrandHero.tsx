@@ -1,5 +1,5 @@
 import SafeHtmlContent from "@/components/public/SafeHtmlContent";
-import { Buildings } from "@phosphor-icons/react/dist/ssr";
+import { BuildingsIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 interface BrandHeroProps {
@@ -46,7 +46,7 @@ export default function BrandHero({
             </div>
           ) : (
             <div className="bg-muted border-border flex size-28 shrink-0 items-center justify-center rounded-2xl border text-[color:var(--accent-red)] md:size-36">
-              <Buildings className="h-12 w-12" aria-hidden="true" />
+              <BuildingsIcon className="h-12 w-12" aria-hidden="true" />
             </div>
           )}
 

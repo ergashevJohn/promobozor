@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getApprovedImageUrl } from "@/lib/media";
-import { ArrowRight, Storefront } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRightIcon, StorefrontIcon } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 interface Store {
@@ -73,7 +73,7 @@ export default function FeaturedStoreSection({
                 </div>
               ) : (
                 <div className="bg-card flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl ring-1 ring-[color:var(--border)]">
-                  <Storefront className="text-muted-foreground h-7 w-7" aria-hidden="true" />
+                  <StorefrontIcon className="text-muted-foreground h-7 w-7" aria-hidden="true" />
                 </div>
               )}
               <div className="min-w-0 flex-1">
@@ -90,7 +90,7 @@ export default function FeaturedStoreSection({
             </div>
             <span className="text-foreground inline-flex items-center text-sm font-semibold transition-colors group-hover:text-[color:var(--accent-red)] sm:shrink-0">
               {browse.stores.featuredCta}
-              <ArrowRight
+              <ArrowRightIcon
                 className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
@@ -102,7 +102,7 @@ export default function FeaturedStoreSection({
             className="text-foreground mt-auto inline-flex min-h-11 items-center gap-2 pt-8 text-sm font-semibold transition-colors hover:text-[color:var(--accent-red)]"
           >
             <span>{tCommon("viewAll")}</span>
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
 
@@ -133,7 +133,7 @@ export default function FeaturedStoreSection({
                     </div>
                   ) : (
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[color:var(--secondary)]">
-                      <Storefront
+                      <StorefrontIcon
                         className="h-5 w-5 text-[color:var(--muted-foreground)]"
                         aria-hidden="true"
                       />
@@ -147,7 +147,7 @@ export default function FeaturedStoreSection({
                       {store.count} {tCommon("promocodes")}
                     </div>
                   </div>
-                  <ArrowRight
+                  <ArrowRightIcon
                     className="text-muted-foreground h-4 w-4 shrink-0 opacity-0 transition-[opacity,transform,color] group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-red)] group-hover:opacity-100"
                     aria-hidden="true"
                   />

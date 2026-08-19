@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 import { getTranslations } from "next-intl/server";
 
 type Props = {
@@ -26,7 +26,7 @@ export default async function HeroSearchForm({ formAction, defaultValue }: Props
       </Label>
       <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <MagnifyingGlass
+          <MagnifyingGlassIcon
             className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform"
             aria-hidden="true"
           />
