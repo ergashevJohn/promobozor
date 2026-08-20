@@ -459,7 +459,9 @@
     "viewStorePromocodesAria": "{name} promokodlarini ko'rish",
     "faqTitle": "{name} promokodlari haqida savollar",
     "faqDescription": "{name} uchun kodlarni qanday topish, nusxalash va to‘lovda qo‘llash.",
-    "lastReviewed": "Oxirgi ko‘rib chiqish"
+    "lastReviewed": "Oxirgi ko‘rib chiqish",
+    "pageNavigation": "Sahifa bo‘ylab navigatsiya",
+    "connectionsTitle": "Ko‘proq kashf eting"
   },
   "category": {
     "title": "Kategoriya",
@@ -504,7 +506,9 @@
     "allPromocodesDescription": "{name} ichidagi jonli tejashlar - do'konlar va bog'liq brendlar bo'yicha faol takliflar.",
     "faqTitle": "{name} kategoriyasi bo‘yicha savollar",
     "faqDescription": "{name} yo‘nalishidagi promokodlarni qanday topish va ishlatish.",
-    "lastReviewed": "Oxirgi ko‘rib chiqish"
+    "lastReviewed": "Oxirgi ko‘rib chiqish",
+    "pageNavigation": "Sahifa bo‘ylab navigatsiya",
+    "connectionsTitle": "Ko‘proq kashf eting"
   },
   "brand": {
     "title": "Brend",
@@ -550,7 +554,9 @@
     "allPromocodesDescription": "{name} bilan bog'liq tejashlar - bir nechta do'kon va faol joylashuvlar bo'yicha.",
     "faqTitle": "{name} promokodlari bo‘yicha FAQ",
     "faqDescription": "{name} chegirmalarini qanday ishlatish va qachon yangilanishi haqida qisqa javoblar.",
-    "lastReviewed": "Oxirgi ko‘rib chiqish"
+    "lastReviewed": "Oxirgi ko‘rib chiqish",
+    "pageNavigation": "Sahifa bo‘ylab navigatsiya",
+    "connectionsTitle": "Ko‘proq kashf eting"
   },
   "promocode": {
     "title": "Promokod tafsilotlari",

@@ -487,7 +487,9 @@
     "viewStorePromocodesAria": "Смотреть промокоды {name}",
     "faqTitle": "Вопросы о промокодах {name}",
     "faqDescription": "Как найти, скопировать и применить коды {name} при оплате.",
-    "lastReviewed": "Последняя проверка"
+    "lastReviewed": "Последняя проверка",
+    "pageNavigation": "Навигация по странице",
+    "connectionsTitle": "Смотрите также"
   },
   "category": {
     "title": "Категория",
@@ -532,7 +534,9 @@
     "allPromocodesDescription": "Живая экономия в {name} - активные предложения магазинов и брендов.",
     "faqTitle": "Вопросы по категории {name}",
     "faqDescription": "Как находить и применять промокоды в направлении {name}.",
-    "lastReviewed": "Последняя проверка"
+    "lastReviewed": "Последняя проверка",
+    "pageNavigation": "Навигация по странице",
+    "connectionsTitle": "Смотрите также"
   },
   "brand": {
     "title": "Бренд",
@@ -578,7 +582,9 @@
     "allPromocodesDescription": "Экономия по {name} - в нескольких магазинах и активных размещениях.",
     "faqTitle": "FAQ по промокодам {name}",
     "faqDescription": "Кратко о том, как пользоваться скидками {name} и когда они обновляются.",
-    "lastReviewed": "Последняя проверка"
+    "lastReviewed": "Последняя проверка",
+    "pageNavigation": "Навигация по странице",
+    "connectionsTitle": "Смотрите также"
   },
   "promocode": {
     "title": "Детали промокода",

@@ -301,6 +301,76 @@
     @apply text-muted-foreground max-w-[65ch] text-lg leading-8 text-pretty md:text-xl;
   }
 
+  .entity-hero {
+    @apply bg-card relative overflow-hidden border border-[color:var(--border)] px-6 py-7 md:px-8 md:py-10 lg:px-10;
+    border-radius: var(--radius-hero);
+    box-shadow: var(--shadow-surface);
+  }
+
+  .entity-hero::before {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      radial-gradient(circle at 100% 0%, rgba(232, 78, 66, 0.14), transparent 31%),
+      linear-gradient(115deg, rgba(15, 20, 25, 0.045), transparent 45%);
+  }
+
+  .entity-hero--category::before {
+    background:
+      radial-gradient(circle at 8% 0%, rgba(232, 78, 66, 0.18), transparent 31%),
+      linear-gradient(115deg, rgba(15, 20, 25, 0.045), transparent 45%);
+  }
+
+  .dark .entity-hero::before {
+    background:
+      radial-gradient(circle at 100% 0%, rgba(232, 78, 66, 0.18), transparent 31%),
+      linear-gradient(115deg, rgba(232, 78, 66, 0.07), transparent 45%);
+  }
+
+  .entity-metric-rail {
+    @apply grid divide-x divide-y divide-[color:var(--border)] overflow-hidden rounded-xl border border-[color:var(--border)] sm:grid-cols-2 lg:grid-cols-4 lg:divide-y-0;
+  }
+
+  .entity-metric {
+    @apply bg-card/70 min-w-0 px-4 py-3.5;
+  }
+
+  .entity-metric dt {
+    @apply text-muted-foreground truncate text-xs font-medium;
+  }
+
+  .entity-metric dd {
+    @apply text-foreground mt-1 text-2xl font-semibold tracking-[-0.04em] tabular-nums;
+  }
+
+  .entity-meta-row {
+    @apply text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-2 text-sm;
+  }
+
+  .entity-anchor-nav {
+    @apply mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none];
+  }
+
+  .entity-anchor-link {
+    @apply border-border bg-card text-muted-foreground focus-visible:ring-ring/50 inline-flex shrink-0 items-center rounded-lg border px-3 py-2 text-sm font-medium transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent-red)] hover:text-[color:var(--accent-red)] focus-visible:ring-[3px] focus-visible:outline-none;
+  }
+
+  .entity-connection-panel {
+    @apply bg-card border-border border p-5 md:p-6;
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-surface);
+  }
+
+  .entity-connection-icon {
+    @apply flex size-9 shrink-0 items-center justify-center rounded-lg bg-[color:var(--accent)] text-[color:var(--accent-red)];
+  }
+
+  .entity-connection-link {
+    @apply text-foreground focus-visible:ring-ring/50 flex min-h-12 items-center justify-between gap-4 px-4 py-3 text-sm font-medium transition-colors hover:bg-[color:var(--accent)] focus-visible:ring-[3px] focus-visible:outline-none;
+  }
+
   .metric-card {
     @apply border-border border-t pt-5;
   }

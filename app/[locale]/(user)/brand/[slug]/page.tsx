@@ -5,11 +5,14 @@ import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 import StructuredData from "@/components/public/StructuredData";
-import { VerifiedBadge } from "@/components/public/VerifiedBadge";
 import BrandHero from "@/components/public/brand/BrandHero";
 import BrandPromocodes from "@/components/public/brand/BrandPromocodes";
 import BrandRelatedCategories from "@/components/public/brand/BrandRelatedCategories";
 import BrandRelatedStores from "@/components/public/brand/BrandRelatedStores";
+import {
+  EntityAnchorNav,
+  EntitySectionHeader,
+} from "@/components/public/entity-detail/EntityDetailPrimitives";
 import type { Promocode } from "@/components/public/types";
 import { Locale } from "@/i18n/routing";
 import { countUnique } from "@/lib/array-utils";
@@ -316,29 +319,29 @@ export default async function BrandPage({
         {/* Hero Section - logo-forward */}
         <BrandHero
           brandName={brandTranslation?.name || brandTitle}
-          brandDescription={resolvedBrandDescription}
+          brandDescription={brandTranslation?.shortSummary || brandTranslation?.description}
           brandImageUrl={brandImageUrl}
           brandWebsiteUrl={brand.websiteUrl}
           totalPromocodes={totalPromocodesCount}
           uniqueStoreCount={uniqueStoreCount}
+          verifiedAt={brand.lastReviewedAt}
+          locale={locale}
           t={t}
           tCommon={tCommon}
           slug={slug}
         />
-        <div className="page-shell pt-2">
-          <VerifiedBadge
-            verifiedAt={brand.lastReviewedAt}
-            locale={locale}
-            label={t("lastReviewed")}
+        <div className="page-shell">
+          <EntityAnchorNav
+            ariaLabel={t("pageNavigation")}
+            items={[
+              { href: "#offers", label: t("allPromocodes") },
+              { href: "#connections", label: t("connectionsTitle") },
+              { href: "#brand-faq", label: "FAQ" },
+            ]}
           />
         </div>
 
         <div className="page-shell py-12">
-          <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <BrandRelatedStores relatedStores={relatedStores} t={t} />
-            <BrandRelatedCategories relatedCategories={relatedCategories} t={t} />
-          </section>
-
           {/* All Promocodes */}
           <BrandPromocodes
             allPromocodes={allPromocodes}
@@ -381,6 +384,14 @@ export default async function BrandPage({
             }}
             t={t}
           />
+
+          <section id="connections" className="section-rhythm scroll-mt-24">
+            <EntitySectionHeader title={t("connectionsTitle")} />
+            <div className="grid gap-4 lg:grid-cols-2">
+              <BrandRelatedStores relatedStores={relatedStores} t={t} />
+              <BrandRelatedCategories relatedCategories={relatedCategories} t={t} />
+            </div>
+          </section>
 
           <EntityFAQSection
             entityName={brandTranslation?.name || brandTitle}

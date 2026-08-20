@@ -25,7 +25,11 @@ export function EntityFAQSection({
   const items = getEntityFaqItems(entityName, locale, faqJson);
 
   return (
-    <section className="section-rhythm" aria-labelledby={`${entityType}-faq-heading`}>
+    <section
+      id={`${entityType}-faq`}
+      className="section-rhythm scroll-mt-24"
+      aria-labelledby={`${entityType}-faq-heading`}
+    >
       <FAQSchema questions={items} />
       <div className="mx-auto mb-8 max-w-2xl text-center">
         <h2 id={`${entityType}-faq-heading`} className="brand-section-heading text-center">

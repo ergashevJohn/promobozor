@@ -6,12 +6,15 @@ import { LocalBusinessSchema } from "@/components/public/LocalBusinessSchema";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
 import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
+import {
+  EntityAnchorNav,
+  EntitySectionHeader,
+} from "@/components/public/entity-detail/EntityDetailPrimitives";
 import StoreHero from "@/components/public/store/StoreHero";
 import StoreRelatedBrands from "@/components/public/store/StoreRelatedBrands";
 import StoreRelatedCategories from "@/components/public/store/StoreRelatedCategories";
 import StructuredData from "@/components/public/StructuredData";
 import type { Promocode } from "@/components/public/types";
-import { VerifiedBadge } from "@/components/public/VerifiedBadge";
 import { Link } from "@/i18n/navigation";
 import { countUnique } from "@/lib/array-utils";
 import { getCachedStorePromocodeCounts } from "@/lib/cache/promocode-counts";
@@ -180,7 +183,7 @@ function StorePageContent({
         </div>
         <StoreHero
           name={storeTranslation?.name || storeTitle}
-          description={resolvedStoreDescription}
+          description={storeTranslation?.shortSummary || storeTranslation?.description}
           logoUrl={store.logoUrl}
           websiteUrl={store.websiteUrl}
           totalPromocodesCount={totalPromocodesCount}
@@ -189,62 +192,45 @@ function StorePageContent({
           featuredPromocodesCount={featuredPromocodesCount}
           totalViews={totalViews}
           totalCopies={totalCopies}
+          verifiedAt={store.lastReviewedAt}
           translations={{
             heroKicker: t("heroKicker"),
             h1Title: t("h1Title", { name: storeTranslation?.name || storeTitle }),
-            activeRouteLabel: t("activeRouteLabel"),
             activePromocodes: t("activePromocodes"),
-            brandMixLabel: t("brandMixLabel"),
             connectedBrandsLabel: t("connectedBrandsLabel"),
-            categorySpreadLabel: t("categorySpreadLabel"),
             activeCategoryPathsLabel: t("activeCategoryPathsLabel"),
-            storeTrustTitle: t("storeTrustTitle"),
-            storeTrustDescription: t("storeTrustDescription"),
             visitWebsite: t("visitWebsite"),
+            viewOffers: t("viewOffers"),
             views: t("views"),
             uses: t("uses"),
             altStoreLogo: tCommon("altStoreLogo"),
             altStoreLogoWithSlug: (slug: string) => tCommon("altStoreLogoWithSlug", { slug }),
             featured: tCommon("featured"),
+            lastReviewed: t("lastReviewed"),
           }}
           slug={slug}
           locale={locale}
         />
-        <div className="page-shell pt-2">
-          <VerifiedBadge
-            verifiedAt={store.lastReviewedAt}
-            locale={locale}
-            label={t("lastReviewed")}
+        <div className="page-shell">
+          <EntityAnchorNav
+            ariaLabel={t("pageNavigation")}
+            items={[
+              { href: "#offers", label: t("allPromocodes") },
+              { href: "#connections", label: t("connectionsTitle") },
+              { href: "#store-faq", label: "FAQ" },
+            ]}
           />
         </div>
 
         <div className="page-shell py-12">
-          <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <StoreRelatedBrands
-              relatedBrands={relatedBrands}
-              translations={{
-                relatedBrandsDescription: t("relatedBrandsDescription"),
-                noLinkedBrands: t("noLinkedBrands"),
-              }}
+          <section id="offers" className="scroll-mt-24">
+            <EntitySectionHeader
+              kicker={t("offersKicker")}
+              title={t("allPromocodes")}
+              description={t("allPromocodesDescription", {
+                name: storeTranslation?.name || storeTitle,
+              })}
             />
-            <StoreRelatedCategories
-              relatedCategories={relatedCategories}
-              translations={{
-                relatedCategoriesDescription: t("relatedCategoriesDescription"),
-                noLinkedCategories: t("noLinkedCategories"),
-              }}
-            />
-          </section>
-
-          <section>
-            <div className="mb-8">
-              <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
-              <p className="text-muted-foreground mt-2">
-                {t("allPromocodesDescription", {
-                  name: storeTranslation?.name || storeTitle,
-                })}
-              </p>
-            </div>
             {totalPromocodesCount > 0 ? (
               <PromocodeListWithPagination
                 initialCount={allPromocodes.length}
@@ -278,6 +264,28 @@ function StorePageContent({
                 </Link>
               </div>
             ) : null}
+          </section>
+
+          <section id="connections" className="section-rhythm scroll-mt-24">
+            <EntitySectionHeader title={t("connectionsTitle")} />
+            <div className="grid gap-4 lg:grid-cols-2">
+              <StoreRelatedBrands
+                relatedBrands={relatedBrands}
+                translations={{
+                  title: t("relatedBrandsKicker"),
+                  relatedBrandsDescription: t("relatedBrandsDescription"),
+                  noLinkedBrands: t("noLinkedBrands"),
+                }}
+              />
+              <StoreRelatedCategories
+                relatedCategories={relatedCategories}
+                translations={{
+                  title: t("relatedCategoriesKicker"),
+                  relatedCategoriesDescription: t("relatedCategoriesDescription"),
+                  noLinkedCategories: t("noLinkedCategories"),
+                }}
+              />
+            </div>
           </section>
 
           <EntityFAQSection

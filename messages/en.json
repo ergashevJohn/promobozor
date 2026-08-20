@@ -487,7 +487,9 @@
     "viewStorePromocodesAria": "View {name} promocodes",
     "faqTitle": "Questions about {name} promocodes",
     "faqDescription": "How to find, copy, and apply {name} codes at checkout.",
-    "lastReviewed": "Last reviewed"
+    "lastReviewed": "Last reviewed",
+    "pageNavigation": "On this page",
+    "connectionsTitle": "Explore related routes"
   },
   "category": {
     "title": "Category",
@@ -532,7 +534,9 @@
     "allPromocodesDescription": "Explore live savings inside {name}, with active offers across stores and related brands.",
     "faqTitle": "Questions about the {name} category",
     "faqDescription": "How to find and use promocodes in the {name} category.",
-    "lastReviewed": "Last reviewed"
+    "lastReviewed": "Last reviewed",
+    "pageNavigation": "On this page",
+    "connectionsTitle": "Explore related routes"
   },
   "brand": {
     "title": "Brand",
@@ -578,7 +582,9 @@
     "allPromocodesDescription": "A tighter look at savings tied to {name}, across multiple stores and active placements.",
     "faqTitle": "{name} promocode FAQ",
     "faqDescription": "Short answers on using {name} discounts and how often they refresh.",
-    "lastReviewed": "Last reviewed"
+    "lastReviewed": "Last reviewed",
+    "pageNavigation": "On this page",
+    "connectionsTitle": "Explore related routes"
   },
   "promocode": {
     "title": "Promocode Details",

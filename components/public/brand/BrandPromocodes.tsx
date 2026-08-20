@@ -59,7 +59,7 @@ export default function BrandPromocodes({
   t,
 }: BrandPromocodesProps) {
   return (
-    <section>
+    <section id="offers" className="scroll-mt-24">
       <div className="mb-8">
         <h2 className="text-foreground text-3xl font-semibold">{t("allPromocodes")}</h2>
         <p className="text-muted-foreground mt-2">
