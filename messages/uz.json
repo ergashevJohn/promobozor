@@ -107,7 +107,8 @@
     "subscribe": "Obuna bo'lish",
     "copyright": "© 2026 PromoBozor. Barcha huquqlar himoyalangan.",
     "createdBy": "Muallif",
-    "blog": "Blog va qo‘llanmalar"
+    "blog": "Blog va qo‘llanmalar",
+    "partners": "Hamkorlar uchun"
   },
   "home": {
     "title": "Takliflarni solishtiring, shartlarni tekshiring, ishonchli variantni tanlang",
@@ -140,7 +141,7 @@
       "heroQuickLinks": [
         {
           "label": "Yangi takliflar",
-          "href": "/promocodes"
+          "href": "/new"
         },
         {
           "label": "Yetkazib berish",
@@ -170,7 +171,7 @@
             "kicker": "Yangi saralash",
             "title": "Avval eng yangi tekshirilgan takliflarni ko'ring",
             "description": "Yaqinda qayta ko'rib chiqilgan va darhol foyda berish ehtimoli yuqori bo'lgan takliflardan boshlang.",
-            "href": "/promocodes"
+            "href": "/new"
           },
           {
             "kicker": "Do'kon qidiruvi",
@@ -1176,5 +1177,88 @@
     "relatedStore": "Do‘kon hubiga o‘tish",
     "relatedBrand": "Brend hubiga o‘tish",
     "allOffers": "Barcha takliflar"
+  },
+  "feedback": {
+    "question": "Bu promokod ishladimi?",
+    "worked": "Ishladi",
+    "failed": "Ishlamadi",
+    "chooseReason": "Sababni tanlang",
+    "send": "Yuborish",
+    "thanks": "Fikringiz uchun rahmat!",
+    "error": "Fikrni yuborib bo‘lmadi. Qayta urinib ko‘ring.",
+    "reasons": {
+      "invalid_or_expired": "Kod noto‘g‘ri yoki muddati tugagan",
+      "new_customer_only": "Faqat yangi foydalanuvchi uchun",
+      "min_order_or_product": "Minimal summa yoki tovar cheklovi bor",
+      "region_app_or_payment": "Hudud, ilova yoki to‘lov usuli mos emas",
+      "other": "Boshqa sabab"
+    }
+  },
+  "newPromocodes": {
+    "title": "Yangi promokodlar",
+    "description": "Oxirgi 14 kunda e’lon qilingan faol promokod va aksiyalar.",
+    "kicker": "Yangi takliflar",
+    "emptyTitle": "Hozircha yangi takliflar yo‘q",
+    "emptyDescription": "Tez orada yangi promokodlar qo‘shiladi. Barcha faol takliflarni ko‘rib chiqing.",
+    "allOffers": "Barcha promokodlar",
+    "newBadge": "Yangi"
+  },
+  "collections": {
+    "title": "Promokod tanlovlari",
+    "description": "Buyurtmangizga mos qo‘lda saralangan promokod va aksiyalar.",
+    "kicker": "Saralangan takliflar",
+    "browse": "Tanlovni ko‘rish",
+    "offers": "ta taklif",
+    "first-order": {
+      "title": "Birinchi buyurtma uchun",
+      "description": "Yangi mijozlar uchun saralangan chegirmalar."
+    },
+    "repeat-order": {
+      "title": "Qayta buyurtma uchun",
+      "description": "Doimiy xaridlar uchun faol takliflar."
+    },
+    "delivery": {
+      "title": "Yetkazib berish uchun",
+      "description": "Yetkazib berish xarajatini kamaytiruvchi aksiyalar."
+    }
+  },
+  "partners": {
+    "title": "PromoBozor bilan hamkorlik",
+    "description": "Brendlar va CPA tarmoqlari uchun promokod kampaniyalarini ko‘rib chiqamiz.",
+    "kicker": "Hamkorlar uchun",
+    "formatsTitle": "Taklif qilinadigan formatlar",
+    "formats": {
+      "list": [
+        "Promokod yoki aksiyani joylashtirish",
+        "Eksklyuziv promokod",
+        "Bosh sahifadagi maxsus taklif",
+        "Tematik tanlovga joylashtirish",
+        "Alohida kelishuvda Telegram e’loni"
+      ],
+      "listing": "Promokod yoki aksiya",
+      "exclusive": "Eksklyuziv promokod",
+      "homepage": "Bosh sahifa taklifi",
+      "collection": "Tanlovga joylashtirish",
+      "telegram": "Telegram e’loni"
+    },
+    "note": "Har bir taklif editorial tekshiruvdan o‘tadi. Trafik, reyting yoki nashr kafolatlanmaydi.",
+    "formTitle": "Hamkorlik taklifini yuboring",
+    "company": "Kompaniya",
+    "person": "Kontakt shaxs",
+    "email": "Ish emaili",
+    "phone": "Telefon (ixtiyoriy)",
+    "telegram": "Telegram (ixtiyoriy)",
+    "website": "Sayt",
+    "type": "Hamkor turi",
+    "direct_brand": "Brend yoki do‘kon",
+    "cpa_network": "CPA tarmog‘i",
+    "formatsLabel": "Kerakli formatlar",
+    "campaign": "Kampaniya tavsifi",
+    "validUntil": "Amal muddati",
+    "tracking": "Tracking ma’lumoti",
+    "privacy": "Maxfiylik siyosatiga roziman",
+    "submit": "Yuborish",
+    "success": "Murojaatingiz qabul qilindi.",
+    "error": "Murojaat yuborilmadi. Qayta urinib ko‘ring."
   }
 }

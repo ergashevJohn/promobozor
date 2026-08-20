@@ -314,18 +314,3 @@ export function transformRelatedPromocodes(data: PromocodeDataRow[]): Transforme
     };
   });
 }
-
-export function calculateRating(likesCount: number, dislikesCount: number) {
-  const totalVotes = likesCount + dislikesCount;
-  const ratingValue =
-    totalVotes > 0 ? ((likesCount * 5 + dislikesCount * 1) / totalVotes).toFixed(1) : null;
-
-  return ratingValue
-    ? {
-        ratingValue: parseFloat(ratingValue),
-        reviewCount: totalVotes,
-        bestRating: 5,
-        worstRating: 1,
-      }
-    : undefined;
-}

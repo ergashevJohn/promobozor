@@ -13,6 +13,7 @@
 import { db } from "@/db";
 import { sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import crypto from "node:crypto";
 
 interface RateLimitEntry {
   count: number;
@@ -64,6 +65,23 @@ function isRateLimitDisabled(): boolean {
 
 function storeKey(identifier: string, config: RateLimitConfig): string {
   return `ratelimit:${config.name}:${identifier}`;
+}
+
+function getClientIp(request: Request): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "anonymous"
+  );
+}
+
+/**
+ * Never persist a raw client IP in rate-limit keys. The HMAC stays stable for
+ * deduplication but cannot be reversed without the server-only secret.
+ */
+export function getHashedRateLimitIdentifier(request: Request): string {
+  const secret = process.env.RATE_LIMIT_SECRET || process.env.CSRF_SECRET || "rate-limit-dev";
+  return crypto.createHmac("sha256", secret).update(getClientIp(request)).digest("hex");
 }
 
 function memoryRateLimit(identifier: string, config: RateLimitConfig): RateLimitResult {
@@ -191,12 +209,7 @@ export async function checkRateLimit(
   request: Request,
   config: RateLimitConfig = { name: "default", limit: 10, timeWindow: 60000 }
 ): Promise<RateLimitResult> {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "anonymous";
-
-  return rateLimit(ip, config);
+  return rateLimit(getClientIp(request), config);
 }
 
 /**
@@ -224,6 +237,26 @@ export const RateLimits = {
 
   // Contact form
   contact: { name: "contact", limit: 3, timeWindow: 60 * 60 * 1000, persistent: true },
+
+  feedbackBurst: { name: "feedbackBurst", limit: 3, timeWindow: 10 * 60 * 1000, persistent: true },
+  feedbackDaily: {
+    name: "feedbackDaily",
+    limit: 20,
+    timeWindow: 24 * 60 * 60 * 1000,
+    persistent: true,
+  },
+  feedbackDedup: {
+    name: "feedbackDedup",
+    limit: 1,
+    timeWindow: 7 * 24 * 60 * 60 * 1000,
+    persistent: true,
+  },
+  partnerInquiry: {
+    name: "partnerInquiry",
+    limit: 3,
+    timeWindow: 60 * 60 * 1000,
+    persistent: true,
+  },
 
   // Search - memory (read-only, already sanitized)
   search: { name: "search", limit: 20, timeWindow: 60 * 1000 },

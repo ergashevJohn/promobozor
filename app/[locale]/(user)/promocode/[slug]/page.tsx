@@ -26,7 +26,6 @@ import {
 } from "./helpers";
 import { PromocodeMetadata } from "./PromocodeMetadata";
 import {
-  calculateRating,
   transformPromocodeData,
   transformRelatedPromocodes,
   type PromocodeDataRow,
@@ -232,9 +231,6 @@ export default async function PromocodeDetailPage({
         },
       ];
 
-      // Calculate rating
-      const rating = calculateRating(promocode.likesCount, promocode.dislikesCount);
-
       // Build contextual links
       const contextualLinks = [
         promocode.store?.translations?.[0]?.slug
@@ -269,7 +265,6 @@ export default async function PromocodeDetailPage({
             breadcrumbItems={breadcrumbItems}
             locale={locale}
             baseUrl={getBaseUrl()}
-            rating={rating}
             createdAt={toIsoOrUndefined(promocodeData.promocode.createdAt)}
             updatedAt={
               toIsoOrUndefined(promocodeData.promocode.updatedAt) ??

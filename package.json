@@ -35,6 +35,7 @@
     "seo:rewrite-existing": "tsx scripts/seo/rewrite-existing-content.ts",
     "seo:rewrite-existing:apply": "tsx scripts/seo/rewrite-existing-content.ts --apply",
     "seo:merge-internal": "tsx scripts/seo/merge-internal-duplicates.ts",
+    "catalog:tag-promocodes": "tsx scripts/catalog/tag-promocodes.ts",
     "prepare": "husky",
     "test:e2e": "playwright test",
     "doctor": "npx react-doctor@latest"

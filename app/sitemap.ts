@@ -19,6 +19,14 @@ import {
   storeTranslations,
 } from "@/lib/db";
 import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
+import { getIndexableCollections } from "@/lib/collections";
+import { getNewPromocodes } from "@/lib/queries/new-promocodes";
+import {
+  getCollectionPath,
+  getCollectionsPath,
+  getNewPromocodesPath,
+  getPartnersPath,
+} from "@/lib/routes";
 
 export async function generateSitemaps() {
   // Next.js will generate 3 sitemaps: /sitemap/uz.xml, /sitemap/ru.xml, /sitemap/en.xml
@@ -50,6 +58,46 @@ export default async function sitemap({
       },
     },
   });
+
+  sitemapEntries.push({
+    url: `${baseUrl}${getPartnersPath(locale)}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  });
+
+  try {
+    const [newPromocodes, collections] = await Promise.all([
+      getNewPromocodes(locale),
+      getIndexableCollections(locale),
+    ]);
+    if (newPromocodes.total > 0) {
+      sitemapEntries.push({
+        url: `${baseUrl}${getNewPromocodesPath(locale)}`,
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.7,
+      });
+    }
+    if (collections.length > 0) {
+      sitemapEntries.push({
+        url: `${baseUrl}${getCollectionsPath(locale)}`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.65,
+      });
+      for (const key of collections) {
+        sitemapEntries.push({
+          url: `${baseUrl}${getCollectionPath(locale, key)}`,
+          lastModified: now,
+          changeFrequency: "daily",
+          priority: 0.65,
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error adding new offers and collections to sitemap:", error);
+  }
 
   // List pages (localized segments)
   const listPages: Array<ListType | "blog"> = [

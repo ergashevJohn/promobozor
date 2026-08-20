@@ -13,14 +13,6 @@ type PromocodeMetadataProps = {
   breadcrumbItems: Array<{ name: string; url: string }>;
   locale: string;
   baseUrl: string;
-  rating:
-    | {
-        ratingValue: number;
-        reviewCount: number;
-        bestRating: number;
-        worstRating: number;
-      }
-    | undefined;
   createdAt: string | undefined;
   updatedAt: string | undefined;
   tPromocode: { title: string };
@@ -32,7 +24,6 @@ export function PromocodeMetadata({
   breadcrumbItems,
   locale,
   baseUrl,
-  rating,
   createdAt,
   updatedAt,
 }: PromocodeMetadataProps) {
@@ -44,7 +35,6 @@ export function PromocodeMetadata({
         data={promocode}
         lang={locale}
         baseUrl={baseUrl}
-        rating={rating}
         datePublished={createdAt}
         dateModified={updatedAt}
       />

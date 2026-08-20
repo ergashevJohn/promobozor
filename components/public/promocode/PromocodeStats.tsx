@@ -1,14 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ShareNetworkIcon, ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react/dist/ssr";
+import { ShareNetworkIcon } from "@phosphor-icons/react/dist/ssr";
 import { usePromocode } from "../PromocodeContext";
 
 export function PromocodeStats() {
-  const { promocode, translations, liked, disliked, handleShare, handleLike, handleDislike } =
-    usePromocode();
+  const { promocode, translations, handleShare } = usePromocode();
   const t = translations.promocode;
-  const tCard = translations.card;
 
   return (
     <>
@@ -35,34 +33,6 @@ export function PromocodeStats() {
           >
             <ShareNetworkIcon size={18} aria-hidden="true" />
             <span className="hidden sm:inline">{t.share}</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={handleLike}
-            className={`bg-card/95 h-11 flex-1 gap-2 rounded-xl ${
-              liked
-                ? "border-accent-red/50 bg-accent-red/10 text-accent-red hover:bg-accent-red/20"
-                : ""
-            }`}
-            aria-label={`${tCard.like} (${promocode.likesCount})`}
-            title={tCard.like}
-          >
-            <ThumbsUpIcon size={18} fill="currentColor" aria-hidden="true" />
-            <span className="hidden sm:inline">{promocode.likesCount}</span>
-            <span className="sm:hidden">{promocode.likesCount}</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={handleDislike}
-            className={`bg-card/95 h-11 flex-1 gap-2 rounded-xl ${
-              disliked ? "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20" : ""
-            }`}
-            aria-label={`${tCard.dislike} (${promocode.dislikesCount})`}
-            title={tCard.dislike}
-          >
-            <ThumbsDownIcon size={18} fill="currentColor" aria-hidden="true" />
-            <span className="hidden sm:inline">{promocode.dislikesCount}</span>
-            <span className="sm:hidden">{promocode.dislikesCount}</span>
           </Button>
         </div>
       </div>

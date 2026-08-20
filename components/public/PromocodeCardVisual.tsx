@@ -40,6 +40,7 @@ export function PromocodeCardVisual({
   const promocodeTitle = translation?.title || t.promocodeTitle;
   const conditionsText = summarizeConditions(translation?.conditions);
   const { isInactive, isExpiredByDate } = getCardInactiveState(promocode);
+  const isFresh = promocode.isFresh;
 
   const discountLabel =
     promocode.discountType === "percent"
@@ -74,13 +75,20 @@ export function PromocodeCardVisual({
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               {!isInactive ? (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
-                  <SealCheckIcon
-                    className="h-3.5 w-3.5 text-[color:var(--accent-red)]"
-                    aria-hidden="true"
-                  />
-                  {t.verified}
-                </span>
+                <>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
+                    <SealCheckIcon
+                      className="h-3.5 w-3.5 text-[color:var(--accent-red)]"
+                      aria-hidden="true"
+                    />
+                    {t.verified}
+                  </span>
+                  {isFresh ? (
+                    <span className="rounded-md bg-[color:var(--secondary)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
+                      {t.fresh}
+                    </span>
+                  ) : null}
+                </>
               ) : (
                 <span className="rounded-md bg-[color:var(--secondary)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
                   {isExpiredByDate ? t.expired : t.disabled}

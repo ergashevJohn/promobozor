@@ -7,6 +7,7 @@
  */
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { dispatchPromocodeFeedback } from "./PromocodeFeedbackPrompt";
 
 interface Translations {
   codeCopied: string;
@@ -56,6 +57,7 @@ export function CardActionsProvider({ translations }: { translations: Translatio
 
             await navigator.clipboard.writeText(code);
             toast.success(translations.codeCopied);
+            dispatchPromocodeFeedback(promocodeId, "card");
 
             // Update button text temporarily
             if (buttonText) {
@@ -95,6 +97,7 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           case "open-link": {
             const link = button.dataset.link || "";
             window.open(link, "_blank", "noopener,noreferrer");
+            dispatchPromocodeFeedback(promocodeId, "card");
 
             // Track click with AbortController
             const abortController = new AbortController();
@@ -104,54 +107,6 @@ export function CardActionsProvider({ translations }: { translations: Translatio
               signal: abortController.signal,
             });
             abortControllers.current.delete(requestKey);
-            break;
-          }
-
-          case "like": {
-            const abortController = new AbortController();
-            abortControllers.current.set(requestKey, abortController);
-            const response = await fetch(`/api/promocodes/${promocodeId}/like`, {
-              method: "POST",
-              signal: abortController.signal,
-            });
-            abortControllers.current.delete(requestKey);
-
-            if (response.ok) {
-              const countSpan = button.querySelector("[data-count]") as HTMLElement;
-              const currentCount = parseInt(button.dataset.count || "0");
-
-              // Update UI
-              if (countSpan) {
-                countSpan.textContent = (currentCount + 1).toLocaleString();
-              }
-              button.classList.add("bg-green-100", "text-green-700");
-              button.classList.remove("bg-muted", "text-muted-foreground");
-              button.dataset.disabled = "true"; // Prevent multiple likes
-            }
-            break;
-          }
-
-          case "dislike": {
-            const abortController = new AbortController();
-            abortControllers.current.set(requestKey, abortController);
-            const response = await fetch(`/api/promocodes/${promocodeId}/dislike`, {
-              method: "POST",
-              signal: abortController.signal,
-            });
-            abortControllers.current.delete(requestKey);
-
-            if (response.ok) {
-              const countSpan = button.querySelector("[data-count]") as HTMLElement;
-              const currentCount = parseInt(button.dataset.count || "0");
-
-              // Update UI
-              if (countSpan) {
-                countSpan.textContent = (currentCount + 1).toLocaleString();
-              }
-              button.classList.add("bg-red-100", "text-red-700");
-              button.classList.remove("bg-muted", "text-muted-foreground");
-              button.dataset.disabled = "true"; // Prevent multiple dislikes
-            }
             break;
           }
         }
