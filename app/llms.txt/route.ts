@@ -44,15 +44,22 @@ PromoBozor is a comparison-oriented promo code and discount platform for shopper
 - English (en)
 
 ## Key Pages
-- Homepage: ${baseUrl}/uz
-- All Promocodes: ${baseUrl}/uz/chegirmalar
-- Stores: ${baseUrl}/uz/do-konlar
-- Categories: ${baseUrl}/uz/kategoriyalar
-- Brands: ${baseUrl}/uz/brendlar
-- Blog: ${baseUrl}/uz/blog
-- FAQ: ${baseUrl}/uz/faq
-- About: ${baseUrl}/uz/about
+- [Homepage](${baseUrl}/uz): main entry point in Uzbek
+- [All Promocodes](${baseUrl}/uz/chegirmalar): verified discounts and promo codes
+- [Stores](${baseUrl}/uz/do-konlar): store hubs and active offers
+- [Categories](${baseUrl}/uz/kategoriyalar): category hubs and active offers
+- [Brands](${baseUrl}/uz/brendlar): brand hubs and active offers
+- [Blog](${baseUrl}/uz/blog): shopping guides and editorial content
+- [FAQ](${baseUrl}/uz/faq): platform and promocode usage answers
+- [About](${baseUrl}/uz/about): platform background and editorial approach
 - Brand alias pattern: ${baseUrl}/uz/promokod/{brand-slug}-promokod (301 to store/brand hub)
+
+## English Pages
+- [Homepage](${baseUrl}/en)
+- [Deals](${baseUrl}/en/deals)
+- [Stores](${baseUrl}/en/stores)
+- [Categories](${baseUrl}/en/categories)
+- [Brands](${baseUrl}/en/brands)
 
 ## Crawler Instructions
 - Index all public pages under /uz/, /ru/, /en/
@@ -65,10 +72,10 @@ PromoBozor is a comparison-oriented promo code and discount platform for shopper
 Promotional content is updated regularly after review. Expired or inactive offers should not be treated as current recommendations.
 
 ## Brand Presence
-- Website: ${baseUrl}
-- Shared network Telegram: https://t.me/promokoduz_app
-- Shared network Instagram: https://instagram.com/promokoduz_app
-- Shared network YouTube: https://www.youtube.com/@promokoduz_app
+- [Website](${baseUrl})
+- [Shared network Telegram](https://t.me/promokoduz_app)
+- [Shared network Instagram](https://instagram.com/promokoduz_app)
+- [Shared network YouTube](https://www.youtube.com/@promokoduz_app)
 - Note: social handles are shared with Promokoduz; PromoBozor remains a separate site at ${baseUrl}
 
 ## Contact
@@ -76,14 +83,14 @@ Promotional content is updated regularly after review. Expired or inactive offer
 - Founder: Jahongir Ergashev
 
 ## Sitemaps
-- ${baseUrl}/sitemap/uz.xml
-- ${baseUrl}/sitemap/ru.xml
-- ${baseUrl}/sitemap/en.xml
+- [Uzbek sitemap](${baseUrl}/sitemap/uz.xml)
+- [Russian sitemap](${baseUrl}/sitemap/ru.xml)
+- [English sitemap](${baseUrl}/sitemap/en.xml)
 `;
 
   return new NextResponse(content, {
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
+      "Content-Type": "text/markdown; charset=utf-8",
       "Cache-Control": `public, max-age=${REVALIDATE_SECONDS}`,
     },
   });
