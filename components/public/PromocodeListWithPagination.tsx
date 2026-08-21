@@ -1,11 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState, type ReactNode } from "react";
 import LoadMore from "./LoadMore";
-import PromocodeList from "./PromocodeList";
 import type { Promocode } from "./types";
 
 const EMPTY_FILTERS = {};
+const PromocodeList = dynamic(() => import("./PromocodeList"));
 
 export type PromocodeListTranslations = {
   noPromocodes: string;
@@ -65,6 +66,8 @@ interface PromocodeListWithPaginationProps {
   };
   translations: PromocodeListTranslations;
   listKicker: string;
+  /** Desktop can fill the first page after first paint without blocking mobile. */
+  autoLoadDesktopBatches?: number;
   /** SSR initial list (PromocodeListOptimized). Extra pages append client cards. */
   children?: ReactNode;
 }
@@ -82,6 +85,7 @@ export default function PromocodeListWithPagination({
   filters = EMPTY_FILTERS,
   translations,
   listKicker,
+  autoLoadDesktopBatches = 0,
   children,
 }: PromocodeListWithPaginationProps) {
   const resolvedCount = initialCount ?? initialPromocodes?.length ?? 0;
@@ -124,6 +128,7 @@ export default function PromocodeListWithPagination({
           initialOffset={visibleCount}
           limit={limit}
           filters={filters}
+          autoLoadDesktop={additionalPromocodes.length < autoLoadDesktopBatches * limit}
           onLoadMore={handleLoadMore}
         />
       )}

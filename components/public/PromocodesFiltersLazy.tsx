@@ -1,15 +1,15 @@
 "use client";
 
-import FilterBar from "@/components/public/FilterBar";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { FunnelSimpleIcon } from "@phosphor-icons/react/dist/ssr";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useState } from "react";
+
+const FilterBar = dynamic(() => import("@/components/public/FilterBar"));
 
 type FilterItem = {
   id: string;
-  translations: Array<{
-    language: string;
-    name: string;
-    slug: string;
-  }>;
+  translations: Array<{ language: string; name: string; slug: string }>;
 };
 
 type FilterTranslations = {
@@ -33,6 +33,8 @@ type FilterTranslations = {
   apply: string;
 };
 
+type FilterCatalog = { stores: FilterItem[]; categories: FilterItem[]; brands: FilterItem[] };
+
 type Props = {
   locale: string;
   pathname: string;
@@ -41,10 +43,33 @@ type Props = {
   filterKey: string;
 };
 
-/**
- * Loads filter catalog after paint so the default SSR list is not blocked by
- * serializing stores/categories/brands into the client boundary.
- */
+const EMPTY_CATALOG: FilterCatalog = { stores: [], categories: [], brands: [] };
+const catalogRequests = new Map<string, Promise<FilterCatalog>>();
+
+function getFilterCatalog(locale: string): Promise<FilterCatalog> {
+  const cached = catalogRequests.get(locale);
+  if (cached) return cached;
+
+  const request = fetch(`/api/filters?lang=${encodeURIComponent(locale)}`)
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = (await response.json()) as Partial<FilterCatalog>;
+      return {
+        stores: Array.isArray(data.stores) ? data.stores : [],
+        categories: Array.isArray(data.categories) ? data.categories : [],
+        brands: Array.isArray(data.brands) ? data.brands : [],
+      };
+    })
+    .catch((error) => {
+      catalogRequests.delete(locale);
+      throw error;
+    });
+
+  catalogRequests.set(locale, request);
+  return request;
+}
+
+/** Loads the filter catalog and select UI only after the visitor opens filters. */
 export function PromocodesFiltersLazy({
   locale,
   pathname,
@@ -52,89 +77,68 @@ export function PromocodesFiltersLazy({
   translations,
   filterKey,
 }: Props) {
-  const [stores, setStores] = useState<FilterItem[]>([]);
-  const [categories, setCategories] = useState<FilterItem[]>([]);
-  const [brands, setBrands] = useState<FilterItem[]>([]);
-  const [ready, setReady] = useState(false);
+  const hasActiveFilters = useMemo(
+    () => Boolean(currentParams.storeId || currentParams.categoryId || currentParams.brandId),
+    [currentParams.brandId, currentParams.categoryId, currentParams.storeId]
+  );
+  const [isOpen, setIsOpen] = useState(hasActiveFilters);
+  const [catalog, setCatalog] = useState<FilterCatalog>(EMPTY_CATALOG);
+  const [isLoading, setIsLoading] = useState(hasActiveFilters);
 
   useEffect(() => {
-    const controller = new AbortController();
-    let cancelled = false;
-
-    const load = async () => {
-      try {
-        const response = await fetch(`/api/filters?lang=${encodeURIComponent(locale)}`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const data = (await response.json()) as {
-          stores?: FilterItem[];
-          categories?: FilterItem[];
-          brands?: FilterItem[];
-        };
-        if (!cancelled) {
-          setStores(Array.isArray(data.stores) ? data.stores : []);
-          setCategories(Array.isArray(data.categories) ? data.categories : []);
-          setBrands(Array.isArray(data.brands) ? data.brands : []);
-          setReady(true);
-        }
-      } catch (error) {
-        if (cancelled || (error instanceof DOMException && error.name === "AbortError")) {
-          return;
-        }
-        console.error("Error loading filters:", error);
-        if (!cancelled) {
-          setReady(true);
-        }
-      }
-    };
-
-    const schedule =
-      typeof requestIdleCallback === "function"
-        ? (cb: () => void) => requestIdleCallback(cb, { timeout: 1500 })
-        : (cb: () => void) => window.setTimeout(cb, 200);
-
-    const idleId = schedule(() => {
-      void load();
-    });
+    if (!isOpen) return;
+    let active = true;
+    void getFilterCatalog(locale)
+      .then((data) => {
+        if (active) setCatalog(data);
+      })
+      .catch((error) => console.error("Error loading filters:", error))
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
 
     return () => {
-      cancelled = true;
-      controller.abort();
-      if (typeof cancelIdleCallback === "function" && typeof idleId === "number") {
-        cancelIdleCallback(idleId);
-      } else {
-        window.clearTimeout(idleId as number);
-      }
+      active = false;
     };
-  }, [locale]);
-
-  if (!ready) {
-    // Same FilterBar chrome with empty options — avoids CLS from pulse → form swap
-    return (
-      <FilterBar
-        key={`pending-${filterKey}`}
-        pathname={pathname}
-        stores={[]}
-        categories={[]}
-        brands={[]}
-        currentParams={currentParams}
-        translations={translations}
-      />
-    );
-  }
+  }, [isOpen, locale]);
 
   return (
-    <FilterBar
-      key={filterKey}
-      pathname={pathname}
-      stores={stores}
-      categories={categories}
-      brands={brands}
-      currentParams={currentParams}
-      translations={translations}
-    />
+    <div className="mb-5 md:mb-6">
+      {!isOpen ? (
+        <Button
+          type="button"
+          variant="outline"
+          className="bg-card min-h-12 w-full justify-center gap-2 md:w-auto md:px-5"
+          aria-expanded="false"
+          aria-controls="promocode-filters"
+          onClick={() => {
+            setIsLoading(true);
+            setIsOpen(true);
+          }}
+        >
+          <FunnelSimpleIcon size={18} aria-hidden="true" />
+          {translations.filters}
+        </Button>
+      ) : isLoading ? (
+        <div
+          id="promocode-filters"
+          className="bg-card/70 h-12 rounded-2xl border border-[color:var(--border)] md:h-44"
+          aria-live="polite"
+          aria-label={translations.filters}
+        />
+      ) : (
+        <div id="promocode-filters">
+          <FilterBar
+            key={filterKey}
+            pathname={pathname}
+            stores={catalog.stores}
+            categories={catalog.categories}
+            brands={catalog.brands}
+            currentParams={currentParams}
+            translations={translations}
+          />
+        </div>
+      )}
+    </div>
   );
 }

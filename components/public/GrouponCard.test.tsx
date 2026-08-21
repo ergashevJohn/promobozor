@@ -31,7 +31,15 @@ vi.mock("next/image", () => ({
 }));
 
 vi.mock("@/i18n/navigation", () => ({
-  Link: ({ children, href }: any) => <a href={href}>{children}</a>,
+  Link: ({ children, href, prefetch }: any) => {
+    const resolvedHref =
+      typeof href === "string" ? href : href.pathname.replace("[slug]", href.params.slug);
+    return (
+      <a href={resolvedHref} data-prefetch={String(prefetch)}>
+        {children}
+      </a>
+    );
+  },
 }));
 
 vi.mock("sonner", () => ({
@@ -197,6 +205,7 @@ describe("GrouponCard", () => {
 
     const detailLink = screen.getByRole("link", { name: /Test Promo/i });
     expect(detailLink).toHaveAttribute("href", "/promocode/test-promo");
+    expect(detailLink).toHaveAttribute("data-prefetch", "false");
     expect(screen.queryByText("View Details")).not.toBeInTheDocument();
   });
 

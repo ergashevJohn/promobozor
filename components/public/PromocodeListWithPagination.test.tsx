@@ -87,7 +87,7 @@ describe("PromocodeListWithPagination", () => {
     expect(screen.queryByTestId("client-list")).not.toBeInTheDocument();
   });
 
-  it("falls back to client PromocodeList when children are omitted", () => {
+  it("falls back to client PromocodeList when children are omitted", async () => {
     render(
       <PromocodeListWithPagination
         initialPromocodes={[makePromocode("a"), makePromocode("b")]}
@@ -101,6 +101,6 @@ describe("PromocodeListWithPagination", () => {
       />
     );
 
-    expect(screen.getByTestId("client-list")).toHaveTextContent("a,b");
+    expect(await screen.findByTestId("client-list")).toHaveTextContent("a,b");
   });
 });

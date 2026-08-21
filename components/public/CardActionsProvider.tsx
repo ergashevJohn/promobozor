@@ -6,8 +6,6 @@
  * Dramatically reduces hydration overhead compared to per-card components
  */
 import { useCallback, useEffect, useRef } from "react";
-import { toast } from "sonner";
-import { dispatchPromocodeFeedback } from "./PromocodeFeedbackPrompt";
 
 interface Translations {
   codeCopied: string;
@@ -21,6 +19,16 @@ declare global {
 }
 
 let isInitialized = false;
+
+async function showToast(kind: "success" | "error", message: string) {
+  const { toast } = await import("sonner");
+  toast[kind](message);
+}
+
+async function requestFeedback(promocodeId: string) {
+  const { dispatchPromocodeFeedback } = await import("./PromocodeFeedbackPrompt");
+  dispatchPromocodeFeedback(promocodeId, "card");
+}
 
 export function CardActionsProvider({ translations }: { translations: Translations }) {
   const pendingRequests = useRef(new Set<string>());
@@ -56,8 +64,8 @@ export function CardActionsProvider({ translations }: { translations: Translatio
             const buttonText = button.querySelector("[data-button-text]") as HTMLElement;
 
             await navigator.clipboard.writeText(code);
-            toast.success(translations.codeCopied);
-            dispatchPromocodeFeedback(promocodeId, "card");
+            void showToast("success", translations.codeCopied);
+            void requestFeedback(promocodeId);
 
             // Update button text temporarily
             if (buttonText) {
@@ -97,7 +105,7 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           case "open-link": {
             const link = button.dataset.link || "";
             window.open(link, "_blank", "noopener,noreferrer");
-            dispatchPromocodeFeedback(promocodeId, "card");
+            void requestFeedback(promocodeId);
 
             // Track click with AbortController
             const abortController = new AbortController();
@@ -116,7 +124,7 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           return;
         }
         console.error("Card action error:", error);
-        toast.error(translations.copyError);
+        void showToast("error", translations.copyError);
       } finally {
         pendingRequests.current.delete(requestKey);
       }

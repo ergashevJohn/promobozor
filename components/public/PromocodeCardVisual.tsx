@@ -15,7 +15,10 @@ interface PromocodeCardVisualProps {
   promocode: Promocode;
   priority?: boolean;
   translations: PromocodeCardTranslations;
-  detailHref: string;
+  detailHref: {
+    pathname: "/promocode/[slug]";
+    params: { slug: string };
+  };
   actions: ReactNode;
   footer?: ReactNode;
 }
@@ -48,7 +51,11 @@ export function PromocodeCardVisual({
       : `-${promocode.discountValue} ${promocode.currency || "UZS"}`;
 
   return (
-    <article className={`deal-card group ${isInactive ? "grayscale" : ""}`}>
+    <article
+      className={`deal-card group ${isInactive ? "grayscale" : ""} ${
+        priority ? "" : "[contain-intrinsic-size:auto_26rem] [content-visibility:auto]"
+      }`}
+    >
       <div className={`flex flex-1 flex-col gap-3 p-4 sm:p-5 ${isInactive ? "opacity-80" : ""}`}>
         <div className="flex items-start gap-3">
           {displayImageUrl ? (
@@ -98,7 +105,11 @@ export function PromocodeCardVisual({
 
             {displayTranslation?.slug ? (
               <Link
-                href={`/${storeTranslation ? "store" : "brand"}/${displayTranslation.slug}`}
+                href={{
+                  pathname: storeTranslation ? "/store/[slug]" : "/brand/[slug]",
+                  params: { slug: displayTranslation.slug },
+                }}
+                prefetch={false}
                 className="focus-visible:ring-ring/50 relative z-20 block truncate text-sm font-medium text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)] focus-visible:ring-[3px] focus-visible:outline-none"
               >
                 {displayName}
@@ -118,6 +129,7 @@ export function PromocodeCardVisual({
         {!isInactive ? (
           <Link
             href={detailHref}
+            prefetch={false}
             className="focus-visible:ring-ring/50 relative z-20 block rounded-md focus-visible:ring-[3px] focus-visible:outline-none"
             aria-label={`${t.details} - ${displayName} ${promocodeTitle}`}
           >

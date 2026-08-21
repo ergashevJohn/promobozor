@@ -2,6 +2,7 @@ import { BreadcrumbsSchema } from "@/components/public/BreadcrumbsSchema";
 import { CollectionPageSchema } from "@/components/public/CollectionPageSchema";
 import { HubEditorialSection } from "@/components/public/HubEditorialSection";
 import { PromocodeListOptimized } from "@/components/public/PromocodeListServer";
+import PromocodeListWithPagination from "@/components/public/PromocodeListWithPagination";
 import PromocodesPageClient, {
   type PromocodesInitialSectionData,
   type PromocodesPageTranslations,
@@ -32,6 +33,7 @@ import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 
 const ITEMS_PER_PAGE = 24;
+const INITIAL_PROMOCODES_COUNT = 8;
 
 export const revalidate = 1800;
 
@@ -108,7 +110,7 @@ async function fetchDefaultPromocodesSectionData(
         )
         .where(and(...whereConditions))
         .orderBy(...orderByClause)
-        .limit(ITEMS_PER_PAGE)
+        .limit(INITIAL_PROMOCODES_COUNT)
         .offset(0),
     ]);
 
@@ -284,15 +286,30 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
             )}
           </div>
 
-          <PromocodeListOptimized
-            promocodes={initialSectionData.promocodesList}
+          <PromocodeListWithPagination
+            initialCount={initialSectionData.promocodesList.length}
+            initialIds={initialSectionData.promocodesList.map((promocode) => promocode.id)}
+            totalCount={initialSectionData.totalPromocodesCount}
+            limit={INITIAL_PROMOCODES_COUNT}
+            autoLoadDesktopBatches={2}
+            listKicker={translations.pageTitle}
             translations={{
               noPromocodes: translations.noPromocodes,
               noPromocodesDescription: translations.noPromocodesDescription,
               emptyHint: translations.emptyHint,
               card: translations.card,
             }}
-          />
+          >
+            <PromocodeListOptimized
+              promocodes={initialSectionData.promocodesList}
+              translations={{
+                noPromocodes: translations.noPromocodes,
+                noPromocodesDescription: translations.noPromocodesDescription,
+                emptyHint: translations.emptyHint,
+                card: translations.card,
+              }}
+            />
+          </PromocodeListWithPagination>
 
           <ServerPagination
             currentPage={initialSectionData.currentPage}

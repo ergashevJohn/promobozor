@@ -15,7 +15,10 @@ export default function GrouponCard({
   translations: t,
 }: GrouponCardProps) {
   const translation = promocode.translations?.[0];
-  const detailHref = `/promocode/${translation?.slug || promocode.id}`;
+  const detailHref = {
+    pathname: "/promocode/[slug]" as const,
+    params: { slug: translation?.slug || promocode.id },
+  };
   const { isInactive } = getCardInactiveState(promocode);
 
   return (
