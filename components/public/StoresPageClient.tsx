@@ -1,9 +1,9 @@
 "use client";
 
+import { filterStoreSearchIndex } from "@/components/public/filter-store-search-index";
 import {
   StoresDirectoryGrid,
   type StoreSearchIndexItem,
-  type StoresDirectoryItem,
 } from "@/components/public/StoresDirectoryGrid";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
@@ -39,21 +39,10 @@ export default function StoresPageClient({
 }: StoresPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredStores = useMemo((): StoresDirectoryItem[] | null => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) {
-      return null;
-    }
-    return searchIndex
-      .filter((store) => store.searchText.includes(query))
-      .map(({ id, name, slug, logoUrl, promocodesCount }) => ({
-        id,
-        name,
-        slug,
-        logoUrl,
-        promocodesCount,
-      }));
-  }, [searchIndex, searchQuery]);
+  const filteredStores = useMemo(
+    () => filterStoreSearchIndex(searchIndex, searchQuery),
+    [searchIndex, searchQuery]
+  );
 
   return (
     <div>
