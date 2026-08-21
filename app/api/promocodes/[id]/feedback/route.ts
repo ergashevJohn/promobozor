@@ -9,6 +9,7 @@ import {
   RateLimits,
   type RateLimitResult,
 } from "@/lib/rate-limit";
+import { verifyRecaptcha } from "@/lib/recaptcha";
 import { validateId } from "@/lib/validators";
 import { and, eq, sql } from "drizzle-orm";
 
@@ -52,6 +53,12 @@ function parseFeedbackBody(value: unknown): FeedbackInput | null {
   return null;
 }
 
+function recaptchaTokenFromBody(value: unknown): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const token = (value as Record<string, unknown>).recaptchaToken;
+  return typeof token === "string" ? token : null;
+}
+
 function rateLimitResponse(result: RateLimitResult) {
   return NextResponse.json(
     { error: "Feedback limit reached. Please try again later." },
@@ -86,24 +93,36 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "Invalid feedback body" }, { status: 400 });
   }
 
+  if (!(await verifyRecaptcha(recaptchaTokenFromBody(body)))) {
+    return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
+  }
+
+  const now = new Date();
+  const active = await db
+    .select({ id: promocodes.id })
+    .from(promocodes)
+    .where(and(eq(promocodes.id, id), activePromocodeStatusConditions(now)))
+    .limit(1);
+  if (active.length === 0) {
+    return NextResponse.json({ error: "Promocode is inactive or expired" }, { status: 409 });
+  }
+
   const identifier = getHashedRateLimitIdentifier(request);
-  const [burst, daily, dedup] = await Promise.all([
-    checkRateLimitKey(identifier, RateLimits.feedbackBurst),
-    checkRateLimitKey(identifier, RateLimits.feedbackDaily),
-    checkRateLimitKey(`${identifier}:${id}`, RateLimits.feedbackDedup),
-  ]);
-  const failedLimit = [burst, daily, dedup].find((result) => !result.success);
-  if (failedLimit) return rateLimitResponse(failedLimit);
+  const burst = await checkRateLimitKey(identifier, RateLimits.feedbackBurst);
+  if (!burst.success) return rateLimitResponse(burst);
+  const daily = await checkRateLimitKey(identifier, RateLimits.feedbackDaily);
+  if (!daily.success) return rateLimitResponse(daily);
+  const dedup = await checkRateLimitKey(`${identifier}:${id}`, RateLimits.feedbackDedup);
+  if (!dedup.success) return rateLimitResponse(dedup);
 
   try {
     const saved = await db.transaction(async (tx) => {
-      const now = new Date();
-      const active = await tx
+      const stillActive = await tx
         .select({ id: promocodes.id })
         .from(promocodes)
-        .where(and(eq(promocodes.id, id), activePromocodeStatusConditions(now)))
+        .where(and(eq(promocodes.id, id), activePromocodeStatusConditions(new Date())))
         .limit(1);
-      if (active.length === 0) return null;
+      if (stillActive.length === 0) return null;
 
       await tx.insert(promocodeFeedback).values({
         promocodeId: id,

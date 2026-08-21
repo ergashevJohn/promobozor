@@ -319,7 +319,7 @@ export default async function BrandPage({
         {/* Hero Section - logo-forward */}
         <BrandHero
           brandName={brandTranslation?.name || brandTitle}
-          brandDescription={brandTranslation?.shortSummary || brandTranslation?.description}
+          brandDescription={resolvedBrandDescription}
           brandImageUrl={brandImageUrl}
           brandWebsiteUrl={brand.websiteUrl}
           totalPromocodes={totalPromocodesCount}

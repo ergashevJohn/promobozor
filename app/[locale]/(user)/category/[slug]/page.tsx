@@ -271,12 +271,7 @@ export default async function CategoryPage({
         {/* Hero Section */}
         <CategoryHero
           categoryName={categoryTranslation?.name || categoryTitle}
-          categoryDescription={
-            categoryTranslation?.shortSummary ||
-            categoryTranslation?.description ||
-            categoryTranslation?.metaDescription ||
-            undefined
-          }
+          categoryDescription={resolvedCategoryDescription}
           categoryImageUrl={category.imageUrl}
           totalPromocodes={totalPromocodesCount}
           uniqueStoreCount={uniqueStoreCount}

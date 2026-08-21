@@ -62,7 +62,6 @@ export default async function NewPromocodesPage({
   ]);
   const totalPages = Math.ceil(data.total / NEW_PROMOCODES_PAGE_SIZE);
   if (data.total && page > totalPages) notFound();
-  const path = getNewPromocodesPath(locale);
   return (
     <div className="page-shell section-rhythm">
       <Breadcrumbs locale={locale} items={[{ name: t("title"), url: "/new" }]} />
@@ -94,7 +93,7 @@ export default async function NewPromocodesPage({
         <ServerPagination
           currentPage={page}
           totalPages={totalPages}
-          baseUrl={path}
+          baseUrl="/new"
           translations={{
             ariaLabel: common("pagination"),
             previous: common("previous"),

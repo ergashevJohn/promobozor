@@ -32,6 +32,8 @@ export async function Footer({ locale }: { locale: string }) {
     { href: "/stores" as const, label: tCommon("stores") },
     { href: "/categories" as const, label: tCommon("categories") },
     { href: "/brands" as const, label: tCommon("brands") },
+    { href: "/new" as const, label: t("newOffers") },
+    { href: "/collections" as const, label: t("collections") },
     { href: "/blog" as const, label: t("blog") },
   ];
 

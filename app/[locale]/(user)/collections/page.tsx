@@ -1,12 +1,7 @@
 import { Breadcrumbs } from "@/components/public/Breadcrumbs";
 import { getIndexableCollections, COLLECTION_KEYS } from "@/lib/collections";
 import { generateFullMetadata } from "@/lib/metadata";
-import {
-  getCollectionPath,
-  getCollectionsPath,
-  getStaticLanguageAlternates,
-  type Locale,
-} from "@/lib/routes";
+import { getCollectionsPath, getStaticLanguageAlternates, type Locale } from "@/lib/routes";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -65,7 +60,7 @@ export default async function CollectionsPage({ params }: { params: Promise<{ lo
             </p>
             <Link
               className="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-red)]"
-              href={getCollectionPath(locale, key)}
+              href={`/collections/${key}`}
             >
               {t("browse")}
             </Link>

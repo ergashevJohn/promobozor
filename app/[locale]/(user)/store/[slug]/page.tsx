@@ -183,7 +183,7 @@ function StorePageContent({
         </div>
         <StoreHero
           name={storeTranslation?.name || storeTitle}
-          description={storeTranslation?.shortSummary || storeTranslation?.description}
+          description={resolvedStoreDescription}
           logoUrl={store.logoUrl}
           websiteUrl={store.websiteUrl}
           totalPromocodesCount={totalPromocodesCount}

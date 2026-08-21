@@ -1,7 +1,12 @@
 import { getBaseUrl } from "@/lib/metadata";
 import {
+  getCollectionPath,
+  getCollectionsPath,
   getEntityPath,
   getListPath,
+  getNewPromocodesPath,
+  getPartnersPath,
+  getStaticLanguageAlternates,
   type ListType,
   type Locale as RouteLocale,
 } from "@/lib/routes";
@@ -21,12 +26,17 @@ import {
 import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
 import { getIndexableCollections } from "@/lib/collections";
 import { getNewPromocodes } from "@/lib/queries/new-promocodes";
-import {
-  getCollectionPath,
-  getCollectionsPath,
-  getNewPromocodesPath,
-  getPartnersPath,
-} from "@/lib/routes";
+
+function languageAlternates(paths: Record<RouteLocale, string>, baseUrl: string) {
+  return {
+    languages: {
+      "x-default": `${baseUrl}${paths.uz}`,
+      uz: `${baseUrl}${paths.uz}`,
+      ru: `${baseUrl}${paths.ru}`,
+      en: `${baseUrl}${paths.en}`,
+    },
+  };
+}
 
 export async function generateSitemaps() {
   // Next.js will generate 3 sitemaps: /sitemap/uz.xml, /sitemap/ru.xml, /sitemap/en.xml
@@ -64,6 +74,7 @@ export default async function sitemap({
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.6,
+    alternates: languageAlternates(getStaticLanguageAlternates("/partners"), baseUrl),
   });
 
   try {
@@ -77,6 +88,7 @@ export default async function sitemap({
         lastModified: now,
         changeFrequency: "daily",
         priority: 0.7,
+        alternates: languageAlternates(getStaticLanguageAlternates("/new"), baseUrl),
       });
     }
     if (collections.length > 0) {
@@ -85,6 +97,7 @@ export default async function sitemap({
         lastModified: now,
         changeFrequency: "weekly",
         priority: 0.65,
+        alternates: languageAlternates(getStaticLanguageAlternates("/collections"), baseUrl),
       });
       for (const key of collections) {
         sitemapEntries.push({
@@ -92,6 +105,14 @@ export default async function sitemap({
           lastModified: now,
           changeFrequency: "daily",
           priority: 0.65,
+          alternates: languageAlternates(
+            {
+              uz: getCollectionPath("uz", key),
+              ru: getCollectionPath("ru", key),
+              en: getCollectionPath("en", key),
+            },
+            baseUrl
+          ),
         });
       }
     }

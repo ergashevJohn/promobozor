@@ -122,8 +122,9 @@ export function PartnerInquiryForm() {
         type="url"
       />
       <div>
-        <Label>{t("type")}</Label>
+        <Label htmlFor="partnerType">{t("type")}</Label>
         <select
+          id="partnerType"
           className="bg-card mt-1 h-11 w-full rounded-xl border px-3"
           value={data.partnerType}
           onChange={(e) => update("partnerType", e.target.value)}

@@ -33,7 +33,7 @@ import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 
 const ITEMS_PER_PAGE = 24;
-const INITIAL_PROMOCODES_COUNT = 8;
+const INITIAL_PROMOCODES_COUNT = ITEMS_PER_PAGE;
 
 export const revalidate = 1800;
 

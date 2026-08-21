@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useRecaptcha } from "@/lib/hooks/use-recaptcha";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -37,6 +38,7 @@ export function dispatchPromocodeFeedback(promocodeId: string, source: Source) {
 }
 
 export function PromocodeFeedbackPrompt({ translations }: { translations: FeedbackTranslations }) {
+  const { executeRecaptcha } = useRecaptcha();
   const [pending, setPending] = useState<PendingFeedback | null>(null);
   const [reason, setReason] = useState<FailureReason | null>(null);
   const [showReasons, setShowReasons] = useState(false);
@@ -71,6 +73,10 @@ export function PromocodeFeedbackPrompt({ translations }: { translations: Feedba
       const csrfResponse = await fetch("/api/csrf", { cache: "no-store" });
       const csrf = (await csrfResponse.json()) as { token?: string };
       if (!csrfResponse.ok || !csrf.token) throw new Error();
+      const recaptchaToken =
+        typeof executeRecaptcha === "function"
+          ? await executeRecaptcha("promocode_feedback")
+          : undefined;
       const response = await fetch(`/api/promocodes/${pending.promocodeId}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-csrf-token": csrf.token },
@@ -78,6 +84,7 @@ export function PromocodeFeedbackPrompt({ translations }: { translations: Feedba
           result,
           failureReason: result === "failed" ? reason : null,
           source: pending.source,
+          recaptchaToken,
         }),
       });
       if (!response.ok) throw new Error();
