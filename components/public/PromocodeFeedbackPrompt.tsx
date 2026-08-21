@@ -5,8 +5,8 @@ import { useRecaptcha } from "@/lib/hooks/use-recaptcha";
 import { XIcon } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { type PendingFeedback } from "./promocode-feedback-utils";
 
-type Source = "card" | "detail";
 type FailureReason =
   | "invalid_or_expired"
   | "new_customer_only"
@@ -26,16 +26,7 @@ type FeedbackTranslations = {
   reasons: Record<FailureReason, string>;
 };
 
-type PendingFeedback = { promocodeId: string; source: Source };
 const storageKey = (id: string) => `promobozor:feedback:${id}`;
-
-export function dispatchPromocodeFeedback(promocodeId: string, source: Source) {
-  window.dispatchEvent(
-    new CustomEvent<PendingFeedback>("promobozor:feedback-ready", {
-      detail: { promocodeId, source },
-    })
-  );
-}
 
 export function PromocodeFeedbackPrompt({ translations }: { translations: FeedbackTranslations }) {
   const { executeRecaptcha } = useRecaptcha();

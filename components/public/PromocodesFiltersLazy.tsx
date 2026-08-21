@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { FunnelSimpleIcon } from "@phosphor-icons/react/dist/ssr";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useFilterCatalog } from "./hooks/use-filter-catalog";
 
 const FilterBar = dynamic(() => import("@/components/public/FilterBar"));
 
@@ -11,6 +12,8 @@ type FilterItem = {
   id: string;
   translations: Array<{ language: string; name: string; slug: string }>;
 };
+
+type FilterCatalog = { stores: FilterItem[]; categories: FilterItem[]; brands: FilterItem[] };
 
 type FilterTranslations = {
   store: string;
@@ -33,8 +36,6 @@ type FilterTranslations = {
   apply: string;
 };
 
-type FilterCatalog = { stores: FilterItem[]; categories: FilterItem[]; brands: FilterItem[] };
-
 type Props = {
   locale: string;
   pathname: string;
@@ -44,30 +45,6 @@ type Props = {
 };
 
 const EMPTY_CATALOG: FilterCatalog = { stores: [], categories: [], brands: [] };
-const catalogRequests = new Map<string, Promise<FilterCatalog>>();
-
-function getFilterCatalog(locale: string): Promise<FilterCatalog> {
-  const cached = catalogRequests.get(locale);
-  if (cached) return cached;
-
-  const request = fetch(`/api/filters?lang=${encodeURIComponent(locale)}`)
-    .then(async (response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = (await response.json()) as Partial<FilterCatalog>;
-      return {
-        stores: Array.isArray(data.stores) ? data.stores : [],
-        categories: Array.isArray(data.categories) ? data.categories : [],
-        brands: Array.isArray(data.brands) ? data.brands : [],
-      };
-    })
-    .catch((error) => {
-      catalogRequests.delete(locale);
-      throw error;
-    });
-
-  catalogRequests.set(locale, request);
-  return request;
-}
 
 /** Loads the filter catalog and select UI only after the visitor opens filters. */
 export function PromocodesFiltersLazy({
@@ -82,25 +59,7 @@ export function PromocodesFiltersLazy({
     [currentParams.brandId, currentParams.categoryId, currentParams.storeId]
   );
   const [isOpen, setIsOpen] = useState(hasActiveFilters);
-  const [catalog, setCatalog] = useState<FilterCatalog>(EMPTY_CATALOG);
-  const [isLoading, setIsLoading] = useState(hasActiveFilters);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    let active = true;
-    void getFilterCatalog(locale)
-      .then((data) => {
-        if (active) setCatalog(data);
-      })
-      .catch((error) => console.error("Error loading filters:", error))
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [isOpen, locale]);
+  const { data: catalog = EMPTY_CATALOG, isLoading } = useFilterCatalog(locale, isOpen);
 
   return (
     <div className="mb-5 md:mb-6">
@@ -111,10 +70,7 @@ export function PromocodesFiltersLazy({
           className="bg-card min-h-12 w-full justify-center gap-2 md:w-auto md:px-5"
           aria-expanded="false"
           aria-controls="promocode-filters"
-          onClick={() => {
-            setIsLoading(true);
-            setIsOpen(true);
-          }}
+          onClick={() => setIsOpen(true)}
         >
           <FunnelSimpleIcon size={18} aria-hidden="true" />
           {translations.filters}

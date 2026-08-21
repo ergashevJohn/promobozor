@@ -13,7 +13,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { Promocode } from "./types";
-import { dispatchPromocodeFeedback } from "./PromocodeFeedbackPrompt";
+import { dispatchPromocodeFeedback } from "./promocode-feedback-utils";
 
 interface PromocodeTranslations {
   title: string;

@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+import type { ReactNode } from "react";
 
 function validLocale(locale: string): locale is Locale {
   return locale === "uz" || locale === "ru" || locale === "en";
@@ -52,20 +53,28 @@ export default async function CollectionsPage({ params }: { params: Promise<{ lo
         <p className="text-muted-foreground mt-3 max-w-2xl leading-7">{t("description")}</p>
       </section>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {COLLECTION_KEYS.filter((key) => keys.includes(key)).map((key) => (
-          <article key={key} className="brand-panel p-6">
-            <h2 className="text-xl font-semibold">{t(`${key}.title`)}</h2>
-            <p className="text-muted-foreground mt-3 text-sm leading-6">
-              {t(`${key}.description`)}
-            </p>
-            <Link
-              className="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-red)]"
-              href={`/collections/${key}`}
-            >
-              {t("browse")}
-            </Link>
-          </article>
-        ))}
+        {((): ReactNode[] => {
+          const keysSet = new Set(keys);
+          const result: ReactNode[] = [];
+          for (const key of COLLECTION_KEYS) {
+            if (!keysSet.has(key)) continue;
+            result.push(
+              <article key={key} className="brand-panel p-6">
+                <h2 className="text-xl font-semibold">{t(`${key}.title`)}</h2>
+                <p className="text-muted-foreground mt-3 text-sm leading-6">
+                  {t(`${key}.description`)}
+                </p>
+                <Link
+                  className="mt-5 inline-flex text-sm font-semibold text-[color:var(--accent-red)]"
+                  href={`/collections/${key}`}
+                >
+                  {t("browse")}
+                </Link>
+              </article>
+            );
+          }
+          return result;
+        })()}
       </div>
     </div>
   );

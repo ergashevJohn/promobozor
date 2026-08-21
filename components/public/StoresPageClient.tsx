@@ -44,15 +44,13 @@ export default function StoresPageClient({
     if (!query) {
       return null;
     }
-    return searchIndex
-      .filter((store) => store.searchText.includes(query))
-      .map(({ id, name, slug, logoUrl, promocodesCount }) => ({
-        id,
-        name,
-        slug,
-        logoUrl,
-        promocodesCount,
-      }));
+    const result: StoresDirectoryItem[] = [];
+    for (const store of searchIndex) {
+      if (!store.searchText.includes(query)) continue;
+      const { id, name, slug, logoUrl, promocodesCount } = store;
+      result.push({ id, name, slug, logoUrl, promocodesCount });
+    }
+    return result;
   }, [searchIndex, searchQuery]);
 
   return (

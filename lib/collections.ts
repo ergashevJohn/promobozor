@@ -108,5 +108,9 @@ export async function getIndexableCollections(locale: "uz" | "ru" | "en") {
   const counts = await Promise.all(
     COLLECTION_KEYS.map(async (key) => [key, await getCollectionOfferCount(locale, key)] as const)
   );
-  return counts.filter(([, count]) => count >= COLLECTION_MIN_OFFERS).map(([key]) => key);
+  const result: CollectionKey[] = [];
+  for (const [key, count] of counts) {
+    if (count >= COLLECTION_MIN_OFFERS) result.push(key);
+  }
+  return result;
 }

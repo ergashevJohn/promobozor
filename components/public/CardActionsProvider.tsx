@@ -26,7 +26,7 @@ async function showToast(kind: "success" | "error", message: string) {
 }
 
 async function requestFeedback(promocodeId: string) {
-  const { dispatchPromocodeFeedback } = await import("./PromocodeFeedbackPrompt");
+  const { dispatchPromocodeFeedback } = await import("./promocode-feedback-utils");
   dispatchPromocodeFeedback(promocodeId, "card");
 }
 

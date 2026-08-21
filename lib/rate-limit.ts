@@ -80,7 +80,26 @@ function getClientIp(request: Request): string {
  * deduplication but cannot be reversed without the server-only secret.
  */
 export function getHashedRateLimitIdentifier(request: Request): string {
-  const secret = process.env.RATE_LIMIT_SECRET || process.env.CSRF_SECRET || "rate-limit-dev";
+  const secret = process.env.RATE_LIMIT_SECRET || process.env.CSRF_SECRET;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "RATE_LIMIT_SECRET or CSRF_SECRET environment variable must be set in production. " +
+          "This is required to secure rate limiting. Set a strong random secret in your environment."
+      );
+    }
+    // Development fallback - only when explicitly not set
+    console.warn(
+      "Warning: RATE_LIMIT_SECRET and CSRF_SECRET are not set. " +
+        "Using insecure fallback for development. Set these variables in production."
+    );
+    return crypto
+      .createHmac("sha256", "dev-only-insecure")
+      .update(getClientIp(request))
+      .digest("hex");
+  }
+
   return crypto.createHmac("sha256", secret).update(getClientIp(request)).digest("hex");
 }
 
