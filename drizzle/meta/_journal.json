@@ -148,6 +148,13 @@
       "when": 1786400000000,
       "tag": "0020_content_seo_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1787208975000,
+      "tag": "0021_feedback_collections_partners",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { Promocode } from "./types";
+import { dispatchPromocodeFeedback } from "./promocode-feedback-utils";
 
 interface PromocodeTranslations {
   title: string;
@@ -72,12 +73,8 @@ interface PromocodeContextValue {
   };
   lang?: Language;
   copied: boolean;
-  liked: boolean;
-  disliked: boolean;
   handleCopy: () => Promise<void>;
   handleShare: () => Promise<void>;
-  handleLike: () => void;
-  handleDislike: () => void;
 }
 
 const PromocodeContext = createContext<PromocodeContextValue | null>(null);
@@ -100,8 +97,6 @@ export function PromocodeProvider({
   children,
 }: PromocodeProviderProps) {
   const [copied, setCopied] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
   const viewTracked = useRef(false);
 
   const translation = promocode.translations[0];
@@ -135,15 +130,14 @@ export function PromocodeProvider({
 
       const message = promocode.type === "link" ? t.linkActivated : t.codeCopied;
       toast.success(message);
+      dispatchPromocodeFeedback(promocode.id, "detail");
+
+      const urlToOpen = targetUrl || displayUrl;
+      if (urlToOpen) window.open(urlToOpen, "_blank", "noopener,noreferrer");
 
       await fetch(`/api/promocodes/${promocode.id}/copy`, {
         method: "POST",
       });
-
-      const urlToOpen = targetUrl || displayUrl;
-      if (urlToOpen) {
-        window.open(urlToOpen, "_blank", "noopener,noreferrer");
-      }
     } catch (err) {
       console.error("Failed to copy/open link:", err);
       toast.error(t.copyError);
@@ -173,53 +167,16 @@ export function PromocodeProvider({
     }
   }, [translation, t]);
 
-  // Like handler
-  const handleLike = useCallback(() => {
-    if (liked) {
-      setLiked(false);
-      return;
-    }
-    setDisliked(false);
-    setLiked(true);
-    // TODO: Implement like API
-  }, [liked]);
-
-  // Dislike handler
-  const handleDislike = useCallback(() => {
-    if (disliked) {
-      setDisliked(false);
-      return;
-    }
-    setLiked(false);
-    setDisliked(true);
-    // TODO: Implement dislike API
-  }, [disliked]);
-
   const value: PromocodeContextValue = useMemo(
     () => ({
       promocode,
       translations,
       lang,
       copied,
-      liked,
-      disliked,
       handleCopy,
       handleShare,
-      handleLike,
-      handleDislike,
     }),
-    [
-      promocode,
-      translations,
-      lang,
-      copied,
-      liked,
-      disliked,
-      handleCopy,
-      handleShare,
-      handleLike,
-      handleDislike,
-    ]
+    [promocode, translations, lang, copied, handleCopy, handleShare]
   );
 
   return <PromocodeContext.Provider value={value}>{children}</PromocodeContext.Provider>;

@@ -6,7 +6,6 @@
  * Dramatically reduces hydration overhead compared to per-card components
  */
 import { useCallback, useEffect, useRef } from "react";
-import { toast } from "sonner";
 
 interface Translations {
   codeCopied: string;
@@ -20,6 +19,16 @@ declare global {
 }
 
 let isInitialized = false;
+
+async function showToast(kind: "success" | "error", message: string) {
+  const { toast } = await import("sonner");
+  toast[kind](message);
+}
+
+async function requestFeedback(promocodeId: string) {
+  const { dispatchPromocodeFeedback } = await import("./promocode-feedback-utils");
+  dispatchPromocodeFeedback(promocodeId, "card");
+}
 
 export function CardActionsProvider({ translations }: { translations: Translations }) {
   const pendingRequests = useRef(new Set<string>());
@@ -55,7 +64,8 @@ export function CardActionsProvider({ translations }: { translations: Translatio
             const buttonText = button.querySelector("[data-button-text]") as HTMLElement;
 
             await navigator.clipboard.writeText(code);
-            toast.success(translations.codeCopied);
+            void showToast("success", translations.codeCopied);
+            void requestFeedback(promocodeId);
 
             // Update button text temporarily
             if (buttonText) {
@@ -95,6 +105,7 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           case "open-link": {
             const link = button.dataset.link || "";
             window.open(link, "_blank", "noopener,noreferrer");
+            void requestFeedback(promocodeId);
 
             // Track click with AbortController
             const abortController = new AbortController();
@@ -106,54 +117,6 @@ export function CardActionsProvider({ translations }: { translations: Translatio
             abortControllers.current.delete(requestKey);
             break;
           }
-
-          case "like": {
-            const abortController = new AbortController();
-            abortControllers.current.set(requestKey, abortController);
-            const response = await fetch(`/api/promocodes/${promocodeId}/like`, {
-              method: "POST",
-              signal: abortController.signal,
-            });
-            abortControllers.current.delete(requestKey);
-
-            if (response.ok) {
-              const countSpan = button.querySelector("[data-count]") as HTMLElement;
-              const currentCount = parseInt(button.dataset.count || "0");
-
-              // Update UI
-              if (countSpan) {
-                countSpan.textContent = (currentCount + 1).toLocaleString();
-              }
-              button.classList.add("bg-green-100", "text-green-700");
-              button.classList.remove("bg-muted", "text-muted-foreground");
-              button.dataset.disabled = "true"; // Prevent multiple likes
-            }
-            break;
-          }
-
-          case "dislike": {
-            const abortController = new AbortController();
-            abortControllers.current.set(requestKey, abortController);
-            const response = await fetch(`/api/promocodes/${promocodeId}/dislike`, {
-              method: "POST",
-              signal: abortController.signal,
-            });
-            abortControllers.current.delete(requestKey);
-
-            if (response.ok) {
-              const countSpan = button.querySelector("[data-count]") as HTMLElement;
-              const currentCount = parseInt(button.dataset.count || "0");
-
-              // Update UI
-              if (countSpan) {
-                countSpan.textContent = (currentCount + 1).toLocaleString();
-              }
-              button.classList.add("bg-red-100", "text-red-700");
-              button.classList.remove("bg-muted", "text-muted-foreground");
-              button.dataset.disabled = "true"; // Prevent multiple dislikes
-            }
-            break;
-          }
         }
       } catch (error) {
         // Ignore aborted requests
@@ -161,7 +124,7 @@ export function CardActionsProvider({ translations }: { translations: Translatio
           return;
         }
         console.error("Card action error:", error);
-        toast.error(translations.copyError);
+        void showToast("error", translations.copyError);
       } finally {
         pendingRequests.current.delete(requestKey);
       }

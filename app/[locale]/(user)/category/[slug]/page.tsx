@@ -4,11 +4,14 @@ import { EntityFAQSection } from "@/components/public/EntityFAQSection";
 import { ItemListSchema } from "@/components/public/ItemListSchema";
 import { NotFoundUI } from "@/components/public/NotFoundUI";
 import StructuredData from "@/components/public/StructuredData";
-import { VerifiedBadge } from "@/components/public/VerifiedBadge";
 import CategoryHero from "@/components/public/category/CategoryHero";
 import CategoryPromocodes from "@/components/public/category/CategoryPromocodes";
 import CategoryRelatedBrands from "@/components/public/category/CategoryRelatedBrands";
 import CategoryRelatedStores from "@/components/public/category/CategoryRelatedStores";
+import {
+  EntityAnchorNav,
+  EntitySectionHeader,
+} from "@/components/public/entity-detail/EntityDetailPrimitives";
 import type { Promocode } from "@/components/public/types";
 import { countUnique } from "@/lib/array-utils";
 import { getCachedCategoryPromocodeCounts } from "@/lib/cache/promocode-counts";
@@ -268,28 +271,27 @@ export default async function CategoryPage({
         {/* Hero Section */}
         <CategoryHero
           categoryName={categoryTranslation?.name || categoryTitle}
-          categoryDescription={
-            resolvedCategoryDescription || categoryTranslation?.metaDescription || undefined
-          }
+          categoryDescription={resolvedCategoryDescription}
+          categoryImageUrl={category.imageUrl}
           totalPromocodes={totalPromocodesCount}
           uniqueStoreCount={uniqueStoreCount}
           uniqueBrandCount={uniqueBrandCount}
+          verifiedAt={category.lastReviewedAt}
+          locale={locale}
           t={t}
         />
-        <div className="page-shell pt-2">
-          <VerifiedBadge
-            verifiedAt={category.lastReviewedAt}
-            locale={locale}
-            label={t("lastReviewed")}
+        <div className="page-shell">
+          <EntityAnchorNav
+            ariaLabel={t("pageNavigation")}
+            items={[
+              { href: "#offers", label: t("allPromocodes") },
+              { href: "#connections", label: t("connectionsTitle") },
+              { href: "#category-faq", label: "FAQ" },
+            ]}
           />
         </div>
 
         <div className="page-shell py-12">
-          <section className="mb-10 grid gap-4 lg:grid-cols-2">
-            <CategoryRelatedStores relatedStores={relatedStores} t={t} />
-            <CategoryRelatedBrands relatedBrands={relatedBrands} t={t} />
-          </section>
-
           {/* All Promocodes */}
           <CategoryPromocodes
             allPromocodes={allPromocodes}
@@ -332,6 +334,14 @@ export default async function CategoryPage({
             }}
             t={t}
           />
+
+          <section id="connections" className="section-rhythm scroll-mt-24">
+            <EntitySectionHeader title={t("connectionsTitle")} />
+            <div className="grid gap-4 lg:grid-cols-2">
+              <CategoryRelatedStores relatedStores={relatedStores} t={t} />
+              <CategoryRelatedBrands relatedBrands={relatedBrands} t={t} />
+            </div>
+          </section>
 
           <EntityFAQSection
             entityName={categoryTranslation?.name || categoryTitle}

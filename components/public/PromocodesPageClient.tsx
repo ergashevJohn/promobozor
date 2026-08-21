@@ -1,15 +1,16 @@
 "use client";
 
-import PromocodeList from "@/components/public/PromocodeList";
 import { PromocodesFiltersLazy } from "@/components/public/PromocodesFiltersLazy";
 import SearchBar from "@/components/public/SearchBar";
 import ServerPagination from "@/components/public/ServerPagination";
 import type { Promocode } from "@/components/public/types";
 import { SkeletonCardGrid } from "@/components/ui/skeleton-card";
 import { useBrowserSearchParams } from "@/lib/hooks/use-browser-search-params";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 const ITEMS_PER_PAGE = 24;
+const PromocodeList = dynamic(() => import("@/components/public/PromocodeList"));
 
 const FILTER_QUERY_KEYS = [
   "storeId",
@@ -285,7 +286,7 @@ export default function PromocodesPageClient({
   return (
     <>
       <section className="brand-hero relative -mt-[4.75rem] overflow-hidden pt-[4.75rem]">
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
           <div className="absolute top-[-20%] left-1/2 h-[28rem] w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(232,78,66,0.14),transparent_68%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(232,78,66,0.18),transparent_68%)]" />
           <div className="absolute bottom-[-30%] left-1/2 h-[22rem] w-[36rem] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(15,20,25,0.06),transparent_70%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(248,250,252,0.05),transparent_70%)]" />
         </div>

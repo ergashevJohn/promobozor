@@ -31,7 +31,10 @@ export const promocodeListSelect = {
     copyCount: promocodes.copyCount,
     likesCount: promocodes.likesCount,
     dislikesCount: promocodes.dislikesCount,
+    workedCount: promocodes.workedCount,
+    failedCount: promocodes.failedCount,
     startsAt: promocodes.startsAt,
+    publishedAt: promocodes.publishedAt,
     expiresAt: promocodes.expiresAt,
   },
   store: {
@@ -94,7 +97,10 @@ export type PromocodeListRow = {
     copyCount: number;
     likesCount: number;
     dislikesCount: number;
+    workedCount: number;
+    failedCount: number;
     startsAt: Date | null;
+    publishedAt: Date | null;
     expiresAt: Date | null;
   };
   store: {
@@ -196,7 +202,14 @@ export function mapPromocodeListRow(
     copyCount: row.promocode.copyCount,
     likesCount: row.promocode.likesCount,
     dislikesCount: row.promocode.dislikesCount,
+    workedCount: row.promocode.workedCount,
+    failedCount: row.promocode.failedCount,
     ...(includeStartsAt ? { startsAt: row.promocode.startsAt?.toISOString() || null } : {}),
+    publishedAt: row.promocode.publishedAt?.toISOString() || null,
+    isFresh: Boolean(
+      row.promocode.publishedAt &&
+      Date.now() - row.promocode.publishedAt.getTime() <= 7 * 24 * 60 * 60 * 1000
+    ),
     expiresAt: row.promocode.expiresAt?.toISOString() || null,
     translations: row.promocodeTranslation
       ? [

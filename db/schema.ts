@@ -33,6 +33,27 @@ export const promocodeTypeEnum = pgEnum("promocode_type", ["code", "link"]);
 /** Aligned with live Supabase enum values */
 export const userRoleEnum = pgEnum("user_role", ["admin", "editor"]);
 export const activityTypeEnum = pgEnum("activity_type", ["view", "copy", "like", "dislike"]);
+export const promocodeFeedbackResultEnum = pgEnum("promocode_feedback_result", [
+  "worked",
+  "failed",
+]);
+export const promocodeFeedbackReasonEnum = pgEnum("promocode_feedback_reason", [
+  "invalid_or_expired",
+  "new_customer_only",
+  "min_order_or_product",
+  "region_app_or_payment",
+  "other",
+]);
+export const promocodeFeedbackSourceEnum = pgEnum("promocode_feedback_source", ["card", "detail"]);
+export const partnerInquiryTypeEnum = pgEnum("partner_inquiry_type", [
+  "direct_brand",
+  "cpa_network",
+]);
+export const partnerInquiryStatusEnum = pgEnum("partner_inquiry_status", [
+  "new",
+  "in_progress",
+  "closed",
+]);
 
 const tsvector = customType<{ data: string }>({
   dataType() {
@@ -265,7 +286,13 @@ export const promocodes = pgTable(
     copyCount: integer("copy_count").notNull().default(0),
     likesCount: integer("likes_count").notNull().default(0),
     dislikesCount: integer("dislikes_count").notNull().default(0),
+    workedCount: integer("worked_count").notNull().default(0),
+    failedCount: integer("failed_count").notNull().default(0),
+    /** Editorial queue flag; feedback never disables an offer automatically. */
+    needsReview: boolean("needs_review").notNull().default(false),
     startsAt: timestamp("starts_at"),
+    /** First time this offer became active. Never changes after publication. */
+    publishedAt: timestamp("published_at", { withTimezone: true }),
     expiresAt: timestamp("expires_at"),
     lastVerifiedAt: timestamp("last_verified_at", { withTimezone: true }),
     minOrderAmount: integer("min_order_amount"),
@@ -365,6 +392,9 @@ export const promocodes = pgTable(
     activeCreatedIdx: index("promocodes_active_created_idx")
       .on(table.createdAt.desc(), table.isFeatured.desc())
       .where(sql`status = 'active'`),
+    activePublishedIdx: index("promocodes_active_published_idx")
+      .on(table.publishedAt.desc())
+      .where(sql`status = 'active' AND published_at IS NOT NULL`),
     activeViewsIdx: index("promocodes_active_views_idx")
       .on(table.viewsCount.desc(), table.isFeatured.desc())
       .where(sql`status = 'active'`),
@@ -441,6 +471,62 @@ export const activityLogs = pgTable(
   })
 );
 
+/** Curated offer tags. Tags are only assigned by trusted editorial tooling. */
+export const offerTags = pgTable("offer_tags", {
+  key: varchar("key", { length: 64 }).primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const promocodeTags = pgTable(
+  "promocode_tags",
+  {
+    id: text("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    promocodeId: text("promocode_id")
+      .notNull()
+      .references(() => promocodes.id, { onDelete: "cascade" }),
+    tagKey: varchar("tag_key", { length: 64 })
+      .notNull()
+      .references(() => offerTags.key, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    promocodeTagUnique: unique("promocode_tags_promocode_tag_unique").on(
+      table.promocodeId,
+      table.tagKey
+    ),
+    tagPromocodeIdx: index("promocode_tags_tag_promocode_idx").on(table.tagKey, table.promocodeId),
+  })
+);
+
+/** Anonymous outcome events. IP and fingerprint data are intentionally never stored here. */
+export const promocodeFeedback = pgTable(
+  "promocode_feedback",
+  {
+    id: text("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    promocodeId: text("promocode_id")
+      .notNull()
+      .references(() => promocodes.id, { onDelete: "cascade" }),
+    result: promocodeFeedbackResultEnum("result").notNull(),
+    failureReason: promocodeFeedbackReasonEnum("failure_reason"),
+    source: promocodeFeedbackSourceEnum("source").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    promocodeCreatedIdx: index("promocode_feedback_promocode_created_idx").on(
+      table.promocodeId,
+      table.createdAt
+    ),
+    resultCreatedIdx: index("promocode_feedback_result_created_idx").on(
+      table.result,
+      table.createdAt
+    ),
+  })
+);
+
 export const contacts = pgTable(
   "contacts",
   {
@@ -457,6 +543,37 @@ export const contacts = pgTable(
   (table) => ({
     createdAtIdx: index("contacts_created_at_idx").on(table.createdAt),
     phoneIdx: index("contacts_phone_idx").on(table.phone),
+  })
+);
+
+export const partnerInquiries = pgTable(
+  "partner_inquiries",
+  {
+    id: text("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    company: varchar("company", { length: 255 }).notNull(),
+    contactPerson: varchar("contact_person", { length: 255 }).notNull(),
+    workEmail: varchar("work_email", { length: 255 }).notNull(),
+    phone: varchar("phone", { length: 50 }),
+    telegram: varchar("telegram", { length: 100 }),
+    website: varchar("website", { length: 500 }),
+    partnerType: partnerInquiryTypeEnum("partner_type").notNull(),
+    requestedFormats: jsonb("requested_formats").$type<string[]>().notNull().default([]),
+    campaignDescription: text("campaign_description").notNull(),
+    validUntil: timestamp("valid_until", { withTimezone: true }),
+    trackingDetails: text("tracking_details"),
+    privacyAcceptedAt: timestamp("privacy_accepted_at", { withTimezone: true }).notNull(),
+    status: partnerInquiryStatusEnum("status").notNull().default("new"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    statusCreatedIdx: index("partner_inquiries_status_created_idx").on(
+      table.status,
+      table.createdAt
+    ),
+    emailIdx: index("partner_inquiries_work_email_idx").on(table.workEmail),
   })
 );
 
@@ -521,8 +638,16 @@ export type PromocodeTranslation = typeof promocodeTranslations.$inferSelect;
 export type NewPromocodeTranslation = typeof promocodeTranslations.$inferInsert;
 export type ActivityLog = typeof activityLogs.$inferSelect;
 export type NewActivityLog = typeof activityLogs.$inferInsert;
+export type OfferTag = typeof offerTags.$inferSelect;
+export type NewOfferTag = typeof offerTags.$inferInsert;
+export type PromocodeTag = typeof promocodeTags.$inferSelect;
+export type NewPromocodeTag = typeof promocodeTags.$inferInsert;
+export type PromocodeFeedback = typeof promocodeFeedback.$inferSelect;
+export type NewPromocodeFeedback = typeof promocodeFeedback.$inferInsert;
 export type Contact = typeof contacts.$inferSelect;
 export type NewContact = typeof contacts.$inferInsert;
+export type PartnerInquiry = typeof partnerInquiries.$inferSelect;
+export type NewPartnerInquiry = typeof partnerInquiries.$inferInsert;
 export type RateLimit = typeof rateLimits.$inferSelect;
 export type NewRateLimit = typeof rateLimits.$inferInsert;
 export type Redirect = typeof redirects.$inferSelect;

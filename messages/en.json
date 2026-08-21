@@ -107,7 +107,10 @@
     "subscribe": "Subscribe",
     "copyright": "© 2026 PromoBozor. All rights reserved.",
     "createdBy": "Created by",
-    "blog": "Blog & guides"
+    "blog": "Blog & guides",
+    "partners": "For partners",
+    "newOffers": "New promocodes",
+    "collections": "Promocode collections"
   },
   "card": {
     "featured": "Featured",
@@ -173,7 +176,7 @@
       "heroQuickLinks": [
         {
           "label": "Latest deals",
-          "href": "/promocodes"
+          "href": "/new"
         },
         {
           "label": "Food delivery",
@@ -203,7 +206,7 @@
             "kicker": "Fresh picks",
             "title": "See the latest verified deals first",
             "description": "Start with the offers that were checked recently and are most likely to be immediately useful.",
-            "href": "/promocodes"
+            "href": "/new"
           },
           {
             "kicker": "Store finder",
@@ -486,7 +489,9 @@
     "viewStorePromocodesAria": "View {name} promocodes",
     "faqTitle": "Questions about {name} promocodes",
     "faqDescription": "How to find, copy, and apply {name} codes at checkout.",
-    "lastReviewed": "Last reviewed"
+    "lastReviewed": "Last reviewed",
+    "pageNavigation": "On this page",
+    "connectionsTitle": "Explore related routes"
   },
   "category": {
     "title": "Category",
@@ -531,7 +536,9 @@
     "allPromocodesDescription": "Explore live savings inside {name}, with active offers across stores and related brands.",
     "faqTitle": "Questions about the {name} category",
     "faqDescription": "How to find and use promocodes in the {name} category.",
-    "lastReviewed": "Last reviewed"
+    "lastReviewed": "Last reviewed",
+    "pageNavigation": "On this page",
+    "connectionsTitle": "Explore related routes"
   },
   "brand": {
     "title": "Brand",
@@ -577,7 +584,9 @@
     "allPromocodesDescription": "A tighter look at savings tied to {name}, across multiple stores and active placements.",
     "faqTitle": "{name} promocode FAQ",
     "faqDescription": "Short answers on using {name} discounts and how often they refresh.",
-    "lastReviewed": "Last reviewed"
+    "lastReviewed": "Last reviewed",
+    "pageNavigation": "On this page",
+    "connectionsTitle": "Explore related routes"
   },
   "promocode": {
     "title": "Promocode Details",
@@ -1171,5 +1180,85 @@
     "relatedStore": "Open store hub",
     "relatedBrand": "Open brand hub",
     "allOffers": "All offers"
+  },
+  "feedback": {
+    "question": "Did this promocode work?",
+    "worked": "It worked",
+    "failed": "It did not work",
+    "chooseReason": "Choose a reason",
+    "send": "Send",
+    "thanks": "Thanks for your feedback!",
+    "error": "Could not send feedback.",
+    "reasons": {
+      "invalid_or_expired": "The code is invalid or expired",
+      "new_customer_only": "Only for new customers",
+      "min_order_or_product": "Minimum order or product restriction",
+      "region_app_or_payment": "Region, app, or payment method does not match",
+      "other": "Other reason"
+    }
+  },
+  "newPromocodes": {
+    "title": "New promocodes",
+    "description": "Active promocodes and deals published during the last 14 days.",
+    "kicker": "New offers",
+    "emptyTitle": "No new offers yet",
+    "emptyDescription": "New promocodes will be added soon. Browse all active offers.",
+    "allOffers": "All promocodes",
+    "newBadge": "New"
+  },
+  "collections": {
+    "title": "Promocode collections",
+    "description": "Hand-picked promocodes for different order types.",
+    "kicker": "Curated offers",
+    "browse": "View collection",
+    "offers": "offers",
+    "first-order": {
+      "title": "First order",
+      "description": "Discounts selected for new customers."
+    },
+    "repeat-order": {
+      "title": "Repeat order",
+      "description": "Active offers for returning customers."
+    },
+    "delivery": { "title": "Delivery", "description": "Deals that reduce delivery costs." }
+  },
+  "partners": {
+    "title": "Partner with PromoBozor",
+    "description": "We review promocode campaigns from brands and CPA networks.",
+    "kicker": "For partners",
+    "formatsTitle": "Available formats",
+    "formats": {
+      "list": [
+        "Promocode or deal placement",
+        "Exclusive promocode",
+        "Featured homepage deal",
+        "Collection placement",
+        "Telegram announcement by separate agreement"
+      ],
+      "listing": "Promocode or deal",
+      "exclusive": "Exclusive promocode",
+      "homepage": "Homepage deal",
+      "collection": "Collection placement",
+      "telegram": "Telegram announcement"
+    },
+    "note": "Every offer goes through editorial review. Traffic, ranking, and publication are not guaranteed.",
+    "formTitle": "Send a partnership proposal",
+    "company": "Company",
+    "person": "Contact person",
+    "email": "Work email",
+    "phone": "Phone (optional)",
+    "telegram": "Telegram (optional)",
+    "website": "Website",
+    "type": "Partner type",
+    "direct_brand": "Brand or store",
+    "cpa_network": "CPA network",
+    "formatsLabel": "Requested formats",
+    "campaign": "Campaign description",
+    "validUntil": "Valid until",
+    "tracking": "Tracking details",
+    "privacy": "I agree to the privacy policy",
+    "submit": "Submit",
+    "success": "Your inquiry was received.",
+    "error": "Could not submit the inquiry."
   }
 }

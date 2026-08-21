@@ -16,7 +16,11 @@ export type Promocode = {
   copyCount: number;
   likesCount: number;
   dislikesCount: number;
+  workedCount?: number;
+  failedCount?: number;
   startsAt?: string | null;
+  publishedAt?: string | null;
+  isFresh?: boolean;
   expiresAt: string | null;
   lastVerifiedAt?: string | null;
   minOrderAmount?: number | null;

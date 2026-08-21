@@ -107,6 +107,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
     common: messageRecord.common ?? {},
     consent: messageRecord.consent ?? {},
     contact: messageRecord.contact ?? {},
+    partners: messageRecord.partners ?? {},
     error: messageRecord.error ?? {},
     admin: messageRecord.admin ?? {},
   };

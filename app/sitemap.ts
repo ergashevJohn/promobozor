@@ -1,12 +1,18 @@
 import { getBaseUrl } from "@/lib/metadata";
 import {
+  getCollectionPath,
+  getCollectionsPath,
   getEntityPath,
   getListPath,
+  getNewPromocodesPath,
+  getPartnersPath,
+  getStaticLanguageAlternates,
   type ListType,
   type Locale as RouteLocale,
 } from "@/lib/routes";
 import { MetadataRoute } from "next";
 
+import { getIndexableCollections } from "@/lib/collections";
 import {
   brands,
   brandTranslations,
@@ -18,7 +24,19 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
+import { getNewPromocodes } from "@/lib/queries/new-promocodes";
 import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
+
+function languageAlternates(paths: Record<RouteLocale, string>, baseUrl: string) {
+  return {
+    languages: {
+      "x-default": `${baseUrl}${paths.uz}`,
+      uz: `${baseUrl}${paths.uz}`,
+      ru: `${baseUrl}${paths.ru}`,
+      en: `${baseUrl}${paths.en}`,
+    },
+  };
+}
 
 export async function generateSitemaps() {
   // Next.js will generate 3 sitemaps: /sitemap/uz.xml, /sitemap/ru.xml, /sitemap/en.xml
@@ -50,6 +68,57 @@ export default async function sitemap({
       },
     },
   });
+
+  sitemapEntries.push({
+    url: `${baseUrl}${getPartnersPath(locale)}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+    alternates: languageAlternates(getStaticLanguageAlternates("/partners"), baseUrl),
+  });
+
+  try {
+    const [newPromocodes, collections] = await Promise.all([
+      getNewPromocodes(locale),
+      getIndexableCollections(locale),
+    ]);
+    if (newPromocodes.total > 0) {
+      sitemapEntries.push({
+        url: `${baseUrl}${getNewPromocodesPath(locale)}`,
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.7,
+        alternates: languageAlternates(getStaticLanguageAlternates("/new"), baseUrl),
+      });
+    }
+    if (collections.length > 0) {
+      sitemapEntries.push({
+        url: `${baseUrl}${getCollectionsPath(locale)}`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.65,
+        alternates: languageAlternates(getStaticLanguageAlternates("/collections"), baseUrl),
+      });
+      for (const key of collections) {
+        sitemapEntries.push({
+          url: `${baseUrl}${getCollectionPath(locale, key)}`,
+          lastModified: now,
+          changeFrequency: "daily",
+          priority: 0.65,
+          alternates: languageAlternates(
+            {
+              uz: getCollectionPath("uz", key),
+              ru: getCollectionPath("ru", key),
+              en: getCollectionPath("en", key),
+            },
+            baseUrl
+          ),
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error adding new offers and collections to sitemap:", error);
+  }
 
   // List pages (localized segments)
   const listPages: Array<ListType | "blog"> = [

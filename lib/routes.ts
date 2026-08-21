@@ -144,6 +144,20 @@ export function resolveInternalHrefToPublicPath(locale: Locale, internalHref: st
     }
   }
 
+  if (parts.length === 1) {
+    const staticPath = normalized as keyof typeof STATIC_LOCALIZED_PATHNAMES;
+    if (staticPath in STATIC_LOCALIZED_PATHNAMES) {
+      const localized = STATIC_LOCALIZED_PATHNAMES[staticPath];
+      if (typeof localized !== "string") {
+        return `/${locale}${localized[locale]}`;
+      }
+    }
+  }
+
+  if (parts.length === 2 && parts[0] === "collections") {
+    return getCollectionPath(locale, parts[1]);
+  }
+
   return `/${locale}${normalized}`;
 }
 
@@ -264,7 +278,41 @@ const STATIC_LOCALIZED_PATHNAMES = {
   "/blog": localePathMap(() => "/blog"),
   "/blog/[slug]": localePathMap(() => "/blog/[slug]"),
   "/how-we-verify-promocodes": localePathMap(() => "/how-we-verify-promocodes"),
+  "/new": { uz: "/yangi", ru: "/novye", en: "/new" },
+  "/collections": { uz: "/tanlovlar", ru: "/podborki", en: "/collections" },
+  "/collections/[slug]": {
+    uz: "/tanlovlar/[slug]",
+    ru: "/podborki/[slug]",
+    en: "/collections/[slug]",
+  },
+  "/partners": { uz: "/hamkorlar", ru: "/partneram", en: "/partners" },
 } as const;
+
+export function getNewPromocodesPath(locale: Locale): string {
+  return `/${locale}${STATIC_LOCALIZED_PATHNAMES["/new"][locale]}`;
+}
+
+export function getCollectionsPath(locale: Locale): string {
+  return `/${locale}${STATIC_LOCALIZED_PATHNAMES["/collections"][locale]}`;
+}
+
+export function getCollectionPath(locale: Locale, key: string): string {
+  return `${getCollectionsPath(locale)}/${key}`;
+}
+
+export function getPartnersPath(locale: Locale): string {
+  return `/${locale}${STATIC_LOCALIZED_PATHNAMES["/partners"][locale]}`;
+}
+
+export function getStaticLanguageAlternates(
+  path: "/new" | "/collections" | "/partners"
+): Record<Locale, string> {
+  return {
+    uz: `/uz${STATIC_LOCALIZED_PATHNAMES[path].uz}`,
+    ru: `/ru${STATIC_LOCALIZED_PATHNAMES[path].ru}`,
+    en: `/en${STATIC_LOCALIZED_PATHNAMES[path].en}`,
+  };
+}
 
 type EntityListPathnames = {
   readonly [K in ListType as (typeof INTERNAL_LIST_PATH)[K]]: Record<Locale, string>;

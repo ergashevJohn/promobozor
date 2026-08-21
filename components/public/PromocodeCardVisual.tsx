@@ -15,7 +15,10 @@ interface PromocodeCardVisualProps {
   promocode: Promocode;
   priority?: boolean;
   translations: PromocodeCardTranslations;
-  detailHref: string;
+  detailHref: {
+    pathname: "/promocode/[slug]";
+    params: { slug: string };
+  };
   actions: ReactNode;
   footer?: ReactNode;
 }
@@ -40,6 +43,7 @@ export function PromocodeCardVisual({
   const promocodeTitle = translation?.title || t.promocodeTitle;
   const conditionsText = summarizeConditions(translation?.conditions);
   const { isInactive, isExpiredByDate } = getCardInactiveState(promocode);
+  const isFresh = promocode.isFresh;
 
   const discountLabel =
     promocode.discountType === "percent"
@@ -47,7 +51,11 @@ export function PromocodeCardVisual({
       : `-${promocode.discountValue} ${promocode.currency || "UZS"}`;
 
   return (
-    <article className={`deal-card group ${isInactive ? "grayscale" : ""}`}>
+    <article
+      className={`deal-card group ${isInactive ? "grayscale" : ""} ${
+        priority ? "" : "[contain-intrinsic-size:auto_26rem] [content-visibility:auto]"
+      }`}
+    >
       <div className={`flex flex-1 flex-col gap-3 p-4 sm:p-5 ${isInactive ? "opacity-80" : ""}`}>
         <div className="flex items-start gap-3">
           {displayImageUrl ? (
@@ -74,13 +82,20 @@ export function PromocodeCardVisual({
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               {!isInactive ? (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
-                  <SealCheckIcon
-                    className="h-3.5 w-3.5 text-[color:var(--accent-red)]"
-                    aria-hidden="true"
-                  />
-                  {t.verified}
-                </span>
+                <>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-[color:var(--accent)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
+                    <SealCheckIcon
+                      className="h-3.5 w-3.5 text-[color:var(--accent-red)]"
+                      aria-hidden="true"
+                    />
+                    {t.verified}
+                  </span>
+                  {isFresh ? (
+                    <span className="rounded-md bg-[color:var(--secondary)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
+                      {t.fresh}
+                    </span>
+                  ) : null}
+                </>
               ) : (
                 <span className="rounded-md bg-[color:var(--secondary)] px-2 py-0.5 text-[11px] font-semibold text-[color:var(--foreground)]">
                   {isExpiredByDate ? t.expired : t.disabled}
@@ -90,7 +105,11 @@ export function PromocodeCardVisual({
 
             {displayTranslation?.slug ? (
               <Link
-                href={`/${storeTranslation ? "store" : "brand"}/${displayTranslation.slug}`}
+                href={{
+                  pathname: storeTranslation ? "/store/[slug]" : "/brand/[slug]",
+                  params: { slug: displayTranslation.slug },
+                }}
+                prefetch={false}
                 className="focus-visible:ring-ring/50 relative z-20 block truncate text-sm font-medium text-[color:var(--muted-foreground)] transition-colors hover:text-[color:var(--foreground)] focus-visible:ring-[3px] focus-visible:outline-none"
               >
                 {displayName}
@@ -110,6 +129,7 @@ export function PromocodeCardVisual({
         {!isInactive ? (
           <Link
             href={detailHref}
+            prefetch={false}
             className="focus-visible:ring-ring/50 relative z-20 block rounded-md focus-visible:ring-[3px] focus-visible:outline-none"
             aria-label={`${t.details} - ${displayName} ${promocodeTitle}`}
           >

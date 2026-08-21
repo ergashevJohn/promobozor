@@ -1,7 +1,13 @@
-import Image from "next/image";
-import { StorefrontIcon } from "@phosphor-icons/react/dist/ssr";
+import SafeHtmlContent from "@/components/public/SafeHtmlContent";
+import { VerifiedBadge } from "@/components/public/VerifiedBadge";
+import {
+  EntityHeroFrame,
+  EntityMetaRow,
+  EntityMetricRail,
+} from "@/components/public/entity-detail/EntityDetailPrimitives";
 import { getApprovedImageUrl } from "@/lib/media";
-import StoreDescription from "@/components/public/StoreDescription";
+import { ArrowUpRightIcon, StorefrontIcon } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
 
 interface StoreHeroProps {
   name: string;
@@ -14,23 +20,21 @@ interface StoreHeroProps {
   featuredPromocodesCount: number;
   totalViews: number;
   totalCopies: number;
+  verifiedAt: Date | string | null | undefined;
   translations: {
     heroKicker: string;
     h1Title: string;
-    activeRouteLabel: string;
     activePromocodes: string;
-    brandMixLabel: string;
     connectedBrandsLabel: string;
-    categorySpreadLabel: string;
     activeCategoryPathsLabel: string;
-    storeTrustTitle: string;
-    storeTrustDescription: string;
     visitWebsite: string;
+    viewOffers: string;
     views: string;
     uses: string;
     altStoreLogo: string;
     altStoreLogoWithSlug: (slug: string) => string;
     featured: string;
+    lastReviewed: string;
   };
   slug: string;
   locale: string;
@@ -47,6 +51,7 @@ export default function StoreHero({
   featuredPromocodesCount,
   totalViews,
   totalCopies,
+  verifiedAt,
   translations,
   slug,
   locale,
@@ -54,13 +59,13 @@ export default function StoreHero({
   const storeLogoUrl = getApprovedImageUrl(logoUrl);
 
   return (
-    <div className="page-shell pb-10">
-      <div className="page-hero-surface">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+    <div className="page-shell pb-4 md:pb-5">
+      <EntityHeroFrame variant="store">
+        <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)] lg:items-end">
           <div>
-            <div className="mb-6 flex items-start gap-4">
+            <div className="flex items-start gap-4 md:gap-5">
               {storeLogoUrl ? (
-                <div className="bg-card border-border relative mt-2 flex size-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-[22px] border md:size-20">
+                <div className="bg-card border-border relative mt-1 flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-[1.25rem] border shadow-[0_16px_40px_-28px_rgba(15,20,25,0.35)] md:size-20">
                   <Image
                     src={storeLogoUrl}
                     alt={
@@ -69,114 +74,82 @@ export default function StoreHero({
                         : translations.altStoreLogoWithSlug(slug)
                     }
                     fill
-                    className="h-full w-full object-contain"
+                    className="object-contain p-2"
                     sizes="80px"
                     priority
                   />
                 </div>
               ) : (
-                <div className="bg-muted border-border flex size-16 flex-shrink-0 items-center justify-center rounded-[22px] border text-4xl md:size-20">
-                  <StorefrontIcon className="text-foreground size-10 md:size-12" />
+                <div className="bg-muted border-border mt-1 flex size-16 shrink-0 items-center justify-center rounded-[1.25rem] border text-[color:var(--accent-red)] md:size-20">
+                  <StorefrontIcon
+                    className="size-9 md:size-10"
+                    weight="duotone"
+                    aria-hidden="true"
+                  />
                 </div>
               )}
-              <div>
-                <div className="brand-kicker mb-4">{translations.heroKicker}</div>
-                <h1 className="text-foreground mb-2 text-3xl font-semibold md:text-5xl">
-                  {translations.h1Title}
-                </h1>
-                {description && <StoreDescription description={description} locale={locale} />}
+              <div className="min-w-0">
+                <p className="brand-kicker mb-3">{translations.heroKicker}</p>
+                <h1 className="page-hero-heading">{translations.h1Title}</h1>
               </div>
             </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="surface-stat">
-                <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                  {translations.activeRouteLabel}
-                </div>
-                <div className="mt-3 text-3xl font-semibold text-[color:var(--foreground)]">
-                  {totalPromocodesCount}
-                </div>
-                <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                  {translations.activePromocodes}
-                </p>
-              </div>
-              <div className="surface-stat">
-                <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                  {translations.brandMixLabel}
-                </div>
-                <div className="mt-3 text-3xl font-semibold text-[color:var(--foreground)]">
-                  {uniqueBrandCount}
-                </div>
-                <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                  {translations.connectedBrandsLabel}
-                </p>
-              </div>
-              <div className="surface-stat">
-                <div className="text-xs font-semibold tracking-[0.14em] text-[color:var(--accent-red)] uppercase">
-                  {translations.categorySpreadLabel}
-                </div>
-                <div className="mt-3 text-3xl font-semibold text-[color:var(--foreground)]">
-                  {uniqueCategoryCount}
-                </div>
-                <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                  {translations.activeCategoryPathsLabel}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="surface-dark p-5">
-              <div className="text-xs font-semibold tracking-[0.16em] text-white/70 uppercase">
-                {translations.storeTrustTitle}
-              </div>
-              <div className="mt-3 text-2xl font-semibold">
-                {featuredPromocodesCount} {translations.featured.toLowerCase()}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-white/74">
-                {translations.storeTrustDescription}
-              </p>
-              {websiteUrl && (
+            {description ? (
+              <SafeHtmlContent
+                html={description}
+                className="text-muted-foreground mt-5 max-w-[65ch] text-base leading-7 md:text-lg md:leading-8"
+              />
+            ) : null}
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {totalPromocodesCount > 0 ? (
+                <a
+                  href="#offers"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[color:var(--accent-red)] px-5 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:ring-[3px] focus-visible:ring-[color:var(--ring)]/50 focus-visible:outline-none active:translate-y-0"
+                >
+                  {translations.viewOffers}
+                </a>
+              ) : null}
+              {websiteUrl ? (
                 <a
                   href={websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer nofollow sponsored"
-                  className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-[color:var(--ink-foreground)] px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition-transform hover:-translate-y-0.5"
+                  className="border-border text-foreground inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold transition-colors hover:bg-[color:var(--accent)] focus-visible:ring-[3px] focus-visible:ring-[color:var(--ring)]/50 focus-visible:outline-none"
                 >
                   {translations.visitWebsite}
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  <ArrowUpRightIcon className="size-4" aria-hidden="true" />
                 </a>
-              )}
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="surface-stat">
-                <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                  {translations.views}
-                </div>
-                <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                  {totalViews}
-                </div>
-              </div>
-              <div className="surface-stat">
-                <div className="text-sm font-semibold text-[color:var(--foreground)]">
-                  {translations.uses}
-                </div>
-                <div className="mt-2 text-2xl font-semibold text-[color:var(--foreground)]">
-                  {totalCopies}
-                </div>
-              </div>
+              ) : null}
             </div>
           </div>
+
+          <aside className="relative rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)]/75 p-5 md:p-6">
+            <p className="text-muted-foreground text-sm leading-6">
+              {uniqueBrandCount} {translations.connectedBrandsLabel} · {uniqueCategoryCount}{" "}
+              {translations.activeCategoryPathsLabel}
+            </p>
+            <div className="mt-6">
+              <EntityMetaRow>
+                <VerifiedBadge
+                  verifiedAt={verifiedAt}
+                  locale={locale}
+                  label={translations.lastReviewed}
+                />
+              </EntityMetaRow>
+            </div>
+          </aside>
         </div>
-      </div>
+
+        <div className="relative mt-8">
+          <EntityMetricRail
+            items={[
+              { label: translations.activePromocodes, value: totalPromocodesCount },
+              { label: translations.featured, value: featuredPromocodesCount },
+              { label: translations.uses, value: totalCopies },
+              { label: translations.views, value: totalViews },
+            ]}
+          />
+        </div>
+      </EntityHeroFrame>
     </div>
   );
 }

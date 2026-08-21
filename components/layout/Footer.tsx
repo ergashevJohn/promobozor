@@ -32,6 +32,8 @@ export async function Footer({ locale }: { locale: string }) {
     { href: "/stores" as const, label: tCommon("stores") },
     { href: "/categories" as const, label: tCommon("categories") },
     { href: "/brands" as const, label: tCommon("brands") },
+    { href: "/new" as const, label: t("newOffers") },
+    { href: "/collections" as const, label: t("collections") },
     { href: "/blog" as const, label: t("blog") },
   ];
 
@@ -40,6 +42,7 @@ export async function Footer({ locale }: { locale: string }) {
     { href: "/how-we-verify-promocodes" as const, label: t("verification") },
     { href: "/faq" as const, label: "FAQ" },
     { href: "/contact" as const, label: t("contact") },
+    { href: "/partners" as const, label: t("partners") },
     { href: "/privacy" as const, label: t("privacy") },
     { href: "/terms" as const, label: t("terms") },
   ];
