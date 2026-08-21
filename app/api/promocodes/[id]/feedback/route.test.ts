@@ -1,8 +1,8 @@
+import { db } from "@/lib/db";
+import { verifyRecaptcha } from "@/lib/recaptcha";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
-import { db } from "@/lib/db";
-import { verifyRecaptcha } from "@/lib/recaptcha";
 
 const PROMO_ID = "550e8400-e29b-41d4-a716-446655440000";
 

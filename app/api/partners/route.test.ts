@@ -1,7 +1,7 @@
+import { verifyRecaptcha } from "@/lib/recaptcha";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "./route";
-import { verifyRecaptcha } from "@/lib/recaptcha";
 
 vi.mock("@/lib/csrf", () => ({ csrfProtection: vi.fn().mockResolvedValue({ success: true }) }));
 

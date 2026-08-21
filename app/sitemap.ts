@@ -12,6 +12,7 @@ import {
 } from "@/lib/routes";
 import { MetadataRoute } from "next";
 
+import { getIndexableCollections } from "@/lib/collections";
 import {
   brands,
   brandTranslations,
@@ -23,9 +24,8 @@ import {
   stores,
   storeTranslations,
 } from "@/lib/db";
-import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
-import { getIndexableCollections } from "@/lib/collections";
 import { getNewPromocodes } from "@/lib/queries/new-promocodes";
+import { and, eq, gt, isNull, lte, or } from "drizzle-orm";
 
 function languageAlternates(paths: Record<RouteLocale, string>, baseUrl: string) {
   return {
