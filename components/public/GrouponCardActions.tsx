@@ -27,6 +27,7 @@ type Props = {
   type: "code" | "link" | null;
   code: string | null;
   link: string | null;
+  storeUrl?: string | null;
   translations: Translations;
   stats?: {
     views: number;
@@ -58,6 +59,7 @@ export function GrouponCardActions({
   type,
   code,
   link,
+  storeUrl = null,
   translations,
   disabled = false,
 }: Props) {
@@ -75,6 +77,11 @@ export function GrouponCardActions({
         toast.success(translations.codeCopied);
       } else if (type === "link" && link) {
         window.open(link, "_blank", "noopener,noreferrer");
+      }
+
+      if (type === "code") {
+        const redirectUrl = link || storeUrl;
+        if (redirectUrl) window.open(redirectUrl, "_blank", "noopener,noreferrer");
       }
 
       await fetch(`/api/promocodes/${promocodeId}/copy`, { method: "POST" });

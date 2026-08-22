@@ -33,6 +33,11 @@ export interface PromocodeDisplayData {
   discountDisplay: string;
 }
 
+/** Prefer a campaign-specific destination over the merchant's generic homepage. */
+export function getPromocodeRedirectUrl(promocode: Promocode): string | null {
+  return promocode.link || promocode.store?.websiteUrl || promocode.brand?.websiteUrl || null;
+}
+
 export function getPromocodeDisplayData(
   promocode: Promocode,
   translations: { card: Record<string, string> }

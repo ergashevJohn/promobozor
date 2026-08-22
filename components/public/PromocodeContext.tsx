@@ -1,6 +1,7 @@
 "use client";
 
 import type { Language } from "@/lib/i18n";
+import { getPromocodeRedirectUrl } from "@/lib/promocode-utils";
 import {
   createContext,
   ReactNode,
@@ -102,9 +103,6 @@ export function PromocodeProvider({
   const translation = promocode.translations[0];
   const t = translations.promocode;
 
-  // Get display URL
-  const displayUrl = promocode.store?.websiteUrl || promocode.brand?.websiteUrl || null;
-
   // Track view
   useEffect(() => {
     if (viewTracked.current) return;
@@ -132,7 +130,7 @@ export function PromocodeProvider({
       toast.success(message);
       dispatchPromocodeFeedback(promocode.id, "detail");
 
-      const urlToOpen = targetUrl || displayUrl;
+      const urlToOpen = targetUrl || getPromocodeRedirectUrl(promocode);
       if (urlToOpen) window.open(urlToOpen, "_blank", "noopener,noreferrer");
 
       await fetch(`/api/promocodes/${promocode.id}/copy`, {
@@ -142,7 +140,7 @@ export function PromocodeProvider({
       console.error("Failed to copy/open link:", err);
       toast.error(t.copyError);
     }
-  }, [promocode, t, displayUrl]);
+  }, [promocode, t]);
 
   // Share handler
   const handleShare = useCallback(async () => {

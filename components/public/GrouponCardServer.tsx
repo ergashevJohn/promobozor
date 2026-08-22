@@ -34,6 +34,7 @@ export default function GrouponCardServer({
             data-promocode-id={promocode.id}
             data-code={promocode.code || ""}
             data-link={promocode.link || ""}
+            data-store-url={promocode.store?.websiteUrl || promocode.brand?.websiteUrl || ""}
             data-disabled={isInactive ? "true" : "false"}
             className={`flex h-12 min-h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-[color,background-color,opacity,transform] duration-200 ${
               promocode.type === "link"

@@ -61,11 +61,13 @@ export function CardActionsProvider({ translations }: { translations: Translatio
         switch (action) {
           case "copy-code": {
             const code = button.dataset.code || "";
+            const redirectUrl = button.dataset.link || button.dataset.storeUrl || "";
             const buttonText = button.querySelector("[data-button-text]") as HTMLElement;
 
             await navigator.clipboard.writeText(code);
             void showToast("success", translations.codeCopied);
             void requestFeedback(promocodeId);
+            if (redirectUrl) window.open(redirectUrl, "_blank", "noopener,noreferrer");
 
             // Update button text temporarily
             if (buttonText) {

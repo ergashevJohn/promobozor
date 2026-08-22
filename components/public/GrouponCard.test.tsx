@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import GrouponCard from "./GrouponCard";
 import { Promocode } from "./types";
 
@@ -85,6 +85,10 @@ vi.mock("@phosphor-icons/react/dist/ssr", () => ({
 global.fetch = vi.fn();
 
 describe("GrouponCard", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   const mockPromocode: Promocode = {
     id: "promo-1",
     type: "code",
@@ -111,6 +115,7 @@ describe("GrouponCard", () => {
       id: "store-1",
       translations: [{ language: "uz", name: "Test Store", slug: "test-store" }],
       logoUrl: "/store-logo.png",
+      websiteUrl: "https://store.example.com",
     },
     category: null,
     brand: null,
@@ -223,6 +228,64 @@ describe("GrouponCard", () => {
     await waitFor(() => {
       expect(mockClipboard.writeText).toHaveBeenCalledWith("TESTCODE");
     });
+  });
+
+  it("copies a code and opens its campaign-specific link", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    render(
+      <GrouponCard
+        promocode={{ ...mockPromocode, link: "https://go.uzum.uz/l/campaign" }}
+        translations={mockTranslations}
+      />
+    );
+
+    fireEvent.click(screen.getByLabelText("Copy"));
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith("TESTCODE");
+      expect(open).toHaveBeenCalledWith(
+        "https://go.uzum.uz/l/campaign",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    });
+  });
+
+  it("falls back to the store homepage when a code has no campaign link", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    render(<GrouponCard promocode={mockPromocode} translations={mockTranslations} />);
+    fireEvent.click(screen.getByLabelText("Copy"));
+
+    await waitFor(() => {
+      expect(open).toHaveBeenCalledWith(
+        "https://store.example.com",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    });
+  });
+
+  it("does not copy or redirect an inactive offer", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    Object.assign(navigator, { clipboard: { writeText } });
+    render(
+      <GrouponCard
+        promocode={{ ...mockPromocode, status: "disabled", link: "https://go.uzum.uz/l/campaign" }}
+        translations={mockTranslations}
+      />
+    );
+
+    fireEvent.click(screen.getByLabelText("Copy"));
+
+    expect(writeText).not.toHaveBeenCalled();
+    expect(open).not.toHaveBeenCalled();
   });
 
   it("renders expired status correctly", () => {
