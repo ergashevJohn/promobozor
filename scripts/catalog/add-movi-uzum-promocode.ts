@@ -6,7 +6,9 @@ import { db, promocodeTranslations, promocodes, storeTranslations, stores, users
 const PROMOCODE = "ADD76-JUFT26";
 const CAMPAIGN_URL = "https://go.uzum.uz/l/cTnQsTTG";
 const UZUM_MARKET_SLUG = "uzum-market-chegirmalar";
-const EXPIRES_AT = new Date("2026-09-30T18:59:59.999Z");
+// The live column is `timestamp without time zone`, while the application reads
+// it as an instant. This UTC value is 23:59:59.999 in Asia/Tashkent (UTC+5).
+const EXPIRES_AT = sql`TIMESTAMP '2026-09-30 18:59:59.999'`;
 const APPLY = process.argv.includes("--apply");
 
 const translations = [
