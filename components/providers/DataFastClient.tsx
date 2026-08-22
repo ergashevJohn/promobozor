@@ -1,21 +1,8 @@
 "use client";
 
-import { CONSENT_STORAGE_KEY } from "@/lib/consent";
+import { hasAnalyticsConsent } from "@/lib/consent";
 import { getDataFast } from "@/lib/datafast";
 import { useEffect } from "react";
-
-function hasAnalyticsConsent(): boolean {
-  try {
-    const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
-    if (!raw) return false;
-    const parsed = JSON.parse(raw) as {
-      preferences?: { analytics?: boolean; marketing?: boolean };
-    };
-    return Boolean(parsed?.preferences?.analytics || parsed?.preferences?.marketing);
-  } catch {
-    return false;
-  }
-}
 
 export function DataFastClient() {
   useEffect(() => {

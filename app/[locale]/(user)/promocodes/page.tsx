@@ -33,7 +33,9 @@ import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 
 const ITEMS_PER_PAGE = 24;
-const INITIAL_PROMOCODES_COUNT = ITEMS_PER_PAGE;
+// Keep the first response light on every viewport. Further results are fetched
+// only after an explicit visitor action.
+const INITIAL_PROMOCODES_COUNT = 8;
 
 export const revalidate = 1800;
 
@@ -291,7 +293,6 @@ export default async function PromocodesPage({ params }: { params: Promise<{ loc
             initialIds={initialSectionData.promocodesList.map((promocode) => promocode.id)}
             totalCount={initialSectionData.totalPromocodesCount}
             limit={INITIAL_PROMOCODES_COUNT}
-            autoLoadDesktopBatches={2}
             listKicker={translations.pageTitle}
             translations={{
               noPromocodes: translations.noPromocodes,

@@ -1,6 +1,7 @@
 "use client";
 
 import { readCspNonce } from "@/lib/csp-nonce";
+import { hasAnalyticsConsent } from "@/lib/consent";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -32,22 +33,33 @@ export default function LazyAnalytics({ nonce }: { nonce?: string }) {
         cancelIdleCallback?: (handle: number) => void;
       };
 
+    let idleId: number | undefined;
+    let timeoutId: number | undefined;
+
     const start = () => {
+      if (!hasAnalyticsConsent()) return;
       setClientNonce(nonce ?? readCspNonce(document));
       setEnabled(true);
     };
 
-    if (typeof win.requestIdleCallback === "function") {
-      const id = win.requestIdleCallback(start, { timeout: 1500 });
-      return () => {
-        if (typeof win.cancelIdleCallback === "function") {
-          win.cancelIdleCallback(id);
-        }
-      };
-    }
+    const schedule = () => {
+      if (!hasAnalyticsConsent()) return;
+      if (typeof win.requestIdleCallback === "function") {
+        idleId = win.requestIdleCallback(start, { timeout: 1500 });
+      } else {
+        timeoutId = window.setTimeout(start, 600);
+      }
+    };
 
-    const timeoutId = window.setTimeout(start, 600);
-    return () => window.clearTimeout(timeoutId);
+    schedule();
+    window.addEventListener("consent-updated", schedule);
+    return () => {
+      window.removeEventListener("consent-updated", schedule);
+      if (idleId !== undefined && typeof win.cancelIdleCallback === "function") {
+        win.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, [nonce]);
 
   if (!enabled) {

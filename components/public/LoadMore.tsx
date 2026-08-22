@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { sanitizeSearchQuery } from "@/lib/search";
 import { CircleNotchIcon } from "@phosphor-icons/react/dist/ssr";
 import { useLocale, useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import type { Promocode } from "./types";
 
 interface LoadMoreProps {
@@ -20,22 +20,13 @@ interface LoadMoreProps {
     featured?: boolean;
   };
   onLoadMore: (promocodes: Promocode[]) => void;
-  autoLoadDesktop?: boolean;
 }
 
-export default function LoadMore({
-  initialOffset,
-  limit,
-  filters,
-  onLoadMore,
-  autoLoadDesktop = false,
-}: LoadMoreProps) {
+export default function LoadMore({ initialOffset, limit, filters, onLoadMore }: LoadMoreProps) {
   const t = useTranslations("common");
   const locale = useLocale();
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const hasScheduledAutoLoad = useRef(false);
-
   // Use initialOffset as a key to reset state when offset changes
   // The parent component can use: <LoadMore key={initialOffset} ... />
   // This ensures fresh state when navigation occurs
@@ -81,33 +72,6 @@ export default function LoadMore({
       setIsLoading(false);
     }
   }, [filters, initialOffset, isLoading, limit, locale, onLoadMore]);
-
-  useEffect(() => {
-    if (
-      !autoLoadDesktop ||
-      hasScheduledAutoLoad.current ||
-      !window.matchMedia("(min-width: 640px)").matches
-    ) {
-      return;
-    }
-
-    hasScheduledAutoLoad.current = true;
-    const schedule =
-      typeof window.requestIdleCallback === "function"
-        ? (callback: () => void) => window.requestIdleCallback(callback, { timeout: 1500 })
-        : (callback: () => void) => window.setTimeout(callback, 300);
-    const idleId = schedule(() => {
-      void handleLoadMore();
-    });
-
-    return () => {
-      if (typeof window.cancelIdleCallback === "function" && typeof idleId === "number") {
-        window.cancelIdleCallback(idleId);
-      } else {
-        window.clearTimeout(idleId as number);
-      }
-    };
-  }, [autoLoadDesktop, handleLoadMore]);
 
   if (!hasMore) {
     return null;

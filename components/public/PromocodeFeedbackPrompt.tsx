@@ -14,7 +14,7 @@ type FailureReason =
   | "region_app_or_payment"
   | "other";
 
-type FeedbackTranslations = {
+export type FeedbackTranslations = {
   question: string;
   worked: string;
   failed: string;
@@ -28,7 +28,13 @@ type FeedbackTranslations = {
 
 const storageKey = (id: string) => `promobozor:feedback:${id}`;
 
-export function PromocodeFeedbackPrompt({ translations }: { translations: FeedbackTranslations }) {
+export function PromocodeFeedbackPrompt({
+  translations,
+  initialFeedback,
+}: {
+  translations: FeedbackTranslations;
+  initialFeedback?: PendingFeedback | null;
+}) {
   const { executeRecaptcha } = useRecaptcha();
   const [pending, setPending] = useState<PendingFeedback | null>(null);
   const [reason, setReason] = useState<FailureReason | null>(null);
@@ -44,18 +50,21 @@ export function PromocodeFeedbackPrompt({ translations }: { translations: Feedba
   };
 
   useEffect(() => {
-    const handle = (event: Event) => {
-      const detail = (event as CustomEvent<PendingFeedback>).detail;
+    const schedule = (detail: PendingFeedback | undefined | null) => {
       if (!detail?.promocodeId || localStorage.getItem(storageKey(detail.promocodeId))) return;
       if (timer.current) window.clearTimeout(timer.current);
       timer.current = window.setTimeout(() => setPending(detail), 15_000);
     };
+
+    const handle = (event: Event) => schedule((event as CustomEvent<PendingFeedback>).detail);
+
+    schedule(initialFeedback);
     window.addEventListener("promobozor:feedback-ready", handle);
     return () => {
       window.removeEventListener("promobozor:feedback-ready", handle);
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, []);
+  }, [initialFeedback]);
 
   const submit = async (result: "worked" | "failed") => {
     if (!pending || (result === "failed" && !reason)) return;
