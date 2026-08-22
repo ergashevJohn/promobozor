@@ -27,6 +27,8 @@ const FORMAT_ICONS: Record<(typeof FORMAT_KEYS)[number], ComponentType<{ classNa
   telegram: TelegramLogoIcon,
 };
 
+const HOW_STEPS = [1, 2, 3] as const;
+
 function validLocale(locale: string): locale is Locale {
   return locale === "uz" || locale === "ru" || locale === "en";
 }
@@ -60,7 +62,6 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
     getTranslations({ locale, namespace: "common" }),
   ]);
   const formatDetails = t.raw("formats.list") as string[];
-  const howSteps = [1, 2, 3] as const;
   const breadcrumbItems = [{ name: t("title"), url: "/partners" }];
 
   return (
@@ -108,7 +109,7 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
                 {t("howTitle")}
               </h2>
               <ol className="mt-5 space-y-3">
-                {howSteps.map((step) => (
+                {HOW_STEPS.map((step) => (
                   <li key={step} className="brand-panel flex gap-4 p-4">
                     <span className="text-muted-foreground font-mono text-sm font-semibold">
                       {String(step).padStart(2, "0")}

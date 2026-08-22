@@ -8,7 +8,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import type { ComponentType } from "react";
 
-export const COLLECTION_ICONS: Record<CollectionKey, ComponentType<{ className?: string }>> = {
+const COLLECTION_ICONS: Record<CollectionKey, ComponentType<{ className?: string }>> = {
   "first-order": UserPlusIcon,
   "repeat-order": ArrowsClockwiseIcon,
   delivery: TruckIcon,
