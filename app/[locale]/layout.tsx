@@ -1,3 +1,4 @@
+import { DataFastClient } from "@/components/providers/DataFastClient";
 import { HtmlLangSync } from "@/components/providers/HtmlLangSync";
 import LazyAnalytics from "@/components/providers/LazyAnalytics";
 import LazyToaster from "@/components/providers/LazyToaster";
@@ -131,6 +132,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
             <LazyToaster />
           </NextIntlClientProvider>
           {process.env.NODE_ENV === "development" && <Agentation />}
+          <DataFastClient />
           <LazyAnalytics />
         </ThemeProvider>
       </body>

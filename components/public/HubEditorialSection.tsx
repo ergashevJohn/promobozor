@@ -27,7 +27,7 @@ export async function HubEditorialSection({ locale, kind }: HubEditorialSectionP
 
   return (
     <section className="page-shell pb-14 md:pb-16" aria-labelledby={`hub-editorial-${kind}`}>
-      <div className="content-prose-panel mx-auto max-w-4xl md:p-8">
+      <div className="content-prose-panel mx-auto md:p-8">
         <div className="brand-kicker mb-4">{content.eyebrow}</div>
         <h2
           id={`hub-editorial-${kind}`}

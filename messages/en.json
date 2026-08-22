@@ -1204,7 +1204,11 @@
     "emptyTitle": "No new offers yet",
     "emptyDescription": "New promocodes will be added soon. Browse all active offers.",
     "allOffers": "All promocodes",
-    "newBadge": "New"
+    "newBadge": "New",
+    "countLabel": "{count} new offers",
+    "windowLabel": "14 days",
+    "windowHint": "Published in this window",
+    "collectionsCta": "Browse collections"
   },
   "collections": {
     "title": "Promocode collections",
@@ -1212,6 +1216,14 @@
     "kicker": "Curated offers",
     "browse": "View collection",
     "offers": "offers",
+    "offerCount": "{count} offers",
+    "collectionCount": "{count} collections",
+    "heroHint": "Active, reviewed offers right now",
+    "faqTitle": "Frequently asked questions",
+    "otherCollections": "Other collections",
+    "emptyTitle": "No collections yet",
+    "emptyDescription": "Collections appear once enough active offers are tagged. Browse all promocodes meanwhile.",
+    "allOffers": "All promocodes",
     "first-order": {
       "title": "First order",
       "description": "Discounts selected for new customers."
@@ -1242,7 +1254,25 @@
       "telegram": "Telegram announcement"
     },
     "note": "Every offer goes through editorial review. Traffic, ranking, and publication are not guaranteed.",
+    "howTitle": "How it works",
+    "how": {
+      "1": {
+        "title": "Send a proposal",
+        "text": "Share the campaign, formats, and tracking details in the form."
+      },
+      "2": {
+        "title": "Editorial review",
+        "text": "We check conditions, dates, and whether the brand fits PromoBozor."
+      },
+      "3": {
+        "title": "Placement",
+        "text": "If it fits, we publish it on a page, collection, or Telegram."
+      }
+    },
     "formTitle": "Send a partnership proposal",
+    "formLead": "Work email, campaign description, and at least one format are required.",
+    "contactSection": "Contact",
+    "campaignSection": "Campaign",
     "company": "Company",
     "person": "Contact person",
     "email": "Work email",
@@ -1256,8 +1286,9 @@
     "campaign": "Campaign description",
     "validUntil": "Valid until",
     "tracking": "Tracking details",
-    "privacy": "I agree to the privacy policy",
+    "privacy": "I agree to the <policy>privacy policy</policy>",
     "submit": "Submit",
+    "submitting": "Sending…",
     "success": "Your inquiry was received.",
     "error": "Could not submit the inquiry."
   }

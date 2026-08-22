@@ -104,12 +104,19 @@ export async function getCollectionOfferCount(locale: "uz" | "ru" | "en", key: C
   return row?.count ?? 0;
 }
 
-export async function getIndexableCollections(locale: "uz" | "ru" | "en") {
-  const counts = await Promise.all(
-    COLLECTION_KEYS.map(async (key) => [key, await getCollectionOfferCount(locale, key)] as const)
+export async function getCollectionSummaries(locale: "uz" | "ru" | "en") {
+  return Promise.all(
+    COLLECTION_KEYS.map(async (key) => ({
+      key,
+      count: await getCollectionOfferCount(locale, key),
+    }))
   );
+}
+
+export async function getIndexableCollections(locale: "uz" | "ru" | "en") {
+  const summaries = await getCollectionSummaries(locale);
   const result: CollectionKey[] = [];
-  for (const [key, count] of counts) {
+  for (const { key, count } of summaries) {
     if (count >= COLLECTION_MIN_OFFERS) result.push(key);
   }
   return result;
