@@ -3,17 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { FunnelSimpleIcon } from "@phosphor-icons/react/dist/ssr";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
-import { useFilterCatalog } from "./hooks/use-filter-catalog";
+import { useEffect, useMemo, useState } from "react";
+import { getFilterCatalog, type FilterCatalog } from "./filter-catalog";
 
 const FilterBar = dynamic(() => import("@/components/public/FilterBar"));
-
-type FilterItem = {
-  id: string;
-  translations: Array<{ language: string; name: string; slug: string }>;
-};
-
-type FilterCatalog = { stores: FilterItem[]; categories: FilterItem[]; brands: FilterItem[] };
 
 type FilterTranslations = {
   store: string;
@@ -59,7 +52,28 @@ export function PromocodesFiltersLazy({
     [currentParams.brandId, currentParams.categoryId, currentParams.storeId]
   );
   const [isOpen, setIsOpen] = useState(hasActiveFilters);
-  const { data: catalog = EMPTY_CATALOG, isLoading } = useFilterCatalog(locale, isOpen);
+  const [catalog, setCatalog] = useState<FilterCatalog>(EMPTY_CATALOG);
+  const [isLoading, setIsLoading] = useState(hasActiveFilters);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let active = true;
+    void getFilterCatalog(locale)
+      .then((data) => {
+        if (active) setCatalog(data);
+      })
+      .catch(() => {
+        if (active) setCatalog(EMPTY_CATALOG);
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [isOpen, locale]);
 
   return (
     <div className="mb-5 md:mb-6">
@@ -70,7 +84,10 @@ export function PromocodesFiltersLazy({
           className="bg-card min-h-12 w-full justify-center gap-2 md:w-auto md:px-5"
           aria-expanded="false"
           aria-controls="promocode-filters"
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsLoading(true);
+            setIsOpen(true);
+          }}
         >
           <FunnelSimpleIcon size={18} aria-hidden="true" />
           {translations.filters}
