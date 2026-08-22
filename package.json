@@ -50,6 +50,7 @@
     "@vercel/speed-insights": "^1.3.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "datafast": "^3.0.18",
     "drizzle-orm": "^0.45.2",
     "next": "^16.3.0",
     "next-intl": "^4.13.5",
